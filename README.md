@@ -2,6 +2,7 @@
 This will be MCP server
 
 An Up coming project will update soon.
+
 Phase 0: Research and validation (Currently In)
 
 Phase 1: Foundation Build
