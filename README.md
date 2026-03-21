@@ -2,6 +2,8 @@
 
 MCP server exposing Indian financial and government APIs - GSTIN, IFSC, PAN, UPI, pincode, HSN/SAC - for AI agents. Zero auth. Offline-first.
 
+***Still Under development***
+
 ## Status
 
 [![CI](https://github.com/mcp-india-stack/mcp-india-stack/actions/workflows/ci.yml/badge.svg)](https://github.com/mcp-india-stack/mcp-india-stack/actions/workflows/ci.yml)
