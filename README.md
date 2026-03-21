@@ -1,13 +1,13 @@
-# MCP
+# MCP-India-Stack
 This will be MCP server
 
 An Up coming project will update soon.
 
-Phase 0: Research and validation (Currently In)
+Phase 0: Research and validation (Completed)
 
-Phase 1: Foundation Build
+Phase 1: Foundation Build (Under-way)
 
-Phase 2: Documentation
+Phase 2: Documentation (Under-way)
 
 Phase 3: Launch
 
