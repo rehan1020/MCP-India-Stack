@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.1] - 2026-03-22
+
+- Fix: Replace SAC-only HSN dataset (681 rows) with full HSN + SAC master
+	from services.gst.gov.in (22,471 rows). Goods codes now correctly resolved.
+
 ## [0.1.0] - 2026-03-21
 
 - Initial monolith release with 7 tools: IFSC, GSTIN, PAN, UPI VPA, pincode, HSN/SAC, state code
