@@ -5,6 +5,7 @@ from __future__ import annotations
 import csv
 import gzip
 import json
+import re
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, cast
@@ -17,6 +18,11 @@ DATA_ROOT = PACKAGE_ROOT / "data"
 
 class DataLoadError(RuntimeError):
     """Raised when a packaged dataset cannot be loaded."""
+
+
+def _normalize_hsn_code(value: object) -> str:
+    """Normalize HSN/SAC code by keeping digits only."""
+    return re.sub(r"\D", "", str(value)).strip()
 
 
 def _must_exist(path: Path, label: str) -> Path:
@@ -128,7 +134,14 @@ def load_hsn_index() -> dict[str, list[dict[str, Any]]]:
     """Load HSN/SAC master and index by code."""
     path = _must_exist(DATA_ROOT / "hsn" / "hsn_master.csv", "HSN/SAC")
     try:
-        df = pl.read_csv(path, infer_schema_length=2000)
+        df = pl.read_csv(
+            path,
+            infer_schema_length=2000,
+            schema_overrides={
+                "HSNCode": pl.Utf8,
+                "Description": pl.Utf8,
+            },
+        )
     except Exception as exc:  # pragma: no cover
         raise DataLoadError(f"Failed loading HSN dataset: {exc}") from exc
 
@@ -147,8 +160,12 @@ def load_hsn_index() -> dict[str, list[dict[str, Any]]]:
     rows = df.to_dicts()
     out: dict[str, list[dict[str, Any]]] = {}
     for row in rows:
-        code = str(row["HSNCode"]).strip()
-        out.setdefault(code, []).append(row)
+        code = _normalize_hsn_code(row.get("HSNCode", ""))
+        if not code:
+            continue
+        normalized_row = dict(row)
+        normalized_row["HSNCode"] = code
+        out.setdefault(code, []).append(normalized_row)
     return out
 
 
