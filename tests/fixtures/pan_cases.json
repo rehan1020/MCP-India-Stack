@@ -1,0 +1,10 @@
+[
+  {
+    "input": "AAAPL1234C",
+    "expected_valid": true
+  },
+  {
+    "input": "AAA1",
+    "expected_valid": false
+  }
+]

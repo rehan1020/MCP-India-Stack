@@ -1,0 +1,40 @@
+name: CI
+
+on:
+	pull_request:
+	push:
+		branches: [main]
+
+jobs:
+	test:
+		runs-on: ubuntu-latest
+		strategy:
+			matrix:
+				python-version: ["3.10", "3.11", "3.12"]
+
+		steps:
+			- name: Checkout
+				uses: actions/checkout@v4
+
+			- name: Setup Python
+				uses: actions/setup-python@v5
+				with:
+					python-version: ${{ matrix.python-version }}
+
+			- name: Install dependencies
+				run: |
+					python -m pip install --upgrade pip
+					pip install -e ".[dev]"
+
+			- name: Ruff lint
+				run: ruff check .
+
+			- name: Ruff format check
+				run: ruff format --check .
+
+			- name: Mypy
+				run: mypy src
+
+			- name: Pytest with coverage
+				run: pytest --cov=mcp_india_stack --cov-report=term-missing --cov-fail-under=80
+

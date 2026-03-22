@@ -1,0 +1,10 @@
+[
+  {
+    "input": "27AAPFU0939F1ZV",
+    "expected_valid": true
+  },
+  {
+    "input": "27AAPFU0939F1ZA",
+    "expected_valid": false
+  }
+]

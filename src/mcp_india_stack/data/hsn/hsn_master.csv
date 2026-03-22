@@ -1,0 +1,682 @@
+HSNCode,Description,CGST_Rate,SGST_Rate,IGST_Rate,CESS_Rate
+99,All Services,0.0,0.0,0.0,0.0
+9954,Construction services,0.0,0.0,0.0,0.0
+995411,Construction services of single dwelling or multi dwelling or multi-storied residential buildings,0.0,0.0,0.0,0.0
+995412,"Construction services of other residential buildings such as old age homes, homeless shelters, hostels and the like",0.0,0.0,0.0,0.0
+995413,"Construction services of industrial buildings such as buildings used for production activities (used for assembly line activities), workshops, storage buildings and other similar industrial buildings",0.0,0.0,0.0,0.0
+995414,"Construction services of commercial buildings such as office buildings, exhibition and marriage halls, malls, hotels, restaurants, airports, rail or road terminals, parking garages, petrol and service stations, theatres and other similar buildings",0.0,0.0,0.0,0.0
+995415,"Construction services of other non-residential buildings such as educational institutions, hospitals, clinics including veterinary clinics, religious establishments, courts, prisons, museums and other similar buildings",0.0,0.0,0.0,0.0
+995416,Construction services of other buildings nowhere else classified,0.0,0.0,0.0,0.0
+995417,"(i) Construction services of commercial buildings such as office buildings, exhibition and marriage halls, malls, hotels, restaurants, airports, rail or road terminals, parking garages, petrol and service stations, theatres and other similar buildings (i...",0.0,0.0,0.0,0.0
+995418,"Services by way of house-keeping, such as plumbing, carpentering, etc. where the person supplying such service through electronic commerce operator is not liable for registration under sub-section (1) of section 22 of the Central Goods and Services Tax A...",0.0,0.0,0.0,0.0
+995419,"Services involving repair, alterations, additions, replacements, renovation, maintenance or remodeling of the buildings covered above",0.0,0.0,0.0,0.0
+995421,"General construction services of highways, streets, roads, railways and airfield runways, bridges and tunnels",0.0,0.0,0.0,0.0
+995422,"General construction services of harbours, waterways, dams, water mains and lines, irrigation and other waterworks",0.0,0.0,0.0,0.0
+995423,"General construction services of long-distance underground/ overland/ submarine pipelines, communication and electric power lines (cables); pumping stations and related works; transformer stations and related works",0.0,0.0,0.0,0.0
+995424,"General construction services of local water and sewage pipelines, electricity and communication cables and related works",0.0,0.0,0.0,0.0
+995425,General construction services of mines and industrial plants,0.0,0.0,0.0,0.0
+995426,General Construction services of Power Plants and its related infrastructure,0.0,0.0,0.0,0.0
+995427,General construction services of outdoor sport and recreation facilities,0.0,0.0,0.0,0.0
+995428,General construction services of other civil engineering works nowhere else classified,0.0,0.0,0.0,0.0
+995429,"Services involving repair, alterations, additions, replacements, renovation, maintenance or remodeling of the constructions covered above",0.0,0.0,0.0,0.0
+995431,Demolition services,0.0,0.0,0.0,0.0
+995432,"Site formation and clearance services including preparation services to make sites ready for subsequent construction work, test drilling and boring and core extraction, digging of trenches",0.0,0.0,0.0,0.0
+995433,Excavating and earthmoving services,0.0,0.0,0.0,0.0
+995434,Water well drilling services and septic system installation services,0.0,0.0,0.0,0.0
+995435,Other site preparation services nowhere else classified,0.0,0.0,0.0,0.0
+995439,"Services involving repair, alterations, additions, replacements, maintenance of the constructions covered above",0.0,0.0,0.0,0.0
+995441,"Installation, assembly and erection services of prefabricated buildings",0.0,0.0,0.0,0.0
+995442,"Installation, assembly and erection services of other prefabricated structures and constructions",0.0,0.0,0.0,0.0
+995443,"Installation services of all types of street furniture (such as bus shelters, benches, telephone booths, public toilets, and the like)",0.0,0.0,0.0,0.0
+995444,Other assembly and erection services nowhere else classified,0.0,0.0,0.0,0.0
+995449,"Services involving repair, alterations, additions, replacements, maintenance of the constructions covered above",0.0,0.0,0.0,0.0
+995451,Pile driving and foundation services,0.0,0.0,0.0,0.0
+995452,Building framing and roof framing services,0.0,0.0,0.0,0.0
+995453,Roofing and waterproofing services,0.0,0.0,0.0,0.0
+995454,Concrete services,0.0,0.0,0.0,0.0
+995455,Structural steel erection services,0.0,0.0,0.0,0.0
+995456,Masonry services,0.0,0.0,0.0,0.0
+995457,Scaffolding services,0.0,0.0,0.0,0.0
+995458,Other special trade construction services nowhere else classified,0.0,0.0,0.0,0.0
+995459,"Services involving repair, alterations, additions, replacements, maintenance of the constructions covered above",0.0,0.0,0.0,0.0
+995461,"Electrical installation services including Electrical wiring and fitting services, fire alarm installation services, burglar alarm system installation services",0.0,0.0,0.0,0.0
+995462,Water plumbing and drain laying services,0.0,0.0,0.0,0.0
+995463,"Heating, ventilation and air conditioning equipment installation services",0.0,0.0,0.0,0.0
+995464,Gas fitting installation services,0.0,0.0,0.0,0.0
+995465,Insulation services,0.0,0.0,0.0,0.0
+995466,Lift and escalator installation services,0.0,0.0,0.0,0.0
+995468,Other installation services nowhere else classified,0.0,0.0,0.0,0.0
+995469,"Services involving repair, alterations, additions, replacements, maintenance of the installations covered above",0.0,0.0,0.0,0.0
+995471,Glazing services,0.0,0.0,0.0,0.0
+995472,Plastering services,0.0,0.0,0.0,0.0
+995473,Painting services,0.0,0.0,0.0,0.0
+995474,Floor and wall tiling services,0.0,0.0,0.0,0.0
+995475,"Other floor laying, wall covering and wall papering services",0.0,0.0,0.0,0.0
+995476,Joinery and carpentry services,0.0,0.0,0.0,0.0
+995477,Fencing and railing services,0.0,0.0,0.0,0.0
+995478,Other building completion and finishing services nowhere else classified,0.0,0.0,0.0,0.0
+995479,"Services involving repair, alterations, additions, replacements, maintenance of the completion/finishing works covered above",0.0,0.0,0.0,0.0
+9961,Services in wholesale trade,0.0,0.0,0.0,0.0
+996111,Services provided for a fee or commission or on contract basis on wholesale trade,0.0,0.0,0.0,0.0
+9962,Services in retail trade,0.0,0.0,0.0,0.0
+996211,Services provided for a fee or commission or on contract basis on retail trade,0.0,0.0,0.0,0.0
+9963,"Accommodation, food and beverage services",0.0,0.0,0.0,0.0
+996311,"Room or unit accommodation services provided by Hotels, Inn, Guest House, Club and the like",0.0,0.0,0.0,0.0
+996312,Camp site services,0.0,0.0,0.0,0.0
+996313,Recreational and vacation camp services,0.0,0.0,0.0,0.0
+996321,Room or unit accommodation services for students in student residences,0.0,0.0,0.0,0.0
+996322,"Room or unit accommodation services provided by Hostels, Camps, Paying Guest and the like",0.0,0.0,0.0,0.0
+996329,Other room or unit accommodation services nowhere else classified,0.0,0.0,0.0,0.0
+996331,"Services provided by restaurants, cafes and similar eating facilities including takeaway services, room services and door delivery of food",0.0,0.0,0.0,0.0
+996332,"Services provided by Hotels, Inn, Guest House, Club and the like including room services, takeaway services and door delivery of food",0.0,0.0,0.0,0.0
+996333,Services provided in canteen and other similar establishments,0.0,0.0,0.0,0.0
+996334,"Catering Services in exhibition halls, events, marriage halls and other outdoor/indoor functions",0.0,0.0,0.0,0.0
+996335,"Catering services in trains, flights and the like",0.0,0.0,0.0,0.0
+996336,"Preparation or supply services of food, edible preparations, alcoholic and non-alcoholic beverages to airlines and other transportation operators",0.0,0.0,0.0,0.0
+996337,Other contract food services,0.0,0.0,0.0,0.0
+996339,"Other food, edible preparations, alcoholic and non-alcoholic beverages serving services nowhere else classified",0.0,0.0,0.0,0.0
+9964,Passenger transport services,0.0,0.0,0.0,0.0
+996411,"Local land transport services of passengers by railways, metro, monorail, bus, tramway, autos, three wheelers, scooters and other motor vehicles",0.0,0.0,0.0,0.0
+996412,Taxi services including radio taxi and other similar services,0.0,0.0,0.0,0.0
+996413,Non-scheduled local bus and coach charter services,0.0,0.0,0.0,0.0
+996414,Other land transportation services of passengers,0.0,0.0,0.0,0.0
+996415,"Local water transport services of passengers by ferries, cruises and the like",0.0,0.0,0.0,0.0
+996416,"Sightseeing transportation services by rail, land, water and air",0.0,0.0,0.0,0.0
+996417,Transport services of passengers by ropeways,0.0,0.0,0.0,0.0
+996418,Sightseeing transportation services by rail or road,0.0,0.0,0.0,0.0
+996419,Other local transportation services of passengers nowhere else classified,0.0,0.0,0.0,0.0
+996421,"Long-distance transport services of passengers through rail network by railways, metro and the like",0.0,0.0,0.0,0.0
+996422,"Long-distance transport services of passengers through road by bus, car, non-scheduled long distance bus and coach services, stage carriage and the like",0.0,0.0,0.0,0.0
+996423,Taxi services including radio taxi and other similar services,0.0,0.0,0.0,0.0
+996424,"Coastal and transoceanic (overseas) water transport services of passengers by Ferries, Cruise Ships and the like",0.0,0.0,0.0,0.0
+996425,Domestic/ international scheduled air transport services of passengers,0.0,0.0,0.0,0.0
+996426,Domestic/ international non-scheduled air transport services of passengers,0.0,0.0,0.0,0.0
+996427,Space transport services of passengers,0.0,0.0,0.0,0.0
+996429,Other long-distance transportation services of passengers nowhere else classified,0.0,0.0,0.0,0.0
+996431,Long-distance transport service of passengers through rail network by railways,0.0,0.0,0.0,0.0
+996432,"Scheduled long-distance transport services of passengers through road by bus and coach services including stage carriage, contract carriage and the like",0.0,0.0,0.0,0.0
+996433,"Non-scheduled long-distance transport services of passengers through road by bus and coach services including stage carriage, contract carriage and the like",0.0,0.0,0.0,0.0
+996434,"Long-distance transport service of passengers by any motor vehicle other than bus including motorcab, maxicab  and radio taxi",0.0,0.0,0.0,0.0
+996439,Other long distance transport service of passengers by land nowhere else specified,0.0,0.0,0.0,0.0
+996441,Coastal water transport service of passengers by ferries and the like,0.0,0.0,0.0,0.0
+996442,Coastal  water transport service of passengers by cruise ships and the like,0.0,0.0,0.0,0.0
+996443,Inland water transport service of passengers by ferries and the like,0.0,0.0,0.0,0.0
+996444,Inland water transport service of passengers by cruise ships and the like,0.0,0.0,0.0,0.0
+996445,"International water transport services of passengers by ferries, cruise ships and the like",0.0,0.0,0.0,0.0
+996449,Other long distance transport service of passengers by water nowhere else specified,0.0,0.0,0.0,0.0
+996451,Domestic scheduled air transport service of passengers in economy class,0.0,0.0,0.0,0.0
+996452,Domestic scheduled air transport service of passengers in other than economy class,0.0,0.0,0.0,0.0
+996453,Domestic non-scheduled air transport service of passengers,0.0,0.0,0.0,0.0
+996454,International scheduled air transport service of passengers in economy class,0.0,0.0,0.0,0.0
+996455,International scheduled air transport service of passengers in other than economy class,0.0,0.0,0.0,0.0
+996456,International non-scheduled air transport service of passengers,0.0,0.0,0.0,0.0
+996459,Other long-distance transportation service of passengers by air nowhere else specified including space transport service of passengers,0.0,0.0,0.0,0.0
+9965,Goods Transport Services,0.0,0.0,0.0,0.0
+996511,"Road transport services of Goods including letters, parcels, live animals, household and office furniture, containers and the like by refrigerator vehicles, trucks, trailers, man or animal drawn vehicles or any other vehicles",0.0,0.0,0.0,0.0
+996512,"Railway transport services of Goods including letters, parcels, live animals, household and office furniture, intermodal containers, bulk cargo and the like",0.0,0.0,0.0,0.0
+996513,"Transport services of petroleum and natural gas, water, sewerage and other goods via pipeline",0.0,0.0,0.0,0.0
+996514,"Transport services via pipeline of other chemicals, coal slurry and of other goods",0.0,0.0,0.0,0.0
+996515,"Moving services of household goods, office equipment and furniture",0.0,0.0,0.0,0.0
+996516,"Road transport services of goods including letters, parcels, live animals, containers and the like in referigerated vehicles, trucks, trailers or any other motor vehicle or in man or animal driven vehicles by any person other than a goods transport agency",0.0,0.0,0.0,0.0
+996517,"Railway transport services of goods including letters, parcels, live animals, household and office furniture, intermodal containers, bulk cargo and the like by  Container Transport Operators (CTOs) other than Railways",0.0,0.0,0.0,0.0
+996518,Transport of goods by ropeways,0.0,0.0,0.0,0.0
+996519,Other land transport services of goods nowhere else classified,0.0,0.0,0.0,0.0
+996521,"Coastal and transoceanic (overseas) water transport services of goods by refrigerator vessels, tankers, bulk cargo vessels, container ships and the like",0.0,0.0,0.0,0.0
+996522,"Inland water transport services of goods by refrigerator vessels, tankers and other vessels",0.0,0.0,0.0,0.0
+996523,"International water transport services of goods by refrigerated vessels,  tankers, bulk cargo vessels, container ships and the like",0.0,0.0,0.0,0.0
+996531,Air transport services of letters and parcels and other goods,0.0,0.0,0.0,0.0
+996532,Space transport services of freight,0.0,0.0,0.0,0.0
+996540,Multimodal Transport of goods from a place in India to another place in India,0.0,0.0,0.0,0.0
+9966,Rental services of transport vehicles with operators,0.0,0.0,0.0,0.0
+996601,"Rental services of road vehicles including buses, coaches, cars, trucks and other motor vehicles, operator",0.0,0.0,0.0,0.0
+996602,"Rental services of water vessels including passenger vessels, freight vessels and the like operator",0.0,0.0,0.0,0.0
+996603,"Rental services of aircraft including passenger aircrafts, freight aircrafts and the like operator",0.0,0.0,0.0,0.0
+996604,Rental services of passenger vessels  with operator,0.0,0.0,0.0,0.0
+996605,Rental services of goods vessels with operator,0.0,0.0,0.0,0.0
+996606,Rental service of passenger aircraft with operator,0.0,0.0,0.0,0.0
+996607,Rental service of goods aircraft with operator,0.0,0.0,0.0,0.0
+996609,Rental services of other transport vehicles nowhere else classified operator,0.0,0.0,0.0,0.0
+9967,Supporting services in transport,0.0,0.0,0.0,0.0
+996711,Container handling services,0.0,0.0,0.0,0.0
+996712,Customs House Agent services,0.0,0.0,0.0,0.0
+996713,Clearing and forwarding services,0.0,0.0,0.0,0.0
+996719,Other cargo and baggage handling services,0.0,0.0,0.0,0.0
+996721,Refrigerated storage services,0.0,0.0,0.0,0.0
+996722,Bulk liquid or gas storage services,0.0,0.0,0.0,0.0
+996729,Other storage and warehousing services,0.0,0.0,0.0,0.0
+996731,Railway pushing or towing services,0.0,0.0,0.0,0.0
+996739,Other supporting services for railway transport nowhere else classified,0.0,0.0,0.0,0.0
+996741,Bus station services,0.0,0.0,0.0,0.0
+996742,"Operation services of national highways, state highways, expressways, roads and streets; bridges and tunnel operation services",0.0,0.0,0.0,0.0
+996743,Parking lot services,0.0,0.0,0.0,0.0
+996744,Towing services for commercial and private vehicles,0.0,0.0,0.0,0.0
+996749,Other supporting services for road transport nowhere else classified,0.0,0.0,0.0,0.0
+996751,"Port and waterway operation services (excluding cargo handling) such as operation services of ports, docks, light houses, light ships and the like",0.0,0.0,0.0,0.0
+996752,Pilotage and berthing services,0.0,0.0,0.0,0.0
+996753,Vessel salvage and refloating services,0.0,0.0,0.0,0.0
+996754,"Maintenance, repair or overhaul services in respect of ships and other vessels, their engines and other components or parts",0.0,0.0,0.0,0.0
+996759,Other supporting services for water transport nowhere else classified,0.0,0.0,0.0,0.0
+996761,Airport operation services (excluding cargo handling),0.0,0.0,0.0,0.0
+996762,Air traffic control services,0.0,0.0,0.0,0.0
+996763,Other supporting services for air transport,0.0,0.0,0.0,0.0
+996764,Supporting services for space transport,0.0,0.0,0.0,0.0
+996768,Other supporting services for air transport,0.0,0.0,0.0,0.0
+996769,Supporting services for space transport,0.0,0.0,0.0,0.0
+996791,Goods transport agency services for road transport,0.0,0.0,0.0,0.0
+996792,Goods transport agency services for other modes of transport,0.0,0.0,0.0,0.0
+996793,Other goods transport services,0.0,0.0,0.0,0.0
+996799,Other supporting transport services nowhere else classified,0.0,0.0,0.0,0.0
+9968,Postal and courier services,0.0,0.0,0.0,0.0
+996811,"Postal services including post office counter services, mail box rental services",0.0,0.0,0.0,0.0
+996812,Courier services,0.0,0.0,0.0,0.0
+996813,Local delivery services,0.0,0.0,0.0,0.0
+996819,Other Delivery Services nowhere else classified,0.0,0.0,0.0,0.0
+9969,"Electricity, gas, water and other distribution services",0.0,0.0,0.0,0.0
+996911,Electricity transmission services,0.0,0.0,0.0,0.0
+996912,Electricity distribution services,0.0,0.0,0.0,0.0
+996913,Gas distribution services,0.0,0.0,0.0,0.0
+996921,Water distribution services,0.0,0.0,0.0,0.0
+996922,"Services involving distribution of steam, hot water and air conditioning supply and the like",0.0,0.0,0.0,0.0
+996929,Other similar services,0.0,0.0,0.0,0.0
+9971,Financial and related services,0.0,0.0,0.0,0.0
+997111,Central banking services,0.0,0.0,0.0,0.0
+997112,Deposit services,0.0,0.0,0.0,0.0
+997113,"Credit-granting services including stand-by commitment, guarantees and securities",0.0,0.0,0.0,0.0
+997114,Financial leasing services,0.0,0.0,0.0,0.0
+997115,"Transfer of the right to use any goods for any purpose (whether or not for a specified period) for cash, deferred payment or other valuable consideration.",0.0,0.0,0.0,0.0
+997116,Any transfer of right in goods or of undivided share in goods without the transfer of title thereof.,0.0,0.0,0.0,0.0
+997119,"Other financial services (except investment banking, insurance services and pension services)",0.0,0.0,0.0,0.0
+997120,Investment banking services,0.0,0.0,0.0,0.0
+997131,pension services,0.0,0.0,0.0,0.0
+997132,Life insurance services  (excluding reinsurance services),0.0,0.0,0.0,0.0
+997133,Accident and health insurance services,0.0,0.0,0.0,0.0
+997134,Motor vehicle insurance services,0.0,0.0,0.0,0.0
+997135,"Marine, aviation, and other transport insurance services",0.0,0.0,0.0,0.0
+997136,Freight insurance services and travel insurance services,0.0,0.0,0.0,0.0
+997137,Other property insurance services,0.0,0.0,0.0,0.0
+997138,Freight insurance services and travel insurance services,0.0,0.0,0.0,0.0
+997139,Other non-life insurance services (excluding reinsurance services),0.0,0.0,0.0,0.0
+997141,Life reinsurance services,0.0,0.0,0.0,0.0
+997142,Accident and health reinsurance services,0.0,0.0,0.0,0.0
+997143,Motor vehicle reinsurance services,0.0,0.0,0.0,0.0
+997144,"Marine, aviation and other transport reinsurance services",0.0,0.0,0.0,0.0
+997145,Freight reinsurance services,0.0,0.0,0.0,0.0
+997146,Other property reinsurance services,0.0,0.0,0.0,0.0
+997147,Other property reinsurance services,0.0,0.0,0.0,0.0
+997149,Other non-life reinsurance services,0.0,0.0,0.0,0.0
+997151,"Services related to investment banking such as mergers and acquisition services, corporate finance and venture capital services",0.0,0.0,0.0,0.0
+997152,Brokerage and related securities and commodities services including commodity exchange services,0.0,0.0,0.0,0.0
+997153,Portfolio management services except pension funds,0.0,0.0,0.0,0.0
+997154,Trust and custody services,0.0,0.0,0.0,0.0
+997155,Services related to the administration of financial markets,0.0,0.0,0.0,0.0
+997156,Financial consultancy services,0.0,0.0,0.0,0.0
+997157,Foreign exchange services,0.0,0.0,0.0,0.0
+997158,Financial transactions processing and clearing house services,0.0,0.0,0.0,0.0
+997159,Other services auxiliary to financial services,0.0,0.0,0.0,0.0
+997161,Services auxiliary to insurance and pensions,0.0,0.0,0.0,0.0
+997162,Insurance claims adjustment services,0.0,0.0,0.0,0.0
+997163,Actuarial services,0.0,0.0,0.0,0.0
+997164,Pension fund management services,0.0,0.0,0.0,0.0
+997169,Other services auxiliary to insurance and pensions,0.0,0.0,0.0,0.0
+997171,Services of holding equity of subsidiary companies,0.0,0.0,0.0,0.0
+997172,Services of holding securities and other assets of trusts and funds and similar financial entities,0.0,0.0,0.0,0.0
+9972,Real estate services,0.0,0.0,0.0,0.0
+997211,Rental or leasing services involving own or leased residential property,0.0,0.0,0.0,0.0
+997212,Rental or leasing services involving own or leased non-residential property,0.0,0.0,0.0,0.0
+997213,Trade services of buildings,0.0,0.0,0.0,0.0
+997214,Trade services of time-share properties,0.0,0.0,0.0,0.0
+997215,Trade services of vacant and subdivided land,0.0,0.0,0.0,0.0
+997219,Other real estate services involving owned or leased property,0.0,0.0,0.0,0.0
+997221,Property management services on a fee or commission basis or on contract basis,0.0,0.0,0.0,0.0
+997222,Building sales on a fee or commission basis or on contract basis,0.0,0.0,0.0,0.0
+997223,Land sales on a fee or commission basis or on contract basis,0.0,0.0,0.0,0.0
+997224,Real estate appraisal services on a fee or commission basis or on contract basis,0.0,0.0,0.0,0.0
+997229,Other real estate services on a fee or commission basis or on contract basis,0.0,0.0,0.0,0.0
+997231,"Services by way of grant of development rights, FSI or additional FSI",0.0,0.0,0.0,0.0
+9973,Leasing or rental services without operator,0.0,0.0,0.0,0.0
+997311,"Leasing or rental services concerning transport equipments including containers, without operator",0.0,0.0,0.0,0.0
+997312,Leasing or rental services concerning agricultural machinery and equipment without operator,0.0,0.0,0.0,0.0
+997313,Leasing or rental services concerning construction machinery and equipment without operator,0.0,0.0,0.0,0.0
+997314,Leasing or rental services concerning office machinery and equipment (except computers) without operator,0.0,0.0,0.0,0.0
+997315,Leasing or rental services concerning computers without operators,0.0,0.0,0.0,0.0
+997316,Leasing or rental services concerning telecommunications equipment without operator,0.0,0.0,0.0,0.0
+997317,Leasing or rental services concerning other machinery and equipment without operator,0.0,0.0,0.0,0.0
+997318,"Transfer of the right to use any goods for any purpose (whether or not for a specified period) for cash, deferred payment or other valuable consideration.",0.0,0.0,0.0,0.0
+997319,Leasing or rental services concerning other machinery and equipments without operator,0.0,0.0,0.0,0.0
+997321,"Leasing or rental services concerning televisions, radios, video cassette recorders, projectors, audio systems and related equipment and accessories (home entertainment equipment )",0.0,0.0,0.0,0.0
+997322,Leasing or rental services concerning video tapes and disks (home entertainment equipment ),0.0,0.0,0.0,0.0
+997323,Leasing or rental services concerning furniture and other household appliances,0.0,0.0,0.0,0.0
+997324,Leasing or rental services concerning pleasure and leisure equipment,0.0,0.0,0.0,0.0
+997325,Leasing or rental services concerning household linen,0.0,0.0,0.0,0.0
+997326,"Leasing or rental services concerning textiles, clothing and footwear",0.0,0.0,0.0,0.0
+997327,Leasing or rental services concerning do-it-yourself machinery and equipment,0.0,0.0,0.0,0.0
+997328,"Transfer of the right to use any goods for any purpose (whether or not for a specified period) for cash, deferred payment or other valuable consideration.",0.0,0.0,0.0,0.0
+997329,Leasing or rental services concerning other goods,0.0,0.0,0.0,0.0
+997331,Licensing services for the right to use computer software and databases,0.0,0.0,0.0,0.0
+997332,"Licensing services for the right to broadcast and show original films, sound recordings, radio and television programme and the like",0.0,0.0,0.0,0.0
+997333,Licensing services for the right to reproduce original art works,0.0,0.0,0.0,0.0
+997334,"Licensing services for the right to reprint and copy manuscripts, books, journals and periodicals",0.0,0.0,0.0,0.0
+997335,Licensing services for the right to use research and development  products,0.0,0.0,0.0,0.0
+997336,Licensing services for the right to use trademarks and franchises,0.0,0.0,0.0,0.0
+997337,Licensing services for the right to use minerals including its exploration and evaluation,0.0,0.0,0.0,0.0
+997338,Licensing services for right to use other natural resources including telecommunication spectrum,0.0,0.0,0.0,0.0
+997339,Licensing services for the right to use other intellectual property products and other resources nowhere else classified,0.0,0.0,0.0,0.0
+9981,Research and development services,0.0,0.0,0.0,0.0
+998111,Research and experimental development services in natural sciences,0.0,0.0,0.0,0.0
+998112,Research and experimental development services in engineering and technology,0.0,0.0,0.0,0.0
+998113,Research and experimental development services in medical sciences and pharmacy,0.0,0.0,0.0,0.0
+998114,Research and experimental development services in agricultural sciences,0.0,0.0,0.0,0.0
+998121,Research and experimental development services in social sciences,0.0,0.0,0.0,0.0
+998122,Research and experimental development services in humanities,0.0,0.0,0.0,0.0
+998130,Interdisciplinary research and experimental development services,0.0,0.0,0.0,0.0
+998141,Research and development originals in pharmaceuticals,0.0,0.0,0.0,0.0
+998142,Research and development originals in agriculture,0.0,0.0,0.0,0.0
+998143,Research and development originals in biotechnology,0.0,0.0,0.0,0.0
+998144,Research and development originals in computer related sciences,0.0,0.0,0.0,0.0
+998145,Research and development originals in other fields nowhere else classified,0.0,0.0,0.0,0.0
+998149,Research and development originals in other fields nowhere else classified,0.0,0.0,0.0,0.0
+9982,Legal and accounting services,0.0,0.0,0.0,0.0
+998211,Legal advisory and representation services concerning criminal law,0.0,0.0,0.0,0.0
+998212,Legal advisory and representation services concerning other fields of law,0.0,0.0,0.0,0.0
+998213,"Legal documentation and certification services concerning patents, copyrights and other intellectual property rights",0.0,0.0,0.0,0.0
+998214,Legal documentation and certification services concerning other documents,0.0,0.0,0.0,0.0
+998215,Arbitration and conciliation services,0.0,0.0,0.0,0.0
+998216,Other legal services nowhere else classified,0.0,0.0,0.0,0.0
+998219,Other legal services nowhere else classified,0.0,0.0,0.0,0.0
+998221,Financial auditing services,0.0,0.0,0.0,0.0
+998222,Accounting and bookkeeping services,0.0,0.0,0.0,0.0
+998223,Payroll services,0.0,0.0,0.0,0.0
+998224,Other similar services nowhere else classified,0.0,0.0,0.0,0.0
+998229,Other similar services nowhere else classified,0.0,0.0,0.0,0.0
+998231,Corporate tax consulting and preparation services,0.0,0.0,0.0,0.0
+998232,Individual tax preparation and planning services,0.0,0.0,0.0,0.0
+998239,Other tax consultancy and preparation services,0.0,0.0,0.0,0.0
+998240,Insolvency and receivership services,0.0,0.0,0.0,0.0
+9983,"Other professional, technical and business services",0.0,0.0,0.0,0.0
+998311,"Management consulting and management services including financial, strategic, human resources, marketing, operations and supply chain management",0.0,0.0,0.0,0.0
+998312,Business consulting services including public relations services,0.0,0.0,0.0,0.0
+998313,Information technology consulting and support services,0.0,0.0,0.0,0.0
+998314,Information technology design and development services,0.0,0.0,0.0,0.0
+998315,Hosting and information technology infrastructure provisioning services,0.0,0.0,0.0,0.0
+998316,Information technology infrastructure and network management services,0.0,0.0,0.0,0.0
+998319,Other information technology services nowhere else classified,0.0,0.0,0.0,0.0
+998321,Architectural advisory services,0.0,0.0,0.0,0.0
+998322,Architectural services for residential building projects,0.0,0.0,0.0,0.0
+998323,Architectural services for non-residential building projects,0.0,0.0,0.0,0.0
+998324,Historical restoration architectural services,0.0,0.0,0.0,0.0
+998325,Urban planning services,0.0,0.0,0.0,0.0
+998326,Rural land planning services,0.0,0.0,0.0,0.0
+998327,Project site master planning services,0.0,0.0,0.0,0.0
+998328,Landscape architectural services and advisory services,0.0,0.0,0.0,0.0
+998329,"Other architectural services, urban and land planning and landscape architectural services",0.0,0.0,0.0,0.0
+998331,Engineering advisory services,0.0,0.0,0.0,0.0
+998332,Engineering services for building projects,0.0,0.0,0.0,0.0
+998333,Engineering services for industrial and manufacturing projects,0.0,0.0,0.0,0.0
+998334,Engineering services for transportation projects,0.0,0.0,0.0,0.0
+998335,Engineering services for power projects,0.0,0.0,0.0,0.0
+998336,Engineering services for telecommunications and broadcasting projects,0.0,0.0,0.0,0.0
+998337,"Engineering services for waste management projects (hazardous and non-hazardous), for water, sewerage and drainage projects",0.0,0.0,0.0,0.0
+998338,Engineering services for other projects nowhere else classified,0.0,0.0,0.0,0.0
+998339,Project management services for construction projects,0.0,0.0,0.0,0.0
+998341,Geological and geophysical consulting services,0.0,0.0,0.0,0.0
+998342,Subsurface surveying services,0.0,0.0,0.0,0.0
+998343,Mineral exploration and evaluation,0.0,0.0,0.0,0.0
+998344,Surface surveying and map-making services,0.0,0.0,0.0,0.0
+998345,Weather forecasting and meteorological services,0.0,0.0,0.0,0.0
+998346,Technical testing and analysis services,0.0,0.0,0.0,0.0
+998347,"Certification of ships, aircraft, dams, and the like",0.0,0.0,0.0,0.0
+998348,Certification and authentication of works of art,0.0,0.0,0.0,0.0
+998349,Other technical and scientific services nowhere else classified,0.0,0.0,0.0,0.0
+998351,Veterinary services for pet animals,0.0,0.0,0.0,0.0
+998352,Veterinary services for livestock,0.0,0.0,0.0,0.0
+998359,Other veterinary services nowhere else classified,0.0,0.0,0.0,0.0
+998361,Advertising Services,0.0,0.0,0.0,0.0
+998362,"Purchase or sale of advertising space or time, on commission",0.0,0.0,0.0,0.0
+998363,Sale of advertising space in print media (except on commission),0.0,0.0,0.0,0.0
+998364,Sale of television and radio advertising time,0.0,0.0,0.0,0.0
+998365,Sale of Internet advertising space,0.0,0.0,0.0,0.0
+998366,Sale of other advertising space or time (except on commission),0.0,0.0,0.0,0.0
+998371,Market research services,0.0,0.0,0.0,0.0
+998372,Public opinion polling services,0.0,0.0,0.0,0.0
+998381,Portrait photography services,0.0,0.0,0.0,0.0
+998382,Advertising and related photography services,0.0,0.0,0.0,0.0
+998383,Event photography and event videography services,0.0,0.0,0.0,0.0
+998384,Specialty photography services,0.0,0.0,0.0,0.0
+998385,Restoration and retouching services of photography,0.0,0.0,0.0,0.0
+998386,Photographic and videographic processing services,0.0,0.0,0.0,0.0
+998387,Other photography and videography and their processing services nowhere else classified,0.0,0.0,0.0,0.0
+998389,Other photography and videography and their processing services nowhere else classified,0.0,0.0,0.0,0.0
+998391,"Specialty design services including interior design, fashion design, industrial design and other specialty design services",0.0,0.0,0.0,0.0
+998392,Design originals,0.0,0.0,0.0,0.0
+998393,Scientific and technical consulting services,0.0,0.0,0.0,0.0
+998394,Original compilations of facts or information,0.0,0.0,0.0,0.0
+998395,Translation and interpretation services,0.0,0.0,0.0,0.0
+998396,Trademarks and franchises,0.0,0.0,0.0,0.0
+998397,Sponsorship services and brand promotion services,0.0,0.0,0.0,0.0
+998398,Sponsorship services and brand promotion services,0.0,0.0,0.0,0.0
+998399,"Other professional, technical and business services nowhere else classified",0.0,0.0,0.0,0.0
+9984,"Telecommunications, broadcasting and information supply services",0.0,0.0,0.0,0.0
+998411,Carrier services,0.0,0.0,0.0,0.0
+998412,Fixed telephony services,0.0,0.0,0.0,0.0
+998413,Mobile telecommunications services,0.0,0.0,0.0,0.0
+998414,Private network services,0.0,0.0,0.0,0.0
+998415,Data transmission services,0.0,0.0,0.0,0.0
+998419,"Other telecommunications services including fax services, telex services nowhere else classified",0.0,0.0,0.0,0.0
+998421,Internet backbone services,0.0,0.0,0.0,0.0
+998422,Internet access services in wired and wireless mode,0.0,0.0,0.0,0.0
+998423,"Fax, telephony over the Internet",0.0,0.0,0.0,0.0
+998424,Audio conferencing and video conferencing over the Internet,0.0,0.0,0.0,0.0
+998429,Other internet telecommunications services nowhere else classified,0.0,0.0,0.0,0.0
+998431,"On-line text based information such as online books, newspapers, periodicals, directories and the like",0.0,0.0,0.0,0.0
+998432,On-line audio content,0.0,0.0,0.0,0.0
+998433,On-line video content,0.0,0.0,0.0,0.0
+998434,Software downloads,0.0,0.0,0.0,0.0
+998435,Supply consisting only of e-book.,0.0,0.0,0.0,0.0
+998439,Other on-line contents nowhere else classified,0.0,0.0,0.0,0.0
+998441,News agency services to newspapers and periodicals,0.0,0.0,0.0,0.0
+998442,Services of independent journalists and press photographers,0.0,0.0,0.0,0.0
+998443,News agency services to audiovisual media,0.0,0.0,0.0,0.0
+998451,Library services,0.0,0.0,0.0,0.0
+998452,Operation services of public archives including digital archives,0.0,0.0,0.0,0.0
+998453,Operation services of historical archives including digital archives,0.0,0.0,0.0,0.0
+998461,Radio broadcast originals,0.0,0.0,0.0,0.0
+998462,Television broadcast originals,0.0,0.0,0.0,0.0
+998463,Radio channel programmes,0.0,0.0,0.0,0.0
+998464,Television channel programmes,0.0,0.0,0.0,0.0
+998465,Broadcasting services,0.0,0.0,0.0,0.0
+998466,Home programme distribution services,0.0,0.0,0.0,0.0
+998469,"Other broadcasting, programming and programme distribution services",0.0,0.0,0.0,0.0
+9985,Support services,0.0,0.0,0.0,0.0
+998511,Executive or retained personnel search services,0.0,0.0,0.0,0.0
+998512,"Permanent placement services, other than executive search services",0.0,0.0,0.0,0.0
+998513,Contract staffing services,0.0,0.0,0.0,0.0
+998514,Temporary staffing services,0.0,0.0,0.0,0.0
+998515,Long-term staffing (pay rolling) services,0.0,0.0,0.0,0.0
+998516,Temporary staffing-to-permanent placement services,0.0,0.0,0.0,0.0
+998517,Co-employment staffing services,0.0,0.0,0.0,0.0
+998519,Other employment and labour supply services nowhere else classified,0.0,0.0,0.0,0.0
+998521,Investigation services,0.0,0.0,0.0,0.0
+998522,Security consulting services,0.0,0.0,0.0,0.0
+998523,Security systems services,0.0,0.0,0.0,0.0
+998524,Armoured car services,0.0,0.0,0.0,0.0
+998525,Guard services,0.0,0.0,0.0,0.0
+998526,Training of guard dogs,0.0,0.0,0.0,0.0
+998527,Polygraph services,0.0,0.0,0.0,0.0
+998528,Fingerprinting services,0.0,0.0,0.0,0.0
+998529,Other security services nowhere else classified,0.0,0.0,0.0,0.0
+998531,Disinfecting and exterminating services,0.0,0.0,0.0,0.0
+998532,Window cleaning services,0.0,0.0,0.0,0.0
+998533,General cleaning services,0.0,0.0,0.0,0.0
+998534,Specialised cleaning services for reservoirs and tanks,0.0,0.0,0.0,0.0
+998535,Sterilisation of objects or premises (operating rooms),0.0,0.0,0.0,0.0
+998536,Furnace and chimney cleaning services,0.0,0.0,0.0,0.0
+998537,Exterior cleaning of buildings of all types,0.0,0.0,0.0,0.0
+998538,Cleaning of transportation equipment,0.0,0.0,0.0,0.0
+998539,Other cleaning services nowhere else classified,0.0,0.0,0.0,0.0
+998540,Packaging services of goods for others,0.0,0.0,0.0,0.0
+998541,Parcel packing and gift wrapping,0.0,0.0,0.0,0.0
+998542,Coin and currency packing services,0.0,0.0,0.0,0.0
+998543,Coin and currency packing services,0.0,0.0,0.0,0.0
+998549,Other packaging services nowhere else classified,0.0,0.0,0.0,0.0
+998551,Reservation services for transportation,0.0,0.0,0.0,0.0
+998552,"Reservation services for accommodation, cruises and package tours",0.0,0.0,0.0,0.0
+998553,"Reservation services for convention centres, congress centres and exhibition halls",0.0,0.0,0.0,0.0
+998554,"Reservation services for event tickets, cinema halls, entertainment and recreational services and other reservation services",0.0,0.0,0.0,0.0
+998555,Tour operator services,0.0,0.0,0.0,0.0
+998556,Tourist guide services,0.0,0.0,0.0,0.0
+998557,Tourism promotion and visitor information services,0.0,0.0,0.0,0.0
+998559,Other travel arrangement and related services nowhere else classified,0.0,0.0,0.0,0.0
+998591,Credit reporting and rating services,0.0,0.0,0.0,0.0
+998592,Collection agency services,0.0,0.0,0.0,0.0
+998593,Telephone-based support services,0.0,0.0,0.0,0.0
+998594,Combined office administrative services,0.0,0.0,0.0,0.0
+998595,"Specialised office support services such as duplicating services, mailing services, document preparation and the like",0.0,0.0,0.0,0.0
+998596,"Events, Exhibitions, Conventions and trade shows organisation and assistance services",0.0,0.0,0.0,0.0
+998597,Landscape care and maintenance services,0.0,0.0,0.0,0.0
+998598,Other information services nowhere else classified,0.0,0.0,0.0,0.0
+998599,Other support services nowhere else classified,0.0,0.0,0.0,0.0
+9986,"Support services to agriculture, hunting, forestry, fishing, mining and utilities",0.0,0.0,0.0,0.0
+998611,Support services to crop production,0.0,0.0,0.0,0.0
+998612,Animal husbandry services,0.0,0.0,0.0,0.0
+998613,Support services to hunting,0.0,0.0,0.0,0.0
+998614,Support services to forestry and logging,0.0,0.0,0.0,0.0
+998615,Support services to fishing,0.0,0.0,0.0,0.0
+998619,"Other support services to agriculture, hunting, forestry and fishing",0.0,0.0,0.0,0.0
+998621,Support services to oil and gas extraction,0.0,0.0,0.0,0.0
+998622,Support services to other mining nowhere else classified,0.0,0.0,0.0,0.0
+998631,Support services to electricity transmission and distribution,0.0,0.0,0.0,0.0
+998632,Support services to gas distribution,0.0,0.0,0.0,0.0
+998633,Support services to water distribution,0.0,0.0,0.0,0.0
+998634,"Support services to Distribution services of steam, hot water and air-conditioning supply",0.0,0.0,0.0,0.0
+998635,"Other support services to electricity , gas and water distribution",0.0,0.0,0.0,0.0
+9987,"Maintenance, repair and installation (except construction) services",0.0,0.0,0.0,0.0
+998711,"Maintenance and repair services of fabricated metal products, except machinery and equipment",0.0,0.0,0.0,0.0
+998712,Maintenance and repair services of office and accounting machinery,0.0,0.0,0.0,0.0
+998713,Maintenance and repair services of computers and peripheral equipment,0.0,0.0,0.0,0.0
+998714,Maintenance and repair services of transport machinery and equipment,0.0,0.0,0.0,0.0
+998715,Maintenance and repair services of electrical household appliances,0.0,0.0,0.0,0.0
+998716,Maintenance and repair services of telecommunication equipments and apparatus,0.0,0.0,0.0,0.0
+998717,Maintenance and repair services of commercial and industrial machinery,0.0,0.0,0.0,0.0
+998718,Maintenance and repair services of elevators and escalators,0.0,0.0,0.0,0.0
+998719,Maintenance and repair services of other machinery and equipments,0.0,0.0,0.0,0.0
+998721,Repair services of footwear and leather goods,0.0,0.0,0.0,0.0
+998722,"Repair services of watches, clocks and jewellery",0.0,0.0,0.0,0.0
+998723,Repair services of garments and household textiles,0.0,0.0,0.0,0.0
+998724,Repair services of furniture,0.0,0.0,0.0,0.0
+998725,Repair services of bicycles,0.0,0.0,0.0,0.0
+998726,Maintenance and repair services of musical instruments,0.0,0.0,0.0,0.0
+998727,Repair services for photographic equipment and cameras,0.0,0.0,0.0,0.0
+998729,Maintenance and repair services of other goods nowhere else classified,0.0,0.0,0.0,0.0
+998731,"Installation services of fabricated metal products, except machinery and equipment",0.0,0.0,0.0,0.0
+998732,"Installation services of industrial, manufacturing and service industry machinery and equipment",0.0,0.0,0.0,0.0
+998733,Installation services of office and accounting machinery and computers,0.0,0.0,0.0,0.0
+998734,"Installation services of radio, television and communications equipment and apparatus",0.0,0.0,0.0,0.0
+998735,"Installation services of professional medical machinery and equipment, and precision and optical instruments",0.0,0.0,0.0,0.0
+998736,Installation services of electrical machinery and apparatus nowhere else classified,0.0,0.0,0.0,0.0
+998739,Installation services of other goods nowhere else classified,0.0,0.0,0.0,0.0
+9988,Manufacturing services on physical inputs (goods) owned by others,0.0,0.0,0.0,0.0
+998811,Meat processing services,0.0,0.0,0.0,0.0
+998812,Fish processing services,0.0,0.0,0.0,0.0
+998813,Fruit and vegetables processing services,0.0,0.0,0.0,0.0
+998814,Vegetable and animal oil and fat manufacturing services,0.0,0.0,0.0,0.0
+998815,Dairy product manufacturing services,0.0,0.0,0.0,0.0
+998816,Other food product manufacturing services,0.0,0.0,0.0,0.0
+998817,Prepared animal feeds manufacturing services,0.0,0.0,0.0,0.0
+998818,Beverage manufacturing services,0.0,0.0,0.0,0.0
+998819,Tobacco manufacturing services nowhere else classified,0.0,0.0,0.0,0.0
+998821,Textile manufacturing services,0.0,0.0,0.0,0.0
+998822,Wearing apparel manufacturing services,0.0,0.0,0.0,0.0
+998823,Leather and leather product manufacturing services,0.0,0.0,0.0,0.0
+998829,"Textile, wearing apparel and leather manufacturing services other than services by way of job work specified above.",0.0,0.0,0.0,0.0
+998831,Wood and wood product manufacturing services,0.0,0.0,0.0,0.0
+998832,Paper and paper product manufacturing services,0.0,0.0,0.0,0.0
+998839,Wood and paper manufacturing services other than services by way of job work specified above,0.0,0.0,0.0,0.0
+998841,Coke and refined petroleum product manufacturing services,0.0,0.0,0.0,0.0
+998842,Chemical product manufacturing services,0.0,0.0,0.0,0.0
+998843,Pharmaceutical product manufacturing services,0.0,0.0,0.0,0.0
+998849,"Petroleum, chemical and pharmaceutical products manufacturing services other than services by way of job work specified above",0.0,0.0,0.0,0.0
+998851,Rubber and plastic product manufacturing services,0.0,0.0,0.0,0.0
+998852,Plastic product manufacturing services,0.0,0.0,0.0,0.0
+998853,Other non-metallic mineral product manufacturing services,0.0,0.0,0.0,0.0
+998859,"Rubber, plastic and other non-metallic mineral product manufacturing services, other than services by way of job work specified above.",0.0,0.0,0.0,0.0
+998860,Basic metal manufacturing services,0.0,0.0,0.0,0.0
+998861,Services by way of job work in relation to basic metals,0.0,0.0,0.0,0.0
+998869,"Basic metal manufacturing services, other than services by way of job work specified above",0.0,0.0,0.0,0.0
+998871,"Structural metal product, tank, reservoir and steam generator manufacturing services",0.0,0.0,0.0,0.0
+998872,Weapon and ammunition manufacturing services,0.0,0.0,0.0,0.0
+998873,Other fabricated metal product manufacturing and metal treatment services,0.0,0.0,0.0,0.0
+998874,"Computer, electronic and optical product manufacturing services",0.0,0.0,0.0,0.0
+998875,Electrical equipment manufacturing services,0.0,0.0,0.0,0.0
+998876,General-purpose machinery manufacturing services nowhere else classified,0.0,0.0,0.0,0.0
+998877,Special-purpose machinery manufacturing services,0.0,0.0,0.0,0.0
+998879,"Fabricated metal product, machinery and equipment manufacturing services, other than services by way of job work specified above",0.0,0.0,0.0,0.0
+998881,Motor vehicle and trailer manufacturing services,0.0,0.0,0.0,0.0
+998882,Other transport equipment manufacturing services,0.0,0.0,0.0,0.0
+998883,Services  by way of job work in relation to bus body building,0.0,0.0,0.0,0.0
+998889,"Transport equipment manufacturing services, other than job work services specified above",0.0,0.0,0.0,0.0
+998891,Furniture manufacturing services,0.0,0.0,0.0,0.0
+998892,Jewellery manufacturing services,0.0,0.0,0.0,0.0
+998893,Imitation jewellery manufacturing services,0.0,0.0,0.0,0.0
+998894,Musical instrument manufacturing services,0.0,0.0,0.0,0.0
+998895,Sports goods manufacturing services,0.0,0.0,0.0,0.0
+998896,Game and toy manufacturing services,0.0,0.0,0.0,0.0
+998897,Medical and dental instrument and supply manufacturing services,0.0,0.0,0.0,0.0
+998898,Other manufacturing services nowhere else classified,0.0,0.0,0.0,0.0
+998899,Other manufacturing services nowhere else classified,0.0,0.0,0.0,0.0
+9989,"Other manufacturing services; publishing, printing and reproduction services; materials recovery services",0.0,0.0,0.0,0.0
+998911,"Publishing, on a fee or contract basis",0.0,0.0,0.0,0.0
+998912,"Printing and reproduction services of recorded media, on a fee or contract basis",0.0,0.0,0.0,0.0
+998920,"Moulding, pressing, stamping, extruding and similar plastic manufacturing services",0.0,0.0,0.0,0.0
+998931,Iron and steel casting services,0.0,0.0,0.0,0.0
+998932,Non-ferrous metal casting services,0.0,0.0,0.0,0.0
+998933,"Metal forging, pressing, stamping, roll forming and powder metallurgy services",0.0,0.0,0.0,0.0
+998941,"Metal waste and scrap recovery (recycling) services, on a fee or contract basis",0.0,0.0,0.0,0.0
+998942,"Non-metal waste and scrap recovery (recycling) services, on a fee or contract basis",0.0,0.0,0.0,0.0
+998950,"Other manufacturing services, publishing, printing and reproduction services, materials recovery services nowhere else classified",0.0,0.0,0.0,0.0
+9991,Public administration and other services provided to the community as a whole; compulsory social security services,0.0,0.0,0.0,0.0
+999111,Overall Government public services,0.0,0.0,0.0,0.0
+999112,"Public administrative services related to the provision of educational, health care, cultural and other social services, excluding social security service",0.0,0.0,0.0,0.0
+999113,Public administrative services related to the more efficient operation of business,0.0,0.0,0.0,0.0
+999119,Other administrative services of the government nowhere else classified,0.0,0.0,0.0,0.0
+999121,"Public administrative services related to External Affairs, Diplomatic and Consular services abroad",0.0,0.0,0.0,0.0
+999122,Services related to foreign economic aid,0.0,0.0,0.0,0.0
+999123,Services related to foreign military aid,0.0,0.0,0.0,0.0
+999124,Military defence services,0.0,0.0,0.0,0.0
+999125,Civil defence services,0.0,0.0,0.0,0.0
+999126,Police and fire protection services,0.0,0.0,0.0,0.0
+999127,Public administrative services related to law courts,0.0,0.0,0.0,0.0
+999128,Administrative services related to the detention or rehabilitation of criminals,0.0,0.0,0.0,0.0
+999129,Public administrative services related to other public order and safety affairs nowhere else classified,0.0,0.0,0.0,0.0
+999131,"Administrative services related to sickness, maternity or temporary disablement benefit schemes",0.0,0.0,0.0,0.0
+999132,"Administrative services related to government employee pension schemes; old-age disability or survivors' benefit schemes, other than for government employees",0.0,0.0,0.0,0.0
+999133,Administrative services related to unemployment compensation benefit schemes,0.0,0.0,0.0,0.0
+999134,Administrative services related to family and child allowance programmes,0.0,0.0,0.0,0.0
+999139,Other administrative services related to compulsory social security schemes,0.0,0.0,0.0,0.0
+9992,Education services,0.0,0.0,0.0,0.0
+999210,Pre-primary education services,0.0,0.0,0.0,0.0
+999220,Primary education services,0.0,0.0,0.0,0.0
+999231,"Secondary education services, general",0.0,0.0,0.0,0.0
+999232,"Secondary education services, technical and vocational",0.0,0.0,0.0,0.0
+999241,"Higher education services, general",0.0,0.0,0.0,0.0
+999242,"Higher education services, technical",0.0,0.0,0.0,0.0
+999243,"Higher education services, vocational",0.0,0.0,0.0,0.0
+999249,Other higher education services,0.0,0.0,0.0,0.0
+999250,Specialised education services,0.0,0.0,0.0,0.0
+999259,Specialised education services,0.0,0.0,0.0,0.0
+999291,Cultural education services,0.0,0.0,0.0,0.0
+999292,Sports and recreation education services,0.0,0.0,0.0,0.0
+999293,Commercial training and coaching services,0.0,0.0,0.0,0.0
+999294,Other education and training services nowhere else classified,0.0,0.0,0.0,0.0
+999295,services involving conduct of examination for admission to educational institutions,0.0,0.0,0.0,0.0
+999299,Other Educational support services,0.0,0.0,0.0,0.0
+9993,Human health and social care services,0.0,0.0,0.0,0.0
+999311,Inpatient services,0.0,0.0,0.0,0.0
+999312,Medical and dental services,0.0,0.0,0.0,0.0
+999313,Childbirth and related services,0.0,0.0,0.0,0.0
+999314,Nursing and physiotherapeutic services,0.0,0.0,0.0,0.0
+999315,Ambulance services,0.0,0.0,0.0,0.0
+999316,Medical laboratory and diagnostic-imaging services,0.0,0.0,0.0,0.0
+999317,"Blood, sperm and organ bank services",0.0,0.0,0.0,0.0
+999318,"Blood, sperm and organ bank services",0.0,0.0,0.0,0.0
+999319,"Other human health services including homeopathy, unani, ayurveda, naturopathy, acupuncture and the like",0.0,0.0,0.0,0.0
+999321,Residential health-care services other than by hospitals,0.0,0.0,0.0,0.0
+999322,Residential care services for the elderly and persons with disabilities,0.0,0.0,0.0,0.0
+999331,"Residential care services for children suffering from mental retardation, mental health illnesses or substance abuse",0.0,0.0,0.0,0.0
+999332,Other social services with accommodation for children,0.0,0.0,0.0,0.0
+999333,"Residential care services for adults suffering from mental retardation, mental health illnesses or substance abuse",0.0,0.0,0.0,0.0
+999334,Other social services with accommodation for adults,0.0,0.0,0.0,0.0
+999341,Vocational rehabilitation services,0.0,0.0,0.0,0.0
+999349,Other social services without accommodation for the elderly and disabled nowhere else classified,0.0,0.0,0.0,0.0
+999351,Child day-care services,0.0,0.0,0.0,0.0
+999352,Guidance and counseling services nowhere else classified related to children,0.0,0.0,0.0,0.0
+999353,Welfare services without accommodation,0.0,0.0,0.0,0.0
+999359,Other social services without accommodation nowhere else classified,0.0,0.0,0.0,0.0
+9994,"Sewage and waste collection, treatment and disposal and other environmental protection services",0.0,0.0,0.0,0.0
+999411,Sewerage and sewage treatment services,0.0,0.0,0.0,0.0
+999412,Septic tank emptying and cleaning services,0.0,0.0,0.0,0.0
+999413,Septic tank emptying and cleaning services,0.0,0.0,0.0,0.0
+999419,"Other sewerage, sewage treatment and septic tank cleaning services",0.0,0.0,0.0,0.0
+999421,Collection services of hazardous waste,0.0,0.0,0.0,0.0
+999422,Collection services of non-hazardous recyclable materials,0.0,0.0,0.0,0.0
+999423,"General waste collection services, residential",0.0,0.0,0.0,0.0
+999424,"General waste collection services, other nowhere else classified",0.0,0.0,0.0,0.0
+999429,Other sewage and waste collection services,0.0,0.0,0.0,0.0
+999431,"Waste preparation, consolidation and storage services",0.0,0.0,0.0,0.0
+999432,Hazardous waste treatment and disposal services,0.0,0.0,0.0,0.0
+999433,Non-hazardous waste treatment and disposal services,0.0,0.0,0.0,0.0
+999439,Other waste treatment and disposal services,0.0,0.0,0.0,0.0
+999441,Site remediation and clean-up services,0.0,0.0,0.0,0.0
+999442,"Containment, control and monitoring services and other site remediation services",0.0,0.0,0.0,0.0
+999443,Building remediation services,0.0,0.0,0.0,0.0
+999449,Other remediation services nowhere else classified,0.0,0.0,0.0,0.0
+999451,Sweeping and snow removal services,0.0,0.0,0.0,0.0
+999459,Other sanitation services nowhere else classified,0.0,0.0,0.0,0.0
+999490,Other environmental protection services nowhere else classified,0.0,0.0,0.0,0.0
+999491,Services by way of treatment or disposal of biomedical waste or the processes incidental thereto by a common biomedical waste treatment facility to a clinical establishment.,0.0,0.0,0.0,0.0
+999499,Other environmental protection services nowhere else classified,0.0,0.0,0.0,0.0
+9995,Services of membership organisations,0.0,0.0,0.0,0.0
+999511,Services furnished by business and employers organisations,0.0,0.0,0.0,0.0
+999512,Services furnished by professional organisations,0.0,0.0,0.0,0.0
+999520,Services furnished by trade unions,0.0,0.0,0.0,0.0
+999591,Religious services,0.0,0.0,0.0,0.0
+999592,Services furnished by political organisations,0.0,0.0,0.0,0.0
+999593,Services furnished by human rights organisations,0.0,0.0,0.0,0.0
+999594,Cultural and recreational associations,0.0,0.0,0.0,0.0
+999595,Services furnished by environmental advocacy groups,0.0,0.0,0.0,0.0
+999596,Services provided by youth associations,0.0,0.0,0.0,0.0
+999597,Other civic and social organisations,0.0,0.0,0.0,0.0
+999598,Home owners associations,0.0,0.0,0.0,0.0
+999599,Services provided by other membership organisations nowhere else classified,0.0,0.0,0.0,0.0
+9996,"Recreational, cultural and sporting services",0.0,0.0,0.0,0.0
+999611,Sound recording services,0.0,0.0,0.0,0.0
+999612,"Motion picture, videotape, television and radio programme production services",0.0,0.0,0.0,0.0
+999613,Audiovisual post-production services,0.0,0.0,0.0,0.0
+999614,"Motion picture, videotape and television programme distribution services",0.0,0.0,0.0,0.0
+999615,Motion picture projection services,0.0,0.0,0.0,0.0
+999616,Services by way of admission to exhibition of cinematograph films where price of admission ticket is one hundred rupees or less,0.0,0.0,0.0,0.0
+999617,Services by way of admission to exhibition of cinematograph films where price of admission ticket is above one hundred rupees.,0.0,0.0,0.0,0.0
+999621,Performing arts event promotion and organisation services,0.0,0.0,0.0,0.0
+999622,Performing arts event production and presentation services,0.0,0.0,0.0,0.0
+999623,Performing arts facility operation services,0.0,0.0,0.0,0.0
+999624,"Services by way of admission or access to circus, Indian classical dance including folk dance, theatrical performance, drama [or planetarium], ballet etc.",0.0,0.0,0.0,0.0
+999629,Other performing arts and live entertainment services nowhere else classified,0.0,0.0,0.0,0.0
+999631,"Services of performing artists including actors, readers, musicians, singers, dancers, television personalities, independent models and the like",0.0,0.0,0.0,0.0
+999632,"Services of authors, composers, sculptors and other artists, except performing artists",0.0,0.0,0.0,0.0
+999633,"Original works of authors, composers and other artists except performing artists, painters and sculptors",0.0,0.0,0.0,0.0
+999641,Museum and preservation services of historical sites and buildings,0.0,0.0,0.0,0.0
+999642,"Botanical, zoological and nature reserve services",0.0,0.0,0.0,0.0
+999651,Sports and recreational sports event promotion and organisation services,0.0,0.0,0.0,0.0
+999652,Sports and recreational sports facility operation services,0.0,0.0,0.0,0.0
+999653,Services by way of admission to sporting events like Indian Premier League.,0.0,0.0,0.0,0.0
+999659,Other sports and recreational sports services nowhere else classified,0.0,0.0,0.0,0.0
+999661,Services of athletes,0.0,0.0,0.0,0.0
+999662,Support services related to sports and recreation,0.0,0.0,0.0,0.0
+999691,Amusement park and similar attraction services,0.0,0.0,0.0,0.0
+999692,Coin-operated amusement machine services,0.0,0.0,0.0,0.0
+999693,Coin-operated amusement machine services,0.0,0.0,0.0,0.0
+999694,Services by way of admission to casinos or race clubs or any place having casinos or race clubs,0.0,0.0,0.0,0.0
+999699,Other recreation and amusement services nowhere else classified,0.0,0.0,0.0,0.0
+9997,Other services,0.0,0.0,0.0,0.0
+999711,Coin-operated laundry services,0.0,0.0,0.0,0.0
+999712,Dry-cleaning services (including fur product cleaning services),0.0,0.0,0.0,0.0
+999713,Other textile cleaning services,0.0,0.0,0.0,0.0
+999714,Pressing services,0.0,0.0,0.0,0.0
+999715,Dyeing and colouring services,0.0,0.0,0.0,0.0
+999719,"Other washing, cleaning and dyeing services nowhere else classified",0.0,0.0,0.0,0.0
+999721,Hairdressing and barbers services,0.0,0.0,0.0,0.0
+999722,"Cosmetic treatment (including cosmetic or plastic surgery), manicuring and pedicuring services",0.0,0.0,0.0,0.0
+999723,Physical well-being services including health club and fitness centre,0.0,0.0,0.0,0.0
+999729,Other beauty treatment services nowhere else classified,0.0,0.0,0.0,0.0
+999731,Cemeteries and cremation services,0.0,0.0,0.0,0.0
+999732,Undertaking services,0.0,0.0,0.0,0.0
+999791,Services involving commercial use or exploitation of any event,0.0,0.0,0.0,0.0
+999792,Agreeing to do an act,0.0,0.0,0.0,0.0
+999793,Agreeing to refrain from doing an act,0.0,0.0,0.0,0.0
+999794,Agreeing to tolerate an act,0.0,0.0,0.0,0.0
+999795,Conduct of religious ceremonies or rituals by persons,0.0,0.0,0.0,0.0
+999799,Other services nowhere else classified,0.0,0.0,0.0,0.0
+9998,Domestic services,0.0,0.0,0.0,0.0
+999800,Domestic services both part time and full time,0.0,0.0,0.0,0.0
+9999,Services provided by extraterritorial organisations and bodies,0.0,0.0,0.0,0.0
+999900,Services provided by extraterritorial organisations and bodies,0.0,0.0,0.0,0.0
+996541,Multimodal Transport of goods from a place in India to another place in India,0.0,0.0,0.0,0.0
