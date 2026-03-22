@@ -71,7 +71,7 @@ python -m zipfile -l dist/mcp_india_stack-0.1.0-py3-none-any.whl
 Preferred: Trusted Publishing (OIDC)
 
 1. In PyPI project settings, add trusted publisher for this repo/workflow:
-	 - Repository: `mcp-india-stack/mcp-india-stack`
+	 - Repository: `rehan1020/MCP-India-Stack`
 	 - Workflow: `.github/workflows/publish.yml`
 	 - Environment: optional
 2. Push tag:

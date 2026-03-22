@@ -56,8 +56,8 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/mcp-india-stack/mcp-india-stack"
-Repository = "https://github.com/mcp-india-stack/mcp-india-stack"
+Homepage = "https://github.com/rehan1020/MCP-India-Stack"
+Repository = "https://github.com/rehan1020/MCP-India-Stack"
 
 [project.scripts]
 mcp-india-stack = "mcp_india_stack.server:main"
