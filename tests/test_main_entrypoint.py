@@ -1,7 +1,9 @@
 import runpy
 
+from pytest import MonkeyPatch
 
-def test_module_entrypoint_calls_server_main(monkeypatch) -> None:
+
+def test_module_entrypoint_calls_server_main(monkeypatch: MonkeyPatch) -> None:
     calls: list[str] = []
 
     def fake_main() -> None:

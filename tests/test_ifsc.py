@@ -1,5 +1,6 @@
 import httpx
 import respx
+from pytest import MonkeyPatch
 
 from mcp_india_stack.tools.ifsc import lookup_ifsc
 
@@ -16,7 +17,7 @@ def test_lookup_ifsc_not_found_shape() -> None:
 
 
 @respx.mock
-def test_lookup_ifsc_live_fallback_success(monkeypatch) -> None:
+def test_lookup_ifsc_live_fallback_success(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr("mcp_india_stack.tools.ifsc.load_ifsc_index", lambda: {})
     route = respx.get("https://ifsc.razorpay.com/ZZZZ0123456").mock(
         return_value=httpx.Response(
@@ -46,7 +47,7 @@ def test_lookup_ifsc_live_fallback_success(monkeypatch) -> None:
 
 
 @respx.mock
-def test_lookup_ifsc_live_fallback_timeout(monkeypatch) -> None:
+def test_lookup_ifsc_live_fallback_timeout(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr("mcp_india_stack.tools.ifsc.load_ifsc_index", lambda: {})
     route = respx.get("https://ifsc.razorpay.com/ZZZX0123456").mock(
         side_effect=httpx.TimeoutException("timed out")

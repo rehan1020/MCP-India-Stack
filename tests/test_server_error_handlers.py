@@ -1,3 +1,5 @@
+from pytest import MonkeyPatch
+
 from mcp_india_stack import server
 
 
@@ -8,7 +10,7 @@ def _assert_structured_error(response: dict[str, object], fragment: str) -> None
     assert any(fragment in str(item) for item in errors)
 
 
-def test_lookup_ifsc_wrapper_handles_unexpected_error(monkeypatch) -> None:
+def test_lookup_ifsc_wrapper_handles_unexpected_error(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr(
         "mcp_india_stack.server.core_lookup_ifsc",
         lambda _: (_ for _ in ()).throw(RuntimeError("boom-ifsc")),
@@ -17,7 +19,7 @@ def test_lookup_ifsc_wrapper_handles_unexpected_error(monkeypatch) -> None:
     _assert_structured_error(response, "IFSC lookup failed")
 
 
-def test_validate_gstin_wrapper_handles_unexpected_error(monkeypatch) -> None:
+def test_validate_gstin_wrapper_handles_unexpected_error(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr(
         "mcp_india_stack.server.core_validate_gstin",
         lambda _: (_ for _ in ()).throw(RuntimeError("boom-gstin")),
@@ -26,7 +28,7 @@ def test_validate_gstin_wrapper_handles_unexpected_error(monkeypatch) -> None:
     _assert_structured_error(response, "GSTIN validation failed")
 
 
-def test_validate_pan_wrapper_handles_unexpected_error(monkeypatch) -> None:
+def test_validate_pan_wrapper_handles_unexpected_error(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr(
         "mcp_india_stack.server.core_validate_pan",
         lambda _: (_ for _ in ()).throw(RuntimeError("boom-pan")),
@@ -35,7 +37,7 @@ def test_validate_pan_wrapper_handles_unexpected_error(monkeypatch) -> None:
     _assert_structured_error(response, "PAN validation failed")
 
 
-def test_validate_upi_wrapper_handles_unexpected_error(monkeypatch) -> None:
+def test_validate_upi_wrapper_handles_unexpected_error(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr(
         "mcp_india_stack.server.core_validate_upi_vpa",
         lambda _: (_ for _ in ()).throw(RuntimeError("boom-upi")),
@@ -44,7 +46,7 @@ def test_validate_upi_wrapper_handles_unexpected_error(monkeypatch) -> None:
     _assert_structured_error(response, "UPI validation failed")
 
 
-def test_lookup_pincode_wrapper_handles_unexpected_error(monkeypatch) -> None:
+def test_lookup_pincode_wrapper_handles_unexpected_error(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr(
         "mcp_india_stack.server.core_lookup_pincode",
         lambda _: (_ for _ in ()).throw(RuntimeError("boom-pincode")),
@@ -53,7 +55,7 @@ def test_lookup_pincode_wrapper_handles_unexpected_error(monkeypatch) -> None:
     _assert_structured_error(response, "Pincode lookup failed")
 
 
-def test_lookup_hsn_wrapper_handles_unexpected_error(monkeypatch) -> None:
+def test_lookup_hsn_wrapper_handles_unexpected_error(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr(
         "mcp_india_stack.server.core_lookup_hsn_code",
         lambda **_: (_ for _ in ()).throw(RuntimeError("boom-hsn")),
@@ -62,7 +64,7 @@ def test_lookup_hsn_wrapper_handles_unexpected_error(monkeypatch) -> None:
     _assert_structured_error(response, "HSN lookup failed")
 
 
-def test_decode_state_code_wrapper_handles_unexpected_error(monkeypatch) -> None:
+def test_decode_state_code_wrapper_handles_unexpected_error(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr(
         "mcp_india_stack.server.core_decode_state_code",
         lambda _: (_ for _ in ()).throw(RuntimeError("boom-state")),
@@ -71,7 +73,7 @@ def test_decode_state_code_wrapper_handles_unexpected_error(monkeypatch) -> None
     _assert_structured_error(response, "State code decode failed")
 
 
-def test_server_main_runs_stdio_transport(monkeypatch) -> None:
+def test_server_main_runs_stdio_transport(monkeypatch: MonkeyPatch) -> None:
     called: list[str] = []
 
     def fake_run(*, transport: str) -> None:
