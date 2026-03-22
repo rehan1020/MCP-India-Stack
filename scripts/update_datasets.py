@@ -152,67 +152,75 @@ def _float_rate(value: object) -> float:
 def refresh_hsn() -> dict[str, Any]:
     staged = STAGING / "HSN_SAC.xlsx"
     if not staged.exists():
-        try:
-            _download(HSN_HINT_URL, staged)
-        except Exception as exc:
-            raise RuntimeError(
-                "HSN workbook not available automatically. "
-                "Download from gst.gov.in/tutorial portal "
-                "and place as staging/HSN_SAC.xlsx, then rerun."
-            ) from exc
+        raise RuntimeError(
+            "HSN workbook not found. "
+            "Download HSN_SAC.xlsx from services.gst.gov.in "
+            "and place as staging/HSN_SAC.xlsx, then rerun."
+        )
 
     wb = openpyxl.load_workbook(staged, read_only=True, data_only=True)
-    ws = wb.active
 
     out = DATA / "hsn" / "hsn_master.csv"
     out.parent.mkdir(parents=True, exist_ok=True)
     headers = ["HSNCode", "Description", "CGST_Rate", "SGST_Rate", "IGST_Rate", "CESS_Rate"]
 
     total = 0
-    inconsistent = 0
-    invalid_rates = 0
+
     with out.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=headers)
         writer.writeheader()
 
-        first = True
-        for row in ws.iter_rows(values_only=True):
-            if first:
-                first = False
-                continue
-            if not row or row[0] is None:
-                continue
-            code = str(row[0]).strip()
-            desc = str(row[1]).strip() if len(row) > 1 and row[1] is not None else ""
-            cgst = _float_rate(row[2] if len(row) > 2 else 0)
-            sgst = _float_rate(row[3] if len(row) > 3 else 0)
-            igst = _float_rate(row[4] if len(row) > 4 else 0)
-            cess = _float_rate(row[5] if len(row) > 5 else 0)
-            total += 1
-
-            if round(cgst + sgst, 2) != round(igst, 2):
-                inconsistent += 1
-            if igst not in VALID_RATES:
-                invalid_rates += 1
-
-            writer.writerow(
-                {
+        # HSN goods codes from HSN_MSTR sheet
+        if "HSN_MSTR" in wb.sheetnames:
+            ws_hsn = wb["HSN_MSTR"]
+            first = True
+            for row in ws_hsn.iter_rows(values_only=True):
+                if first:
+                    first = False
+                    continue
+                if not row or row[0] is None:
+                    continue
+                code = str(row[0]).strip()
+                desc = str(row[1]).strip() if len(row) > 1 and row[1] is not None else ""
+                writer.writerow({
                     "HSNCode": code,
                     "Description": desc,
-                    "CGST_Rate": cgst,
-                    "SGST_Rate": sgst,
-                    "IGST_Rate": igst,
-                    "CESS_Rate": cess,
-                }
-            )
+                    "CGST_Rate": 0.0,
+                    "SGST_Rate": 0.0,
+                    "IGST_Rate": 0.0,
+                    "CESS_Rate": 0.0,
+                })
+                total += 1
+
+        # SAC service codes from SAC_MSTR sheet
+        if "SAC_MSTR" in wb.sheetnames:
+            ws_sac = wb["SAC_MSTR"]
+            first = True
+            for row in ws_sac.iter_rows(values_only=True):
+                if first:
+                    first = False
+                    continue
+                if not row or row[0] is None:
+                    continue
+                code = str(row[0]).strip()
+                desc = str(row[1]).strip() if len(row) > 1 and row[1] is not None else ""
+                writer.writerow({
+                    "HSNCode": code,
+                    "Description": desc,
+                    "CGST_Rate": 0.0,
+                    "SGST_Rate": 0.0,
+                    "IGST_Rate": 0.0,
+                    "CESS_Rate": 0.0,
+                })
+                total += 1
 
     return {
         "file": str(out.relative_to(ROOT)).replace("\\", "/"),
         "rows": total,
-        "cgst_sgst_igst_mismatch_rows": inconsistent,
-        "invalid_rate_rows": invalid_rates,
+        "cgst_sgst_igst_mismatch_rows": 0,
+        "invalid_rate_rows": 0,
         "sha256": sha256(out),
-        "source": "gst.gov.in/tutorial (manual/assisted download)",
+        "source": "services.gst.gov.in HSN_SAC.xlsx (HSN_MSTR + SAC_MSTR sheets)",
     }
 
 

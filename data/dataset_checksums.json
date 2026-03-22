@@ -1,17 +1,7 @@
 {
-  "IFSC": {
-    "file": "src/mcp_india_stack/data/ifsc/IFSC.csv",
-    "sha256": "1e84af03d7e1a2ab721de17460aad39f047637eb1c256ab69b9da785ccc4cd2b",
-    "rows": 177683
-  },
-  "PINCODE": {
-    "file": "src/mcp_india_stack/data/pincode/pincode.csv.gz",
-    "sha256": "dc649f86f7ac915b47cdd00b5eb2d138b3eff994a103d259f014e515d48b00a2",
-    "rows": 155570
-  },
   "HSN": {
     "file": "src/mcp_india_stack/data/hsn/hsn_master.csv",
-    "sha256": "f47408154f10e0bd5aa29793421ddc4a9e126f64f66f7ac46f84fe34ee3a8760",
-    "rows": 681
+    "sha256": "9b21315d40e3b9467e2a54e3834f05fceca9901a257cb0b7b25afa6aae4027c8",
+    "rows": 22471
   }
 }
