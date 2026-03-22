@@ -182,14 +182,16 @@ def refresh_hsn() -> dict[str, Any]:
                     continue
                 code = str(row[0]).strip()
                 desc = str(row[1]).strip() if len(row) > 1 and row[1] is not None else ""
-                writer.writerow({
-                    "HSNCode": code,
-                    "Description": desc,
-                    "CGST_Rate": 0.0,
-                    "SGST_Rate": 0.0,
-                    "IGST_Rate": 0.0,
-                    "CESS_Rate": 0.0,
-                })
+                writer.writerow(
+                    {
+                        "HSNCode": code,
+                        "Description": desc,
+                        "CGST_Rate": 0.0,
+                        "SGST_Rate": 0.0,
+                        "IGST_Rate": 0.0,
+                        "CESS_Rate": 0.0,
+                    }
+                )
                 total += 1
 
         # SAC service codes from SAC_MSTR sheet
@@ -204,14 +206,16 @@ def refresh_hsn() -> dict[str, Any]:
                     continue
                 code = str(row[0]).strip()
                 desc = str(row[1]).strip() if len(row) > 1 and row[1] is not None else ""
-                writer.writerow({
-                    "HSNCode": code,
-                    "Description": desc,
-                    "CGST_Rate": 0.0,
-                    "SGST_Rate": 0.0,
-                    "IGST_Rate": 0.0,
-                    "CESS_Rate": 0.0,
-                })
+                writer.writerow(
+                    {
+                        "HSNCode": code,
+                        "Description": desc,
+                        "CGST_Rate": 0.0,
+                        "SGST_Rate": 0.0,
+                        "IGST_Rate": 0.0,
+                        "CESS_Rate": 0.0,
+                    }
+                )
                 total += 1
 
     return {
