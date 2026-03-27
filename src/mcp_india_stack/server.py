@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sys
-from typing import Annotated, Any
+from typing import Annotated, Any, cast
 
 from fastmcp import FastMCP
 from pydantic import Field
@@ -375,7 +375,7 @@ def validate_aadhaar(
         return build_response(
             success=bool(result.get("valid")),
             data=result,
-            errors=list(result.get("errors", [])),
+            errors=cast(list[str], result.get("errors", [])),
             source="offline_algorithm",
         )
     except Exception as exc:
@@ -415,7 +415,7 @@ def validate_voter_id(
         return build_response(
             success=bool(result.get("valid")),
             data=result,
-            errors=list(result.get("errors", [])),
+            errors=cast(list[str], result.get("errors", [])),
             source="offline_algorithm",
         )
     except Exception as exc:
@@ -456,7 +456,7 @@ def validate_driving_license(
         return build_response(
             success=bool(result.get("valid")),
             data=result,
-            errors=list(result.get("errors", [])),
+            errors=cast(list[str], result.get("errors", [])),
             source="offline_algorithm",
         )
     except Exception as exc:
@@ -496,7 +496,7 @@ def validate_passport(
         return build_response(
             success=bool(result.get("valid")),
             data=result,
-            errors=list(result.get("errors", [])),
+            errors=cast(list[str], result.get("errors", [])),
             source="offline_algorithm",
         )
     except Exception as exc:
@@ -538,7 +538,7 @@ def validate_cin(
         return build_response(
             success=bool(result.get("valid")),
             data=result,
-            errors=list(result.get("errors", [])),
+            errors=cast(list[str], result.get("errors", [])),
             source="offline_algorithm",
         )
     except Exception as exc:
@@ -578,7 +578,7 @@ def validate_din(
         return build_response(
             success=bool(result.get("valid")),
             data=result,
-            errors=list(result.get("errors", [])),
+            errors=cast(list[str], result.get("errors", [])),
             source="offline_algorithm",
         )
     except Exception as exc:
