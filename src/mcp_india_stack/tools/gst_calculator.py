@@ -68,19 +68,14 @@ def calculate_gst(
             errors.append("Amount cannot be negative")
 
         if gst_rate not in VALID_GST_RATES:
-            errors.append(
-                f"Invalid GST rate {gst_rate}%. Valid rates: {VALID_GST_RATES}"
-            )
+            errors.append(f"Invalid GST rate {gst_rate}%. Valid rates: {VALID_GST_RATES}")
 
         if transaction_type not in ("intra_state", "inter_state"):
-            errors.append(
-                "transaction_type must be 'intra_state' or 'inter_state'"
-            )
+            errors.append("transaction_type must be 'intra_state' or 'inter_state'")
 
         if cess_category not in CESS_RATES:
             errors.append(
-                f"Unknown cess_category '{cess_category}'. "
-                f"Valid: {list(CESS_RATES.keys())}"
+                f"Unknown cess_category '{cess_category}'. Valid: {list(CESS_RATES.keys())}"
             )
 
         if errors:

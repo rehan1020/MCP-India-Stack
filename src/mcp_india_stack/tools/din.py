@@ -50,9 +50,7 @@ def validate_din(din: str) -> dict[str, object]:
         padded = cleaned.zfill(8)
 
         if len(cleaned) > 8:
-            errors.append(
-                f"DIN must be exactly 8 digits, got {len(cleaned)}"
-            )
+            errors.append(f"DIN must be exactly 8 digits, got {len(cleaned)}")
             return {
                 "valid": False,
                 "din": cleaned,
@@ -61,9 +59,7 @@ def validate_din(din: str) -> dict[str, object]:
             }
 
         if len(padded) != 8:
-            errors.append(
-                f"DIN must be exactly 8 digits, got {len(cleaned)}"
-            )
+            errors.append(f"DIN must be exactly 8 digits, got {len(cleaned)}")
             return {
                 "valid": False,
                 "din": padded,

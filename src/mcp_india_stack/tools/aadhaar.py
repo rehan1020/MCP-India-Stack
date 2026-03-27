@@ -100,9 +100,7 @@ def validate_aadhaar(aadhaar: str) -> dict[str, object]:
                 "formatted": "",
                 "checksum_valid": False,
                 "first_digit_valid": False,
-                "errors": [
-                    f"Aadhaar number must be exactly 12 digits, got {len(cleaned)}"
-                ],
+                "errors": [f"Aadhaar number must be exactly 12 digits, got {len(cleaned)}"],
                 "disclaimer": DISCLAIMER,
             }
 
@@ -110,8 +108,7 @@ def validate_aadhaar(aadhaar: str) -> dict[str, object]:
         first_digit_valid = cleaned[0] not in ("0", "1")
         if not first_digit_valid:
             errors.append(
-                "Aadhaar numbers cannot start with 0 or 1 "
-                "(UIDAI does not issue such numbers)"
+                "Aadhaar numbers cannot start with 0 or 1 (UIDAI does not issue such numbers)"
             )
 
         # Verhoeff checksum

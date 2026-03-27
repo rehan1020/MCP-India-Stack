@@ -142,9 +142,7 @@ def validate_driving_license(dl_number: str) -> dict[str, Any]:
 
         # Clearly invalid
         if len(cleaned) < 13 or len(cleaned) > 16:
-            errors.append(
-                f"Driving license number should be 13-16 characters, got {len(cleaned)}"
-            )
+            errors.append(f"Driving license number should be 13-16 characters, got {len(cleaned)}")
         else:
             errors.append("Driving license number contains invalid characters")
 

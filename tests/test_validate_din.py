@@ -52,4 +52,3 @@ class TestEdgeCases:
         result = validate_din("00000000")
         assert result["valid"] is True
         assert result["din"] == "00000000"
-

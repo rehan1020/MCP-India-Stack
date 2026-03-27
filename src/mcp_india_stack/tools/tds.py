@@ -110,8 +110,7 @@ def calculate_tds(
 
         if section not in TDS_SECTIONS:
             errors.append(
-                f"Unknown TDS section '{section}'. "
-                f"Valid sections: {sorted(TDS_SECTIONS.keys())}"
+                f"Unknown TDS section '{section}'. Valid sections: {sorted(TDS_SECTIONS.keys())}"
             )
 
         if payment_amount is None or not isinstance(payment_amount, (int, float)):
@@ -173,9 +172,7 @@ def calculate_tds(
             no_pan_rate = section_info["no_pan_rate"]
             normal_rate = section_info["rate"]
             tds_amount = round(payment_amount * no_pan_rate, 2)
-            no_pan_surcharge = round(
-                payment_amount * (no_pan_rate - normal_rate), 2
-            )
+            no_pan_surcharge = round(payment_amount * (no_pan_rate - normal_rate), 2)
             rate = no_pan_rate
 
         net_payment = round(payment_amount - tds_amount, 2)

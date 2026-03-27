@@ -77,13 +77,9 @@ def validate_voter_id(voter_id: str) -> dict[str, object]:
 
         # Invalid
         if len(cleaned) != 10:
-            errors.append(
-                f"Voter ID must be exactly 10 characters, got {len(cleaned)}"
-            )
+            errors.append(f"Voter ID must be exactly 10 characters, got {len(cleaned)}")
         else:
-            errors.append(
-                "Voter ID must match pattern: 3 uppercase letters followed by 7 digits"
-            )
+            errors.append("Voter ID must match pattern: 3 uppercase letters followed by 7 digits")
 
         return {
             "valid": False,

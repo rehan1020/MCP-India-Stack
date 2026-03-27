@@ -34,3 +34,11 @@ Thumbs.db
 # Local staging
 staging/
 
+# Temporary directories and files
+.tmp_*/
+test_install/
+pip_log.txt
+*.log
+
+# Environment
+.env

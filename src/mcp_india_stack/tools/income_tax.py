@@ -160,9 +160,7 @@ def _compute_regime(
 
     tax_after_rebate = max(base_tax - rebate_87a, 0)
 
-    surcharge = _compute_surcharge_with_marginal_relief(
-        gross_income, tax_after_rebate, regime_key
-    )
+    surcharge = _compute_surcharge_with_marginal_relief(gross_income, tax_after_rebate, regime_key)
     cess = round((tax_after_rebate + surcharge) * CESS_RATE, 2)
     total_tax = round(tax_after_rebate + surcharge + cess, 2)
 
@@ -228,9 +226,7 @@ def calculate_income_tax(
             errors.append("regime must be 'new', 'old', or 'both'")
 
         if taxpayer_type not in VALID_TAXPAYER_TYPES:
-            errors.append(
-                f"taxpayer_type must be one of {sorted(VALID_TAXPAYER_TYPES)}"
-            )
+            errors.append(f"taxpayer_type must be one of {sorted(VALID_TAXPAYER_TYPES)}")
 
         if errors:
             return {
@@ -282,9 +278,7 @@ def calculate_income_tax(
             capped_80ccd = min(
                 deduction_80ccd_nps, OLD_REGIME_DEDUCTION_LIMITS["section_80ccd_nps"]
             )
-            capped_24b = min(
-                deduction_24b, OLD_REGIME_DEDUCTION_LIMITS["section_24b_home_loan"]
-            )
+            capped_24b = min(deduction_24b, OLD_REGIME_DEDUCTION_LIMITS["section_24b_home_loan"])
 
             total_deductions = (
                 capped_80c

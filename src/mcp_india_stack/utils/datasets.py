@@ -21,10 +21,7 @@ class DatasetConfig(TypedDict):
 
 DATASET_CONFIG: dict[str, DatasetConfig] = {
     "ifsc": {
-        "cdn_url": (
-            "https://github.com/razorpay/ifsc/releases/download/"
-            "v2.0.57/IFSC.csv"
-        ),
+        "cdn_url": ("https://github.com/razorpay/ifsc/releases/download/v2.0.57/IFSC.csv"),
         "cache_filename": "IFSC.csv",
         "stale_after_days": 30,
         "bundled_path": "data/ifsc/IFSC.csv",

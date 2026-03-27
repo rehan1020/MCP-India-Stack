@@ -53,16 +53,12 @@ class TestWithoutPAN:
 class TestSeniorCitizen194A:
     def test_senior_bank_interest_50k_threshold(self) -> None:
         """Senior citizen 194A bank threshold is ₹50,000 not ₹40,000."""
-        result = calculate_tds(
-            "194A_bank", 45_000, pan_available=True, is_senior_citizen=True
-        )
+        result = calculate_tds("194A_bank", 45_000, pan_available=True, is_senior_citizen=True)
         assert result["tds_applicable"] is False  # Below ₹50K threshold
 
     def test_non_senior_bank_interest_40k_threshold(self) -> None:
         """Non-senior 194A bank threshold is ₹40,000."""
-        result = calculate_tds(
-            "194A_bank", 45_000, pan_available=True, is_senior_citizen=False
-        )
+        result = calculate_tds("194A_bank", 45_000, pan_available=True, is_senior_citizen=False)
         assert result["tds_applicable"] is True  # Above ₹40K threshold
 
 

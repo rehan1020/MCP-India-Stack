@@ -108,9 +108,7 @@ def validate_cin(cin: str) -> dict[str, Any]:
             }
 
         if len(cleaned) != 21:
-            errors.append(
-                f"CIN must be exactly 21 characters, got {len(cleaned)}"
-            )
+            errors.append(f"CIN must be exactly 21 characters, got {len(cleaned)}")
             return {
                 "valid": False,
                 "cin": cleaned,
@@ -156,9 +154,7 @@ def validate_cin(cin: str) -> dict[str, Any]:
 
         company_type = COMPANY_TYPES.get(company_type_code, "Unknown")
         if company_type == "Unknown":
-            errors.append(
-                f"Unrecognised company type code: {company_type_code}"
-            )
+            errors.append(f"Unrecognised company type code: {company_type_code}")
 
         # Basic year check
         year_int = int(year_of_incorporation)

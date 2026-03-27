@@ -29,9 +29,7 @@ class TestSurcharge:
 class TestSeniorCitizen:
     def test_senior_old_regime_higher_exemption(self) -> None:
         """Senior citizen under old regime has ₹3L basic exemption."""
-        result = calculate_income_tax(
-            500_000, regime="old", taxpayer_type="senior_citizen"
-        )
+        result = calculate_income_tax(500_000, regime="old", taxpayer_type="senior_citizen")
         old = result["old_regime"]
         # ₹5L income, ₹50K standard deduction = ₹4.5L taxable
         # First ₹3L exempt, then 5% on ₹1.5L = ₹7,500

@@ -88,9 +88,7 @@ class TestStaleness:
 class TestGetDatasetPath:
     def test_returns_bundled_when_no_cache(self, tmp_cache: Path) -> None:
         """When no cache exists, return the bundled path."""
-        with patch(
-            "mcp_india_stack.utils.updater.trigger_background_update"
-        ) as mock_trigger:
+        with patch("mcp_india_stack.utils.updater.trigger_background_update") as mock_trigger:
             result = get_dataset_path("ifsc")
             assert result == _bundled_path("ifsc")
             mock_trigger.assert_called_once_with("ifsc")
@@ -99,24 +97,18 @@ class TestGetDatasetPath:
         """When a fresh cache exists, return the cached path."""
         cached = tmp_cache / "IFSC.csv"
         cached.write_text("BANK,IFSC\nHDFC,HDFC0000001\n")
-        with patch(
-            "mcp_india_stack.utils.updater.trigger_background_update"
-        ) as mock_trigger:
+        with patch("mcp_india_stack.utils.updater.trigger_background_update") as mock_trigger:
             result = get_dataset_path("ifsc")
             assert result == cached
             mock_trigger.assert_not_called()
 
-    def test_returns_cached_but_triggers_update_when_stale(
-        self, tmp_cache: Path
-    ) -> None:
+    def test_returns_cached_but_triggers_update_when_stale(self, tmp_cache: Path) -> None:
         """When cache is stale, return it but trigger background update."""
         cached = tmp_cache / "IFSC.csv"
         cached.write_text("BANK,IFSC\nHDFC,HDFC0000001\n")
         old_time = time.time() - (60 * 86400)
         os.utime(cached, (old_time, old_time))
-        with patch(
-            "mcp_india_stack.utils.updater.trigger_background_update"
-        ) as mock_trigger:
+        with patch("mcp_india_stack.utils.updater.trigger_background_update") as mock_trigger:
             result = get_dataset_path("ifsc")
             assert result == cached
             mock_trigger.assert_called_once_with("ifsc")
@@ -165,9 +157,7 @@ class TestCorruptDownload:
             mock_resp.raise_for_status = MagicMock()
             mock_client = MagicMock()
             mock_get = MagicMock(return_value=mock_resp)
-            mock_client.__enter__ = MagicMock(
-                return_value=MagicMock(get=mock_get)
-            )
+            mock_client.__enter__ = MagicMock(return_value=MagicMock(get=mock_get))
             mock_client.__exit__ = MagicMock(return_value=False)
             with patch("mcp_india_stack.utils.updater.httpx.Client", return_value=mock_client):
                 result = _fetch_and_cache("ifsc")
@@ -183,9 +173,7 @@ class TestNetworkTimeout:
 
         mock_client = MagicMock()
         mock_client.__enter__ = MagicMock(
-            return_value=MagicMock(
-                get=MagicMock(side_effect=httpx.TimeoutException("timeout"))
-            )
+            return_value=MagicMock(get=MagicMock(side_effect=httpx.TimeoutException("timeout")))
         )
         mock_client.__exit__ = MagicMock(return_value=False)
         with patch("mcp_india_stack.utils.updater.httpx.Client", return_value=mock_client):
@@ -198,9 +186,7 @@ class TestForceRefresh:
         """force_refresh_all returns dict with success status for each dataset."""
         mock_client = MagicMock()
         mock_client.__enter__ = MagicMock(
-            return_value=MagicMock(
-                get=MagicMock(side_effect=Exception("network error"))
-            )
+            return_value=MagicMock(get=MagicMock(side_effect=Exception("network error")))
         )
         mock_client.__exit__ = MagicMock(return_value=False)
         with patch("mcp_india_stack.utils.updater.httpx.Client", return_value=mock_client):
@@ -208,4 +194,3 @@ class TestForceRefresh:
             assert isinstance(results, dict)
             assert all(v is False for v in results.values())
             assert set(results.keys()) == {"ifsc", "pincode", "hsn"}
-

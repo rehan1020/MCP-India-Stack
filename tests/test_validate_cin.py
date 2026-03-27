@@ -108,4 +108,3 @@ class TestFieldWarnings:
         result = validate_cin("L17110MH1800PLC019786")
         assert "out of plausible range" in str(result["errors"])
         assert result["valid"] is False
-

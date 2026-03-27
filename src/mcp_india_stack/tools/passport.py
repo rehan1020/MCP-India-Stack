@@ -59,9 +59,7 @@ def validate_passport(passport_number: str) -> dict[str, object]:
             }
 
         if not PASSPORT_RE.match(cleaned):
-            errors.append(
-                "Passport number must be 1 uppercase letter followed by 7 digits"
-            )
+            errors.append("Passport number must be 1 uppercase letter followed by 7 digits")
             return {
                 "valid": False,
                 "passport_number": cleaned,

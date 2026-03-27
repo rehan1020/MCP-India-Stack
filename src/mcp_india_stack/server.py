@@ -337,7 +337,6 @@ def decode_state_code(
         )
 
 
-
 # ---------------------------------------------------------------------------
 # v0.2.0 — Validation tools
 # ---------------------------------------------------------------------------
@@ -351,8 +350,7 @@ def validate_aadhaar(
             min_length=1,
             max_length=20,
             description=(
-                "12-digit Aadhaar number. Spaces and hyphens accepted. "
-                "Example: 2959 4583 7261"
+                "12-digit Aadhaar number. Spaces and hyphens accepted. Example: 2959 4583 7261"
             ),
         ),
     ],

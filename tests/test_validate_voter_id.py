@@ -65,4 +65,3 @@ class TestEdgeCases:
         assert result["valid"] is False
         assert result["format"] == ""
         assert "3 uppercase letters" in str(result["errors"])
-

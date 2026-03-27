@@ -159,9 +159,7 @@ def test_calculate_gst_wrapper_handles_unexpected_error(monkeypatch: MonkeyPatch
         "mcp_india_stack.server.core_calculate_gst",
         lambda **_: (_ for _ in ()).throw(RuntimeError("boom-gst")),
     )
-    response = server.calculate_gst(
-        amount=10_000, gst_rate=18, transaction_type="intra_state"
-    )
+    response = server.calculate_gst(amount=10_000, gst_rate=18, transaction_type="intra_state")
     _assert_structured_error(response, "GST calculation failed")
 
 
@@ -188,4 +186,3 @@ def test_server_main_runs_stdio_transport(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr("sys.argv", ["mcp-india-stack"])
     server.main()
     assert called == ["stdio"]
-
