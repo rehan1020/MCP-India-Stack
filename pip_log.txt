@@ -1,0 +1,2 @@
+2026-03-25T18:49:01,591 Using pip 26.0.1 from C:\Users\30reh\Downloads\mcp\.venv\Lib\site-packages\pip (python 3.14)
+2026-03-25T18:49:01,592 Non-user install because user site-packages disabled

@@ -1,0 +1,10 @@
+[
+  {
+    "input": "user@okaxis",
+    "expected_valid": true
+  },
+  {
+    "input": "not-a-vpa",
+    "expected_valid": false
+  }
+]

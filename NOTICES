@@ -1,0 +1,23 @@
+# Dataset Notices
+
+## Razorpay IFSC Dataset
+
+- Source: https://github.com/razorpay/ifsc/releases
+- License: MIT (code repository), dataset marked public domain by source repository
+- Attribution: Razorpay IFSC dataset maintained from RBI/NPCI sources
+- Last updated in repo: 2026-03-21
+
+## India Pincode Dataset
+
+- Source: https://download.geonames.org/export/zip/IN.zip
+- License: CC-BY (GeoNames postal dataset)
+- Attribution: GeoNames postal code data, includes India postal geocoding fields
+- Last updated in repo: 2026-03-21
+
+## HSN/SAC Master Dataset
+
+- Source: https://tutorial.gst.gov.in/downloads/HSN_SAC.xlsx (GST portal tutorial resource)
+- License: NDSAP / Government Open Data reuse with attribution
+- Attribution: HSN/SAC data sourced from GST Council/GSTN resources
+- Last updated in repo: 2026-03-21
+

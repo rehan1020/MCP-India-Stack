@@ -1,0 +1,7 @@
+{
+  "HSN": {
+    "file": "src/mcp_india_stack/data/hsn/hsn_master.csv",
+    "sha256": "9b21315d40e3b9467e2a54e3834f05fceca9901a257cb0b7b25afa6aae4027c8",
+    "rows": 22471
+  }
+}

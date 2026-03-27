@@ -1,0 +1,20 @@
+{
+  "name": "mcp-india-stack",
+  "description": "MCP server for Indian APIs — GSTIN, IFSC, PAN, UPI, pincode, HSN/SAC. Zero auth. Offline-first. For AI agents.",
+  "version": "0.1.1",
+  "homepage": "https://github.com/rehan1020/MCP-India-Stack",
+  "installation": {
+    "type": "pip",
+    "package": "mcp-india-stack",
+    "command": "mcp-india-stack"
+  },
+  "tools": [
+    {"name": "validate_gstin"},
+    {"name": "lookup_ifsc"},
+    {"name": "validate_pan"},
+    {"name": "validate_upi_vpa"},
+    {"name": "lookup_pincode"},
+    {"name": "lookup_hsn_code"},
+    {"name": "decode_state_code"}
+  ]
+}

@@ -1,0 +1,93 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-india-stack"
+version = "0.2.0"
+description = "MCP server exposing Indian financial and government APIs — GSTIN, IFSC, PAN, UPI, pincode, HSN/SAC — for AI agents. Zero auth. Offline-first."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [
+	{ name = "mcp-india-stack maintainers" }
+]
+keywords = [
+	"mcp",
+	"model-context-protocol",
+	"india",
+	"gstin",
+	"gst",
+	"ifsc",
+	"pan",
+	"upi",
+	"pincode",
+	"hsn",
+	"indian-api",
+	"fastmcp"
+]
+classifiers = [
+	"Development Status :: 3 - Alpha",
+	"Intended Audience :: Developers",
+	"Programming Language :: Python :: 3",
+	"Programming Language :: Python :: 3.10",
+	"Programming Language :: Python :: 3.11",
+	"Programming Language :: Python :: 3.12",
+	"Topic :: Software Development :: Libraries",
+]
+dependencies = [
+	"fastmcp>=3.1.1",
+	"httpx>=0.27.0",
+	"polars>=1.0.0",
+	"platformdirs>=4.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+	"pytest>=8.0.0",
+	"pytest-asyncio>=0.24.0",
+	"pytest-cov>=5.0.0",
+	"respx>=0.21.1",
+	"ruff>=0.6.0",
+	"mypy>=1.11.0",
+	"pre-commit>=3.8.0",
+	"build>=1.2.1",
+	"types-requests>=2.32.0.20241016",
+	"openpyxl>=3.1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/rehan1020/MCP-India-Stack"
+Repository = "https://github.com/rehan1020/MCP-India-Stack"
+
+[project.scripts]
+mcp-india-stack = "mcp_india_stack.server:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+mcp_india_stack = ["data/**/*.csv", "data/**/*.csv.gz", "data/**/*.json"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "ANN"]
+ignore = []
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+exclude = ["^tests/fixtures/"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --cov=mcp_india_stack --cov-report=term-missing"
+
