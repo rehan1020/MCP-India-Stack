@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/rehan1020-mcp-india-stack-badge.png)](https://mseep.ai/app/rehan1020-mcp-india-stack)
+
 # mcp-india-stack
 
 [![PyPI version](https://img.shields.io/pypi/v/mcp-india-stack.svg)](https://pypi.org/project/mcp-india-stack/)
