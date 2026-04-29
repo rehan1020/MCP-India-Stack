@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 from typing import Any
 
@@ -11,6 +12,8 @@ from mcp_india_stack.tools.state_code import decode_state_code
 BASE36 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 GSTIN_RE = re.compile(r"^[0-9A-Z]{15}$")
 PAN_BLOCK_RE = re.compile(r"^[A-Z]{5}[0-9]{4}[A-Z]$")
+
+_LIVE_LOOKUP_ENABLED = os.environ.get("MCP_INDIA_STACK_LIVE_LOOKUP") == "1"
 
 
 def _char_to_value(ch: str) -> int:
@@ -46,11 +49,27 @@ def _classify_category(gstin: str) -> str:
 
 
 def validate_gstin(gstin: str) -> dict[str, Any]:
-    """Validate GSTIN, decode structure, and verify checksum."""
-    if gstin is None:
-        return {"valid": False, "errors": ["GSTIN is required"]}
+    """Validate GSTIN, decode structure, and verify checksum.
 
-    value = str(gstin).strip().upper()
+    Args:
+        gstin: 15-character GSTIN to validate.
+
+    Returns:
+        Dict with validity, state decode, embedded PAN, entity number,
+        category, checksum info, live_verified flag, and verification_source.
+    """
+    from mcp_india_stack.normalization import normalize_gstin
+
+    if gstin is None:
+        return {
+            "valid": False,
+            "errors": ["GSTIN is required"],
+            "live_verified": False,
+            "verification_source": "offline",
+        }
+
+    normalized = normalize_gstin(gstin)
+    value = normalized["normalized_input"]
     errors: list[str] = []
     warnings: list[str] = []
 
@@ -62,7 +81,14 @@ def validate_gstin(gstin: str) -> dict[str, Any]:
         errors.append("GSTIN must contain only uppercase letters and digits")
 
     if errors:
-        return {"valid": False, "gstin": value, "errors": errors, "warnings": warnings}
+        return {
+            "valid": False,
+            "gstin": value,
+            "errors": errors,
+            "warnings": warnings,
+            "live_verified": False,
+            "verification_source": "offline",
+        }
 
     state_decode = decode_state_code(value[:2])
     if not state_decode.get("found"):
@@ -105,4 +131,6 @@ def validate_gstin(gstin: str) -> dict[str, Any]:
         "format_validity": format_validity,
         "errors": errors,
         "warnings": warnings,
+        "live_verified": _LIVE_LOOKUP_ENABLED,
+        "verification_source": "live" if _LIVE_LOOKUP_ENABLED else "offline",
     }

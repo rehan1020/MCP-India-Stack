@@ -68,7 +68,7 @@ python -m build
 Verify wheel contents include data files:
 
 ```bash
-python -m zipfile -l dist/mcp_india_stack-0.2.0-py3-none-any.whl
+python -m zipfile -l dist/mcp_india_stack-0.3.0-py3-none-any.whl
 ```
 
 ## 7. PyPI publish setup
@@ -82,8 +82,8 @@ Preferred: Trusted Publishing (OIDC)
 2. Push tag:
 
 ```bash
-git tag v0.2.0
-git push origin v0.2.0
+git tag v0.3.0
+git push origin v0.3.0
 ```
 
 Fallback: use `PYPI_API_TOKEN` GitHub secret and twine workflow (not included here).

@@ -5,20 +5,9 @@ from __future__ import annotations
 import re
 from typing import Any
 
-PAN_RE = re.compile(r"^[A-Z]{5}[0-9]{4}[A-Z]$")
+from mcp_india_stack.tools import PAN_ENTITY_TYPE_LABELS
 
-ENTITY_TYPES = {
-    "P": "Individual",
-    "C": "Company",
-    "H": "HUF",
-    "F": "Firm",
-    "A": "Association of Persons",
-    "T": "Trust",
-    "B": "Body of Individuals",
-    "L": "Local Authority",
-    "J": "Artificial Juridical Person",
-    "G": "Government",
-}
+PAN_RE = re.compile(r"^[A-Z]{5}[0-9]{4}[A-Z]$")
 
 
 def validate_pan(pan: str) -> dict[str, Any]:
@@ -51,7 +40,7 @@ def validate_pan(pan: str) -> dict[str, Any]:
         }
 
     entity_code = value[3]
-    entity_type = ENTITY_TYPES.get(entity_code, "Unknown")
+    entity_type = PAN_ENTITY_TYPE_LABELS.get(entity_code, "Unknown")
     if entity_type == "Unknown":
         warnings.append("PAN entity code is not in the common official list")
 

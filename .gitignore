@@ -42,3 +42,6 @@ pip_log.txt
 
 # Environment
 .env
+
+# Roadmap (internal planning)
+ROADMAP.md

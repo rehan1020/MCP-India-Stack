@@ -20,23 +20,47 @@ def _state_to_code(state_name: str) -> str | None:
 def lookup_pincode(pincode: str | int) -> dict[str, Any]:
     """Lookup Indian pincode and return all mapped post offices."""
     if pincode is None:
-        return {"found": False, "errors": ["Pincode is required"]}
+        return {"found": False, "errors": ["Pincode is required"], "valid": False}
 
     value = str(pincode).strip().replace(" ", "").replace("-", "")
-    if value.isdigit() and len(value) < 6:
-        value = value.zfill(6)
 
     errors: list[str] = []
     warnings: list[str] = []
-    if not PIN_RE.match(value):
-        errors.append("Pincode must be exactly 6 digits")
-        return {"found": False, "pincode": value, "errors": errors, "warnings": warnings}
+
+    # Format validation BEFORE any lookup - reject invalid lengths immediately
+    if not value.isdigit():
+        return {
+            "found": False,
+            "pincode": value,
+            "valid": False,
+            "normalized_input": value,
+            "confidence": 0.0,
+            "error_reason": "Pincode must be exactly 6 digits (numeric only)",
+            "errors": ["Pincode must be exactly 6 digits"],
+            "warnings": warnings,
+        }
+
+    if len(value) != 6:
+        return {
+            "found": False,
+            "pincode": value,
+            "valid": False,
+            "normalized_input": value,
+            "confidence": 0.0,
+            "error_reason": "Pincode must be exactly 6 digits (numeric only)",
+            "errors": [f"Pincode must be exactly 6 digits, got {len(value)}"],
+            "warnings": warnings,
+        }
 
     records = load_pincode_index().get(value, [])
     if not records:
         return {
             "found": False,
             "pincode": value,
+            "valid": False,
+            "normalized_input": value,
+            "confidence": 0.0,
+            "error_reason": "Pincode not found in bundled dataset",
             "errors": ["Pincode not found in bundled dataset"],
             "warnings": warnings,
         }
@@ -67,6 +91,9 @@ def lookup_pincode(pincode: str | int) -> dict[str, Any]:
     return {
         "found": True,
         "pincode": value,
+        "valid": True,
+        "normalized_input": value,
+        "confidence": 0.65,
         "state": state,
         "district": district,
         "region": region,

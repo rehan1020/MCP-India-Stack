@@ -102,3 +102,26 @@ class TestFinancialYear:
     def test_fy_present(self) -> None:
         result = calculate_tds("194C_individual", 50_000, pan_available=True)
         assert result["financial_year"] == "2025-26"
+
+
+class TestEdgeCases:
+    def test_tds_194b_without_pan(self) -> None:
+        result = calculate_tds("194B", 50_000, pan_available=False)
+        assert result["rate_applied"] == 0.30
+
+    def test_tds_194d_without_pan(self) -> None:
+        result = calculate_tds("194D", 20_000, pan_available=False)
+        assert result["no_pan_surcharge"] > 0
+
+    def test_tds_invalid_amount_negative(self) -> None:
+        result = calculate_tds("194C_individual", -1000, pan_available=True)
+        assert len(result["errors"]) > 0
+
+    def test_tds_zero_amount(self) -> None:
+        result = calculate_tds("194C_individual", 0, pan_available=True)
+        assert result["tds_amount"] == 0
+        assert len(result["errors"]) == 0
+
+    def test_tds_none_amount(self) -> None:
+        result = calculate_tds("194C_individual", None, pan_available=True)
+        assert len(result["errors"]) > 0

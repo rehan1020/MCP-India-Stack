@@ -52,3 +52,21 @@ class TestEdgeCases:
         result = validate_din("00000000")
         assert result["valid"] is True
         assert result["din"] == "00000000"
+
+    def test_din_all_same_digit(self) -> None:
+        result = validate_din("11111111")
+        assert result["valid"] is True
+
+    def test_din_leading_zeros_valid(self) -> None:
+        result = validate_din("00000001")
+        assert result["valid"] is True
+        assert result["din"] == "00000001"
+
+    def test_din_float_string(self) -> None:
+        result = validate_din("1234.567")
+        assert result["valid"] is False
+        assert "digits" in str(result["errors"]).lower()
+
+    def test_din_boundary_exactly_8_zeros(self) -> None:
+        result = validate_din("00000000")
+        assert result["valid"] is True

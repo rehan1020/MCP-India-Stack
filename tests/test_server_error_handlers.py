@@ -87,7 +87,7 @@ def test_validate_aadhaar_wrapper_handles_unexpected_error(monkeypatch: MonkeyPa
 
 def test_validate_voter_id_wrapper_handles_unexpected_error(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr(
-        "mcp_india_stack.server.core_validate_voter_id",
+        "mcp_india_stack.tools.voter_id.validate_voter_id",
         lambda _: (_ for _ in ()).throw(RuntimeError("boom-voter")),
     )
     response = server.validate_voter_id("ABC1234567")
@@ -107,7 +107,7 @@ def test_validate_driving_license_wrapper_handles_unexpected_error(
 
 def test_validate_passport_wrapper_handles_unexpected_error(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr(
-        "mcp_india_stack.server.core_validate_passport",
+        "mcp_india_stack.tools.passport.validate_passport",
         lambda _: (_ for _ in ()).throw(RuntimeError("boom-passport")),
     )
     response = server.validate_passport("A1234567")
@@ -125,7 +125,7 @@ def test_validate_cin_wrapper_handles_unexpected_error(monkeypatch: MonkeyPatch)
 
 def test_validate_din_wrapper_handles_unexpected_error(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr(
-        "mcp_india_stack.server.core_validate_din",
+        "mcp_india_stack.tools.din.validate_din",
         lambda _: (_ for _ in ()).throw(RuntimeError("boom-din")),
     )
     response = server.validate_din("00012345")

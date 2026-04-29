@@ -49,6 +49,30 @@ python -m mcp_india_stack
 - [`calculate_gst`](docs/tools/gst_calculator.md) — GST breakdown (CGST/SGST/IGST/cess)
 - [`calculate_surcharge`](docs/tools/surcharge.md) — Surcharge and marginal relief calculator
 
+### Additional Tools
+- [`bulk_validate_gstin`](docs/tools/gstin.md) — Parallel GSTIN batch validation
+- [`bulk_validate_pan`](docs/tools/pan.md) — Parallel PAN batch validation
+- [`bulk_validate_ifsc`](docs/tools/ifsc.md) — Parallel IFSC batch validation
+- [`validate_fssai`](docs/tools/fssai.md) — FSSAI license number validation and decode
+- [`calculate_hra_exemption`](docs/tools/hra.md) — HRA exemption calculator for salary planning
+- [`calculate_capital_gains`](docs/tools/capital_gains.md) — Capital gains tax helper
+- [`calculate_advance_tax`](docs/tools/advance_tax.md) — Advance tax estimator
+- [`lookup_bbps_biller`](docs/tools/bbps.md) — BBPS biller directory lookup
+- [`decode_pan_type`](docs/tools/pan.md) — Decode PAN entity type from the 4th character
+- [`lookup_bank`](docs/tools/bank.md) — Basic bank master lookup by name or code
+- [`validate_epf_code`](docs/tools/epf.md) — EPF establishment code validator
+- [`validate_esic_code`](docs/tools/esic.md) — ESIC employer code validator
+- [`decode_digilocker_uri`](docs/tools/digilocker.md) — DigiLocker URI decoder and validator mapper
+
+### Prompt Workflows
+- [`vendor_kyc`](docs/workflows/vendor_kyc.md) — GSTIN, PAN, and IFSC verification workflow
+- [`salary_planner`](docs/workflows/salary_planner.md) — Income, HRA, and take-home salary workflow
+- [`invoice_audit`](docs/workflows/invoice_audit.md) — GSTIN, HSN, and GST rate audit workflow
+
+### Resources
+- `india://status` — Version, DB connectivity, and runtime flags
+- `india://changelog` — Structured changelog resource
+
 ## Data Freshness
 
 Datasets are bundled with the package for offline-first operation. An optional auto-update mechanism fetches the latest versions from jsDelivr CDN in the background.
@@ -80,3 +104,12 @@ Expected install footprint includes approximately 10-11MB compressed static data
 ## Legal and Attribution
 
 See `NOTICES` for dataset attribution and licensing details.
+
+## Launch Notes
+
+This repository is release-ready for GitHub launch with:
+
+- `0.3.0` package metadata and changelog coverage
+- A complete MCP server-card under `docs/.well-known/mcp/server-card.json`
+- Local setup and publishing steps in `SETUP.md`
+- Contribution guidance and versioning policy in `CONTRIBUTING.md`

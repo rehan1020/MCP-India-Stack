@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.0] - 2026-04-28
+
+### Added
+- Bulk validation tools for GSTIN, PAN, and IFSC
+- HRA, capital gains, and advance tax calculators
+- BBPS biller lookup and bank master lookup
+- FSSAI, EPF, ESIC, and DigiLocker validation utilities
+- Prompt workflows for vendor KYC, salary planning, and invoice audit
+- `india://status` and `india://changelog` MCP resources
+- Expanded the public tool catalog to 30 tools
+
+### Changed
+- Synced package metadata, launch docs, and server card with the 0.3.0 release
+
 ## [0.2.0] - 2026-03-26
 
 ### Added

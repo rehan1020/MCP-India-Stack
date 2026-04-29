@@ -39,3 +39,25 @@ class TestDisclaimer:
     def test_disclaimer_present(self) -> None:
         result = validate_passport("A1234567")
         assert "disclaimer" in result
+
+
+class TestEdgeCases:
+    def test_validate_passport_none_input(self) -> None:
+        result = validate_passport(None)
+        assert result["valid"] is False
+        assert "required" in str(result["errors"]).lower()
+
+    def test_validate_passport_numeric_start(self) -> None:
+        result = validate_passport("1XXXXXXX")
+        assert result["valid"] is False
+        assert "letter" in str(result["errors"]).lower()
+
+    def test_validate_passport_special_characters(self) -> None:
+        result = validate_passport("A@234567")
+        assert result["valid"] is False
+        assert len(result["errors"]) > 0
+
+    def test_validate_passport_whitespace_only(self) -> None:
+        result = validate_passport("        ")
+        assert result["valid"] is False
+        assert "empty" in str(result["errors"]).lower()

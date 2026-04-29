@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 from typing import Any
 
@@ -10,6 +11,8 @@ import httpx
 from mcp_india_stack.utils.loader import load_ifsc_index
 
 IFSC_RE = re.compile(r"^[A-Z]{4}0[A-Z0-9]{6}$")
+
+_LIVE_LOOKUP_ENABLED = os.environ.get("MCP_INDIA_STACK_LIVE_LOOKUP") == "1"
 
 
 def _to_bool(value: object) -> bool:
@@ -20,11 +23,22 @@ def _to_bool(value: object) -> bool:
 
 
 def lookup_ifsc(code: str) -> dict[str, Any]:
-    """Lookup IFSC from bundled dataset with Razorpay live API fallback."""
+    """Lookup IFSC from bundled dataset with optional live API fallback.
+
+    Args:
+        code: IFSC code to lookup.
+
+    Returns:
+        Dict with found flag, branch details, payment rails, source,
+        live_verified flag, and verification_source.
+    """
+    from mcp_india_stack.normalization import normalize_ifsc
+
     if code is None:
         return {"found": False, "errors": ["IFSC code is required"]}
 
-    value = str(code).strip().upper()
+    normalized = normalize_ifsc(code)
+    value = normalized["normalized_input"]
     errors: list[str] = []
     warnings: list[str] = []
 
@@ -36,7 +50,14 @@ def lookup_ifsc(code: str) -> dict[str, Any]:
         errors.append("IFSC must match format: 4 letters, 0, 6 alphanumeric")
 
     if errors:
-        return {"found": False, "ifsc": value, "errors": errors, "warnings": warnings}
+        return {
+            "found": False,
+            "ifsc": value,
+            "errors": errors,
+            "warnings": warnings,
+            "live_verified": False,
+            "verification_source": "offline",
+        }
 
     row = load_ifsc_index().get(value)
     if row:
@@ -56,43 +77,50 @@ def lookup_ifsc(code: str) -> dict[str, Any]:
             "imps_enabled": _to_bool(row.get("IMPS")),
             "swift": row.get("SWIFT"),
             "source": "bundled_dataset",
+            "live_verified": False,
+            "verification_source": "offline",
             "errors": errors,
             "warnings": warnings,
         }
 
-    try:
-        with httpx.Client(timeout=3.0) as client:
-            response = client.get(f"https://ifsc.razorpay.com/{value}")
-        if response.status_code == 200:
-            payload = response.json()
-            return {
-                "found": True,
-                "ifsc": value,
-                "bank": payload.get("BANK"),
-                "branch": payload.get("BRANCH"),
-                "address": payload.get("ADDRESS"),
-                "city": payload.get("CITY"),
-                "district": payload.get("DISTRICT"),
-                "state": payload.get("STATE"),
-                "micr": payload.get("MICR"),
-                "upi_enabled": _to_bool(payload.get("UPI")),
-                "rtgs_enabled": _to_bool(payload.get("RTGS")),
-                "neft_enabled": _to_bool(payload.get("NEFT")),
-                "imps_enabled": _to_bool(payload.get("IMPS")),
-                "swift": payload.get("SWIFT"),
-                "source": "live_api",
-                "errors": errors,
-                "warnings": [
-                    "IFSC was not present in bundled dataset and was resolved via live API"
-                ],
-            }
-    except Exception:
-        warnings.append("Live IFSC fallback failed or timed out")
+    if _LIVE_LOOKUP_ENABLED:
+        try:
+            with httpx.Client(timeout=3.0) as client:
+                response = client.get(f"https://ifsc.razorpay.com/{value}")
+            if response.status_code == 200:
+                payload = response.json()
+                return {
+                    "found": True,
+                    "ifsc": value,
+                    "bank": payload.get("BANK"),
+                    "branch": payload.get("BRANCH"),
+                    "address": payload.get("ADDRESS"),
+                    "city": payload.get("CITY"),
+                    "district": payload.get("DISTRICT"),
+                    "state": payload.get("STATE"),
+                    "micr": payload.get("MICR"),
+                    "upi_enabled": _to_bool(payload.get("UPI")),
+                    "rtgs_enabled": _to_bool(payload.get("RTGS")),
+                    "neft_enabled": _to_bool(payload.get("NEFT")),
+                    "imps_enabled": _to_bool(payload.get("IMPS")),
+                    "swift": payload.get("SWIFT"),
+                    "source": "live_api",
+                    "live_verified": True,
+                    "verification_source": "live",
+                    "errors": errors,
+                    "warnings": warnings,
+                }
+            else:
+                warnings.append(f"Live IFSC API returned {response.status_code}")
+        except Exception:
+            warnings.append("Live IFSC fallback failed or timed out")
 
     return {
         "found": False,
         "ifsc": value,
         "source": "bundled_dataset",
+        "live_verified": False,
+        "verification_source": "offline" if not _LIVE_LOOKUP_ENABLED else "live",
         "errors": ["IFSC not found in local dataset"],
         "warnings": warnings,
     }

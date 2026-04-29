@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mcp-india-stack"
-version = "0.2.0"
+version = "0.3.0"
 description = "MCP server exposing Indian financial and government APIs — GSTIN, IFSC, PAN, UPI, pincode, HSN/SAC — for AI agents. Zero auth. Offline-first."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -57,8 +57,8 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/rehan1020/MCP-India-Stack"
-Repository = "https://github.com/rehan1020/MCP-India-Stack"
+Homepage = "https://github.com/rehan1020/mcp-india-stack"
+Repository = "https://github.com/rehan1020/mcp-india-stack"
 
 [project.scripts]
 mcp-india-stack = "mcp_india_stack.server:main"

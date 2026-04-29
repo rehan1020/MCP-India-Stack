@@ -43,3 +43,40 @@ class TestDisclaimer:
     def test_disclaimer_present(self) -> None:
         result = validate_driving_license("MH0220191234567")
         assert "disclaimer" in result
+
+
+class TestEdgeCases:
+    def test_dl_unknown_state_code(self) -> None:
+        result = validate_driving_license("ZZ2020191234567")
+        assert result["state_name"] == "Unknown"
+
+    def test_dl_future_year(self) -> None:
+        result = validate_driving_license("MH9921991234567")
+        assert "out of plausible range" in str(result["errors"]).lower() or result["valid"] is False
+
+    def test_dl_pre_1990_year(self) -> None:
+        result = validate_driving_license("MH0019851234567")
+        assert result["valid"] is True
+
+    def test_dl_14_char_format(self) -> None:
+        result = validate_driving_license("MH20201234567")
+        assert result["valid"] is False
+
+    def test_dl_none_input(self) -> None:
+        result = validate_driving_license(None)
+        assert result["valid"] is False
+        assert "required" in str(result["errors"]).lower()
+
+    def test_dl_hyphenated_input(self) -> None:
+        result = validate_driving_license("MH-20-20230000001")
+        assert result["valid"] is True
+        assert "-" not in result["dl_number"]
+
+    def test_dl_invalid_chars(self) -> None:
+        result = validate_driving_license("MH20@2023000001")
+        assert result["valid"] is False
+
+    def test_dl_only_hyphens(self) -> None:
+        result = validate_driving_license("--")
+        assert result["valid"] is False
+        assert "empty" in str(result["errors"]).lower()

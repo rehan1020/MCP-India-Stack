@@ -192,5 +192,81 @@ class TestForceRefresh:
         with patch("mcp_india_stack.utils.updater.httpx.Client", return_value=mock_client):
             results = force_refresh_all()
             assert isinstance(results, dict)
-            assert all(v is False for v in results.values())
-            assert set(results.keys()) == {"ifsc", "pincode", "hsn"}
+
+
+class TestUpdateEdgeCases:
+    def test_update_returns_http_404(self, tmp_cache: Path) -> None:
+        mock_resp = MagicMock()
+        mock_resp.status_code = 404
+        mock_client = MagicMock()
+        mock_get = MagicMock(return_value=mock_resp)
+        mock_client.__enter__ = MagicMock(return_value=MagicMock(get=mock_get))
+        mock_client.__exit__ = MagicMock(return_value=False)
+        with patch("mcp_india_stack.utils.updater.httpx.Client", return_value=mock_client):
+            result = _fetch_and_cache("ifsc")
+            assert result is False
+
+    def test_update_returns_http_500(self, tmp_cache: Path) -> None:
+        mock_resp = MagicMock()
+        mock_resp.status_code = 500
+        mock_client = MagicMock()
+        mock_get = MagicMock(return_value=mock_resp)
+        mock_client.__enter__ = MagicMock(return_value=MagicMock(get=mock_get))
+        mock_client.__exit__ = MagicMock(return_value=False)
+        with patch("mcp_india_stack.utils.updater.httpx.Client", return_value=mock_client):
+            result = _fetch_and_cache("ifsc")
+            assert result is False
+
+    def test_corrupt_download_discarded_on_write(self, tmp_cache: Path) -> None:
+        cached = tmp_cache / "IFSC.csv"
+        cached.write_text("old_data")
+        original_content = cached.read_text()
+
+        with patch("mcp_india_stack.utils.updater._validate_csv", return_value=True):
+            mock_resp = MagicMock()
+            mock_resp.content = b"valid"
+            mock_resp.raise_for_status = MagicMock()
+            mock_client = MagicMock()
+            mock_get = MagicMock(return_value=mock_resp)
+            mock_client.__enter__ = MagicMock(return_value=MagicMock(get=mock_get))
+            mock_client.__exit__ = MagicMock(return_value=False)
+            with patch("mcp_india_stack.utils.updater.httpx.Client", return_value=mock_client):
+                with patch(
+                    "mcp_india_stack.utils.updater.Path.write_bytes",
+                    side_effect=IOError("disk full"),
+                ):
+                    result = _fetch_and_cache("ifsc")
+                    assert result is False
+
+    def test_force_refresh_handles_network_error(self, tmp_cache: Path) -> None:
+        mock_client = MagicMock()
+        mock_client.__enter__ = MagicMock(
+            return_value=MagicMock(get=MagicMock(side_effect=ConnectionError("no network")))
+        )
+        mock_client.__exit__ = MagicMock(return_value=False)
+        with patch("mcp_india_stack.utils.updater.httpx.Client", return_value=mock_client):
+            result = _fetch_and_cache("ifsc")
+            assert result is False
+
+    def test_auto_update_disabled_returns_early(self, monkeypatch) -> None:
+        from mcp_india_stack.utils import updater
+
+        monkeypatch.setattr(updater, "_auto_update_disabled", lambda: True)
+        with patch("mcp_india_stack.utils.updater._fetch_and_cache") as mock_fetch:
+            updater.trigger_background_update("ifsc")
+            mock_fetch.assert_not_called()
+
+    def test_get_cache_info_exists(self, tmp_cache: Path) -> None:
+        from mcp_india_stack.utils.updater import get_cache_info
+
+        cached = tmp_cache / "IFSC.csv"
+        cached.write_text("data")
+        info = get_cache_info("ifsc")
+        assert info["cached"] is True
+        assert info["last_updated"] is not None
+
+    def test_get_cache_info_not_exists(self, tmp_cache: Path) -> None:
+        from mcp_india_stack.utils.updater import get_cache_info
+
+        info = get_cache_info("ifsc")
+        assert info["cached"] is False

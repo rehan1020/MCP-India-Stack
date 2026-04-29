@@ -59,3 +59,35 @@ class TestFinancialYear:
     def test_fy_present(self) -> None:
         result = calculate_surcharge(1_000_000, 100_000, "new")
         assert result["financial_year"] == "2025-26"
+
+
+class TestEdgeCases:
+    def test_surcharge_marginal_relief_exact_boundary(self) -> None:
+        result = calculate_surcharge(5_000_001, 1_200_000, "old")
+        assert result["surcharge_before_relief"] > 0
+
+    def test_surcharge_old_regime_37_percent_tier(self) -> None:
+        result = calculate_surcharge(60_000_000, 17_100_000, "old")
+        assert result["surcharge_rate"] == 0.37
+
+    def test_surcharge_income_just_above_1_crore(self) -> None:
+        result = calculate_surcharge(10_000_001, 2_500_000, "old")
+        assert result["surcharge_rate"] == 0.15
+
+    def test_surcharge_negative_tax_input(self) -> None:
+        result = calculate_surcharge(1_000_000, -100, "new")
+        assert len(result["errors"]) > 0
+        assert "negative" in str(result["errors"]).lower()
+
+    def test_surcharge_zero_tax_with_income(self) -> None:
+        result = calculate_surcharge(6_000_000, 0, "old")
+        assert result["surcharge_after_relief"] == 0
+        assert len(result["errors"]) == 0
+
+    def test_surcharge_none_income(self) -> None:
+        result = calculate_surcharge(None, 100000, "new")
+        assert len(result["errors"]) > 0
+
+    def test_surcharge_none_tax(self) -> None:
+        result = calculate_surcharge(100000, None, "new")
+        assert len(result["errors"]) > 0
