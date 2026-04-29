@@ -1,4 +1,3 @@
-import os
 import httpx
 import respx
 from pytest import MonkeyPatch

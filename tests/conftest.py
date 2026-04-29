@@ -2,9 +2,6 @@
 
 from __future__ import annotations
 
-import json
-import os
-import re
 from typing import Any
 from unittest.mock import MagicMock, patch
 
@@ -188,19 +185,19 @@ def assert_normalization(response: dict[str, Any], expected: str) -> None:
 
 
 @pytest.fixture
-def dry_run_enabled(monkeypatch):
+def dry_run_enabled(monkeypatch) -> None:
     """Enable dry-run mode."""
     monkeypatch.setenv("MCP_INDIA_STACK_DRY_RUN", "1")
 
 
 @pytest.fixture
-def live_lookup_enabled(monkeypatch):
+def live_lookup_enabled(monkeypatch) -> None:
     """Enable live lookup."""
     monkeypatch.setenv("MCP_INDIA_STACK_LIVE_LOOKUP", "1")
 
 
 @pytest.fixture
-def db_url_set(monkeypatch):
+def db_url_set(monkeypatch) -> None:
     """Set DB URL."""
     monkeypatch.setenv("MCP_INDIA_STACK_DB_URL", "http://fake-db:5432/api")
 
@@ -214,6 +211,6 @@ def telemetry_enabled(monkeypatch, mock_telemetry_file):
 
 
 @pytest.fixture
-def bulk_workers_default(monkeypatch):
+def bulk_workers_default(monkeypatch) -> None:
     """Set default bulk workers."""
     monkeypatch.setenv("MCP_INDIA_STACK_BULK_WORKERS", "10")

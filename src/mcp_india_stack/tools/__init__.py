@@ -17,8 +17,8 @@ PAN_ENTITY_TYPE_LABELS = {
 from mcp_india_stack.tools.aadhaar import validate_aadhaar
 from mcp_india_stack.tools.advance_tax import calculate_advance_tax, calculate_interest_penalty
 from mcp_india_stack.tools.bbps import lookup_bbps_biller
-from mcp_india_stack.tools.cin import validate_cin
 from mcp_india_stack.tools.capital_gains import calculate_capital_gains, calculate_home_loan_savings
+from mcp_india_stack.tools.cin import validate_cin
 from mcp_india_stack.tools.din import validate_din
 from mcp_india_stack.tools.driving_license import validate_driving_license
 from mcp_india_stack.tools.fssai import validate_fssai

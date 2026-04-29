@@ -1,5 +1,5 @@
-from mcp_india_stack.tools.pan import validate_pan
 from mcp_india_stack.server import decode_pan_type
+from mcp_india_stack.tools.pan import validate_pan
 
 
 def test_validate_pan_success() -> None:

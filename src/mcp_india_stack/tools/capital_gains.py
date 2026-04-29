@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import Any
 
-
 LTCG_EQUITY_EXEMPTION = 100000  # ₹1,00,000 per year (Section 112A)
 
 

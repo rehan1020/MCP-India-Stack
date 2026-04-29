@@ -220,7 +220,7 @@ class TestUpdateEdgeCases:
     def test_corrupt_download_discarded_on_write(self, tmp_cache: Path) -> None:
         cached = tmp_cache / "IFSC.csv"
         cached.write_text("old_data")
-        original_content = cached.read_text()
+        cached.read_text()
 
         with patch("mcp_india_stack.utils.updater._validate_csv", return_value=True):
             mock_resp = MagicMock()
@@ -233,7 +233,7 @@ class TestUpdateEdgeCases:
             with patch("mcp_india_stack.utils.updater.httpx.Client", return_value=mock_client):
                 with patch(
                     "mcp_india_stack.utils.updater.Path.write_bytes",
-                    side_effect=IOError("disk full"),
+                    side_effect=OSError("disk full"),
                 ):
                     result = _fetch_and_cache("ifsc")
                     assert result is False

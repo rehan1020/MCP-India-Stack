@@ -312,7 +312,7 @@ def lookup_bbps_biller(
     """Look up BBPS biller details.
 
     Args:
-        category: Category of biller (electricity, gas, dth, water, broadband, fastag, insurance, mobile)
+        category: Category (electricity, gas, dth, water, broadband, fastag, insurance, mobile)
         state: State name (e.g., 'Maharashtra', 'Delhi', 'all')
         biller_id: Specific biller ID for direct lookup
 

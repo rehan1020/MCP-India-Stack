@@ -5,8 +5,8 @@ Provides optional live database connectivity as an alternative to bundled data.
 
 from __future__ import annotations
 
-import os
 import logging
+import os
 from typing import Any
 
 import httpx

@@ -103,9 +103,10 @@ def calculate_advance_tax(
         "is_advance_tax_required": True,
         "installments": installment_schedule,
         "interest_rules": {
-            "section_234b": "1% per month Simple interest if tax paid after due date but before assessment",
+            "section_234b": "1% per month Simple interest if tax paid after due date"
+            " but before assessment",
             "section_234c": "1% per month Simple interest on each installment delayed",
-            "note": "Interest under 234C is not levied if shortfall in installment is paid in next installment",
+            "note": "Interest under 234C not levied if shortfall paid in next installment",
         },
         "errors": errors,
         "warnings": warnings,

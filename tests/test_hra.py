@@ -1,6 +1,5 @@
 """Tests for HRA exemption calculator."""
 
-import pytest
 from mcp_india_stack.tools.hra import calculate_hra_exemption, calculate_hra_for_salary_structure
 
 

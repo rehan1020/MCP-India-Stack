@@ -13,7 +13,16 @@ from mcp.types import ToolAnnotations
 from pydantic import Field
 
 from mcp_india_stack.tools import (
+    calculate_advance_tax as core_calculate_advance_tax,
+)
+from mcp_india_stack.tools import (
+    calculate_capital_gains as core_calculate_capital_gains,
+)
+from mcp_india_stack.tools import (
     calculate_gst as core_calculate_gst,
+)
+from mcp_india_stack.tools import (
+    calculate_hra_exemption as core_calculate_hra,
 )
 from mcp_india_stack.tools import (
     calculate_income_tax as core_calculate_income_tax,
@@ -22,22 +31,13 @@ from mcp_india_stack.tools import (
     calculate_surcharge as core_calculate_surcharge,
 )
 from mcp_india_stack.tools import (
-    calculate_hra_exemption as core_calculate_hra,
-)
-from mcp_india_stack.tools import (
-    calculate_capital_gains as core_calculate_capital_gains,
-)
-from mcp_india_stack.tools import (
-    calculate_advance_tax as core_calculate_advance_tax,
-)
-from mcp_india_stack.tools import (
-    lookup_bbps_biller as core_lookup_bbps_biller,
-)
-from mcp_india_stack.tools import (
     calculate_tds as core_calculate_tds,
 )
 from mcp_india_stack.tools import (
     decode_state_code as core_decode_state_code,
+)
+from mcp_india_stack.tools import (
+    lookup_bbps_biller as core_lookup_bbps_biller,
 )
 from mcp_india_stack.tools import (
     lookup_hsn_code as core_lookup_hsn_code,
@@ -55,10 +55,10 @@ from mcp_india_stack.tools import (
     validate_cin as core_validate_cin,
 )
 from mcp_india_stack.tools import (
-    validate_din as core_validate_din,
+    validate_driving_license as core_validate_driving_license,
 )
 from mcp_india_stack.tools import (
-    validate_driving_license as core_validate_driving_license,
+    validate_fssai as core_validate_fssai,
 )
 from mcp_india_stack.tools import (
     validate_gstin as core_validate_gstin,
@@ -67,16 +67,7 @@ from mcp_india_stack.tools import (
     validate_pan as core_validate_pan,
 )
 from mcp_india_stack.tools import (
-    validate_passport as core_validate_passport,
-)
-from mcp_india_stack.tools import (
     validate_upi_vpa as core_validate_upi_vpa,
-)
-from mcp_india_stack.tools import (
-    validate_voter_id as core_validate_voter_id,
-)
-from mcp_india_stack.tools import (
-    validate_fssai as core_validate_fssai,
 )
 from mcp_india_stack.utils.responses import build_response
 
@@ -163,7 +154,7 @@ def validate_gstin(
     or compliance workflows.
 
     Args:
-            gstin: 15-character GSTIN, example: 27AAPFU0939F1ZV. Spaces and hyphens stripped automatically.
+            gstin: 15-character GSTIN (e.g., 27AAPFU0939F1ZV). Spaces/hyphens stripped.
 
     Returns:
             Standard envelope containing validity, state decode, embedded PAN,
@@ -587,7 +578,7 @@ def validate_voter_id(
     Use when verifying voter ID format in KYC, identity, or electoral workflows.
 
     Args:
-            voter_id: EPIC number, 3 uppercase letters + 7 digits. Spaces and hyphens stripped automatically.
+            voter_id: EPIC number (3 letters + 7 digits). Spaces/hyphens stripped.
 
     Returns:
             Standard envelope containing validity, prefix, serial, and format type.
@@ -627,7 +618,7 @@ def validate_driving_license(
         Field(
             min_length=1,
             max_length=25,
-            description="Indian DL number, 15 chars standard (spaces/hyphens allowed). Example: MH0220191234567",
+            description="Indian DL number, 15 chars (spaces/hyphens allowed). Ex: MH0220191234567",
         ),
     ],
 ) -> dict[str, Any]:
@@ -674,7 +665,7 @@ def validate_passport(
         Field(
             min_length=1,
             max_length=15,
-            description="8-character Indian passport number (spaces/hyphens allowed). Example: A1234567",
+            description="8-char Indian passport (spaces/hyphens allowed). Ex: A1234567",
         ),
     ],
 ) -> dict[str, Any]:
@@ -783,7 +774,7 @@ def validate_din(
     Use when verifying director identity numbers in MCA compliance workflows.
 
     Args:
-            din: 8-digit numeric DIN string. Shorter inputs are zero-padded. Spaces stripped automatically.
+            din: 8-digit numeric DIN string. Shorter inputs zero-padded. Spaces stripped.
 
     Returns:
             Standard envelope containing validity and normalized DIN.
@@ -823,7 +814,7 @@ def validate_fssai(
         Field(
             min_length=1,
             max_length=25,
-            description="14-digit FSSAI license number (spaces/hyphens allowed). Example: 10019000000001",
+            description="14-digit FSSAI license (spaces/hyphens allowed). Ex: 10019000000001",
         ),
     ],
 ) -> dict[str, Any]:
@@ -832,7 +823,7 @@ def validate_fssai(
     Use when verifying food business operator licenses in compliance checks.
 
     Args:
-            license_number: 14-digit FSSAI license number. Spaces and hyphens stripped automatically.
+            license_number: 14-digit FSSAI license. Spaces/hyphens stripped.
 
     Returns:
             Standard envelope with validation, state, license type, year decoded.
@@ -1399,7 +1390,7 @@ def lookup_bbps_biller(
     category: Annotated[
         str | None,
         Field(
-            description="Category: electricity, gas, dth, water, broadband, fastag, insurance, mobile",
+            description="electricity, gas, dth, water, broadband, fastag, insurance, mobile",
         ),
     ] = None,
     state: Annotated[
@@ -2038,8 +2029,6 @@ def changelog() -> dict:
 
 # ========== New Tools ==========
 
-from mcp_india_stack.tools import decode_state_code as _decode_state_code
-
 
 def _validate_single_pan(pan: str) -> dict[str, Any]:
     """Validate a single PAN with error isolation."""
@@ -2156,7 +2145,6 @@ def decode_pan_type(
 ) -> dict[str, Any]:
     """Decode PAN entity type from 4th character. # PermissionTier: READ_ONLY"""
     from mcp_india_stack.tools.pan import validate_pan
-    from mcp_india_stack.tools import PAN_ENTITY_TYPE_LABELS
 
     result = validate_pan(pan)
 
