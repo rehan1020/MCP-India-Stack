@@ -1,7 +1,6 @@
 """Test server wrapper responses and new tools."""
 
 
-
 class TestServerResponses:
     def test_validate_gstin_response(self) -> None:
         from mcp_india_stack.server import validate_gstin
