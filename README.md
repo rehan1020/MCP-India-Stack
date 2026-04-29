@@ -3,6 +3,8 @@
 [![PyPI version](https://img.shields.io/pypi/v/mcp-india-stack.svg)](https://pypi.org/project/mcp-india-stack/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![CI](https://github.com/rehan1020/MCP-India-Stack/actions/workflows/ci.yml/badge.svg)](https://github.com/rehan1020/MCP-India-Stack/actions/workflows/ci.yml)
+[![Verified on MseeP](https://mseep.ai/badge.svg)](https://mseep.ai/app/137943ec-5cee-4de7-a22d-e55a7ac699bd)
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/rehan1020-mcp-india-stack-badge.png)](https://mseep.ai/app/rehan1020-mcp-india-stack)
 
 MCP server exposing Indian financial and government APIs for AI agents. Zero auth. Offline-first.
 
