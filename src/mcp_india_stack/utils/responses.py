@@ -49,7 +49,7 @@ def build_response(
         )
 
     # Build response
-    response = {
+    response: dict[str, Any] = {
         "success": success,
         "data": data,
         "errors": errors or [],

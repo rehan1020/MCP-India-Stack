@@ -1463,7 +1463,7 @@ def main() -> None:
 
 
 @mcp.resource("india://schema/lookup_ifsc")
-def schema_lookup_ifsc() -> dict:
+def schema_lookup_ifsc() -> dict[str, Any]:
     """JSON schema for lookup_ifsc output."""
     return {
         "type": "object",
@@ -1492,7 +1492,7 @@ def schema_lookup_ifsc() -> dict:
 
 
 @mcp.resource("india://schema/validate_gstin")
-def schema_validate_gstin() -> dict:
+def schema_validate_gstin() -> dict[str, Any]:
     """JSON schema for validate_gstin output."""
     return {
         "type": "object",
@@ -1516,7 +1516,7 @@ def schema_validate_gstin() -> dict:
 
 
 @mcp.resource("india://schema/validate_pan")
-def schema_validate_pan() -> dict:
+def schema_validate_pan() -> dict[str, Any]:
     """JSON schema for validate_pan output."""
     return {
         "type": "object",
@@ -1532,7 +1532,7 @@ def schema_validate_pan() -> dict:
 
 
 @mcp.resource("india://schema/validate_upi_vpa")
-def schema_validate_upi_vpa() -> dict:
+def schema_validate_upi_vpa() -> dict[str, Any]:
     """JSON schema for validate_upi_vpa output."""
     return {
         "type": "object",
@@ -1549,7 +1549,7 @@ def schema_validate_upi_vpa() -> dict:
 
 
 @mcp.resource("india://schema/lookup_pincode")
-def schema_lookup_pincode() -> dict:
+def schema_lookup_pincode() -> dict[str, Any]:
     """JSON schema for lookup_pincode output."""
     return {
         "type": "object",
@@ -1566,7 +1566,7 @@ def schema_lookup_pincode() -> dict:
 
 
 @mcp.resource("india://schema/lookup_hsn_code")
-def schema_lookup_hsn_code() -> dict:
+def schema_lookup_hsn_code() -> dict[str, Any]:
     """JSON schema for lookup_hsn_code output."""
     return {
         "type": "object",
@@ -1582,7 +1582,7 @@ def schema_lookup_hsn_code() -> dict:
 
 
 @mcp.resource("india://schema/decode_state_code")
-def schema_decode_state_code() -> dict:
+def schema_decode_state_code() -> dict[str, Any]:
     """JSON schema for decode_state_code output."""
     return {
         "type": "object",
@@ -1599,7 +1599,7 @@ def schema_decode_state_code() -> dict:
 
 
 @mcp.resource("india://schema/validate_aadhaar")
-def schema_validate_aadhaar() -> dict:
+def schema_validate_aadhaar() -> dict[str, Any]:
     """JSON schema for validate_aadhaar output."""
     return {
         "type": "object",
@@ -1615,7 +1615,7 @@ def schema_validate_aadhaar() -> dict:
 
 
 @mcp.resource("india://schema/validate_voter_id")
-def schema_validate_voter_id() -> dict:
+def schema_validate_voter_id() -> dict[str, Any]:
     """JSON schema for validate_voter_id output."""
     return {
         "type": "object",
@@ -1632,7 +1632,7 @@ def schema_validate_voter_id() -> dict:
 
 
 @mcp.resource("india://schema/validate_driving_license")
-def schema_validate_driving_license() -> dict:
+def schema_validate_driving_license() -> dict[str, Any]:
     """JSON schema for validate_driving_license output."""
     return {
         "type": "object",
@@ -1651,7 +1651,7 @@ def schema_validate_driving_license() -> dict:
 
 
 @mcp.resource("india://schema/validate_passport")
-def schema_validate_passport() -> dict:
+def schema_validate_passport() -> dict[str, Any]:
     """JSON schema for validate_passport output."""
     return {
         "type": "object",
@@ -1667,7 +1667,7 @@ def schema_validate_passport() -> dict:
 
 
 @mcp.resource("india://schema/validate_cin")
-def schema_validate_cin() -> dict:
+def schema_validate_cin() -> dict[str, Any]:
     """JSON schema for validate_cin output."""
     return {
         "type": "object",
@@ -1687,7 +1687,7 @@ def schema_validate_cin() -> dict:
 
 
 @mcp.resource("india://schema/validate_din")
-def schema_validate_din() -> dict:
+def schema_validate_din() -> dict[str, Any]:
     """JSON schema for validate_din output."""
     return {
         "type": "object",
@@ -1702,7 +1702,7 @@ def schema_validate_din() -> dict:
 
 
 @mcp.resource("india://schema/calculate_income_tax")
-def schema_calculate_income_tax() -> dict:
+def schema_calculate_income_tax() -> dict[str, Any]:
     """JSON schema for calculate_income_tax output."""
     return {
         "type": "object",
@@ -1724,7 +1724,7 @@ def schema_calculate_income_tax() -> dict:
 
 
 @mcp.resource("india://schema/calculate_tds")
-def schema_calculate_tds() -> dict:
+def schema_calculate_tds() -> dict[str, Any]:
     """JSON schema for calculate_tds output."""
     return {
         "type": "object",
@@ -1742,7 +1742,7 @@ def schema_calculate_tds() -> dict:
 
 
 @mcp.resource("india://schema/calculate_gst")
-def schema_calculate_gst() -> dict:
+def schema_calculate_gst() -> dict[str, Any]:
     """JSON schema for calculate_gst output."""
     return {
         "type": "object",
@@ -1762,7 +1762,7 @@ def schema_calculate_gst() -> dict:
 
 
 @mcp.resource("india://schema/calculate_surcharge")
-def schema_calculate_surcharge() -> dict:
+def schema_calculate_surcharge() -> dict[str, Any]:
     """JSON schema for calculate_surcharge output."""
     return {
         "type": "object",
@@ -1781,7 +1781,7 @@ def schema_calculate_surcharge() -> dict:
 
 
 @mcp.resource("india://schema/calculate_hra_exemption")
-def schema_calculate_hra_exemption() -> dict:
+def schema_calculate_hra_exemption() -> dict[str, Any]:
     """JSON schema for calculate_hra_exemption output."""
     return {
         "type": "object",
@@ -1801,7 +1801,7 @@ def schema_calculate_hra_exemption() -> dict:
 
 
 @mcp.resource("india://schema/calculate_capital_gains")
-def schema_calculate_capital_gains() -> dict:
+def schema_calculate_capital_gains() -> dict[str, Any]:
     """JSON schema for calculate_capital_gains output."""
     return {
         "type": "object",
@@ -1824,7 +1824,7 @@ def schema_calculate_capital_gains() -> dict:
 
 
 @mcp.resource("india://schema/calculate_advance_tax")
-def schema_calculate_advance_tax() -> dict:
+def schema_calculate_advance_tax() -> dict[str, Any]:
     """JSON schema for calculate_advance_tax output."""
     return {
         "type": "object",
@@ -1845,7 +1845,7 @@ def schema_calculate_advance_tax() -> dict:
 
 
 @mcp.resource("india://schema/bulk_validate_gstin")
-def schema_bulk_validate_gstin() -> dict:
+def schema_bulk_validate_gstin() -> dict[str, Any]:
     """JSON schema for bulk_validate_gstin output."""
     return {
         "type": "object",
@@ -1981,7 +1981,7 @@ from mcp_india_stack.database import is_db_connected
 
 
 @mcp.resource("india://status")
-def server_status() -> dict:
+def server_status() -> dict[str, Any]:
     """Server status and configuration."""
     return {
         "version": __version__,
@@ -1995,7 +1995,7 @@ def server_status() -> dict:
 
 
 @mcp.resource("india://changelog")
-def changelog() -> dict:
+def changelog() -> dict[str, Any]:
     """Structured changelog as JSON."""
     return {
         "current_version": "0.3.0",
@@ -2198,7 +2198,7 @@ def lookup_bank(
 ) -> dict[str, Any]:
     """Look up bank details from RBI master list. # PermissionTier: READ_ONLY"""
     # Bundled bank master data (sample)
-    banks = [
+    banks: list[dict[str, Any]] = [
         {
             "name": "State Bank of India",
             "code": "SBIN",
