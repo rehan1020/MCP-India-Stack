@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Any
+from typing import Any, cast
 
 import httpx
 
@@ -66,7 +66,7 @@ def init_db_connection() -> bool:
         return False
 
 
-def query_db(query: str, params: list | None = None) -> list[dict[str, Any]]:
+def query_db(query: str, params: list[Any] | None = None) -> list[dict[str, Any]]:
     """Execute a read-only query against the database.
 
     Args:
@@ -89,11 +89,10 @@ def query_db(query: str, params: list | None = None) -> list[dict[str, Any]]:
             raise ValueError("Only read-only queries allowed")
 
     try:
-        response = _db_connection.get(
-            f"{_DB_URL.rstrip('/')}/query", params={"q": query, "params": params}
-        )
+        base_url = _DB_URL.rstrip("/") if _DB_URL else ""
+        response = _db_connection.get(f"{base_url}/query", params={"q": query, "params": params})
         if response.status_code == 200:
-            return response.json()
+            return cast(list[dict[str, Any]], response.json())
         return []
     except Exception as e:
         logger.error(f"Database query failed: {e}")

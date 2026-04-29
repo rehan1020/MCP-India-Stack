@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-_BILLERS = {
+_BILLERS: dict[str, list[dict[str, Any]]] = {
     "electricity": [
         {
             "biller_id": "ELEC_MH_MSEDC",
