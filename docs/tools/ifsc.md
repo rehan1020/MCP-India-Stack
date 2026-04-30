@@ -1,4 +1,6 @@
-# lookup_ifsc
+# IFSC Tools
+
+## lookup_ifsc
 
 Validates IFSC format and returns bank branch metadata from bundled dataset with optional live fallback to Razorpay IFSC API.
 
@@ -10,3 +12,14 @@ Validates IFSC format and returns bank branch metadata from bundled dataset with
 
 **Limitations:** Bundled data may be slightly behind newest branch openings. Live fallback requires internet connectivity.
 
+---
+
+## bulk_validate_ifsc
+
+Validate multiple IFSC codes in parallel. Maximum 500 IFSCs per call.
+
+**Input:** `ifscs` (list[str]) — List of IFSC codes to validate.
+
+**Output:** `results` (list of single lookup outputs), `total`, `found_count`.
+
+**Example prompt:** "Bulk lookup these IFSC codes: HDFC0000001, ICIC0000002"
