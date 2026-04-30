@@ -11,16 +11,8 @@ package:
 
 # How Smithery starts your server using stdio
 startCommand:
-  type: stdio
-  # This function tells Smithery which command to run in the user's terminal
-  commandFunction: |-
-    (config) => ({
-      command: "python",
-      args: ["-m", "mcp_india_stack"],
-      env: {
-        "PYTHONPATH": "."
-      }
-    })
+  command: "python"
+  args: ["-m", "mcp_india_stack"]
 
 # Define any config your server needs (Optional)
 # Since you are offline-first, we leave this empty so users don't need API keys
