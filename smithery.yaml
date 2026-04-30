@@ -1,8 +1,33 @@
+# smithery.yaml
+version: 0.1.0
+package:
+  name: mcp-india-stack-official
+  version: 0.3.0
+  description: "Offline-first MCP server for Indian financial identifiers (GSTIN, PAN, Aadhaar) and tax calculators (FY25-26)."
+  author: rehan1020
+  license: MIT
+  repository: https://github.com/rehan1020/MCP-India-Stack
+  keywords: ["mcp", "india", "fintech", "tax", "gst", "offline-first"]
+
+# How Smithery starts your server using stdio
 startCommand:
   type: stdio
-  configSchema:
-    type: object
-    properties: {}
-    required: []
+  # This function tells Smithery which command to run in the user's terminal
   commandFunction: |-
-    (config) => ({ command: "python", args: ["-m", "mcp_india_stack"] })
+    (config) => ({
+      command: "python",
+      args: ["-m", "mcp_india_stack"],
+      env: {
+        "PYTHONPATH": "."
+      }
+    })
+
+# Define any config your server needs (Optional)
+# Since you are offline-first, we leave this empty so users don't need API keys
+configSchema:
+  type: object
+  properties: {}
+
+# CRITICAL: This ensures Smithery includes your data folder in the deployment
+resources:
+  - path: src/mcp_india_stack/data
