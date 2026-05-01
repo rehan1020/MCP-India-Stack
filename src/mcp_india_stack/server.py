@@ -1479,10 +1479,34 @@ def main() -> None:
         sys.exit(0)
 
     if args.transport == "sse":
+        from typing import cast
+
+        import uvicorn
+        from starlette.middleware.cors import CORSMiddleware
+
         port = args.port
         if port is None:
             port = int(os.environ.get("PORT", "8000"))
-        mcp.run(transport="sse", host=args.host, port=port)
+
+        from mcp.server.fastmcp import FastMCP
+
+        sse_app_instance = cast(FastMCP[Any], mcp).sse_app()
+
+        sse_app_instance.add_middleware(
+            CORSMiddleware,
+            allow_origins=["*"],
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
+
+        for route in sse_app_instance.router.routes:
+            if hasattr(route, "path") and route.path in ("/sse", ""):
+                route.methods = {"GET", "POST"}  # type: ignore[attr-defined]
+            if hasattr(route, "path") and route.path in ("/messages", "/messages/"):
+                route.methods = {"GET", "POST"}  # type: ignore[attr-defined]
+
+        uvicorn.run(sse_app_instance, host=args.host, port=port)
     else:
         mcp.run(transport="stdio")
 
