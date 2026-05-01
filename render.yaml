@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: mcp-india-stack
+    env: python
+    buildCommand: pip install .
+    startCommand: mcp-india-stack --transport sse
+    envVars:
+      - key: PORT
+        value: "10000"
+    plan: free

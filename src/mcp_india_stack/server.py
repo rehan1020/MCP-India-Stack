@@ -1440,12 +1440,31 @@ def lookup_bbps_biller(
 
 
 def main() -> None:
-    """Run MCP server on stdio transport."""
+    """Run MCP server with configurable transport."""
     parser = argparse.ArgumentParser(description="mcp-india-stack MCP server")
     parser.add_argument(
         "--refresh-all",
         action="store_true",
         help="Refresh all cached datasets from CDN and exit without starting the server.",
+    )
+    parser.add_argument(
+        "--transport",
+        type=str,
+        choices=["stdio", "sse"],
+        default="stdio",
+        help="Transport: 'stdio' (local) or 'sse' (HTTP). Default: stdio",
+    )
+    parser.add_argument(
+        "--host",
+        type=str,
+        default="0.0.0.0",
+        help="Host to bind to for SSE transport (default: 0.0.0.0)",
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=None,
+        help="Port to bind to for SSE transport (default: from $PORT or 8000)",
     )
     args = parser.parse_args()
 
@@ -1459,7 +1478,13 @@ def main() -> None:
             print(f"  {name}: {status}")
         sys.exit(0)
 
-    mcp.run(transport="stdio")
+    if args.transport == "sse":
+        port = args.port
+        if port is None:
+            port = int(os.environ.get("PORT", "8000"))
+        mcp.run(transport="sse", host=args.host, port=port)
+    else:
+        mcp.run(transport="stdio")
 
 
 @mcp.resource("india://schema/lookup_ifsc")
