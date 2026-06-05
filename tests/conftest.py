@@ -244,7 +244,7 @@ def _mock_ifsc_index_globally(monkeypatch):
                 "BRANCH": "TEST",
                 "CITY": "TEST",
                 "STATE": "TEST",
-            }
+            },
         }
         monkeypatch.setattr(mcp_india_stack.utils.loader, "load_ifsc_index", lambda: mock_data)
         monkeypatch.setattr(mcp_india_stack.tools.ifsc, "load_ifsc_index", lambda: mock_data)
