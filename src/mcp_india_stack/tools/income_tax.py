@@ -195,6 +195,8 @@ def calculate_income_tax(
     deduction_80ccd_nps: float = 0,
     deduction_24b: float = 0,
     other_deductions: float = 0,
+    age: int = 35,
+    health_insurance_premium: float | None = None,
 ) -> dict[str, Any]:
     """Calculate income tax for FY2025-26 under old, new, or both regimes.
 
@@ -203,12 +205,14 @@ def calculate_income_tax(
         regime: "new", "old", or "both".
         taxpayer_type: "individual", "senior_citizen", "super_senior_citizen".
         deduction_80c: Section 80C deduction (capped at ₹1.5L).
-        deduction_80d_self: Section 80D self (capped at ₹25K).
+        deduction_80d_self: Section 80D self (capped at ₹25K non-senior, ₹50K senior).
         deduction_80d_parents: Section 80D parents (capped at ₹25K or ₹50K for senior).
         deduction_80d_senior_parents: If True, parents 80D cap is ₹50K.
         deduction_80ccd_nps: Additional NPS deduction (capped at ₹50K).
         deduction_24b: Home loan interest (capped at ₹2L).
         other_deductions: Other deductions (no cap).
+        age: Taxpayer's age (used for senior citizen 80D limit).
+        health_insurance_premium: Alias for deduction_80d_self (if provided, overrides it).
 
     Returns:
         Dict with tax breakdown per regime and comparison.
@@ -224,6 +228,13 @@ def calculate_income_tax(
 
         if regime not in ("new", "old", "both"):
             errors.append("regime must be 'new', 'old', or 'both'")
+
+        if age >= 80:
+            taxpayer_type = "super_senior_citizen"
+        elif age >= 60:
+            taxpayer_type = "senior_citizen"
+        else:
+            taxpayer_type = "individual"
 
         if taxpayer_type not in VALID_TAXPAYER_TYPES:
             errors.append(f"taxpayer_type must be one of {sorted(VALID_TAXPAYER_TYPES)}")
@@ -264,11 +275,20 @@ def calculate_income_tax(
         if regime in ("old", "both"):
             old_slabs = OLD_REGIME_SLABS.get(taxpayer_type, OLD_REGIME_SLABS["individual"])
 
-            # Cap old regime deductions
-            capped_80c = min(deduction_80c, OLD_REGIME_DEDUCTION_LIMITS["section_80c"])
-            capped_80d_self = min(
-                deduction_80d_self, OLD_REGIME_DEDUCTION_LIMITS["section_80d_self"]
+            # If health_insurance_premium provided, use it as 80d_self
+            effective_80d_self = (
+                health_insurance_premium
+                if health_insurance_premium is not None
+                else deduction_80d_self
             )
+
+            # Cap old regime deductions
+            # Section 80D: senior citizen (age >= 60) gets ₹50,000 limit, non-senior gets ₹25,000
+            is_senior = age >= 60
+            self_80d_limit = 50_000 if is_senior else 25_000
+
+            capped_80c = min(deduction_80c, OLD_REGIME_DEDUCTION_LIMITS["section_80c"])
+            capped_80d_self = min(effective_80d_self, self_80d_limit)
             parent_80d_limit = (
                 OLD_REGIME_DEDUCTION_LIMITS["section_80d_senior_parents"]
                 if deduction_80d_senior_parents
@@ -299,6 +319,16 @@ def calculate_income_tax(
                 rebate_amount=OLD_REGIME_87A_REBATE,
                 total_deductions=total_deductions,
             )
+            # Include deduction breakdown in old regime result
+            old_result["deductions"] = {
+                "section_80c": capped_80c,
+                "section_80d": capped_80d_self,
+                "section_80d_parents": capped_80d_parents,
+                "section_80ccd_nps": capped_80ccd,
+                "section_24b": capped_24b,
+                "other": other_deductions,
+                "total": total_deductions,
+            }
             result["old_regime"] = old_result
 
         # --- Comparison ---

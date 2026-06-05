@@ -1,5 +1,88 @@
 # Changelog
 
+## [0.4.2] - 2026-05-31
+
+### Bug Fixes (Round 2 — Deep Code Audit)
+
+- **Capital Gains** — Asset-type-specific LTCG holding period thresholds:
+  equity 12mo, real estate 24mo, gold/debentures 36mo, crypto always flat 30%.
+  STCG on real estate and gold now correctly noted as slab-rate (not flat rate).
+- **EPF/ESIC** — Employee EPF deduction now correctly capped at ₹15,000 wage
+  ceiling (statutory). Added `voluntary_pf_on_actual` flag for VPF on full salary.
+- **HRA** — Removed Bangalore, Hyderabad, Pune from metro cities list.
+  Only Delhi, Mumbai, Chennai, Kolkata qualify for 50% HRA under Section 10(13A).
+  Added `_classify_city()` helper with warnings for commonly confused cities.
+- **Presumptive Tax** — Full 7-slab new regime and 4-slab old regime via reusable
+  `_compute_slab_tax()`. Added Section 87A rebate. Previously only covered 3 slabs.
+- **GST Late Fee** — GSTR9 cap (0.25% of turnover) now enforced. Nil return daily
+  fee corrected from ₹25 to ₹20 per GST Council notification.
+- **Income Tax Interest** — Section 234C shortfall now uses cumulative paid vs
+  cumulative required (not single-quarter paid). Fixed incorrect interest calc.
+- **Advance Tax** — Installment schedule now shows both `cumulative_amount` and
+  `installment_amount` (incremental). The `amount` field returns the quarterly
+  payment due, not the confusing cumulative total.
+- **Salary Restructuring** — Removed obsolete ₹19,200 conveyance exemption
+  (abolished FY2018-19). Standard deduction (₹75,000 new / ₹50,000 old) properly
+  shown. Removed stale medical reimbursement line.
+
+### Tests
+- Added 30+ regression tests covering all 8 fixed scenarios
+- Coverage maintained at 93%+
+
+
+
+## [0.4.0] - 2026-05-08
+
+### Security Fix
+- `validate_aadhaar` — Now masks full Aadhaar number in output, returns only last 4 digits
+
+### TDS Enhancement
+- Added `aggregate_payments_ytd` parameter for 194C aggregate threshold tracking
+- Added `payee_type` parameter ("individual_huf" or "other") for 194C rate determination
+- Added new sections: 194R (perquisite), 194S (VDA/crypto), 194M (contractor without TAN)
+
+### GST Calculator Enhancement
+- Added optional `hsn_code` parameter to look up GST rate from HSN/SAC code
+- Added `rate_source` field ("explicit" or "hsn_lookup") in response
+
+### Capital Gains Enhancement
+- Added `reinvestment_amount` parameter for Section 54/54F exemption calculation
+- Added `section_54_exemption_claimed`, `section_54f_exemption_claimed` fields
+
+### New Tools (35+ total)
+- `calculate_epf_esic` — EPF/ESIC contribution calculator
+- `calculate_emi` — Loan EMI with amortization schedule
+- `calculate_gratuity` — Payment of Gratuity Act calculator
+- `calculate_ppf_maturity` — PPF maturity projections
+- `bulk_validate_aadhaar` — Parallel Aadhaar validation
+- `build_aa_consent_request` — AA consent request builder
+- `validate_aa_consent_artifact` — AA consent artifact validator
+- `decode_aa_fi_type` — AA FI type decoder
+- `calculate_fd_maturity` — Fixed Deposit calculator
+- `calculate_rd_maturity` — Recurring Deposit calculator
+- `calculate_sip_returns` — SIP returns calculator
+- `calculate_step_up_sip` — Step-up SIP calculator
+- `calculate_nps_projection` — NPS corpus/pension projection
+- `calculate_sukanya_samriddhi` — SSY/SCSS calculator
+- `calculate_home_vs_rent` — Buy vs rent comparison
+- `calculate_gst_late_fee` — GST late filing penalty
+- `calculate_income_tax_interest` — Sections 234A/B/C interest
+- `calculate_presumptive_tax` — 44AD/44ADA presumptive tax
+- `calculate_professional_tax` — State-wise professional tax
+- `calculate_leave_encashment_tax` — Section 10(10AA) leave encashment
+- `validate_tan` — TAN validator
+- `validate_mobile_number` — Mobile number with operator detection
+- `validate_pran` — PRAN validator
+- `validate_llpin` — LLPIN validator
+- `decode_isin` — ISIN decoder with Luhn check
+- `calculate_neft_rtgs_imps_charges` — Bank transaction charges
+- `get_regulatory_deadlines` — FY2025-26 tax & regulatory compliance calendar
+- `calculate_salary_restructuring` — Salary restructuring tax optimizer
+
+### Tests
+- Added test files for new tools
+- Coverage: 93%+
+
 ## [0.3.0] - 2026-04-28
 
 ### Added

@@ -13,10 +13,22 @@ from mcp.types import ToolAnnotations
 from pydantic import Field
 
 from mcp_india_stack.tools import (
+    bulk_validate_aadhaar as core_bulk_validate_aadhaar,
+)
+from mcp_india_stack.tools import (
     calculate_advance_tax as core_calculate_advance_tax,
 )
 from mcp_india_stack.tools import (
     calculate_capital_gains as core_calculate_capital_gains,
+)
+from mcp_india_stack.tools import (
+    calculate_emi as core_calculate_emi,
+)
+from mcp_india_stack.tools import (
+    calculate_epf_esic as core_calculate_epf_esic,
+)
+from mcp_india_stack.tools import (
+    calculate_gratuity as core_calculate_gratuity,
 )
 from mcp_india_stack.tools import (
     calculate_gst as core_calculate_gst,
@@ -28,6 +40,12 @@ from mcp_india_stack.tools import (
     calculate_income_tax as core_calculate_income_tax,
 )
 from mcp_india_stack.tools import (
+    calculate_ppf_maturity as core_calculate_ppf_maturity,
+)
+from mcp_india_stack.tools import (
+    calculate_salary_restructuring as core_calculate_salary_restructuring,
+)
+from mcp_india_stack.tools import (
     calculate_surcharge as core_calculate_surcharge,
 )
 from mcp_india_stack.tools import (
@@ -35,6 +53,9 @@ from mcp_india_stack.tools import (
 )
 from mcp_india_stack.tools import (
     decode_state_code as core_decode_state_code,
+)
+from mcp_india_stack.tools import (
+    get_regulatory_deadlines as core_get_regulatory_deadlines,
 )
 from mcp_india_stack.tools import (
     lookup_bbps_biller as core_lookup_bbps_biller,
@@ -69,6 +90,42 @@ from mcp_india_stack.tools import (
 from mcp_india_stack.tools import (
     validate_upi_vpa as core_validate_upi_vpa,
 )
+from mcp_india_stack.tools.aa_consent import (
+    build_aa_consent_request as core_build_aa_consent_request,
+)
+from mcp_india_stack.tools.aa_fi_type import decode_aa_fi_type as core_decode_aa_fi_type
+from mcp_india_stack.tools.bank_charges import (
+    calculate_neft_rtgs_imps_charges as core_calculate_neft_rtgs_imps_charges,
+)
+from mcp_india_stack.tools.fd_maturity import calculate_fd_maturity as core_calculate_fd_maturity
+from mcp_india_stack.tools.gst_late_fee import calculate_gst_late_fee as core_calculate_gst_late_fee
+from mcp_india_stack.tools.home_vs_rent import calculate_home_vs_rent as core_calculate_home_vs_rent
+from mcp_india_stack.tools.income_tax_interest import (
+    calculate_income_tax_interest as core_calculate_income_tax_interest,
+)
+from mcp_india_stack.tools.isin import decode_isin as core_decode_isin
+from mcp_india_stack.tools.leave_encashment import (
+    calculate_leave_encashment_tax as core_calculate_leave_encashment_tax,
+)
+from mcp_india_stack.tools.llpin import validate_llpin as core_validate_llpin
+from mcp_india_stack.tools.mobile import validate_mobile_number as core_validate_mobile_number
+from mcp_india_stack.tools.nps_projection import (
+    calculate_nps_projection as core_calculate_nps_projection,
+)
+from mcp_india_stack.tools.pran import validate_pran as core_validate_pran
+from mcp_india_stack.tools.presumptive_tax import (
+    calculate_presumptive_tax as core_calculate_presumptive_tax,
+)
+from mcp_india_stack.tools.professional_tax import (
+    calculate_professional_tax as core_calculate_professional_tax,
+)
+from mcp_india_stack.tools.rd_maturity import calculate_rd_maturity as core_calculate_rd_maturity
+from mcp_india_stack.tools.sip_returns import calculate_sip_returns as core_calculate_sip_returns
+from mcp_india_stack.tools.step_up_sip import calculate_step_up_sip as core_calculate_step_up_sip
+from mcp_india_stack.tools.sukanya_scss import (
+    calculate_sukanya_samriddhi as core_calculate_sukanya_samriddhi,
+)
+from mcp_india_stack.tools.tan import validate_tan as core_validate_tan
 from mcp_india_stack.utils.responses import build_response
 
 mcp = FastMCP(
@@ -168,18 +225,7 @@ def validate_gstin(
     normalized = normalize_gstin(gstin)["normalized_input"]
     try:
         result = core_validate_gstin(normalized)
-        return build_response(
-            success=bool(result.get("valid")),
-            data=result,
-            errors=result.get("errors", []),
-            warnings=result.get("warnings", []),
-            source="offline_algorithm",
-            normalized_input=result.get("normalized_input", normalized)
-            if result.get("valid")
-            else None,
-            validated_by=["format", "checksum"] if result.get("valid") else [],
-            confidence=0.65 if result.get("valid") else 0.0,
-        )
+        return result
     except Exception as exc:
         return build_response(
             success=False,
@@ -313,13 +359,7 @@ def validate_pan(
     normalized = normalize_pan(pan)["normalized_input"]
     try:
         result = core_validate_pan(normalized)
-        return build_response(
-            success=bool(result.get("valid")),
-            data=result,
-            errors=result.get("errors", []),
-            warnings=result.get("warnings", []),
-            source="offline_algorithm",
-        )
+        return result
     except Exception as exc:
         return build_response(
             success=False,
@@ -984,6 +1024,14 @@ def calculate_tds(
         bool,
         Field(description="For 194A bank interest — applies higher threshold for seniors"),
     ] = False,
+    aggregate_payments_ytd: Annotated[
+        float,
+        Field(description="Prior payments to same payee under this section in current FY"),
+    ] = 0.0,
+    payee_type: Annotated[
+        str,
+        Field(description="Payee type: 'individual_huf' or 'other' (affects 194C rate)"),
+    ] = "individual_huf",
 ) -> dict[str, Any]:
     """Calculate TDS for a given section and payment amount (FY2025-26).
 
@@ -995,6 +1043,8 @@ def calculate_tds(
             payment_amount: Gross payment in rupees.
             pan_available: Whether payee PAN is available (affects rate).
             is_senior_citizen: For 194A bank interest threshold.
+            aggregate_payments_ytd: Prior payments to same payee in current FY.
+            payee_type: 'individual_huf' or 'other' - affects 194C rate.
 
     Returns:
             Standard envelope with TDS applicability, rate, amount, net payment.
@@ -1008,6 +1058,8 @@ def calculate_tds(
             payment_amount=payment_amount,
             pan_available=pan_available,
             is_senior_citizen=is_senior_citizen,
+            aggregate_payments_ytd=aggregate_payments_ytd,
+            payee_type=payee_type,
         )
         return build_response(
             success=len(result.get("errors", [])) == 0,
@@ -1436,6 +1488,432 @@ def lookup_bbps_biller(
             success=False,
             errors=[f"BBPS lookup failed: {exc}"],
             source="bundled_dataset",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def calculate_epf_esic(
+    basic_wages: Annotated[
+        float,
+        Field(description="Basic salary + DA per month in INR"),
+    ],
+    gross_wages: Annotated[
+        float,
+        Field(description="Total gross monthly salary in INR"),
+    ],
+    include_employer_share: Annotated[
+        bool,
+        Field(description="If True, return employer costs"),
+    ] = True,
+) -> dict[str, Any]:
+    """Calculate EPF and ESIC contributions for employer and employee.
+
+    Use when computing payroll costs, employee deductions, or comparing
+    CTC structures across different salary levels.
+
+    Args:
+        basic_wages: Basic salary + DA per month in INR.
+        gross_wages: Total gross monthly salary in INR.
+        include_employer_share: If True, return employer costs.
+
+    Returns:
+        Standard envelope with EPF breakdown, ESIC applicability, and totals.
+
+    Notes:
+        EPF ceiling is ₹15,000/month for statutory computation.
+        ESIC applicable when gross wages ≤ ₹21,000/month.
+    """
+    try:
+        result = core_calculate_epf_esic(
+            basic_wages=basic_wages,
+            gross_wages=gross_wages,
+            include_employer_share=include_employer_share,
+        )
+        return build_response(
+            success=len(result.get("errors", [])) == 0,
+            data=result,
+            errors=result.get("errors", []),
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"EPF/ESIC calculation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def calculate_emi(
+    principal: Annotated[
+        float,
+        Field(description="Loan amount in INR"),
+    ],
+    annual_interest_rate: Annotated[
+        float,
+        Field(description="Annual interest rate as percentage (e.g., 8.5)"),
+    ],
+    tenure_months: Annotated[
+        int,
+        Field(description="Loan tenure in months"),
+    ],
+    loan_type: Annotated[
+        str,
+        Field(description="Loan type: home, personal, car, education, other"),
+    ] = "other",
+) -> dict[str, Any]:
+    """Calculate EMI for a loan with year-by-year amortization schedule.
+
+    Use when computing loan EMIs, comparing loan options, or planning
+    prepayment strategies.
+
+    Args:
+        principal: Loan amount in INR.
+        annual_interest_rate: Annual rate as percentage.
+        tenure_months: Loan tenure in months (max 360).
+        loan_type: Label for the loan type.
+
+    Returns:
+        Standard envelope with EMI, total payment, interest, and amortization.
+
+    Notes:
+        Uses standard reducing balance formula. Actual EMI may vary by lender.
+    """
+    try:
+        result = core_calculate_emi(
+            principal=principal,
+            annual_interest_rate=annual_interest_rate,
+            tenure_months=tenure_months,
+            loan_type=loan_type,
+        )
+        return build_response(
+            success=len(result.get("errors", [])) == 0,
+            data=result,
+            errors=result.get("errors", []),
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"EMI calculation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def calculate_gratuity(
+    last_drawn_salary: Annotated[
+        float,
+        Field(description="Last basic salary + DA per month in INR"),
+    ],
+    years_of_service: Annotated[
+        float,
+        Field(description="Total years served (e.g., 5.8 = 5 yrs 9 months)"),
+    ],
+    is_covered_under_act: Annotated[
+        bool,
+        Field(description="True if establishment has 10+ employees"),
+    ] = True,
+) -> dict[str, Any]:
+    """Calculate gratuity under the Payment of Gratuity Act, 1972.
+
+    Use when computing terminal benefits, comparing CTC packages, or
+    planning retirement benefits.
+
+    Args:
+        last_drawn_salary: Basic + DA per month.
+        years_of_service: Total service duration.
+        is_covered_under_act: True for establishments with 10+ employees.
+
+    Returns:
+        Standard envelope with gratuity amount, tax-exempt limit, and breakdown.
+
+    Notes:
+        Minimum 5 years service required (except death/disablement).
+        Tax-exempt ceiling is ₹20,00,000.
+    """
+    try:
+        result = core_calculate_gratuity(
+            last_drawn_salary=last_drawn_salary,
+            years_of_service=years_of_service,
+            is_covered_under_act=is_covered_under_act,
+        )
+        return build_response(
+            success=len(result.get("errors", [])) == 0,
+            data=result,
+            errors=result.get("errors", []),
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"Gratuity calculation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def calculate_ppf_maturity(
+    annual_investment: Annotated[
+        float,
+        Field(description="Amount invested per year in INR"),
+    ],
+    tenure_years: Annotated[
+        int,
+        Field(description="PPF tenure in years (15, 20, 25, or 30)"),
+    ] = 15,
+    annual_interest_rate: Annotated[
+        float,
+        Field(description="Annual interest rate percentage (default 7.1 for FY2025-26)"),
+    ] = 7.1,
+) -> dict[str, Any]:
+    """Calculate PPF maturity amount with year-by-year breakdown.
+
+    Use when planning long-term savings, comparing investment options, or
+    calculating retirement corpus.
+
+    Args:
+        annual_investment: Amount invested per year (max ₹1,50,000).
+        tenure_years: PPF tenure (15, 20, 25, or 30 years).
+        annual_interest_rate: PPF rate (default 7.1% for FY2025-26).
+
+    Returns:
+        Standard envelope with maturity amount, total invested, interest earned.
+
+    Notes:
+        EEE tax status: exempt at investment, accumulation, and maturity.
+        Rate is government-administered and revised quarterly.
+    """
+    try:
+        result = core_calculate_ppf_maturity(
+            annual_investment=annual_investment,
+            tenure_years=tenure_years,
+            annual_interest_rate=annual_interest_rate,
+        )
+        return build_response(
+            success=len(result.get("errors", [])) == 0,
+            data=result,
+            errors=result.get("errors", []),
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"PPF calculation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def bulk_validate_aadhaar(
+    numbers: Annotated[
+        list[str],
+        Field(description="List of Aadhaar numbers to validate (max 500)"),
+    ],
+) -> dict[str, Any]:
+    """Validate multiple Aadhaar numbers in parallel using ThreadPoolExecutor.
+
+    Use when batch-validating Aadhaar numbers for KYC, onboarding, or
+    compliance workflows.
+
+    Args:
+        numbers: List of Aadhaar numbers (with or without spaces/hyphens).
+
+    Returns:
+        Standard envelope with per-Aadhaar results and valid/invalid counts.
+
+    Notes:
+        Max 500 Aadhaars per call. Uses same Verhoeff validation as single tool.
+    """
+    try:
+        result = core_bulk_validate_aadhaar(numbers=numbers)
+        return build_response(
+            success=len(result.get("errors", [])) == 0,
+            data=result,
+            errors=result.get("errors", []),
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"Bulk Aadhaar validation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def get_regulatory_deadlines(
+    category: Annotated[
+        str | None,
+        Field(description="Filter by category (Income Tax, TDS, GST, PF/ESIC, ROC, etc.)"),
+    ] = None,
+    from_date: Annotated[
+        str | None,
+        Field(description="Start date filter (YYYY-MM-DD)"),
+    ] = None,
+    to_date: Annotated[
+        str | None,
+        Field(description="End date filter (YYYY-MM-DD)"),
+    ] = None,
+) -> dict[str, Any]:
+    """Get India's tax & regulatory compliance calendar for FY2025-26.
+
+    Use when planning tax compliance schedules, setting reminders for deadlines,
+    or building financial compliance dashboards.
+
+    Args:
+        category: Filter by category (Income Tax, TDS, GST, PF/ESIC, ROC, etc.)
+        from_date: Start date filter (YYYY-MM-DD)
+        to_date: End date filter (YYYY-MM-DD)
+
+    Returns:
+        Standard envelope with deadlines grouped by month for FY2025-26
+
+    Notes:
+        Covers ITR filing, TDS deposits, GST returns, PF/ESIC, ROC filings,
+        advance tax, and professional tax deadlines.
+    """
+    try:
+        result = core_get_regulatory_deadlines(
+            category=category,
+            from_date=from_date,
+            to_date=to_date,
+        )
+        return build_response(
+            success=True,
+            data=result,
+            source="offline_dataset",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"Regulatory calendar lookup failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def calculate_salary_restructuring(
+    current_gross: Annotated[
+        float,
+        Field(description="Current gross annual salary in INR"),
+    ],
+    current_basic_ratio: Annotated[
+        float,
+        Field(description="Current basic salary as ratio of gross (0.40-0.60)"),
+    ] = 0.50,
+    structure_type: Annotated[
+        str,
+        Field(description="Structure option: standard, optimized, or startup"),
+    ] = "standard",
+    include_meal_card: Annotated[
+        bool,
+        Field(description="Include Sodexo/Food card allowance"),
+    ] = False,
+    include_wallet_allowance: Annotated[
+        bool,
+        Field(description="Include flexible wallet allowance"),
+    ] = False,
+    has_hra: Annotated[
+        bool,
+        Field(description="Employee receives HRA"),
+    ] = True,
+    rent_in_metro: Annotated[
+        bool,
+        Field(description="Rent paid in metro city (higher HRA)"),
+    ] = False,
+    family_medical: Annotated[
+        bool,
+        Field(description="Include family medical insurance"),
+    ] = False,
+    parents_medical: Annotated[
+        bool,
+        Field(description="Include parents medical insurance (additional)"),
+    ] = False,
+) -> dict[str, Any]:
+    """Calculate salary restructuring options for tax optimization.
+
+    Use when advising employees on tax-efficient salary structures,
+    comparing restructuring options, or planning CTC optimization.
+
+    Args:
+        current_gross: Current gross annual salary in INR
+        current_basic_ratio: Current basic salary as ratio of gross
+        structure_type: Structure option (standard, optimized, startup)
+        include_meal_card: Include Sodexo/Food card allowance
+        include_wallet_allowance: Include flexible wallet allowance
+        has_hra: Employee receives HRA
+        rent_in_metro: Rent paid in metro city (higher HRA)
+        family_medical: Include family medical insurance
+        parents_medical: Include parents medical insurance
+
+    Returns:
+        Standard envelope with tax-optimized structure, deductions, and estimated tax
+    """
+    try:
+        result = core_calculate_salary_restructuring(
+            current_gross=current_gross,
+            current_basic_ratio=current_basic_ratio,
+            structure_type=structure_type,
+            include_meal_card=include_meal_card,
+            include_wallet_allowance=include_wallet_allowance,
+            has_hra=has_hra,
+            rent_in_metro=rent_in_metro,
+            family_medical=family_medical,
+            parents_medical=parents_medical,
+        )
+        return build_response(
+            success=True,
+            data=result,
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"Salary restructuring calculation failed: {exc}"],
+            source="offline_algorithm",
         )
 
 
@@ -2038,7 +2516,7 @@ def server_status() -> dict[str, Any]:
         "live_lookup_enabled": _LIVE_LOOKUP_ENABLED,
         "dry_run_mode": _DRY_RUN,
         "db_url_configured": _DB_URL_SET,
-        "tool_count": 30,
+        "tool_count": 58,
         "data_version": "2025.04",
     }
 
@@ -2047,7 +2525,7 @@ def server_status() -> dict[str, Any]:
 def changelog() -> dict[str, Any]:
     """Structured changelog as JSON."""
     return {
-        "current_version": "0.3.0",
+        "current_version": "0.4.2",
         "entries": [
             {
                 "version": "0.3.0",
@@ -2097,9 +2575,6 @@ def _validate_single_ifsc(ifsc: str) -> dict[str, Any]:
         return _lookup_ifsc(ifsc)
     except Exception as exc:
         return {"found": False, "ifsc": ifsc, "errors": [f"Lookup error: {exc}"], "warnings": []}
-
-
-_BULK_WORKERS = int(_os.environ.get("MCP_INDIA_STACK_BULK_WORKERS", "10"))
 
 
 @mcp.tool(
@@ -2197,8 +2672,8 @@ def decode_pan_type(
 
     result = validate_pan(pan)
 
-    if result.get("valid"):
-        entity_code = result.get("entity_code", "")
+    if result.get("success"):
+        entity_code = result.get("data", {}).get("entity_code", "")
         entity_types = {
             "P": ("Individual", "NRI requires Form 60/61"),
             "C": ("Company", "Requires DIN for directors"),
@@ -2482,6 +2957,1017 @@ def decode_digilocker_uri(
         validated_by=["format"],
         source="offline_algorithm",
     )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def build_aa_consent_request(
+    customer_id: Annotated[str, Field(description="AA customer address (e.g., user@onemoney)")],
+    fi_types: Annotated[
+        list[str],
+        Field(
+            description=(
+                "FI types: DEPOSIT, MUTUAL_FUNDS, INSURANCE, NPS, EQUITIES, "
+                "GSTIN_DATA, CREDIT_CARD, RECURRING_DEPOSIT"
+            )
+        ),
+    ],
+    date_range_from: Annotated[str, Field(description="Start date YYYY-MM-DD")],
+    date_range_to: Annotated[str, Field(description="End date YYYY-MM-DD")],
+    consent_expiry_days: Annotated[int, Field(description="Days until consent expires")] = 30,
+    purpose_code: Annotated[str, Field(description="ReBIT purpose code (101-106)")] = "101",
+    fetch_type: Annotated[str, Field(description="ONETIME or PERIODIC")] = "ONETIME",
+    frequency_unit: Annotated[
+        str | None, Field(description="HOUR, DAY, MONTH, YEAR for PERIODIC")
+    ] = None,
+    frequency_value: Annotated[
+        int | None, Field(description="Frequency value for PERIODIC")
+    ] = None,
+) -> dict[str, Any]:
+    """Build AA (Account Aggregator) consent request JSON per ReBIT spec.
+
+    Use when setting up data sharing consent for open banking workflows.
+
+    Args:
+        customer_id: AA customer address (user@provider)
+        fi_types: Financial information types to request
+        date_range_from: Data fetch range start
+        date_range_to: Data fetch range end
+        consent_expiry_days: How many days consent remains valid
+        purpose_code: ReBIT purpose code (default "101")
+        fetch_type: "ONETIME" or "PERIODIC"
+        frequency_unit: "HOUR", "DAY", "MONTH", "YEAR" - for PERIODIC
+        frequency_value: Numeric frequency - for PERIODIC
+
+    Returns:
+        Consent request payload and validation notes.
+    """
+    try:
+        result = core_build_aa_consent_request(
+            customer_id=customer_id,
+            fi_types=fi_types,
+            date_range_from=date_range_from,
+            date_range_to=date_range_to,
+            consent_expiry_days=consent_expiry_days,
+            purpose_code=purpose_code,
+            fetch_type=fetch_type,
+            frequency_unit=frequency_unit,
+            frequency_value=frequency_value,
+        )
+        return build_response(
+            success=result.get("valid", False),
+            data=result,
+            errors=result.get("errors", []),
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"AA consent request failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def validate_aa_consent_artifact(
+    artifact: Annotated[dict[str, Any], Field(description="AA consent artifact JSON")],
+) -> dict[str, Any]:
+    """Validate AA consent artifact structure and flags.
+
+    Use when verifying consent artifacts received from AA before processing.
+
+    Args:
+        artifact: Consent artifact JSON from AA response
+
+    Returns:
+        Validation result with consent details.
+    """
+    from mcp_india_stack.tools.aa_consent import FI_TYPE_VALID, PURPOSE_CODE_MAP
+
+    errors = []
+    warnings = []
+
+    if "consentStart" not in artifact:
+        errors.append("Missing consentStart")
+    if "consentExpiry" not in artifact:
+        errors.append("Missing consentExpiry")
+    if "fiTypes" not in artifact:
+        errors.append("Missing fiTypes")
+    elif not isinstance(artifact.get("fiTypes"), list):
+        errors.append("fiTypes must be a list")
+    else:
+        for ft in artifact.get("fiTypes", []):
+            if ft not in FI_TYPE_VALID:
+                warnings.append(f"Unknown fi_type: {ft}")
+
+    if "Purpose" in artifact and artifact["Purpose"].get("code") not in PURPOSE_CODE_MAP:
+        warnings.append(f"Unknown purpose code: {artifact['Purpose'].get('code')}")
+
+    return build_response(
+        success=len(errors) == 0,
+        data={
+            "artifact": artifact,
+            "errors": errors,
+            "warnings": warnings,
+            "validated": len(errors) == 0,
+        },
+        source="offline_algorithm",
+    )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def decode_aa_fi_type(
+    fi_type: Annotated[str, Field(description="FI type code (e.g., DEPOSIT, MUTUAL_FUNDS)")],
+) -> dict[str, Any]:
+    """Decode AA Financial Information type and get MCP tool pairings.
+
+    Use when mapping FI types to validation/calculation tools.
+
+    Args:
+        fi_type: FI type code (e.g., "DEPOSIT", "MUTUAL_FUNDS")
+
+    Returns:
+        FI type description, typical fields, and MCP tool pairings.
+    """
+    try:
+        result = core_decode_aa_fi_type(fi_type)
+        return build_response(
+            success=result.get("description") is not None,
+            data=result,
+            errors=[str(result.get("error"))] if result.get("error") else [],
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"FI type decode failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def calculate_fd_maturity(
+    principal: Annotated[float, Field(description="Deposit amount in INR")],
+    annual_interest_rate: Annotated[
+        float, Field(description="Interest rate as percentage (e.g., 6.5)")
+    ],
+    tenure_days: Annotated[int, Field(description="Deposit tenure in days")],
+    compounding: Annotated[
+        str, Field(description="monthly, quarterly, half_yearly, yearly, simple")
+    ] = "quarterly",
+    is_senior_citizen: Annotated[bool, Field(description="Senior citizen flag")] = False,
+    tds_applicable: Annotated[
+        bool, Field(description="Apply 10% TDS if interest exceeds threshold")
+    ] = True,
+) -> dict[str, Any]:
+    """Calculate Fixed Deposit maturity amount.
+
+    Use when projecting FD returns or comparing deposit options.
+
+    Args:
+        principal: Deposit amount in INR
+        annual_interest_rate: Rate as percentage
+        tenure_days: Deposit tenure in days
+        compounding: Compounding frequency
+        is_senior_citizen: Senior citizen flag (0.25% extra rate)
+        tds_applicable: Apply TDS if interest > ₹40,000/yr
+
+    Returns:
+        Maturity amount with interest breakdown and TDS if applicable.
+    """
+    try:
+        result = core_calculate_fd_maturity(
+            principal=principal,
+            annual_interest_rate=annual_interest_rate,
+            tenure_days=tenure_days,
+            compounding=compounding,
+            is_senior_citizen=is_senior_citizen,
+            tds_applicable=tds_applicable,
+        )
+        return build_response(
+            success="errors" not in result,
+            data=result,
+            errors=result.get("errors", []),
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"FD maturity calculation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def calculate_rd_maturity(
+    monthly_installment: Annotated[float, Field(description="Monthly deposit amount in INR")],
+    annual_interest_rate: Annotated[float, Field(description="Annual interest rate as percentage")],
+    tenure_months: Annotated[int, Field(description="Deposit tenure in months")],
+) -> dict[str, Any]:
+    """Calculate Recurring Deposit maturity amount.
+
+    Use when projecting RD returns or planning recurring deposits.
+
+    Args:
+        monthly_installment: Monthly deposit amount
+        annual_interest_rate: Annual rate as percentage
+        tenure_months: Deposit tenure in months
+
+    Returns:
+        Maturity amount with total interest earned.
+    """
+    try:
+        result = core_calculate_rd_maturity(
+            monthly_installment=monthly_installment,
+            annual_interest_rate=annual_interest_rate,
+            tenure_months=tenure_months,
+        )
+        return build_response(
+            success="errors" not in result,
+            data=result,
+            errors=result.get("errors", []),
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"RD maturity calculation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def calculate_sip_returns(
+    monthly_investment: Annotated[float, Field(description="Monthly SIP amount in INR")],
+    expected_annual_return: Annotated[float, Field(description="Expected CAGR as percentage")],
+    tenure_years: Annotated[int, Field(description="Investment tenure in years")],
+    inflation_rate: Annotated[float, Field(description="Expected inflation rate percentage")] = 6.0,
+) -> dict[str, Any]:
+    """Calculate SIP maturity with inflation-adjusted returns.
+
+    Use when projecting mutual fund SIP returns or planning systematic investments.
+
+    Args:
+        monthly_investment: Monthly SIP amount
+        expected_annual_return: Expected CAGR %
+        tenure_years: Investment tenure
+        inflation_rate: Expected inflation %
+
+    Returns:
+        Corpus with wealth gained and inflation-adjusted value.
+    """
+    try:
+        result = core_calculate_sip_returns(
+            monthly_investment=monthly_investment,
+            expected_annual_return=expected_annual_return,
+            tenure_years=tenure_years,
+            inflation_rate=inflation_rate,
+        )
+        return build_response(
+            success="errors" not in result,
+            data=result,
+            errors=result.get("errors", []),
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"SIP returns calculation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def calculate_step_up_sip(
+    initial_monthly_investment: Annotated[float, Field(description="Starting SIP amount in INR")],
+    annual_step_up_percent: Annotated[float, Field(description="Annual step-up percentage")],
+    expected_annual_return: Annotated[float, Field(description="Expected CAGR as percentage")],
+    tenure_years: Annotated[int, Field(description="Investment tenure in years")],
+) -> dict[str, Any]:
+    """Calculate SIP with annual step-up increment.
+
+    Use when comparing step-up SIP vs flat SIP or planning salary-linked investments.
+
+    Args:
+        initial_monthly_investment: Starting SIP amount
+        annual_step_up_percent: % increase each year
+        expected_annual_return: Expected CAGR %
+        tenure_years: Investment tenure
+
+    Returns:
+        Corpus comparison between step-up and flat SIP.
+    """
+    try:
+        result = core_calculate_step_up_sip(
+            initial_monthly_investment=initial_monthly_investment,
+            annual_step_up_percent=annual_step_up_percent,
+            expected_annual_return=expected_annual_return,
+            tenure_years=tenure_years,
+        )
+        return build_response(
+            success="errors" not in result,
+            data=result,
+            errors=result.get("errors", []),
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"Step-up SIP calculation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def calculate_nps_projection(
+    monthly_contribution: Annotated[float, Field(description="Monthly NPS contribution in INR")],
+    current_age: Annotated[int, Field(description="Current age")],
+    retirement_age: Annotated[int, Field(description="Retirement age")] = 60,
+    expected_annual_return: Annotated[
+        float, Field(description="Expected annual return percentage")
+    ] = 10.0,
+    annuity_rate: Annotated[float, Field(description="Annuity rate percentage")] = 6.0,
+    annuity_percent: Annotated[float, Field(description="Corpus for annuity (min 40%)")] = 40.0,
+) -> dict[str, Any]:
+    """Calculate NPS corpus and monthly pension at retirement.
+
+    Use when planning retirement with NPS or projecting pension.
+
+    Args:
+        monthly_contribution: Monthly NPS contribution
+        current_age: Current age
+        retirement_age: Retirement age (default 60)
+        expected_annual_return: Expected annual return %
+        annuity_rate: Annuity rate %
+        annuity_percent: % of corpus to buy annuity (min 40%)
+
+    Returns:
+        Projected corpus, lump sum, and monthly pension estimate.
+    """
+    try:
+        result = core_calculate_nps_projection(
+            monthly_contribution=monthly_contribution,
+            current_age=current_age,
+            retirement_age=retirement_age,
+            expected_annual_return=expected_annual_return,
+            annuity_rate=annuity_rate,
+            annuity_percent=annuity_percent,
+        )
+        return build_response(
+            success="errors" not in result,
+            data=result,
+            errors=result.get("errors", []),
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"NPS projection failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def calculate_sukanya_samriddhi(
+    scheme: Annotated[
+        str,
+        Field(
+            description="'ssy' for Sukanya Samriddhi or 'scss' for Senior Citizen Savings Scheme"
+        ),
+    ],
+    annual_investment: Annotated[float, Field(description="Annual deposit amount in INR")],
+    annual_interest_rate: Annotated[float, Field(description="Interest rate as percentage")] = 8.2,
+) -> dict[str, Any]:
+    """Calculate SSY or SCSS maturity amount.
+
+    Use when planning long-term savings for girl child (SSY) or retirement (SCSS).
+
+    Args:
+        scheme: "ssy" or "scss"
+        annual_investment: Annual deposit amount
+        annual_interest_rate: Interest rate (default 8.2%)
+
+    Returns:
+        Maturity amount with interest breakdown and tax status.
+    """
+    try:
+        result = core_calculate_sukanya_samriddhi(
+            scheme=scheme,
+            annual_investment=annual_investment,
+            annual_interest_rate=annual_interest_rate,
+        )
+        return build_response(
+            success="errors" not in result,
+            data=result,
+            errors=result.get("errors", []),
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"SSY/SCSS calculation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def calculate_home_vs_rent(
+    home_price: Annotated[float, Field(description="Property price in INR")],
+    down_payment_percent: Annotated[float, Field(description="Down payment as percentage")] = 20.0,
+    loan_interest_rate: Annotated[
+        float, Field(description="Home loan interest rate percentage")
+    ] = 8.5,
+    loan_tenure_years: Annotated[int, Field(description="Loan tenure in years")] = 20,
+    monthly_rent: Annotated[float, Field(description="Current monthly rent in INR")] = 25000,
+    annual_rent_increase: Annotated[
+        float, Field(description="Expected rent increase percentage/year")
+    ] = 5.0,
+    expected_property_appreciation: Annotated[
+        float, Field(description="Property appreciation percentage/year")
+    ] = 6.0,
+    investment_return: Annotated[
+        float, Field(description="Return on invested down payment percentage")
+    ] = 12.0,
+    analysis_years: Annotated[int, Field(description="Years to compare")] = 20,
+) -> dict[str, Any]:
+    """Compare buying vs renting financial outcome.
+
+    Use when deciding between buying a home or renting.
+
+    Args:
+        home_price: Property price in INR
+        down_payment_percent: Down payment as %
+        loan_interest_rate: Home loan interest rate %
+        loan_tenure_years: Loan tenure
+        monthly_rent: Current monthly rent
+        annual_rent_increase: Expected rent increase %/year
+        expected_property_appreciation: Property appreciation %/year
+        investment_return: Return on invested down payment %
+        analysis_years: Years to compare
+
+    Returns:
+        Buy/rent comparison with yearly breakdown and break-even analysis.
+    """
+    try:
+        result = core_calculate_home_vs_rent(
+            home_price=home_price,
+            down_payment_percent=down_payment_percent,
+            loan_interest_rate=loan_interest_rate,
+            loan_tenure_years=loan_tenure_years,
+            monthly_rent=monthly_rent,
+            annual_rent_increase=annual_rent_increase,
+            expected_property_appreciation=expected_property_appreciation,
+            investment_return=investment_return,
+            analysis_years=analysis_years,
+        )
+        return build_response(
+            success="errors" not in result,
+            data=result,
+            errors=result.get("errors", []),
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"Home vs rent calculation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def calculate_gst_late_fee(
+    return_type: Annotated[str, Field(description="GSTR1, GSTR3B, or GSTR9")],
+    days_delayed: Annotated[int, Field(description="Number of days delayed")],
+    annual_turnover: Annotated[float, Field(description="Annual turnover in INR")],
+    has_nil_liability: Annotated[bool, Field(description="True if nil return")] = False,
+) -> dict[str, Any]:
+    """Calculate GST late filing penalty.
+
+    Use when estimating late filing fees or planning compliance.
+
+    Args:
+        return_type: "GSTR1", "GSTR3B", or "GSTR9"
+        days_delayed: Number of days delayed
+        annual_turnover: Annual turnover for cap calculation
+        has_nil_liability: True if nil return
+
+    Returns:
+        Late fee breakdown with CGST/SGST split.
+    """
+    try:
+        result = core_calculate_gst_late_fee(
+            return_type=return_type,
+            days_delayed=days_delayed,
+            annual_turnover=annual_turnover,
+            has_nil_liability=has_nil_liability,
+        )
+        return build_response(
+            success="errors" not in result,
+            data=result,
+            errors=result.get("errors", []),
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"GST late fee calculation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def calculate_income_tax_interest(
+    total_tax_liability: Annotated[float, Field(description="Total tax liability in INR")],
+    tds_deducted: Annotated[float, Field(description="TDS already deducted in INR")] = 0.0,
+    advance_tax_paid: Annotated[
+        dict[str, float] | None, Field(description="Dict with q1,q2,q3,q4 quarterly payments")
+    ] = None,
+    filing_date: Annotated[
+        str | None, Field(description="Filing date YYYY-MM-DD or None if not filed")
+    ] = None,
+    due_date: Annotated[str, Field(description="Due date YYYY-MM-DD")] = "2025-07-31",
+) -> dict[str, Any]:
+    """Calculate interest under Sections 234A, 234B, 234C.
+
+    Use when computing penalty interest for late tax filing or short advance tax payments.
+
+    Args:
+        total_tax_liability: Total tax liability
+        tds_deducted: TDS already deducted
+        advance_tax_paid: Dict with q1,q2,q3,q4 quarterly payments
+        filing_date: YYYY-MM-DD when return filed (None if not filed)
+        due_date: Due date for filing
+
+    Returns:
+        Interest breakdown for Sections 234A, 234B, 234C.
+    """
+    if advance_tax_paid is None:
+        advance_tax_paid = {}
+    try:
+        result = core_calculate_income_tax_interest(
+            total_tax_liability=total_tax_liability,
+            advance_tax_paid=advance_tax_paid,
+            tds_deducted=tds_deducted,
+            filing_date=filing_date,
+            due_date=due_date,
+        )
+        return build_response(
+            success=True,
+            data=result,
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"Income tax interest calculation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def calculate_presumptive_tax(
+    scheme: Annotated[str, Field(description="'44AD' for business or '44ADA' for professionals")],
+    gross_receipts: Annotated[float, Field(description="Total gross receipts in INR")],
+    digital_receipt_percent: Annotated[
+        float, Field(description="Percentage via digital mode")
+    ] = 100.0,
+    regime: Annotated[str, Field(description="'new' or 'old' tax regime")] = "new",
+    age: Annotated[int, Field(description="Assessee age")] = 35,
+    deductions_80c: Annotated[float, Field(description="Section 80C deductions (old regime)")] = 0,
+) -> dict[str, Any]:
+    """Calculate tax under presumptive scheme (Sections 44AD, 44ADA).
+
+    Use when computing tax for small businesses or professionals under presumptive taxation.
+
+    Args:
+        scheme: "44AD" or "44ADA"
+        gross_receipts: Total gross receipts
+        digital_receipt_percent: % of receipts via digital mode
+        regime: "new" or "old"
+        age: Assessee age
+        deductions_80c: Section 80C deductions (old regime)
+
+    Returns:
+        Presumptive income and total tax payable.
+    """
+    try:
+        result = core_calculate_presumptive_tax(
+            scheme=scheme,
+            gross_receipts=gross_receipts,
+            digital_receipt_percent=digital_receipt_percent,
+            regime=regime,
+            age=age,
+            deductions_80c=deductions_80c,
+        )
+        return build_response(
+            success="errors" not in result,
+            data=result,
+            errors=result.get("errors", []),
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"Presumptive tax calculation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def calculate_professional_tax(
+    gross_salary_monthly: Annotated[float, Field(description="Monthly gross salary in INR")],
+    state_code: Annotated[str, Field(description="2-char state code (e.g., MH, KA, TN)")],
+) -> dict[str, Any]:
+    """Calculate state-wise professional tax.
+
+    Use when computing total tax liability including professional tax deductions.
+
+    Args:
+        gross_salary_monthly: Monthly gross salary
+        state_code: 2-char state code (e.g., "MH", "KA", "TN")
+
+    Returns:
+        Monthly and annual professional tax amount.
+    """
+    try:
+        result = core_calculate_professional_tax(
+            gross_salary_monthly=gross_salary_monthly,
+            state_code=state_code,
+        )
+        return build_response(
+            success=result.get("applicable", False),
+            data=result,
+            errors=[],
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"Professional tax calculation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def calculate_leave_encashment_tax(
+    leave_encashment_amount: Annotated[float, Field(description="Actual amount received in INR")],
+    average_monthly_salary: Annotated[
+        float, Field(description="Average of last 10 months basic + DA")
+    ],
+    earned_leave_balance_days: Annotated[int, Field(description="Days of earned leave")],
+    years_of_service: Annotated[int, Field(description="Total years of service")],
+    is_government_employee: Annotated[bool, Field(description="Government employee flag")] = False,
+) -> dict[str, Any]:
+    """Calculate tax-exempt portion of leave encashment under Section 10(10AA).
+
+    Use when computing leave encashment tax exemption or planning retirement benefits.
+
+    Args:
+        leave_encashment_amount: Actual amount received
+        average_monthly_salary: Average of last 10 months basic + DA
+        earned_leave_balance_days: Days of earned leave
+        years_of_service: Total years of service
+        is_government_employee: Government employee flag
+
+    Returns:
+        Exemption amount and taxable portion breakdown.
+    """
+    try:
+        result = core_calculate_leave_encashment_tax(
+            leave_encashment_amount=leave_encashment_amount,
+            average_monthly_salary=average_monthly_salary,
+            earned_leave_balance_days=earned_leave_balance_days,
+            years_of_service=years_of_service,
+            is_government_employee=is_government_employee,
+        )
+        return build_response(
+            success="errors" not in result,
+            data=result,
+            errors=result.get("errors", []),
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"Leave encashment calculation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def validate_tan(
+    tan: Annotated[str, Field(description="10-character TAN (e.g., ABCD12345E)")],
+) -> dict[str, Any]:
+    """Validate TAN (Tax Deduction Account Number) format.
+
+    Use when verifying TAN format for TDS compliance.
+
+    Args:
+        tan: 10-character TAN
+
+    Returns:
+        Validation result with decoded segments.
+    """
+    try:
+        result = core_validate_tan(tan)
+        return build_response(
+            success=result.get("valid", False),
+            data=result,
+            errors=[str(result.get("error"))] if result.get("error") else [],
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"TAN validation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def validate_mobile_number(
+    mobile: Annotated[str, Field(description="10-digit mobile number with or without +91/0")],
+) -> dict[str, Any]:
+    """Validate Indian mobile number and detect operator/circle.
+
+    Use when validating mobile numbers for KYC or contact verification.
+
+    Args:
+        mobile: Mobile number with or without +91/0
+
+    Returns:
+        Validation result with operator and telecom circle.
+    """
+    try:
+        result = core_validate_mobile_number(mobile)
+        return build_response(
+            success=result.get("valid", False),
+            data=result,
+            errors=[str(result.get("error"))] if result.get("error") else [],
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"Mobile validation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def validate_pran(
+    pran: Annotated[str, Field(description="12-digit PRAN")],
+) -> dict[str, Any]:
+    """Validate PRAN (Permanent Retirement Account Number) for NPS.
+
+    Use when verifying NPS account numbers.
+
+    Args:
+        pran: 12-digit PRAN
+
+    Returns:
+        Validation result with subscriber category.
+    """
+    try:
+        result = core_validate_pran(pran)
+        return build_response(
+            success=result.get("valid", False),
+            data=result,
+            errors=[str(result.get("error"))] if result.get("error") else [],
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"PRAN validation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def validate_llpin(
+    llpin: Annotated[str, Field(description="LLPIN in format AAA-XXXX or AAAXXXX")],
+) -> dict[str, Any]:
+    """Validate LLPIN (Limited Liability Partnership Identification Number).
+
+    Use when verifying LLP registration numbers.
+
+    Args:
+        llpin: LLPIN in format AAA-XXXX
+
+    Returns:
+        Validation result with decoded segments.
+    """
+    try:
+        result = core_validate_llpin(llpin)
+        return build_response(
+            success=result.get("valid", False),
+            data=result,
+            errors=[str(result.get("error"))] if result.get("error") else [],
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"LLPIN validation failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def decode_isin(
+    isin: Annotated[str, Field(description="12-character ISIN (e.g., INE1234567890)")],
+) -> dict[str, Any]:
+    """Decode ISIN (International Securities Identification Number) with Luhn check.
+
+    Use when validating ISIN for Indian securities.
+
+    Args:
+        isin: 12-character ISIN
+
+    Returns:
+        Decoded fields with country, NSIN, security type, and Luhn validation.
+    """
+    try:
+        result = core_decode_isin(isin)
+        return build_response(
+            success=result.get("valid", False),
+            data=result,
+            errors=[str(result.get("error"))] if result.get("error") else [],
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"ISIN decode failed: {exc}"],
+            source="offline_algorithm",
+        )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
+def calculate_neft_rtgs_imps_charges(
+    transfer_mode: Annotated[str, Field(description="NEFT, RTGS, IMPS, or UPI")],
+    amount: Annotated[float, Field(description="Transfer amount in INR")],
+    account_type: Annotated[str, Field(description="'savings' or 'current'")] = "savings",
+    is_online: Annotated[bool, Field(description="True if done via online banking")] = True,
+) -> dict[str, Any]:
+    """Calculate NEFT/RTGS/IMPS/UPI transaction charges.
+
+    Use when estimating bank transfer costs or comparing payment modes.
+
+    Args:
+        transfer_mode: "NEFT", "RTGS", "IMPS", or "UPI"
+        amount: Transfer amount in INR
+        account_type: "savings" or "current"
+        is_online: True if done via online banking
+
+    Returns:
+        Charge breakdown with base charge, GST, and total.
+    """
+    try:
+        result = core_calculate_neft_rtgs_imps_charges(
+            transfer_mode=transfer_mode,
+            amount=amount,
+            account_type=account_type,
+            is_online=is_online,
+        )
+        return build_response(
+            success="errors" not in result,
+            data=result,
+            errors=result.get("errors", []),
+            source="offline_algorithm",
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"Bank charges calculation failed: {exc}"],
+            source="offline_algorithm",
+        )
 
 
 # ========== Dry-Run Mode Handler ==========

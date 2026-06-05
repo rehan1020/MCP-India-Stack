@@ -5,6 +5,8 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from mcp_india_stack.utils.responses import build_response
+
 # Standard format: SS RR YYYY NNNNNNN (state=2, RTO=2, year=4, serial=7 = 15 chars)
 DL_STANDARD_RE = re.compile(r"^[A-Z]{2}[0-9]{2}[0-9]{4}[0-9]{7}$")
 
@@ -66,34 +68,40 @@ def validate_driving_license(dl_number: str) -> dict[str, Any]:
     """
     try:
         if dl_number is None:
-            return {
-                "valid": False,
-                "dl_number": "",
-                "state_code": "",
-                "state_name": "",
-                "rto_code": "",
-                "year_of_issue": "",
-                "serial": "",
-                "errors": ["Driving license number is required"],
-                "disclaimer": DISCLAIMER,
-            }
+            return build_response(
+                success=False,
+                data={
+                    "valid": False,
+                    "dl_number": "",
+                    "state_code": "",
+                    "state_name": "",
+                    "rto_code": "",
+                    "year_of_issue": "",
+                    "serial": "",
+                },
+                errors=["Driving license number is required"],
+                source="offline_static",
+            )
 
         # Normalise: strip whitespace, hyphens, convert to upper
         cleaned = re.sub(r"[\s\-]", "", str(dl_number).strip().upper())
         errors: list[str] = []
 
         if not cleaned:
-            return {
-                "valid": False,
-                "dl_number": "",
-                "state_code": "",
-                "state_name": "",
-                "rto_code": "",
-                "year_of_issue": "",
-                "serial": "",
-                "errors": ["Driving license number cannot be empty"],
-                "disclaimer": DISCLAIMER,
-            }
+            return build_response(
+                success=False,
+                data={
+                    "valid": False,
+                    "dl_number": "",
+                    "state_code": "",
+                    "state_name": "",
+                    "rto_code": "",
+                    "year_of_issue": "",
+                    "serial": "",
+                },
+                errors=["Driving license number cannot be empty"],
+                source="offline_static",
+            )
 
         # Standard 15-character format
         if DL_STANDARD_RE.match(cleaned):
@@ -111,34 +119,41 @@ def validate_driving_license(dl_number: str) -> dict[str, Any]:
             if year_int < 1900 or year_int > 2100:
                 errors.append(f"Year of issue {year_of_issue} is out of plausible range")
 
-            return {
-                "valid": len(errors) == 0,
-                "dl_number": cleaned,
-                "state_code": state_code,
-                "state_name": state_name,
-                "rto_code": rto_code,
-                "year_of_issue": year_of_issue,
-                "serial": serial,
-                "errors": errors,
-                "disclaimer": DISCLAIMER,
-            }
+            return build_response(
+                success=len(errors) == 0,
+                data={
+                    "valid": len(errors) == 0,
+                    "dl_number": cleaned,
+                    "state_code": state_code,
+                    "state_name": state_name,
+                    "rto_code": rto_code,
+                    "year_of_issue": year_of_issue,
+                    "serial": serial,
+                },
+                errors=errors,
+                source="offline_static",
+                validated_by=["format_check"],
+            )
 
         # Non-standard but plausible length (13-16 chars, alphanumeric)
         if 13 <= len(cleaned) <= 16 and cleaned.isalnum():
-            return {
-                "valid": False,
-                "dl_number": cleaned,
-                "state_code": cleaned[0:2] if len(cleaned) >= 2 else "",
-                "state_name": "",
-                "rto_code": "",
-                "year_of_issue": "",
-                "serial": "",
-                "errors": [
+            return build_response(
+                success=False,
+                data={
+                    "valid": False,
+                    "dl_number": cleaned,
+                    "state_code": cleaned[0:2] if len(cleaned) >= 2 else "",
+                    "state_name": "",
+                    "rto_code": "",
+                    "year_of_issue": "",
+                    "serial": "",
+                },
+                errors=[
                     "Does not match standard post-Sarathi DL format. "
                     "May be a pre-Sarathi or state-specific format."
                 ],
-                "disclaimer": DISCLAIMER,
-            }
+                source="offline_static",
+            )
 
         # Clearly invalid
         if len(cleaned) < 13 or len(cleaned) > 16:
@@ -146,27 +161,33 @@ def validate_driving_license(dl_number: str) -> dict[str, Any]:
         else:
             errors.append("Driving license number contains invalid characters")
 
-        return {
-            "valid": False,
-            "dl_number": cleaned,
-            "state_code": "",
-            "state_name": "",
-            "rto_code": "",
-            "year_of_issue": "",
-            "serial": "",
-            "errors": errors,
-            "disclaimer": DISCLAIMER,
-        }
+        return build_response(
+            success=False,
+            data={
+                "valid": False,
+                "dl_number": cleaned,
+                "state_code": "",
+                "state_name": "",
+                "rto_code": "",
+                "year_of_issue": "",
+                "serial": "",
+            },
+            errors=errors,
+            source="offline_static",
+        )
 
     except Exception as exc:
-        return {
-            "valid": False,
-            "dl_number": str(dl_number) if dl_number else "",
-            "state_code": "",
-            "state_name": "",
-            "rto_code": "",
-            "year_of_issue": "",
-            "serial": "",
-            "errors": [f"Driving license validation failed: {exc}"],
-            "disclaimer": DISCLAIMER,
-        }
+        return build_response(
+            success=False,
+            data={
+                "valid": False,
+                "dl_number": str(dl_number) if dl_number else "",
+                "state_code": "",
+                "state_name": "",
+                "rto_code": "",
+                "year_of_issue": "",
+                "serial": "",
+            },
+            errors=[f"Driving license validation failed: {exc}"],
+            source="offline_static",
+        )

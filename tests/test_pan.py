@@ -4,13 +4,15 @@ from mcp_india_stack.tools.pan import validate_pan
 
 def test_validate_pan_success() -> None:
     result = validate_pan("AAAPL1234C")
-    assert result["valid"] is True
-    assert result["entity_type"] == "Individual"
+    assert result["success"] is True
+    assert result["data"]["valid"] is True
+    assert result["data"]["entity_type"] == "Individual"
 
 
 def test_validate_pan_invalid_length() -> None:
     result = validate_pan("AAA1")
-    assert result["valid"] is False
+    assert result["success"] is False
+    assert result["data"]["valid"] is False
 
 
 def test_decode_pan_type_firm() -> None:
@@ -36,4 +38,4 @@ def test_validate_pan_and_decode_pan_type_agree() -> None:
     pan = "AAPFU0939F"
     validate_result = validate_pan(pan)
     decode_result = decode_pan_type(pan)
-    assert validate_result["entity_type"] == decode_result["data"]["entity_type_label"]
+    assert validate_result["data"]["entity_type"] == decode_result["data"]["entity_type_label"]

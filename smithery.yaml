@@ -2,7 +2,7 @@
 version: 0.1.0
 package:
   name: mcp-india-stack-official
-  version: 0.3.0
+  version: 0.4.2
   description: "Offline-first MCP server for Indian financial identifiers (GSTIN, PAN, Aadhaar) and tax calculators (FY25-26)."
   author: rehan1020
   license: MIT

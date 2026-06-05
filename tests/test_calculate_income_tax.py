@@ -71,3 +71,30 @@ class TestDisclaimer:
         result = calculate_income_tax(1_000_000, regime="new")
         assert "disclaimer" in result
         assert "FY2025-26" in result["disclaimer"]
+
+
+# --- Bug fix verification tests: 80D senior citizen ---
+
+
+def test_80d_senior_citizen_50k_allowed():
+    """Senior citizen (age 65) with ₹50K health insurance should get full deduction."""
+    result = calculate_income_tax(
+        gross_income=8_00_000,
+        regime="old",
+        age=65,
+        health_insurance_premium=50_000,
+    )
+    # Full ₹50,000 should be deducted
+    assert result["old_regime"]["deductions"]["section_80d"] == 50_000
+
+
+def test_80d_non_senior_capped_at_25k():
+    """Non-senior (age 35) with ₹50K premium should be capped at ₹25,000."""
+    result = calculate_income_tax(
+        gross_income=8_00_000,
+        regime="old",
+        age=35,
+        health_insurance_premium=50_000,
+    )
+    # Should be capped at ₹25,000
+    assert result["old_regime"]["deductions"]["section_80d"] == 25_000

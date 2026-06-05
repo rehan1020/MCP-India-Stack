@@ -507,7 +507,7 @@ class TestCapitalGainsTool:
     def test_capital_gains_real_estate(self) -> None:
         from mcp_india_stack.tools.capital_gains import calculate_capital_gains
 
-        result = calculate_capital_gains(2000000, 1000000, "real_estate", 500)
+        result = calculate_capital_gains(2000000, 1000000, "real_estate", 800)
         assert result["is_long_term"] is True
 
     def test_capital_gains_negative(self) -> None:
@@ -608,20 +608,20 @@ class TestAdvanceTaxTool:
     def test_advance_tax_normal(self) -> None:
         from mcp_india_stack.tools.advance_tax import calculate_advance_tax
 
-        result = calculate_advance_tax(1500000)
+        result = calculate_advance_tax(estimated_income=1500000)
         assert "installments" in result
         assert len(result["installments"]) == 4
 
     def test_advance_tax_zero_income(self) -> None:
         from mcp_india_stack.tools.advance_tax import calculate_advance_tax
 
-        result = calculate_advance_tax(0)
+        result = calculate_advance_tax(estimated_income=0)
         assert result["advance_tax_due"] == 0
 
     def test_advance_tax_negative(self) -> None:
         from mcp_india_stack.tools.advance_tax import calculate_advance_tax
 
-        result = calculate_advance_tax(-1000)
+        result = calculate_advance_tax(estimated_income=-1000)
         assert "must be positive" in str(result["errors"])
 
     def test_interest_penalty(self) -> None:

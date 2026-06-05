@@ -186,3 +186,61 @@ def test_server_main_runs_stdio_transport(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr("sys.argv", ["mcp-india-stack"])
     server.main()
     assert called == ["stdio"]
+
+
+def test_calculate_epf_esic_wrapper_handles_error(monkeypatch: MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        "mcp_india_stack.server.core_calculate_epf_esic",
+        lambda **_: (_ for _ in ()).throw(RuntimeError("boom-epf")),
+    )
+    response = server.calculate_epf_esic(basic_wages=25000, gross_wages=40000)
+    assert response["success"] is False
+
+
+def test_calculate_emi_wrapper_handles_error(monkeypatch: MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        "mcp_india_stack.server.core_calculate_emi",
+        lambda **_: (_ for _ in ()).throw(RuntimeError("boom-emi")),
+    )
+    response = server.calculate_emi(principal=1000000, annual_interest_rate=8.5, tenure_months=120)
+    assert response["success"] is False
+
+
+def test_calculate_gratuity_wrapper_handles_error(monkeypatch: MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        "mcp_india_stack.server.core_calculate_gratuity",
+        lambda **_: (_ for _ in ()).throw(RuntimeError("boom-gratuity")),
+    )
+    response = server.calculate_gratuity(last_drawn_salary=50000, years_of_service=7)
+    assert response["success"] is False
+
+
+def test_calculate_ppf_maturity_wrapper_handles_error(monkeypatch: MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        "mcp_india_stack.server.core_calculate_ppf_maturity",
+        lambda **_: (_ for _ in ()).throw(RuntimeError("boom-ppf")),
+    )
+    response = server.calculate_ppf_maturity(annual_investment=150000)
+    assert response["success"] is False
+
+
+def test_get_regulatory_deadlines_wrapper_handles_error(monkeypatch: MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        "mcp_india_stack.server.core_get_regulatory_deadlines",
+        lambda **_: (_ for _ in ()).throw(RuntimeError("boom-calendar")),
+    )
+    response = server.get_regulatory_deadlines(category="GST")
+    assert response["success"] is False
+
+
+def test_calculate_salary_restructuring_wrapper_handles_error(
+    monkeypatch: MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "mcp_india_stack.server.core_calculate_salary_restructuring",
+        lambda **_: (_ for _ in ()).throw(RuntimeError("boom-salary")),
+    )
+    response = server.calculate_salary_restructuring(
+        current_gross=1800000, current_basic_ratio=0.50
+    )
+    assert response["success"] is False

@@ -10,8 +10,6 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, cast
 
-import polars as pl
-
 from mcp_india_stack.utils.updater import get_dataset_path
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
@@ -65,6 +63,8 @@ def load_ifsc_index() -> dict[str, dict[str, Any]]:
     """Load IFSC CSV once and build O(1) code lookup."""
     path = _must_exist(get_dataset_path("ifsc"), "IFSC")
     try:
+        import polars as pl
+
         df = pl.read_csv(
             path,
             infer_schema_length=5000,
@@ -135,39 +135,25 @@ def load_pincode_index() -> dict[str, list[dict[str, str]]]:
 def load_hsn_index() -> dict[str, list[dict[str, Any]]]:
     """Load HSN/SAC master and index by code."""
     path = _must_exist(get_dataset_path("hsn"), "HSN/SAC")
+    out: dict[str, list[dict[str, Any]]] = {}
     try:
-        df = pl.read_csv(
-            path,
-            infer_schema_length=2000,
-            schema_overrides={
-                "HSNCode": pl.Utf8,
-                "Description": pl.Utf8,
-            },
-        )
+        with open(path, encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                code = _normalize_hsn_code(row.get("HSNCode", ""))
+                if not code:
+                    continue
+                normalized_row = dict(row)
+                normalized_row["HSNCode"] = code
+                for key in ["CGST_Rate", "SGST_Rate", "IGST_Rate", "CESS_Rate"]:
+                    try:
+                        val = row.get(key, "0")
+                        normalized_row[key] = float(val) if val else 0.0
+                    except ValueError:
+                        normalized_row[key] = 0.0
+                out[code] = [normalized_row]
     except Exception as exc:  # pragma: no cover
         raise DataLoadError(f"Failed loading HSN dataset: {exc}") from exc
-
-    required_cols = {
-        "HSNCode",
-        "Description",
-        "CGST_Rate",
-        "SGST_Rate",
-        "IGST_Rate",
-        "CESS_Rate",
-    }
-    missing = required_cols - set(df.columns)
-    if missing:
-        raise DataLoadError(f"HSN dataset missing required columns: {sorted(missing)}")
-
-    rows = df.to_dicts()
-    out: dict[str, list[dict[str, Any]]] = {}
-    for row in rows:
-        code = _normalize_hsn_code(row.get("HSNCode", ""))
-        if not code:
-            continue
-        normalized_row = dict(row)
-        normalized_row["HSNCode"] = code
-        out.setdefault(code, []).append(normalized_row)
     return out
 
 

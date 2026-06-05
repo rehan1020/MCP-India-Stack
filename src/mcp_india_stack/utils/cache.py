@@ -15,6 +15,12 @@ def get_cache_dir() -> Path:
         macOS:   ~/Library/Caches/mcp-india-stack
         Linux:   ~/.cache/mcp-india-stack
     """
-    cache = Path(user_cache_dir("mcp-india-stack", "rehan1020"))
+    import os
+
+    env_cache = os.environ.get("MCP_INDIA_STACK_CACHE_DIR")
+    if env_cache:
+        cache = Path(env_cache)
+    else:
+        cache = Path(user_cache_dir("mcp-india-stack", "rehan1020"))
     cache.mkdir(parents=True, exist_ok=True)
     return cache

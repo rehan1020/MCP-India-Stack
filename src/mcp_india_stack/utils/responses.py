@@ -10,7 +10,7 @@ from mcp_india_stack import __version__
 _LIVE_LOOKUP = os.environ.get("MCP_INDIA_STACK_LIVE_LOOKUP") == "1"
 
 
-def build_response(
+def build_response(  # noqa: C901
     *,
     success: bool,
     data: dict[str, Any] | None = None,
@@ -25,7 +25,7 @@ def build_response(
     data_version: str | None = None,
     rate_limit_remaining: int | None = None,
     rate_limit_warning: str | None = None,
-) -> dict[str, Any]:
+) -> dict[str, Any]:  # noqa: C901
     """Build a normalized tool response envelope with confidence scoring."""
 
     # Determine confidence if not provided - use default based on success

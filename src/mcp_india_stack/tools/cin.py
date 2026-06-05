@@ -5,6 +5,8 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from mcp_india_stack.utils.responses import build_response
+
 # CIN format: L 21010 MH 1995 PLC 084717
 # Pos:        1 2-6   7-8 9-12 13-15 16-21
 CIN_RE = re.compile(r"^[LU][0-9]{5}[A-Z]{2}[0-9]{4}[A-Z]{3}[0-9]{6}$")
@@ -75,69 +77,85 @@ def validate_cin(cin: str) -> dict[str, Any]:
     """
     try:
         if cin is None:
-            return {
-                "valid": False,
-                "cin": "",
-                "listing_status": "",
-                "nic_code": "",
-                "state_code": "",
-                "state_name": "",
-                "year_of_incorporation": "",
-                "company_type_code": "",
-                "company_type": "",
-                "sequential_number": "",
-                "errors": ["CIN is required"],
-            }
+            return build_response(
+                success=False,
+                data={
+                    "valid": False,
+                    "cin": "",
+                    "listing_status": "",
+                    "nic_code": "",
+                    "state_code": "",
+                    "state_name": "",
+                    "year_of_incorporation": "",
+                    "company_type_code": "",
+                    "company_type": "",
+                    "sequential_number": "",
+                },
+                errors=["CIN is required"],
+                source="offline_static",
+            )
 
         cleaned = str(cin).strip().upper()
         errors: list[str] = []
 
         if not cleaned:
-            return {
-                "valid": False,
-                "cin": "",
-                "listing_status": "",
-                "nic_code": "",
-                "state_code": "",
-                "state_name": "",
-                "year_of_incorporation": "",
-                "company_type_code": "",
-                "company_type": "",
-                "sequential_number": "",
-                "errors": ["CIN cannot be empty"],
-            }
+            return build_response(
+                success=False,
+                data={
+                    "valid": False,
+                    "cin": "",
+                    "listing_status": "",
+                    "nic_code": "",
+                    "state_code": "",
+                    "state_name": "",
+                    "year_of_incorporation": "",
+                    "company_type_code": "",
+                    "company_type": "",
+                    "sequential_number": "",
+                },
+                errors=["CIN cannot be empty"],
+                source="offline_static",
+            )
 
         if len(cleaned) != 21:
             errors.append(f"CIN must be exactly 21 characters, got {len(cleaned)}")
-            return {
-                "valid": False,
-                "cin": cleaned,
-                "listing_status": "",
-                "nic_code": "",
-                "state_code": "",
-                "state_name": "",
-                "year_of_incorporation": "",
-                "company_type_code": "",
-                "company_type": "",
-                "sequential_number": "",
-                "errors": errors,
-            }
+            return build_response(
+                success=False,
+                data={
+                    "valid": False,
+                    "cin": cleaned,
+                    "listing_status": "",
+                    "nic_code": "",
+                    "state_code": "",
+                    "state_name": "",
+                    "year_of_incorporation": "",
+                    "company_type_code": "",
+                    "company_type": "",
+                    "sequential_number": "",
+                },
+                errors=errors,
+                source="offline_static",
+            )
 
         if not CIN_RE.match(cleaned):
             errors.append("CIN format is invalid")
-            return {
-                "valid": False,
-                "cin": cleaned,
-                "listing_status": "",
-                "nic_code": "",
-                "state_code": "",
-                "state_name": "",
-                "year_of_incorporation": "",
-                "company_type_code": "",
-                "company_type": "",
-                "sequential_number": "",
-                "errors": errors,
-            }
+            return build_response(
+                success=False,
+                data={
+                    "valid": False,
+                    "cin": cleaned,
+                    "listing_status": "",
+                    "nic_code": "",
+                    "state_code": "",
+                    "state_name": "",
+                    "year_of_incorporation": "",
+                    "company_type_code": "",
+                    "company_type": "",
+                    "sequential_number": "",
+                },
+                errors=errors,
+                source="offline_static",
+            )
 
         # Decode fields
         listing_char = cleaned[0]
@@ -163,31 +181,40 @@ def validate_cin(cin: str) -> dict[str, Any]:
                 f"Year of incorporation {year_of_incorporation} is out of plausible range"
             )
 
-        return {
-            "valid": len(errors) == 0,
-            "cin": cleaned,
-            "listing_status": listing_status,
-            "nic_code": nic_code,
-            "state_code": state_code,
-            "state_name": state_name,
-            "year_of_incorporation": year_of_incorporation,
-            "company_type_code": company_type_code,
-            "company_type": company_type,
-            "sequential_number": sequential_number,
-            "errors": errors,
-        }
+        return build_response(
+            success=len(errors) == 0,
+            data={
+                "valid": len(errors) == 0,
+                "cin": cleaned,
+                "listing_status": listing_status,
+                "nic_code": nic_code,
+                "state_code": state_code,
+                "state_name": state_name,
+                "year_of_incorporation": year_of_incorporation,
+                "company_type_code": company_type_code,
+                "company_type": company_type,
+                "sequential_number": sequential_number,
+            },
+            errors=errors,
+            source="offline_static",
+            validated_by=["format_check"],
+        )
 
     except Exception as exc:
-        return {
-            "valid": False,
-            "cin": str(cin) if cin else "",
-            "listing_status": "",
-            "nic_code": "",
-            "state_code": "",
-            "state_name": "",
-            "year_of_incorporation": "",
-            "company_type_code": "",
-            "company_type": "",
-            "sequential_number": "",
-            "errors": [f"CIN validation failed: {exc}"],
-        }
+        return build_response(
+            success=False,
+            data={
+                "valid": False,
+                "cin": str(cin) if cin else "",
+                "listing_status": "",
+                "nic_code": "",
+                "state_code": "",
+                "state_name": "",
+                "year_of_incorporation": "",
+                "company_type_code": "",
+                "company_type": "",
+                "sequential_number": "",
+            },
+            errors=[f"CIN validation failed: {exc}"],
+            source="offline_static",
+        )

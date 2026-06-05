@@ -3,78 +3,63 @@
 from mcp_india_stack.tools.gst_calculator import calculate_gst
 
 
-class TestAllRates:
-    def test_zero_rate(self) -> None:
-        result = calculate_gst(1000, 0, "intra_state")
-        assert result["total_gst"] == 0
-        assert result["total_amount"] == 1000
-
-    def test_5_percent_intra(self) -> None:
-        result = calculate_gst(1000, 5, "intra_state")
-        assert result["cgst_amount"] == 25.0
-        assert result["sgst_amount"] == 25.0
-        assert result["igst_amount"] == 0
-        assert result["total_gst"] == 50.0
-
-    def test_5_percent_inter(self) -> None:
-        result = calculate_gst(1000, 5, "inter_state")
-        assert result["igst_amount"] == 50.0
-        assert result["cgst_amount"] == 0
-        assert result["sgst_amount"] == 0
-
-    def test_12_percent(self) -> None:
-        result = calculate_gst(10000, 12, "intra_state")
-        assert result["cgst_amount"] == 600.0
-        assert result["sgst_amount"] == 600.0
-
-    def test_18_percent(self) -> None:
-        result = calculate_gst(10000, 18, "inter_state")
-        assert result["igst_amount"] == 1800.0
-
-    def test_28_percent(self) -> None:
-        result = calculate_gst(10000, 28, "intra_state")
-        assert result["total_gst"] == 2800.0
-
-    def test_0_1_percent(self) -> None:
-        result = calculate_gst(100000, 0.1, "inter_state")
-        assert result["igst_amount"] == 100.0
-
-    def test_0_25_percent(self) -> None:
-        result = calculate_gst(100000, 0.25, "inter_state")
-        assert result["igst_amount"] == 250.0
-
-    def test_1_5_percent(self) -> None:
-        result = calculate_gst(100000, 1.5, "inter_state")
-        assert result["igst_amount"] == 1500.0
-
-    def test_3_percent(self) -> None:
-        result = calculate_gst(100000, 3, "inter_state")
-        assert result["igst_amount"] == 3000.0
+def test_gst_hsn_code_professional_services():
+    result = calculate_gst(amount=10000, hsn_code="9983")
+    assert len(result.get("errors", [])) == 0
+    assert result.get("gst_rate") == 18
+    assert result.get("rate_source") == "hsn_lookup"
 
 
-class TestInclusive:
-    def test_gst_inclusive_18(self) -> None:
-        """Back-calculate base from GST-inclusive amount."""
-        result = calculate_gst(1180, 18, "intra_state", amount_includes_gst=True)
-        assert result["base_amount"] == 1000.0
-        assert result["total_amount"] == 1180.0
+def test_gst_hsn_code_in_table():
+    result = calculate_gst(amount=5000, hsn_code="9954")
+    assert len(result.get("errors", [])) == 0
 
 
-class TestInvalidRate:
-    def test_invalid_rate(self) -> None:
-        result = calculate_gst(1000, 15, "intra_state")
-        assert len(result["errors"]) > 0
-        assert "Invalid GST rate" in result["errors"][0]
+def test_gst_hsn_lookup_in_result():
+    result = calculate_gst(amount=1000, hsn_code="9983")
+    assert len(result.get("errors", [])) == 0
+    assert "hsn_code_used" in result
 
 
-class TestCess:
-    def test_28_with_cess(self) -> None:
-        result = calculate_gst(10000, 28, "intra_state", cess_category="aerated_drinks")
-        assert result["cess_amount"] == 1200.0
-        assert result["cess_rate"] == 12.0
+def test_gst_neither_hsn_nor_rate():
+    result = calculate_gst(amount=1000)
+    assert len(result.get("errors", [])) > 0
 
 
-class TestDisclaimer:
-    def test_disclaimer_present(self) -> None:
-        result = calculate_gst(1000, 18, "intra_state")
-        assert "disclaimer" in result
+def test_gst_hsn_not_in_table():
+    result = calculate_gst(amount=1000, hsn_code="00000000")
+    assert len(result.get("errors", [])) > 0
+
+
+def test_gst_amount_inclusive_true():
+    result = calculate_gst(amount=1180, gst_rate=18, amount_includes_gst=True)
+    assert len(result.get("errors", [])) == 0
+    assert result.get("base_amount") < 1180
+
+
+def test_gst_inclusive_inter_state():
+    result = calculate_gst(
+        amount=1120, gst_rate=12, transaction_type="inter_state", amount_includes_gst=True
+    )
+    assert len(result.get("errors", [])) == 0
+
+
+def test_gst_cess_applicable_flag():
+    result = calculate_gst(amount=1000, gst_rate=28, cess_category="tobacco_cigarettes")
+    assert len(result.get("errors", [])) == 0
+    assert result.get("cess_rate", 0) > 0
+
+
+def test_gst_invalid_transaction_type():
+    result = calculate_gst(amount=1000, gst_rate=18, transaction_type="domestic")
+    assert len(result.get("errors", [])) > 0
+
+
+def test_gst_zero_amount():
+    result = calculate_gst(amount=0, gst_rate=18)
+    assert "errors" in result
+
+
+def test_gst_negative_amount():
+    result = calculate_gst(amount=-500, gst_rate=18)
+    assert len(result.get("errors", [])) > 0

@@ -38,6 +38,22 @@ DISCLAIMER = (
 )
 
 
+def _mask_aadhaar(aadhaar: str, show_last: int = 4) -> str:
+    """Mask Aadhaar number, showing only the last specified digits.
+
+    Args:
+        aadhaar: Full Aadhaar number string
+        show_last: Number of last digits to show (default 4)
+
+    Returns:
+        Masked string like "XXXX XXXX 7261"
+    """
+    if len(aadhaar) < show_last:
+        return "X" * len(aadhaar)
+    masked = "X" * (len(aadhaar) - show_last) + aadhaar[-show_last:]
+    return f"{masked[:4]} {masked[4:8]} {masked[8:12]}"
+
+
 def _verhoeff_checksum(number: str) -> bool:
     """Validate a number string using the Verhoeff algorithm.
 
@@ -62,13 +78,13 @@ def validate_aadhaar(aadhaar: str) -> dict[str, object]:
 
     Returns:
         Dict with validation results including checksum status.
+        Never exposes the raw or full Aadhaar number — only a masked form.
     """
     try:
         if aadhaar is None:
             return {
                 "valid": False,
-                "aadhaar": "",
-                "formatted": "",
+                "masked": "",
                 "checksum_valid": False,
                 "first_digit_valid": False,
                 "errors": ["Aadhaar number is required"],
@@ -84,8 +100,7 @@ def validate_aadhaar(aadhaar: str) -> dict[str, object]:
         if not cleaned.isdigit():
             return {
                 "valid": False,
-                "aadhaar": cleaned,
-                "formatted": "",
+                "masked": _mask_aadhaar(cleaned) if cleaned else "",
                 "checksum_valid": False,
                 "first_digit_valid": False,
                 "errors": ["Aadhaar number must contain only digits"],
@@ -96,8 +111,7 @@ def validate_aadhaar(aadhaar: str) -> dict[str, object]:
         if len(cleaned) != 12:
             return {
                 "valid": False,
-                "aadhaar": cleaned,
-                "formatted": "",
+                "masked": _mask_aadhaar(cleaned),
                 "checksum_valid": False,
                 "first_digit_valid": False,
                 "errors": [f"Aadhaar number must be exactly 12 digits, got {len(cleaned)}"],
@@ -122,13 +136,12 @@ def validate_aadhaar(aadhaar: str) -> dict[str, object]:
                 "All digits are identical — this is unlikely to be a real Aadhaar number"
             )
 
-        formatted = f"{cleaned[:4]} {cleaned[4:8]} {cleaned[8:12]}"
+        masked = _mask_aadhaar(cleaned)
         valid = first_digit_valid and checksum_valid
 
         result: dict[str, object] = {
             "valid": valid,
-            "aadhaar": cleaned,
-            "formatted": formatted,
+            "masked": masked,
             "checksum_valid": checksum_valid,
             "first_digit_valid": first_digit_valid,
             "errors": errors,
@@ -139,10 +152,10 @@ def validate_aadhaar(aadhaar: str) -> dict[str, object]:
         return result
 
     except Exception as exc:
+        cleaned = re.sub(r"[\s\-]", "", str(aadhaar).strip()) if aadhaar else ""
         return {
             "valid": False,
-            "aadhaar": str(aadhaar) if aadhaar else "",
-            "formatted": "",
+            "masked": _mask_aadhaar(cleaned) if cleaned else "",
             "checksum_valid": False,
             "first_digit_valid": False,
             "errors": [f"Aadhaar validation failed: {exc}"],

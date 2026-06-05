@@ -10,17 +10,19 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false          # all 3 Python versions always run
       matrix:
         python-version: ["3.10", "3.11", "3.12"]
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4   # ← was @v6 (does not exist)
 
-      - name: Setup Python
-        uses: actions/setup-python@v6
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5   # ← was @v6 (does not exist)
         with:
           python-version: ${{ matrix.python-version }}
+          cache: "pip"            # ← caches pip downloads between runs
 
       - name: Install dependencies
         run: |
@@ -35,7 +37,21 @@ jobs:
 
       - name: Mypy
         run: mypy src
+        env:
+          MYPY_CACHE_DIR: .mypy_cache   # persisted by pip cache step
 
       - name: Pytest with coverage
-        run: pytest --cov=mcp_india_stack --cov-report=term-missing --cov-fail-under=80
+        run: |
+          pytest \
+            --cov=mcp_india_stack \
+            --cov-branch \
+            --cov-report=term-missing \
+            --cov-report=xml \
+            --cov-fail-under=80
 
+      - name: Upload coverage report
+        if: matrix.python-version == '3.12'   # upload once, from latest Python
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml

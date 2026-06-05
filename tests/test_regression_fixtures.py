@@ -16,13 +16,13 @@ def _load(name: str) -> list[dict[str, object]]:
 def test_regression_gstin_fixtures() -> None:
     for case in _load("gstin_cases.json"):
         result = validate_gstin(str(case["input"]))
-        assert result["valid"] is case["expected_valid"]
+        assert result["data"]["valid"] is case["expected_valid"]
 
 
 def test_regression_pan_fixtures() -> None:
     for case in _load("pan_cases.json"):
         result = validate_pan(str(case["input"]))
-        assert result["valid"] is case["expected_valid"]
+        assert result["data"]["valid"] is case["expected_valid"]
 
 
 def test_regression_upi_fixtures() -> None:

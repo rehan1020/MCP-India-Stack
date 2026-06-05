@@ -29,11 +29,11 @@ def _get_surcharge_rate(total_income: float, regime: str) -> float:
     return rate
 
 
-def calculate_surcharge(
+def calculate_surcharge(  # noqa: C901
     total_income: float,
     base_tax: float,
     regime: str,
-) -> dict[str, Any]:
+) -> dict[str, Any]:  # noqa: C901
     """Calculate surcharge and marginal relief for a given income and base tax.
 
     This is the same surcharge logic used internally by calculate_income_tax,

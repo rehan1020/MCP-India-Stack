@@ -6,6 +6,7 @@ import re
 from typing import Any
 
 from mcp_india_stack.utils.loader import load_state_codes
+from mcp_india_stack.utils.responses import build_response
 
 GSTIN_RE = re.compile(r"^[0-9]{2}[A-Z0-9]{13}$")
 
@@ -20,11 +21,21 @@ def decode_state_code(value: str) -> dict[str, Any]:
             Decoded state metadata with found flag and optional error.
     """
     if value is None:
-        return {"found": False, "error": "state code input is required"}
+        return build_response(
+            success=False,
+            data={"found": False},
+            errors=["state code input is required"],
+            source="offline_static",
+        )
 
     raw = str(value).strip().upper()
     if not raw:
-        return {"found": False, "error": "state code input cannot be empty"}
+        return build_response(
+            success=False,
+            data={"found": False},
+            errors=["state code input cannot be empty"],
+            source="offline_static",
+        )
 
     code = raw
     if len(raw) >= 2 and raw[:2].isdigit() and (len(raw) == 2 or GSTIN_RE.match(raw)):
@@ -33,13 +44,23 @@ def decode_state_code(value: str) -> dict[str, Any]:
     table = load_state_codes()
     item = table.get(code)
     if not item:
-        return {"found": False, "state_code": code, "error": "unknown GST state code"}
+        return build_response(
+            success=False,
+            data={"found": False, "state_code": code},
+            errors=["unknown GST state code"],
+            source="offline_static",
+        )
 
-    return {
-        "found": True,
-        "state_code": code,
-        "state_name": item["state_name"],
-        "abbreviation": item["abbreviation"],
-        "capital": item["capital"],
-        "gst_zone": item["gst_zone"],
-    }
+    return build_response(
+        success=True,
+        data={
+            "found": True,
+            "state_code": code,
+            "state_name": item["state_name"],
+            "abbreviation": item["abbreviation"],
+            "capital": item["capital"],
+            "gst_zone": item["gst_zone"],
+        },
+        source="offline_static",
+        validated_by=["db_lookup"],
+    )

@@ -4,6 +4,38 @@ from __future__ import annotations
 
 from typing import Any
 
+# Section 10(13A): only these 4 are metros for HRA purposes
+METRO_CITIES_HRA = frozenset(
+    {
+        "delhi",
+        "new delhi",
+        "mumbai",
+        "bombay",
+        "chennai",
+        "madras",
+        "kolkata",
+        "calcutta",
+    }
+)
+
+# These cities get 40% (non-metro for HRA), even though colloquially called "metros"
+NON_METRO_NOTE_CITIES = frozenset({"bangalore", "bengaluru", "hyderabad", "pune", "ahmedabad"})
+
+
+def _classify_city(city: str) -> tuple[str, str | None]:
+    """Return (city_type, warning_if_any)."""
+    c = city.lower().strip()
+    if c in METRO_CITIES_HRA:
+        return "metro", None
+    warning = None
+    if c in NON_METRO_NOTE_CITIES:
+        warning = (
+            f"{city.title()} is NOT a metro city for Section 10(13A) HRA purposes. "
+            f"Only Delhi, Mumbai, Chennai, Kolkata qualify for 50% HRA. "
+            f"Applying 40% (non-metro) rate."
+        )
+    return "non_metro", warning
+
 
 def calculate_hra_exemption(
     basic_salary: float,
@@ -12,18 +44,7 @@ def calculate_hra_exemption(
     city_type: str = "non_metro",
     is_government_employee: bool = False,
 ) -> dict[str, Any]:
-    """Calculate HRA exemption under Section 10(13A).
-
-    Args:
-        basic_salary: Monthly basic salary (annual = basic_salary * 12).
-        hra_received: Annual HRA received from employer.
-        rent_paid: Annual rent paid by employee.
-        city_type: 'metro' (Delhi, Mumbai, Chennai, Kolkata) or 'non_metro'.
-        is_government_employee: If True, uses government formula.
-
-    Returns:
-        Dict with exemption calculation breakdown.
-    """
+    """Calculate HRA exemption under Section 10(13A)."""
     errors: list[str] = []
     warnings: list[str] = []
 
@@ -47,14 +68,11 @@ def calculate_hra_exemption(
             "warnings": warnings,
         }
 
-    annual_basic = basic_salary * 12
+    annual_basic = basic_salary
     annual_rent = rent_paid
 
     if is_government_employee:
-        exemption = min(
-            hra_received,
-            annual_rent - (annual_basic * 0.1),
-        )
+        exemption = min(hra_received, annual_rent - (annual_basic * 0.1))
     else:
         metro_limit = 0.5 if city_type == "metro" else 0.4
         rule1 = hra_received
@@ -74,6 +92,7 @@ def calculate_hra_exemption(
 
     return {
         "exemption": round(exemption, 2),
+        "exempt_hra": round(exemption, 2),
         "taxable_hra": round(taxable_hra, 2),
         "annual_basic_salary": round(annual_basic, 2),
         "annual_hra_received": round(hra_received, 2),
@@ -98,28 +117,19 @@ def calculate_hra_for_salary_structure(
     city: str,
     is_government: bool = False,
 ) -> dict[str, Any]:
-    """Calculate HRA using monthly figures.
-
-    Args:
-        monthly_basic: Monthly basic salary.
-        monthly_hra: Monthly HRA received.
-        monthly_rent: Monthly rent paid.
-        city: City name - will auto-detect metro vs non-metro.
-        is_government: True for government employees.
-
-    Returns:
-        Dict with monthly and annual breakdown.
-    """
-    metro_cities = {"delhi", "mumbai", "chennai", "kolkata", "bangalore", "hyderabad", "pune"}
-    city_type = "metro" if city.lower().strip() in metro_cities else "non_metro"
+    """Calculate HRA using monthly figures with auto city detection."""
+    city_type, city_warning = _classify_city(city)
 
     result = calculate_hra_exemption(
-        basic_salary=monthly_basic,
+        basic_salary=monthly_basic * 12,
         hra_received=monthly_hra * 12,
         rent_paid=monthly_rent * 12,
         city_type=city_type,
         is_government_employee=is_government,
     )
+
+    if city_warning:
+        result.setdefault("warnings", []).append(city_warning)
 
     result["monthly_exemption"] = round(result["exemption"] / 12, 2)
     result["monthly_taxable_hra"] = round(result["taxable_hra"] / 12, 2)

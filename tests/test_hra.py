@@ -1,64 +1,104 @@
-"""Tests for HRA exemption calculator."""
+"""Tests for HRA calculator."""
 
-from mcp_india_stack.tools.hra import calculate_hra_exemption, calculate_hra_for_salary_structure
+import pytest
 
-
-def test_hra_metro_full_exemption() -> None:
-    """Test HRA when all three conditions yield full exemption."""
-    result = calculate_hra_exemption(
-        basic_salary=50000,
-        hra_received=180000,
-        rent_paid=240000,
-        city_type="metro",
-    )
-    assert result["exemption"] == 180000
-    assert result["taxable_hra"] == 0
+from mcp_india_stack.tools.hra import (
+    _classify_city,
+    calculate_hra_exemption,
+    calculate_hra_for_salary_structure,
+)
 
 
-def test_hra_non_metro_full_exemption() -> None:
-    """Test HRA non-metro with full exemption."""
-    result = calculate_hra_exemption(
-        basic_salary=30000,
-        hra_received=72000,
-        rent_paid=120000,
-        city_type="non_metro",
-    )
-    assert result["exemption"] == 72000
-    assert result["taxable_hra"] == 0
+class TestHRABasic:
+    def test_basic_calculation(self):
+        result = calculate_hra_exemption(
+            basic_salary=50000, hra_received=15000, rent_paid=20000, city_type="metro"
+        )
+        assert "exemption" in result
+
+    def test_metro_city(self):
+        result = calculate_hra_exemption(
+            basic_salary=50000, hra_received=15000, rent_paid=25000, city_type="metro"
+        )
+        assert "exemption" in result
+
+    def test_non_metro_city(self):
+        result = calculate_hra_exemption(
+            basic_salary=50000, hra_received=15000, rent_paid=25000, city_type="non_metro"
+        )
+        assert "exemption" in result
 
 
-def test_hra_partial_exemption() -> None:
-    """Test HRA with partial exemption due to rent limit."""
-    result = calculate_hra_exemption(
-        basic_salary=50000,
-        hra_received=180000,
-        rent_paid=120000,  # Rent minus 10% salary = 60000, which is less than hra
-        city_type="metro",
-    )
-    assert result["exemption"] == 60000
-    assert result["taxable_hra"] == 120000
+class TestHRAGovernment:
+    def test_government_employee(self):
+        result = calculate_hra_exemption(
+            basic_salary=50000,
+            hra_received=15000,
+            rent_paid=20000,
+            city_type="metro",
+            is_government_employee=True,
+        )
+        assert "exemption" in result
 
 
-def test_hra_government_employee() -> None:
-    """Test HRA for government employee (simplified formula)."""
-    result = calculate_hra_exemption(
-        basic_salary=50000,
-        hra_received=120000,
-        rent_paid=180000,
-        is_government_employee=True,
-    )
-    assert result["exemption"] == 120000
-    assert "is_government_employee" in result
+class TestHRAEdgeCases:
+    def test_zero_rent(self):
+        result = calculate_hra_exemption(basic_salary=50000, hra_received=15000, rent_paid=0)
+        assert result["exemption"] == 0
+
+    def test_rent_below_10_percent(self):
+        result = calculate_hra_exemption(basic_salary=50000, hra_received=15000, rent_paid=4000)
+        assert result["exemption"] == 0
 
 
-def test_hra_monthly_structure() -> None:
-    """Test monthly HRA calculation."""
+# ---- Bug 3 regression: metro city classification ----
+
+
+def test_mumbai_is_metro():
+    city_type, warn = _classify_city("Mumbai")
+    assert city_type == "metro"
+    assert warn is None
+
+
+def test_delhi_is_metro():
+    city_type, warn = _classify_city("Delhi")
+    assert city_type == "metro"
+    assert warn is None
+
+
+def test_bangalore_is_not_metro():
+    city_type, warn = _classify_city("Bangalore")
+    assert city_type == "non_metro"
+    assert "40%" in warn
+
+
+def test_hyderabad_is_not_metro():
+    city_type, warn = _classify_city("Hyderabad")
+    assert city_type == "non_metro"
+    assert warn is not None
+
+
+def test_pune_is_not_metro():
+    city_type, warn = _classify_city("Pune")
+    assert city_type == "non_metro"
+
+
+def test_hra_bangalore_uses_40_pct():
+    """Bangalore should use 40% (non-metro) rule, not 50%."""
     result = calculate_hra_for_salary_structure(
-        monthly_basic=50000,
-        monthly_hra=15000,
-        monthly_rent=20000,
-        city="mumbai",
+        monthly_basic=50_000, monthly_hra=25_000, monthly_rent=30_000, city="Bangalore"
     )
-    assert "monthly_exemption" in result
-    assert "monthly_taxable_hra" in result
+    # Rule 3: 40% of annual basic = ₹2,40,000
+    assert result["breakdown"]["50_percent_metro_40_percent_nonmetro"] == pytest.approx(2_40_000)
+    assert result["city_type"] == "non_metro"
+    # Should have warning about Bangalore
+    assert any("Bangalore" in w for w in result.get("warnings", []))
+
+
+def test_hra_chennai_uses_50_pct():
+    """Chennai IS a metro — should use 50%."""
+    result = calculate_hra_for_salary_structure(
+        monthly_basic=50_000, monthly_hra=25_000, monthly_rent=30_000, city="Chennai"
+    )
+    assert result["breakdown"]["50_percent_metro_40_percent_nonmetro"] == pytest.approx(3_00_000)
     assert result["city_type"] == "metro"

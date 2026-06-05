@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from mcp_india_stack.utils.responses import build_response
+
 DISCLAIMER = "Format validation only. Cannot verify director status with MCA."
 
 
@@ -19,65 +21,68 @@ def validate_din(din: str) -> dict[str, object]:
     """
     try:
         if din is None:
-            return {
-                "valid": False,
-                "din": "",
-                "errors": ["DIN is required"],
-                "disclaimer": DISCLAIMER,
-            }
+            return build_response(
+                success=False,
+                data={"valid": False, "din": ""},
+                errors=["DIN is required"],
+                source="offline_static",
+            )
 
         cleaned = str(din).strip()
         errors: list[str] = []
 
         if not cleaned:
-            return {
-                "valid": False,
-                "din": "",
-                "errors": ["DIN cannot be empty"],
-                "disclaimer": DISCLAIMER,
-            }
+            return build_response(
+                success=False,
+                data={"valid": False, "din": ""},
+                errors=["DIN cannot be empty"],
+                source="offline_static",
+            )
 
         # Strip non-numeric for normalization but check original
         if not cleaned.isdigit():
-            return {
-                "valid": False,
-                "din": cleaned,
-                "errors": ["DIN must contain only digits"],
-                "disclaimer": DISCLAIMER,
-            }
+            return build_response(
+                success=False,
+                data={"valid": False, "din": cleaned},
+                errors=["DIN must contain only digits"],
+                source="offline_static",
+            )
 
         # Zero-pad if shorter (e.g. leading zeros stripped)
         padded = cleaned.zfill(8)
 
         if len(cleaned) > 8:
             errors.append(f"DIN must be exactly 8 digits, got {len(cleaned)}")
-            return {
-                "valid": False,
-                "din": cleaned,
-                "errors": errors,
-                "disclaimer": DISCLAIMER,
-            }
+            return build_response(
+                success=False,
+                data={"valid": False, "din": cleaned},
+                errors=errors,
+                source="offline_static",
+            )
 
         if len(padded) != 8:
             errors.append(f"DIN must be exactly 8 digits, got {len(cleaned)}")
-            return {
-                "valid": False,
-                "din": padded,
-                "errors": errors,
-                "disclaimer": DISCLAIMER,
-            }
+            return build_response(
+                success=False,
+                data={"valid": False, "din": padded},
+                errors=errors,
+                source="offline_static",
+            )
 
-        return {
-            "valid": True,
-            "din": padded,
-            "errors": [],
-            "disclaimer": DISCLAIMER,
-        }
+        return build_response(
+            success=True,
+            data={
+                "valid": True,
+                "din": padded,
+            },
+            source="offline_static",
+            validated_by=["format_check"],
+        )
 
     except Exception as exc:
-        return {
-            "valid": False,
-            "din": str(din) if din else "",
-            "errors": [f"DIN validation failed: {exc}"],
-            "disclaimer": DISCLAIMER,
-        }
+        return build_response(
+            success=False,
+            data={"valid": False, "din": str(din) if din else ""},
+            errors=[f"DIN validation failed: {exc}"],
+            source="offline_static",
+        )

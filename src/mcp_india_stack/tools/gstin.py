@@ -8,6 +8,7 @@ from typing import Any
 
 from mcp_india_stack.tools.pan import validate_pan
 from mcp_india_stack.tools.state_code import decode_state_code
+from mcp_india_stack.utils.responses import build_response
 
 BASE36 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 GSTIN_RE = re.compile(r"^[0-9A-Z]{15}$")
@@ -61,12 +62,12 @@ def validate_gstin(gstin: str) -> dict[str, Any]:
     from mcp_india_stack.normalization import normalize_gstin
 
     if gstin is None:
-        return {
-            "valid": False,
-            "errors": ["GSTIN is required"],
-            "live_verified": False,
-            "verification_source": "offline",
-        }
+        return build_response(
+            success=False,
+            data={"valid": False, "live_verified": False},
+            errors=["GSTIN is required"],
+            source="offline_static",
+        )
 
     normalized = normalize_gstin(gstin)
     value = normalized["normalized_input"]
@@ -81,22 +82,21 @@ def validate_gstin(gstin: str) -> dict[str, Any]:
         errors.append("GSTIN must contain only uppercase letters and digits")
 
     if errors:
-        return {
-            "valid": False,
-            "gstin": value,
-            "errors": errors,
-            "warnings": warnings,
-            "live_verified": False,
-            "verification_source": "offline",
-        }
+        return build_response(
+            success=False,
+            data={"valid": False, "gstin": value, "live_verified": False},
+            errors=errors,
+            warnings=warnings,
+            source="offline_static",
+        )
 
     state_decode = decode_state_code(value[:2])
-    if not state_decode.get("found"):
+    if not state_decode.get("data", {}).get("found"):
         errors.append("GSTIN state code is invalid")
 
     pan_block = value[2:12]
     pan_check = validate_pan(pan_block)
-    if not pan_check.get("valid"):
+    if not pan_check.get("data", {}).get("valid"):
         errors.append("Embedded PAN block is invalid")
 
     entity_number = value[12]
@@ -118,19 +118,24 @@ def validate_gstin(gstin: str) -> dict[str, Any]:
             "Detected special GSTIN category; v1 applies limited validation beyond core checks"
         )
 
-    return {
-        "valid": len(errors) == 0,
-        "gstin": value,
-        "state_code": value[:2],
-        "state_name": state_decode.get("state_name"),
-        "pan": pan_block,
-        "entity_number": entity_number,
-        "checksum_valid": checksum_valid,
-        "expected_checksum": expected_checksum,
-        "category": category,
-        "format_validity": format_validity,
-        "errors": errors,
-        "warnings": warnings,
-        "live_verified": _LIVE_LOOKUP_ENABLED,
-        "verification_source": "live" if _LIVE_LOOKUP_ENABLED else "offline",
-    }
+    return build_response(
+        success=len(errors) == 0,
+        data={
+            "valid": len(errors) == 0,
+            "gstin": value,
+            "state_code": value[:2],
+            "state_name": state_decode.get("data", {}).get("state_name"),
+            "pan": pan_block,
+            "entity_number": entity_number,
+            "checksum_valid": checksum_valid,
+            "expected_checksum": expected_checksum,
+            "category": category,
+            "format_validity": format_validity,
+            "live_verified": _LIVE_LOOKUP_ENABLED,
+            "normalized_input": value,
+        },
+        errors=errors,
+        warnings=warnings,
+        source="live" if _LIVE_LOOKUP_ENABLED else "offline_static",
+        validated_by=["format_check", "checksum"],
+    )

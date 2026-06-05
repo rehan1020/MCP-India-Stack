@@ -6,8 +6,24 @@ from typing import Any
 
 LTCG_EQUITY_EXEMPTION = 100000  # ₹1,00,000 per year (Section 112A)
 
+# LTCG holding period thresholds per Income Tax Act (in days)
+LTCG_THRESHOLDS = {
+    "equity": 365,  # 12 months
+    "equity_mf": 365,
+    "mutual_fund": 365,
+    "real_estate": 730,  # 24 months
+    "gold": 1095,  # 36 months
+    "debentures": 1095,
+    "crypto": 0,  # always flat 30% — no LTCG concept
+}
 
-def calculate_capital_gains(
+
+def _get_ltcg_threshold(asset_type: str) -> int:
+    """Return the LTCG holding period threshold for a given asset type."""
+    return LTCG_THRESHOLDS.get(asset_type, 365)
+
+
+def calculate_capital_gains(  # noqa: C901
     sale_price: float = 0,
     purchase_price: float = 0,
     asset_type: str = "equity",
@@ -20,7 +36,8 @@ def calculate_capital_gains(
     buy_price: float | None = None,
     sell_price: float | None = None,
     holding_days: int | None = None,
-) -> dict[str, Any]:
+    reinvestment_amount: float = 0.0,
+) -> dict[str, Any]:  # noqa: C901
     """Calculate capital gains for various asset types.
 
     Args:
@@ -36,6 +53,7 @@ def calculate_capital_gains(
         buy_price: Per-unit purchase price (alternative to purchase_price).
         sell_price: Per-unit sale price (alternative to sale_price).
         holding_days: Alias for holding_period_days.
+        reinvestment_amount: Amount reinvested in Section 54/54F eligible assets.
 
     Returns:
         Dict with gains, tax rates, exemption eligibility, and tax liability.
@@ -43,6 +61,9 @@ def calculate_capital_gains(
     if buy_price is not None and sell_price is not None and quantity is not None:
         sale_price = sell_price * quantity
         purchase_price = buy_price * quantity
+    elif quantity is not None and quantity > 1:
+        sale_price = sale_price * quantity
+        purchase_price = purchase_price * quantity
 
     if holding_days is not None:
         holding_period_days = holding_days
@@ -70,8 +91,18 @@ def calculate_capital_gains(
             "warnings": warnings,
         }
 
-    is_long_term = holding_period_days >= 365
+    # Use asset-type-specific LTCG threshold
+    ltcg_threshold = _get_ltcg_threshold(asset_type)
+
+    # Crypto has no LTCG concept — always taxed at flat 30%
+    if asset_type == "crypto":
+        is_long_term = False
+    else:
+        is_long_term = holding_period_days >= ltcg_threshold
+
     is_equity = asset_type in ("equity", "mutual_fund", "equity_mf")
+
+    stcg_note = None
 
     if is_equity:
         stcg_rate = 0.20
@@ -79,15 +110,17 @@ def calculate_capital_gains(
         threshold = LTCG_EQUITY_EXEMPTION
         indexation_required = False
     elif asset_type == "real_estate":
-        stcg_rate = 0.20
+        stcg_rate = None  # slab rate — can't compute without income
         ltcg_rate = 0.20
         threshold = 0
         indexation_required = True
+        stcg_note = "STCG on real estate is added to income and taxed at applicable slab rate."
     elif asset_type in ("gold", "debentures"):
-        stcg_rate = 0.30
+        stcg_rate = None  # slab rate
         ltcg_rate = 0.20
         threshold = 0
         indexation_required = True
+        stcg_note = "STCG on gold/debentures is taxed at applicable income slab rate."
     elif asset_type == "crypto":
         stcg_rate = 0.30
         ltcg_rate = 0.30
@@ -132,7 +165,13 @@ def calculate_capital_gains(
         stcg = gross_gains
         ltcg = 0.0
         taxable_gain = stcg
-        tax_liability = stcg * stcg_rate
+        if stcg_rate is not None:
+            tax_liability = stcg * stcg_rate
+        else:
+            # Slab-rate assets: can't compute exact tax without full income
+            # Use 30% as upper estimate with a warning
+            tax_liability = stcg * 0.30
+            warnings.append(stcg_note or "STCG is taxed at applicable income slab rate.")
 
     if not is_long_term and is_equity:
         warnings.append("STCG on equity/MF taxed at 20% instead of slab rates per Budget 2024")
@@ -143,25 +182,72 @@ def calculate_capital_gains(
             "Consider providing CII for accurate calculation."
         )
 
-    return {
+    section_54_exemption = 0.0
+    section_54_taxable_gains = taxable_gain
+    section_54f_exemption = 0.0
+    section_54f_taxable_gains = taxable_gain
+    section_54_note = None
+    section_54f_note = None
+
+    if reinvestment_amount > 0 and is_long_term:
+        if asset_type == "real_estate":
+            section_54_exemption = min(ltcg, reinvestment_amount)
+            section_54_taxable_gains = taxable_gain - section_54_exemption
+            section_54_note = (
+                f"Section 54 exemption: ₹{section_54_exemption:,.0f}. "
+                "Conditions: Purchase new property within 2 years or construct within 3 years."
+            )
+        elif asset_type != "real_estate":
+            section_54f_exemption = (
+                ltcg * (reinvestment_amount / sale_price) if sale_price > 0 else 0
+            )
+            section_54f_exemption = min(section_54f_exemption, ltcg)
+            section_54f_taxable_gains = taxable_gain - section_54f_exemption
+            section_54f_note = (
+                f"Section 54F exemption: ₹{section_54f_exemption:,.0f}. "
+                "Conditions: Invest full sale proceeds in residential property."
+            )
+
+    # Display-friendly STCG rate
+    stcg_rate_display = stcg_rate * 100 if stcg_rate is not None else "slab_rate"
+
+    result = {
         "short_term_gains": round(stcg, 2),
         "long_term_gains": round(ltcg, 2),
         "total_gains": round(gross_gains, 2),
         "gain_type": "LTCG" if is_long_term else "STCG",
         "is_long_term": is_long_term,
         "holding_period_days": holding_period_days,
+        "ltcg_threshold_days": ltcg_threshold,
         "tax_liability": round(tax_liability, 2),
+        "tax_amount": round(tax_liability, 2),
         "asset_type": asset_type,
-        "stcg_rate": stcg_rate * 100,
+        "stcg_rate": stcg_rate_display,
         "ltcg_rate": ltcg_rate * 100,
         "cost_inflation_adjusted": round(cost_inflation_adjusted, 2),
         "exemption_threshold": threshold if is_equity else 0,
         "exemption_applied": round(exemption_applied, 2),
         "taxable_gain": round(taxable_gain, 2),
         "exemption_note": exemption_note,
+        "section_54_exemption_claimed": round(section_54_exemption, 2)
+        if section_54_exemption > 0
+        else 0,
+        "section_54_taxable_gains": round(section_54_taxable_gains, 2),
+        "section_54_note": section_54_note,
+        "section_54f_exemption_claimed": round(section_54f_exemption, 2)
+        if section_54f_exemption > 0
+        else 0,
+        "section_54f_taxable_gains": round(section_54f_taxable_gains, 2),
+        "section_54f_note": section_54f_note,
+        "reinvestment_amount": reinvestment_amount,
         "errors": errors,
         "warnings": warnings,
     }
+
+    if stcg_note and not is_long_term:
+        result["stcg_note"] = stcg_note
+
+    return result
 
 
 def calculate_home_loan_savings(

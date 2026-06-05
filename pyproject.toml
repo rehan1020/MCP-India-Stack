@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mcp-india-stack"
-version = "0.3.0"
-description = "MCP server exposing Indian financial and government APIs — GSTIN, IFSC, PAN, UPI, pincode, HSN/SAC — for AI agents. Zero auth. Offline-first."
+version = "0.4.2"
+description = "MCP server exposing Indian financial and government APIs â€” GSTIN, IFSC, PAN, UPI, pincode, HSN/SAC â€” for AI agents. Zero auth. Offline-first."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -77,20 +77,72 @@ mcp_india_stack = ["data/**/*.csv", "data/**/*.csv.gz", "data/**/*.json"]
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+exclude = ["mcp", "builddir", "staging", "dist"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "B", "UP", "ANN"]
-ignore = ["E402", "ANN001", "ANN201"]
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "UP",   # pyupgrade
+    "C90",  # McCabe complexity
+    "N",    # pep8 naming
+]
+ignore = [
+    "E402",   # module-level import not at top (needed in a few places)
+    "N803",   # argument name should be lowercase (CII, FY params use uppercase)
+    "N806",   # variable in function should be lowercase (same reason)
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 15   # flag functions more complex than 15 (default is 10, our tax fns need 15)
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["N802", "N803", "N801"]   # test functions/classes can use mixed case
 
 [tool.mypy]
 python_version = "3.10"
 strict = true
 warn_return_any = true
 warn_unused_configs = true
-exclude = ["^tests/fixtures/"]
+warn_unused_ignores = true        # catches stale type: ignore comments
 ignore_missing_imports = true
+exclude = ["^tests/", "^mcp/", "^builddir/", "^staging/", "^dist/", "^\\.venv/", "^test_install/", "^check_coverage\\.py$"]
+
+[[tool.mypy.overrides]]
+module = "mcp_india_stack.server"
+# server.py has FastMCP internals that are hard to fully type â€” relax slightly
+disallow_any_generics = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q --cov=mcp_india_stack --cov-report=term-missing"
+asyncio_mode = "auto"
+addopts = """
+  -q
+  --cov=mcp_india_stack
+  --cov-branch
+  --cov-report=term-missing
+  --cov-fail-under=80
+"""
+
+[tool.coverage.run]
+source = ["mcp_india_stack"]
+branch = true
+omit = [
+    "src/mcp_india_stack/__main__.py",   # entry point â€” hard to unit test
+    "src/mcp_india_stack/data/*",        # CSV data files
+    "tests/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+    "\\.\\.\\.",                          # bare ellipsis in Protocol/ABC stubs
+]
+show_missing = true
+skip_covered = false
 

@@ -45,3 +45,9 @@ pip_log.txt
 
 # Roadmap (internal planning)
 ROADMAP.md
+# Generated artifacts
+coverage_before.txt
+coverage_now.txt
+coverage.json
+coverage.xml
+telemetry.jsonl

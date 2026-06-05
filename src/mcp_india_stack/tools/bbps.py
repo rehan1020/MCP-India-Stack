@@ -304,11 +304,11 @@ _BILLERS: dict[str, list[dict[str, Any]]] = {
 }
 
 
-def lookup_bbps_biller(
+def lookup_bbps_biller(  # noqa: C901
     category: str | None = None,
     state: str | None = None,
     biller_id: str | None = None,
-) -> dict[str, Any]:
+) -> dict[str, Any]:  # noqa: C901
     """Look up BBPS biller details.
 
     Args:

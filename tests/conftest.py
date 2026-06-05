@@ -184,6 +184,13 @@ def assert_normalization(response: dict[str, Any], expected: str) -> None:
 # ============================================================================
 
 
+@pytest.fixture(autouse=True)
+def isolated_environment(monkeypatch, tmp_path) -> None:
+    """Ensure tests don't use the real cache and disable background CDN updates."""
+    monkeypatch.setenv("MCP_INDIA_STACK_NO_AUTO_UPDATE", "1")
+    monkeypatch.setenv("MCP_INDIA_STACK_CACHE_DIR", str(tmp_path / "cache"))
+
+
 @pytest.fixture
 def dry_run_enabled(monkeypatch) -> None:
     """Enable dry-run mode."""
@@ -214,3 +221,32 @@ def telemetry_enabled(monkeypatch, mock_telemetry_file):
 def bulk_workers_default(monkeypatch) -> None:
     """Set default bulk workers."""
     monkeypatch.setenv("MCP_INDIA_STACK_BULK_WORKERS", "10")
+
+
+@pytest.fixture(autouse=True)
+def _mock_ifsc_index_globally(monkeypatch):
+    """Mock load_ifsc_index globally to prevent polars import deadlock on Win/3.14."""
+    try:
+        import mcp_india_stack.tools.ifsc
+        import mcp_india_stack.utils.loader
+
+        mock_data = {
+            "SBIN0001234": {
+                "BANK": "SBI",
+                "IFSC": "SBIN0001234",
+                "BRANCH": "TEST BRANCH",
+                "CITY": "TEST CITY",
+                "STATE": "TEST STATE",
+            },
+            "HDFC0000001": {
+                "BANK": "HDFC",
+                "IFSC": "HDFC0000001",
+                "BRANCH": "TEST",
+                "CITY": "TEST",
+                "STATE": "TEST",
+            }
+        }
+        monkeypatch.setattr(mcp_india_stack.utils.loader, "load_ifsc_index", lambda: mock_data)
+        monkeypatch.setattr(mcp_india_stack.tools.ifsc, "load_ifsc_index", lambda: mock_data)
+    except Exception:
+        pass

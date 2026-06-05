@@ -13,7 +13,7 @@
 - **Offline-First Architecture**: Bundles compressed datasets for zero-latency lookups (IFSC, Pincodes, HSN/SAC). No API rate limits.
 - **Zero Authentication**: No API keys, secrets, or subscriptions required. All logic runs locally.
 - **Background Auto-Updates**: Non-blocking CDN fetching ensures your datasets never go stale without impacting request latency.
-- **Comprehensive Coverage**: 30 dedicated tools for identity validation (PAN, Aadhaar, GSTIN), tax calculation (Income Tax, TDS, GST), and master data lookups.
+- **Comprehensive Coverage**: 58 dedicated tools for identity validation (PAN, Aadhaar, GSTIN, TAN, PRAN), tax calculation (Income Tax, TDS, GST), savings calculators (EPF, PPF, SIP), and master data lookups.
 - **Enterprise-Ready**: Thread-pool accelerated bulk validation tools for processing large batches of vendor or customer data.
 
 ---
@@ -59,42 +59,83 @@ Add the following to your `claude_desktop_config.json` file to enable the India 
 ## 🛠️ Tool Catalog
 
 ### 🔍 Lookup Tools
-- [`lookup_ifsc`](docs/tools/ifsc.md) — Bank branch details from IFSC code
-- [`lookup_pincode`](docs/tools/pincode.md) — India pincode details and post offices
-- [`lookup_hsn_code`](docs/tools/hsn.md) — HSN/SAC code lookup by code or keyword
-- [`decode_state_code`](docs/tools/state_code.md) — GST state code metadata
-- [`lookup_bbps_biller`](docs/tools/bbps.md) — BBPS biller directory lookup
-- [`lookup_bank`](docs/tools/bank.md) — Basic bank master lookup by name or code
+- [`lookup_ifsc`](docs/lookup_and_validation.md) — Bank branch details from IFSC code
+- [`lookup_pincode`](docs/lookup_and_validation.md) — India pincode details and post offices
+- [`lookup_hsn_code`](docs/lookup_and_validation.md) — HSN/SAC code lookup by code or keyword
+- [`decode_state_code`](docs/lookup_and_validation.md) — GST state code metadata
+- [`lookup_bbps_biller`](docs/lookup_and_validation.md) — BBPS biller directory lookup
+- [`lookup_bank`](docs/lookup_and_validation.md) — Basic bank master lookup by name or code
 
 ### ✅ Validation Tools
-- [`validate_gstin`](docs/tools/gstin.md) — GSTIN structure and checksum
-- [`validate_pan`](docs/tools/pan.md) — PAN format and entity type decode
-- [`validate_upi_vpa`](docs/tools/upi.md) — UPI VPA structure and provider decode
-- [`validate_aadhaar`](docs/tools/aadhaar.md) — Aadhaar number with Verhoeff checksum
-- [`validate_voter_id`](docs/tools/voter_id.md) — Voter ID (EPIC) format with legacy detection
-- [`validate_driving_license`](docs/tools/driving_license.md) — DL format with state/RTO/year decode
-- [`validate_passport`](docs/tools/passport.md) — Indian passport number format
-- [`validate_cin`](docs/tools/cin.md) — Company Identification Number with full field decode
-- [`validate_din`](docs/tools/din.md) — Director Identification Number format
-- [`validate_fssai`](docs/tools/fssai.md) — FSSAI license number validation and decode
-- [`validate_epf_code`](docs/tools/epf.md) — EPF establishment code validator
-- [`validate_esic_code`](docs/tools/esic.md) — ESIC employer code validator
-- [`decode_digilocker_uri`](docs/tools/digilocker.md) — DigiLocker URI decoder and validator mapper
-- [`decode_pan_type`](docs/tools/pan.md) — Decode PAN entity type from the 4th character
+- [`validate_gstin`](docs/lookup_and_validation.md) — GSTIN structure and checksum
+- [`validate_pan`](docs/lookup_and_validation.md) — PAN format and entity type decode
+- [`validate_upi_vpa`](docs/lookup_and_validation.md) — UPI VPA structure and provider decode
+- [`validate_aadhaar`](docs/lookup_and_validation.md) — Aadhaar number with Verhoeff checksum (masked output)
+- [`validate_voter_id`](docs/lookup_and_validation.md) — Voter ID (EPIC) format with legacy detection
+- [`validate_driving_license`](docs/lookup_and_validation.md) — DL format with state/RTO/year decode
+- [`validate_passport`](docs/lookup_and_validation.md) — Indian passport number format
+- [`validate_cin`](docs/lookup_and_validation.md) — Company Identification Number with full field decode
+- [`validate_din`](docs/lookup_and_validation.md) — Director Identification Number format
+- [`validate_fssai`](docs/lookup_and_validation.md) — FSSAI license number validation and decode
+- [`validate_epf_code`](docs/lookup_and_validation.md) — EPF establishment code validator
+- [`validate_esic_code`](docs/lookup_and_validation.md) — ESIC employer code validator
+- [`validate_tan`](docs/lookup_and_validation.md) — TAN validator
+- [`validate_pran`](docs/lookup_and_validation.md) — PRAN validator for NPS
+- [`validate_llpin`](docs/lookup_and_validation.md) — LLPIN validator
+- [`decode_isin`](docs/lookup_and_validation.md) — ISIN decoder with Luhn validation
+- [`decode_digilocker_uri`](docs/lookup_and_validation.md) — DigiLocker URI decoder and validator mapper
+- [`decode_pan_type`](docs/lookup_and_validation.md) — Decode PAN entity type from the 4th character
+
+### 📱 Identity & Contact
+- [`validate_mobile_number`](docs/lookup_and_validation.md) — Mobile number with operator/circle detection
 
 ### ⚡ Bulk Operations
-- [`bulk_validate_gstin`](docs/tools/gstin.md) — Parallel GSTIN batch validation
-- [`bulk_validate_pan`](docs/tools/pan.md) — Parallel PAN batch validation
-- [`bulk_validate_ifsc`](docs/tools/ifsc.md) — Parallel IFSC batch validation
+- [`bulk_validate_gstin`](docs/lookup_and_validation.md) — Parallel GSTIN batch validation
+- [`bulk_validate_pan`](docs/lookup_and_validation.md) — Parallel PAN batch validation
+- [`bulk_validate_ifsc`](docs/lookup_and_validation.md) — Parallel IFSC batch validation
+- [`bulk_validate_aadhaar`](docs/lookup_and_validation.md) — Parallel Aadhaar batch validation
 
 ### 🧮 Tax & Financial Calculators (FY2025-26)
-- [`calculate_income_tax`](docs/tools/income_tax.md) — Old vs new regime comparison with surcharge, rebate, cess
-- [`calculate_tds`](docs/tools/tds.md) — TDS rate lookup and computation for 12+ sections
-- [`calculate_gst`](docs/tools/gst_calculator.md) — GST breakdown (CGST/SGST/IGST/cess)
-- [`calculate_surcharge`](docs/tools/surcharge.md) — Surcharge and marginal relief calculator
-- [`calculate_hra_exemption`](docs/tools/hra.md) — HRA exemption calculator for salary planning
-- [`calculate_capital_gains`](docs/tools/capital_gains.md) — Capital gains tax helper
-- [`calculate_advance_tax`](docs/tools/advance_tax.md) — Advance tax estimator
+- [`calculate_income_tax`](docs/tax_and_finance.md) — Old vs new regime comparison with surcharge, rebate, cess
+- [`calculate_tds`](docs/tax_and_finance.md) — TDS rate lookup and computation for 15+ sections
+- [`calculate_gst`](docs/tax_and_finance.md) — GST breakdown (CGST/SGST/IGST/cess) with HSN lookup
+- [`calculate_surcharge`](docs/tax_and_finance.md) — Surcharge and marginal relief calculator
+- [`calculate_hra_exemption`](docs/tax_and_finance.md) — HRA exemption calculator for salary planning
+- [`calculate_capital_gains`](docs/tax_and_finance.md) — Capital gains with Section 54/54F exemption
+- [`calculate_advance_tax`](docs/tax_and_finance.md) — Advance tax estimator
+- [`calculate_gst_late_fee`](docs/tax_and_finance.md) — GST late filing penalty
+- [`calculate_income_tax_interest`](docs/tax_and_finance.md) — Sections 234A/B/C interest
+- [`calculate_presumptive_tax`](docs/tax_and_finance.md) — 44AD/44ADA presumptive tax
+- [`get_regulatory_deadlines`](docs/tax_and_finance.md) — Tax & regulatory compliance calendar
+
+
+### 💰 Savings & Investment Calculators
+- [`calculate_epf_esic`](docs/savings_and_investments.md) — EPF/ESIC contribution calculator
+- [`calculate_emi`](docs/savings_and_investments.md) — Loan EMI with amortization schedule
+- [`calculate_gratuity`](docs/savings_and_investments.md) — Gratuity under Payment of Gratuity Act
+- [`calculate_ppf_maturity`](docs/savings_and_investments.md) — PPF maturity projections
+- [`calculate_fd_maturity`](docs/savings_and_investments.md) — Fixed Deposit maturity
+- [`calculate_rd_maturity`](docs/savings_and_investments.md) — Recurring Deposit maturity
+- [`calculate_sip_returns`](docs/savings_and_investments.md) — SIP returns with inflation adjustment
+- [`calculate_step_up_sip`](docs/savings_and_investments.md) — Step-up SIP comparison
+- [`calculate_nps_projection`](docs/savings_and_investments.md) — NPS corpus and pension
+- [`calculate_sukanya_samriddhi`](docs/savings_and_investments.md) — SSY and SCSS calculator
+
+### 🏠 Real Estate
+- [`calculate_home_vs_rent`](docs/savings_and_investments.md) — Buy vs rent financial comparison
+- [`calculate_leave_encashment_tax`](docs/savings_and_investments.md) — Section 10(10AA) leave encashment
+
+### 💼 HR & Payroll
+- [`calculate_professional_tax`](docs/tax_and_finance.md) — State-wise professional tax
+- [`calculate_salary_restructuring`](docs/tax_and_finance.md) — Tax-optimized salary restructuring
+
+### 🏦 Banking & Payments
+- [`calculate_neft_rtgs_imps_charges`](docs/banking_and_aa.md) — Transaction charges
+
+### 🔐 Account Aggregator (Offline)
+- [`build_aa_consent_request`](docs/banking_and_aa.md) — AA consent request builder
+- [`validate_aa_consent_artifact`](docs/banking_and_aa.md) — AA consent validator
+- [`decode_aa_fi_type`](docs/banking_and_aa.md) — AA FI type decoder
 
 ---
 
@@ -144,7 +185,32 @@ See [`NOTICES`](NOTICES) for detailed dataset attribution, licensing details, an
 ## 🚀 Launch Notes
 
 This repository is release-ready for GitHub launch with:
-- `0.3.0` package metadata and changelog coverage.
+- `0.4.2` package metadata and changelog coverage.
 - A complete MCP server-card under `docs/.well-known/mcp/server-card.json`.
 - Local setup and publishing steps in [`SETUP.md`](SETUP.md).
 - Contribution guidance and versioning policy in [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+### Bug fixes in v0.4.2 (Round 2 — Deep Code Audit)
+- **Capital Gains**: Asset-type-specific LTCG thresholds — real estate 24mo, gold/debentures 36mo, crypto always 30% flat.
+- **EPF/ESIC**: Employee EPF correctly capped at ₹15K wage ceiling. Added `voluntary_pf_on_actual` for VPF.
+- **HRA**: Removed Bangalore/Hyderabad/Pune from metro cities. Only Delhi/Mumbai/Chennai/Kolkata get 50%.
+- **Presumptive Tax**: Full 7-slab new regime coverage with 87A rebate (was truncated at 3 slabs).
+- **GST Late Fee**: GSTR9 cap enforced (0.25% of turnover). Nil return rate corrected to ₹20/day.
+- **Income Tax Interest**: Section 234C uses cumulative paid vs required (not single-quarter).
+- **Advance Tax**: Installments show incremental `installment_amount` (not confusing cumulative).
+- **Salary Restructuring**: Removed obsolete ₹19,200 conveyance exemption. Standard deduction (₹75K) shown.
+
+### Bug fixes in v0.4.1
+- **Security**: Masked Aadhaar number leakage in response fields.
+- **Validation**: Fixed mobile number over-counting digits issue.
+- **Tax Rules**: Corrected Presumptive Tax (44AD/44ADA) thresholds to FY25-26 rules.
+- **Financial**: Fixed Step-up SIP compounding return calculation.
+- **Data**: Added missing HSN codes (8517, 9401, 2523, 3004, 8708) with correct GST rates.
+- **Professional Tax**: Fixed annual total calculations based on correct monthly slabs.
+- **Income Tax**: Fixed 80D deduction cap for senior citizens.
+- **ISIN**: Fixed Luhn checksum multi-digit expansion logic.
+- **EMI Calculator**: Improved error responses to not leak fallback fields on invalid inputs.
+- **Advance Tax**: Added support for overriding internal computations with user-provided `tax_liability`.
+
+---
+**Offline-First Guarantee**: All tools in this package work without an internet connection. No API keys required. No data is sent to any external server. All datasets are bundled in the package at install time.

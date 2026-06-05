@@ -12,9 +12,9 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4   # ← was @v6 (does not exist)
 
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v5   # ← was @v6 (does not exist)
         with:
           python-version: "3.12"
 
@@ -26,4 +26,3 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-
