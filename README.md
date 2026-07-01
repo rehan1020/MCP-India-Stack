@@ -1,12 +1,38 @@
 # 🇮🇳 MCP India Stack
+> A high-performance, offline-first Model Context Protocol (MCP) server equipping AI agents with Indian financial, tax, and government APIs. Zero authentication required.
 
 [![PyPI version](https://img.shields.io/pypi/v/mcp-india-stack.svg)](https://pypi.org/project/mcp-india-stack/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![MCP Compatible](https://img.shields.io/badge/MCP-Compatible-blue.svg)](https://modelcontextprotocol.io)
 [![CI](https://github.com/rehan1020/MCP-India-Stack/actions/workflows/ci.yml/badge.svg)](https://github.com/rehan1020/MCP-India-Stack/actions/workflows/ci.yml)
 [![Verified on MseeP](https://mseep.ai/badge.svg)](https://mseep.ai/app/137943ec-5cee-4de7-a22d-e55a7ac699bd)
 [![MseeP.ai Security Assessment Badge](https://mseep.net/pr/rehan1020-mcp-india-stack-badge.png)](https://mseep.ai/app/rehan1020-mcp-india-stack)
 
-> A high-performance, offline-first Model Context Protocol (MCP) server equipping AI agents with Indian financial, tax, and government APIs. Zero authentication required.
+## 📑 Table of Contents
+
+- [Problem Statement](#problem-statement)
+- [Key Features](#key-features)
+- [Quick Start](#quick-start)
+- [Tech Stack](#tech-stack)
+- [Architecture Diagram](#architecture-diagram)
+- [Tool Catalog](#tool-catalog)
+- [Agent Workflows & Resources](#agent-workflows--resources)
+- [Data Architecture & Freshness](#data-architecture--freshness)
+- [Limitations](#limitations)
+- [Legal & Attribution](#legal--attribution)
+- [Team](#team)
+- [Hackathon Track](#hackathon-track)
+- [Demo & Links](#demo--links)
+- [Launch Notes](#launch-notes)
+
+---
+
+## 📌 Problem Statement
+
+- **Fragmented API Landscape:** AI agents lack a unified, standard interface to interact with scattered Indian financial, tax, and government systems.
+- **Authentication Blockers:** Traditional APIs require API keys, secrets, or paid subscriptions, making it impossible for autonomous agents to perform zero-setup operations.
+- **Latency & Reliability Constraints:** Calling remote third-party APIs for static/slow-moving datasets introduces unnecessary network delays and points of failure.
+- **Data Freshness Burden:** Manually maintaining local copies of critical validation datasets (like IFSC or HSN codes) is tedious and error-prone.
 
 ## ✨ Key Features
 
@@ -53,6 +79,24 @@ Add the following to your `claude_desktop_config.json` file to enable the India 
   }
 }
 ```
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Protocol** | Model Context Protocol (MCP) |
+| **Runtime** | Python |
+| **Distribution** | PyPI / Smithery |
+| **Hosting** | Render |
+
+---
+
+## 🏗️ Architecture Diagram
+
+![Architecture](./assets/architecture.png)
+*High-level architecture of the MCP India Stack.*
 
 ---
 
@@ -179,6 +223,29 @@ An optional auto-update mechanism fetches the latest versions from the jsDelivr 
 ## ⚖️ Legal & Attribution
 
 See [`NOTICES`](NOTICES) for detailed dataset attribution, licensing details, and third-party acknowledgments.
+
+---
+
+## 🧠 Team
+
+| Name | NAMESPACE Username | Role |
+|---|---|---|
+| Rehan | rehan1020 | Developer / Architect |
+
+---
+
+## 🏆 Hackathon Track
+
+**Track:** Work, Finance & Digital Economy
+
+---
+
+## 🔗 Demo & Links
+
+- **Demo Video:** [Insert YouTube/Loom Link Here](#)
+- **Deployment Link:** [Insert Live URL Here](#)
+- **PPT Link:** [Insert Pitch Deck Link Here](#)
+- **GitHub Repository:** [https://github.com/rehan1020/MCP-India-Stack](https://github.com/rehan1020/MCP-India-Stack)
 
 ---
 
