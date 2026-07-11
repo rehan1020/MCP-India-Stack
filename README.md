@@ -242,7 +242,7 @@ See [`NOTICES`](NOTICES) for detailed dataset attribution, licensing details, an
 
 ## 🔗 Demo & Links
 
-- **Demo Video:** [Insert YouTube/Loom Link Here](#)
+- **Demo Video:** [https://www.youtube.com/watch?v=KAy6043Co0w](https://www.youtube.com/watch?v=KAy6043Co0w)](#)
 - **Deployment Link:** [https://pypi.org/project/mcp-india-stack/](https://pypi.org/project/mcp-india-stack/)(#)
 - **PPT Link:** [https://gamma.app/docs/Problem-India-lacks-native-fintech-primitives-for-AI-agents-d1izzfemlvfvkf0](https://gamma.app/docs/Problem-India-lacks-native-fintech-primitives-for-AI-agents-d1izzfemlvfvkf0)(#)
 - **GitHub Repository:** [https://github.com/rehan1020/MCP-India-Stack](https://github.com/rehan1020/MCP-India-Stack)
