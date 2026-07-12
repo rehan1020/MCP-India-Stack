@@ -11,28 +11,73 @@
 ## 📑 Table of Contents
 
 - [Problem Statement](#problem-statement)
-- [Key Features](#key-features)
-- [Quick Start](#quick-start)
 - [Tech Stack](#tech-stack)
 - [Architecture Diagram](#architecture-diagram)
+- [Team](#team)
+- [Hackathon Track](#hackathon-track)
+- [Demo & Links](#demo--links)
+- [Key Features](#key-features)
+- [Quick Start](#quick-start)
 - [Tool Catalog](#tool-catalog)
 - [Agent Workflows & Resources](#agent-workflows--resources)
 - [Data Architecture & Freshness](#data-architecture--freshness)
 - [Limitations](#limitations)
 - [Legal & Attribution](#legal--attribution)
-- [Team](#team)
-- [Hackathon Track](#hackathon-track)
-- [Demo & Links](#demo--links)
 - [Launch Notes](#launch-notes)
 
 ---
 
 ## 📌 Problem Statement
 
-- **Fragmented API Landscape:** AI agents lack a unified, standard interface to interact with scattered Indian financial, tax, and government systems.
-- **Authentication Blockers:** Traditional APIs require API keys, secrets, or paid subscriptions, making it impossible for autonomous agents to perform zero-setup operations.
-- **Latency & Reliability Constraints:** Calling remote third-party APIs for static/slow-moving datasets introduces unnecessary network delays and points of failure.
-- **Data Freshness Burden:** Manually maintaining local copies of critical validation datasets (like IFSC or HSN codes) is tedious and error-prone.
+- **Fragmented Access:** Indian fintech, identity, and tax APIs are heavily siloed, requiring multiple disjointed integrations.
+- **High Barriers to Entry:** Existing solutions are plagued by paid subscriptions, strict rate limits, and complex API key management.
+- **No Native AI Integration:** There is no MCP-native standard designed specifically for autonomous AI agents to validate GSTIN, PAN, IFSC, or compute tax data.
+- **Latency & Reliability Issues:** Depending on remote third-party APIs for static/slow-moving datasets introduces unnecessary network delays and potential points of failure for AI workflows.
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Protocol** | MCP (FastMCP) |
+| **Runtime** | Python |
+| **Distribution** | PyPI / Smithery |
+| **Hosting** | Render |
+| **Datasets** | Offline-bundled (jsDelivr CDN sync) |
+
+---
+
+## 🏗️ Architecture Diagram
+
+![Architecture](./assets/architecture.png)
+*MCP Client ↔ MCP Server ↔ 58 offline-first tool modules*
+
+---
+
+## 🧠 Team
+
+**Team Name:** Solo Wizard
+
+| Name | NAMESPACE Username | Role |
+|---|---|---|
+| Rehan Shashi | Rehan Shashi | Developer |
+
+---
+
+## 🏆 Hackathon Track
+
+**Track:** Work, Finance & Digital Economy
+
+---
+
+## 🔗 Demo & Links
+
+- **Demo Video:** [https://youtu.be/KAy6043Co0w?si=FIFfVRM2y3Zwv8oK](https://youtu.be/KAy6043Co0w?si=FIFfVRM2y3Zwv8oK)
+- **Deployment:** [https://mseep.ai/app/rehan1020-mcp-india-stack](https://mseep.ai/app/rehan1020-mcp-india-stack)
+- **PPT:** [https://gamma.app/docs/Problem-India-lacks-native-fintech-primitives-for-AI-agents-d1izzfemlvfvkf0?mode=doc](https://gamma.app/docs/Problem-India-lacks-native-fintech-primitives-for-AI-agents-d1izzfemlvfvkf0?mode=doc)
+- **GitHub:** [https://github.com/rehan1020/MCP-India-Stack](https://github.com/rehan1020/MCP-India-Stack)
+- **PyPI:** [https://pypi.org/project/mcp-india-stack/](https://pypi.org/project/mcp-india-stack/)
 
 ## ✨ Key Features
 
@@ -82,23 +127,6 @@ Add the following to your `claude_desktop_config.json` file to enable the India 
 
 ---
 
-## 🛠️ Tech Stack
-
-| Layer | Technology |
-|---|---|
-| **Protocol** | Model Context Protocol (MCP) |
-| **Runtime** | Python |
-| **Distribution** | PyPI / Smithery |
-| **Hosting** | Render |
-
----
-
-## 🏗️ Architecture Diagram
-
-![Architecture](./assets/architecture.png)
-*High-level architecture of the MCP India Stack.*
-
----
 
 ## 🛠️ Tool Catalog
 
@@ -226,28 +254,7 @@ See [`NOTICES`](NOTICES) for detailed dataset attribution, licensing details, an
 
 ---
 
-## 🧠 Team
 
-| Name | NAMESPACE Username | Role |
-|---|---|---|
-| Rehan | rehan1020 | Developer / Architect |
-
----
-
-## 🏆 Hackathon Track
-
-**Track:** Work, Finance & Digital Economy
-
----
-
-## 🔗 Demo & Links
-
-- **Demo Video:** [https://www.youtube.com/watch?v=KAy6043Co0w](https://www.youtube.com/watch?v=KAy6043Co0w)](#)
-- **Deployment Link:** [https://pypi.org/project/mcp-india-stack/](https://pypi.org/project/mcp-india-stack/)(#)
-- **PPT Link:** [https://gamma.app/docs/Problem-India-lacks-native-fintech-primitives-for-AI-agents-d1izzfemlvfvkf0](https://gamma.app/docs/Problem-India-lacks-native-fintech-primitives-for-AI-agents-d1izzfemlvfvkf0)(#)
-- **GitHub Repository:** [https://github.com/rehan1020/MCP-India-Stack](https://github.com/rehan1020/MCP-India-Stack)
-
----
 
 ## 🚀 Launch Notes
 
