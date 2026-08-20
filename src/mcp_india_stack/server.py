@@ -1963,8 +1963,6 @@ def main() -> None:
         sys.exit(0)
 
     if args.transport == "sse":
-        from typing import cast
-
         import uvicorn
         from starlette.middleware.cors import CORSMiddleware
 
@@ -1972,9 +1970,7 @@ def main() -> None:
         if port is None:
             port = int(os.environ.get("PORT", "8000"))
 
-        from mcp.server.fastmcp import FastMCP
-
-        sse_app_instance = cast(FastMCP[Any], mcp).sse_app()
+        sse_app_instance = mcp.sse_app()
 
         sse_app_instance.add_middleware(
             CORSMiddleware,
