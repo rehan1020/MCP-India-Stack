@@ -26,11 +26,11 @@ def get_stock_quote(symbol: str) -> dict[str, Any]:
                 source="yfinance",
             )
         )
-    
+
     try:
         ticker = yf.Ticker(symbol)
         info = ticker.info
-        
+
         has_price = any(k in info for k in ("regularMarketPrice", "currentPrice", "previousClose"))
         if not info or not has_price:
             return _flatten(
@@ -56,7 +56,7 @@ def get_stock_quote(symbol: str) -> dict[str, Any]:
             "currency": info.get("currency"),
             "exchange": info.get("exchange"),
         }
-        
+
         return _flatten(
             build_response(
                 success=True,
@@ -87,11 +87,11 @@ def get_stock_history(symbol: str, period: str = "1mo") -> dict[str, Any]:
                 source="yfinance",
             )
         )
-    
+
     try:
         ticker = yf.Ticker(symbol)
         hist = ticker.history(period=period)
-        
+
         if hist.empty:
             return _flatten(
                 build_response(
@@ -101,19 +101,15 @@ def get_stock_history(symbol: str, period: str = "1mo") -> dict[str, Any]:
                     source="yfinance",
                 )
             )
-        
+
         # Reset index to make Date a column and convert it to string
         hist = hist.reset_index()
         hist["Date"] = hist["Date"].dt.strftime("%Y-%m-%d")
-        
+
         records = hist.to_dict(orient="records")
-        
-        data = {
-            "symbol": symbol,
-            "period": period,
-            "history": records
-        }
-        
+
+        data = {"symbol": symbol, "period": period, "history": records}
+
         return _flatten(
             build_response(
                 success=True,
