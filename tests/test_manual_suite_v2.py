@@ -244,7 +244,7 @@ class TestGSTLateFee:
 
 
 class TestCapitalGains:
-    def test_equity_ltcg_with_1L_exemption(self) -> None:
+    def test_equity_ltcg_with_1_25L_exemption(self) -> None:
         r = calculate_capital_gains(
             purchase_price=600,
             sale_price=1000,
@@ -253,7 +253,7 @@ class TestCapitalGains:
             holding_period_days=396,
         )
         assert r.get("is_long_term") is True
-        assert r.get("tax_amount") == pytest.approx(12_500, abs=100)
+        assert r.get("tax_amount") == pytest.approx(9_375, abs=100)
 
     def test_equity_stcg_8_months(self) -> None:
         r = calculate_capital_gains(

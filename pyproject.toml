@@ -114,8 +114,16 @@ exclude = ["^tests/", "^mcp/", "^builddir/", "^staging/", "^dist/", "^\\.venv/",
 
 [[tool.mypy.overrides]]
 module = "mcp_india_stack.server"
-# server.py has FastMCP internals that are hard to fully type â€” relax slightly
+# server.py has FastMCP internals that are hard to fully type — relax slightly
 disallow_any_generics = false
+
+[[tool.mypy.overrides]]
+module = [
+    "yfinance.*",
+    "numpy.*",
+    "pandas.*"
+]
+follow_imports = "skip"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

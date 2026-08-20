@@ -566,9 +566,9 @@ class TestCapitalGainsTool:
             asset_type="equity", buy_price=100, sell_price=300, quantity=1000, holding_days=400
         )
         assert result["gain_type"] == "LTCG"
-        assert result["taxable_gain"] == 100000.0
-        assert result["tax_liability"] == 12500.0
-        assert result["exemption_applied"] == 100000.0
+        assert result["taxable_gain"] == 75000.0
+        assert result["tax_liability"] == 9375.0
+        assert result["exemption_applied"] == 125000.0
 
     def test_ltcg_real_estate_no_exemption_applied(self) -> None:
         from mcp_india_stack.tools.capital_gains import calculate_capital_gains
@@ -601,7 +601,7 @@ class TestCapitalGainsTool:
             asset_type="equity", buy_price=100, sell_price=150, quantity=500, holding_days=400
         )
         assert "exemption_note" in result
-        assert "1,00,000" in result["exemption_note"] or "100000" in result["exemption_note"]
+        assert "1,25,000" in result["exemption_note"] or "125000" in result["exemption_note"]
 
 
 class TestAdvanceTaxTool:
