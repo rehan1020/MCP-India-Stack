@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-LTCG_EQUITY_EXEMPTION = 100000  # ₹1,00,000 per year (Section 112A)
+LTCG_EQUITY_EXEMPTION = 125000  # ₹1,25,000 per year (Section 112A)
 
 # LTCG holding period thresholds per Income Tax Act (in days)
 LTCG_THRESHOLDS = {
@@ -153,7 +153,7 @@ def calculate_capital_gains(  # noqa: C901
         tax_liability = taxable_gain * ltcg_rate
         if exemption_applied > 0:
             exemption_note = (
-                "₹1,00,000 annual LTCG exemption applied under Section 112A. "
+                "₹1,25,000 annual LTCG exemption applied under Section 112A. "
                 "This assumes no other LTCG in the financial year."
             )
     elif is_long_term:

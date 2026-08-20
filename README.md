@@ -13,8 +13,6 @@
 - [Problem Statement](#problem-statement)
 - [Tech Stack](#tech-stack)
 - [Architecture Diagram](#architecture-diagram)
-- [Team](#team)
-- [Hackathon Track](#hackathon-track)
 - [Demo & Links](#demo--links)
 - [Key Features](#key-features)
 - [Quick Start](#quick-start)
@@ -52,22 +50,6 @@
 
 ![Architecture](./assets/architecture.png)
 *MCP Client ↔ MCP Server ↔ 58 offline-first tool modules*
-
----
-
-## 🧠 Team
-
-**Team Name:** Solo Wizard
-
-| Name | NAMESPACE Username | Role |
-|---|---|---|
-| Rehan Shashi | Rehan Shashi | Developer |
-
----
-
-## 🏆 Hackathon Track
-
-**Track:** Work, Finance & Digital Economy
 
 ---
 
@@ -203,6 +185,10 @@ Add the following to your `claude_desktop_config.json` file to enable the India 
 
 ### 🏦 Banking & Payments
 - [`calculate_neft_rtgs_imps_charges`](docs/banking_and_aa.md) — Transaction charges
+
+### 📈 Stock Market
+- `get_stock_quote` — Fetch live/delayed Indian stock quotes and summaries (NSE/BSE) using yfinance.
+- `get_stock_history` — Fetch historical end-of-day data for Indian stocks using yfinance.
 
 ### 🔐 Account Aggregator (Offline)
 - [`build_aa_consent_request`](docs/banking_and_aa.md) — AA consent request builder

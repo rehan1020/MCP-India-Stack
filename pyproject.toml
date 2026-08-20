@@ -43,6 +43,7 @@ dependencies = [
 	"platformdirs>=4.0.0",
 	"uvicorn>=0.30.0",
 	"starlette>=0.38.0",
+	"yfinance>=0.2.40",
 ]
 
 [project.optional-dependencies]

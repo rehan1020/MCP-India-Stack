@@ -39,6 +39,7 @@ from mcp_india_stack.tools.ppf_maturity import calculate_ppf_maturity
 from mcp_india_stack.tools.regulatory_calendar import get_regulatory_deadlines
 from mcp_india_stack.tools.salary_restructuring import calculate_salary_restructuring
 from mcp_india_stack.tools.state_code import decode_state_code
+from mcp_india_stack.tools.stock_market import get_stock_history, get_stock_quote
 from mcp_india_stack.tools.surcharge import calculate_surcharge
 from mcp_india_stack.tools.tds import calculate_tds
 from mcp_india_stack.tools.upi import validate_upi_vpa
@@ -78,4 +79,6 @@ __all__ = [
     "validate_voter_id",
     "get_regulatory_deadlines",
     "calculate_salary_restructuring",
+    "get_stock_quote",
+    "get_stock_history",
 ]

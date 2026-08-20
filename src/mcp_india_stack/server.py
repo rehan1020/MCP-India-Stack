@@ -8,7 +8,7 @@ import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, Any, cast
 
-from fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP
 from mcp.types import ToolAnnotations
 from pydantic import Field
 
@@ -122,6 +122,12 @@ from mcp_india_stack.tools.professional_tax import (
 from mcp_india_stack.tools.rd_maturity import calculate_rd_maturity as core_calculate_rd_maturity
 from mcp_india_stack.tools.sip_returns import calculate_sip_returns as core_calculate_sip_returns
 from mcp_india_stack.tools.step_up_sip import calculate_step_up_sip as core_calculate_step_up_sip
+from mcp_india_stack.tools.stock_market import (
+    get_stock_history as core_get_stock_history,
+)
+from mcp_india_stack.tools.stock_market import (
+    get_stock_quote as core_get_stock_quote,
+)
 from mcp_india_stack.tools.sukanya_scss import (
     calculate_sukanya_samriddhi as core_calculate_sukanya_samriddhi,
 )
@@ -3968,6 +3974,58 @@ def calculate_neft_rtgs_imps_charges(
             errors=[f"Bank charges calculation failed: {exc}"],
             source="offline_algorithm",
         )
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=True,
+    ),
+)
+def get_stock_quote(
+    symbol: Annotated[
+        str,
+        Field(
+            min_length=1,
+            max_length=20,
+            description="Stock symbol/ticker to fetch. Examples: RELIANCE.NS, INFY.NS, TCS.BO",
+        ),
+    ],
+) -> dict[str, Any]:
+    """Fetch current (delayed) price and summary for a given Indian stock ticker."""
+    return core_get_stock_quote(symbol=symbol)
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=True,
+    ),
+)
+def get_stock_history(
+    symbol: Annotated[
+        str,
+        Field(
+            min_length=1,
+            max_length=20,
+            description="Stock symbol/ticker to fetch. Examples: RELIANCE.NS, INFY.NS",
+        ),
+    ],
+    period: Annotated[
+        str,
+        Field(
+            default="1mo",
+            description=(
+                "Time period to fetch data for. Valid periods: 1d, 5d, 1mo, 3mo, "
+                "6mo, 1y, 2y, 5y, 10y, ytd, max"
+            ),
+        ),
+    ] = "1mo",
+) -> dict[str, Any]:
+    """Fetch historical end-of-day data for a given Indian stock ticker."""
+    return core_get_stock_history(symbol=symbol, period=period)
 
 
 # ========== Dry-Run Mode Handler ==========
