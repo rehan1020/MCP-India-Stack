@@ -1,0 +1,154 @@
+[
+  {
+    "article": "36",
+    "suit_type": "On a promissory note or bond payable by installments.",
+    "limitation_years": 3,
+    "starts_from": "The expiration of the first term of payment as to the part then payable; and for the other parts, the expiration of the respective terms of payment.",
+    "part": "Part II",
+    "division": "Suits relating to contracts"
+  },
+  {
+    "article": "37",
+    "suit_type": "On a promissory note or bond payable by installments, which provides that, if default be made in payment of one or more installments, the whole shall be due.",
+    "limitation_years": 3,
+    "starts_from": "When the default is made, unless where the payee or obligee waives the benefit of the provision and then when fresh default is made in respect of which there is no such waiver.",
+    "part": "Part II",
+    "division": "Suits relating to contracts"
+  },
+  {
+    "article": "44",
+    "suit_type": "For specific performance of a contract.",
+    "limitation_years": 3,
+    "starts_from": "The date fixed for the performance, or, if no such date is fixed, when the plaintiff has notice that performance is refused.",
+    "part": "Part II",
+    "division": "Suits relating to contracts"
+  },
+  {
+    "article": "54",
+    "suit_type": "For specific performance of a contract.",
+    "limitation_years": 3,
+    "starts_from": "The date fixed for the performance, or, if no such date is fixed, when the plaintiff has notice that performance is refused.",
+    "part": "Part II",
+    "division": "Suits relating to contracts"
+  },
+  {
+    "article": "55",
+    "suit_type": "For compensation for the breach of any contract, express or implied not herein specially provided for.",
+    "limitation_years": 3,
+    "starts_from": "When the contract is broken or (where there are successive breaches) when the breach in respect of which the suit is instituted occurs or (where the breach is continuing) when it ceases.",
+    "part": "Part II",
+    "division": "Suits relating to contracts"
+  },
+  {
+    "article": "56",
+    "suit_type": "For a declaration of the forgery of an instrument issued or registered.",
+    "limitation_years": 3,
+    "starts_from": "When the issue or registration becomes known to the plaintiff.",
+    "part": "Part III",
+    "division": "Suits relating to declarations"
+  },
+  {
+    "article": "58",
+    "suit_type": "To obtain any other declaration.",
+    "limitation_years": 3,
+    "starts_from": "When the right to sue first accrues.",
+    "part": "Part III",
+    "division": "Suits relating to declarations"
+  },
+  {
+    "article": "59",
+    "suit_type": "To cancel or set aside an instrument or decree or for the rescission of a contract.",
+    "limitation_years": 3,
+    "starts_from": "When the facts entitling the plaintiff to have the instrument or decree cancelled or set aside or the contract rescinded first become known to him.",
+    "part": "Part IV",
+    "division": "Suits relating to decrees and instruments"
+  },
+  {
+    "article": "62",
+    "suit_type": "To enforce payment of money secured by a mortgage or otherwise charged upon immovable property.",
+    "limitation_years": 12,
+    "starts_from": "When the money sued for becomes due.",
+    "part": "Part V",
+    "division": "Suits relating to immovable property"
+  },
+  {
+    "article": "65",
+    "suit_type": "For possession of immovable property or any interest therein based on title.",
+    "limitation_years": 12,
+    "starts_from": "When the possession of the defendant becomes adverse to the plaintiff.",
+    "part": "Part V",
+    "division": "Suits relating to immovable property"
+  },
+  {
+    "article": "67",
+    "suit_type": "By a landlord to recover possession from a tenant.",
+    "limitation_years": 12,
+    "starts_from": "When the tenancy is determined.",
+    "part": "Part V",
+    "division": "Suits relating to immovable property"
+  },
+  {
+    "article": "68",
+    "suit_type": "For specific movable property lost, or acquired by theft, or dishonest misappropriation or conversion.",
+    "limitation_years": 3,
+    "starts_from": "When the person having the right to the possession of the property first learns in whose possession it is.",
+    "part": "Part VI",
+    "division": "Suits relating to movable property"
+  },
+  {
+    "article": "89",
+    "suit_type": "By a principal against his agent for movable property received by the latter and not accounted for.",
+    "limitation_years": 3,
+    "starts_from": "When the account is, during the continuance of the agency, demanded and refused or, where no such demand is made, when the agency terminates.",
+    "part": "Part VII",
+    "division": "Suits relating to torts"
+  },
+  {
+    "article": "90",
+    "suit_type": "Other suits by principals against agents for neglect or misconduct.",
+    "limitation_years": 3,
+    "starts_from": "When the neglect or misconduct becomes known to the plaintiff.",
+    "part": "Part VII",
+    "division": "Suits relating to torts"
+  },
+  {
+    "article": "113",
+    "suit_type": "Any suit for which no period of limitation is provided elsewhere in this Schedule.",
+    "limitation_years": 3,
+    "starts_from": "When the right to sue accrues.",
+    "part": "Part X",
+    "division": "Suits for which there is no prescribed period"
+  },
+  {
+    "article": "120",
+    "suit_type": "Under the Code of Civil Procedure, 1908, to have the legal representative of a deceased plaintiff or appellant or of a deceased defendant or respondent, made a party.",
+    "limitation_years": 90,
+    "starts_from": "The date of death of the plaintiff, appellant, defendant or respondent as the case may be.",
+    "part": "Part I (Applications)",
+    "division": "Applications in specified cases"
+  },
+  {
+    "article": "131",
+    "suit_type": "To any court for the exercise of its powers of revision under the Code of Civil Procedure, 1908, or the Code of Criminal Procedure, 1898.",
+    "limitation_years": 90,
+    "starts_from": "The date of the decree or order or sentence sought to be revised.",
+    "part": "Part I (Applications)",
+    "division": "Applications in specified cases"
+  },
+  {
+    "article": "136",
+    "suit_type": "For the execution of any decree (other than a decree granting a mandatory injunction) or order of any Civil Court.",
+    "limitation_years": 12,
+    "starts_from": "When the decree or order becomes enforceable or where the decree or any subsequent order directs any payment of money or the delivery of any property to be made at a certain date or at recurring periods, when default in making the payment or delivery in respect of which execution is sought, takes place.",
+    "part": "Part I (Applications)",
+    "division": "Applications in specified cases"
+  },
+  {
+    "article": "137",
+    "suit_type": "Any other application for which no period of limitation is provided elsewhere in this division.",
+    "limitation_years": 3,
+    "starts_from": "When the right to apply accrues.",
+    "part": "Part II (Applications)",
+    "division": "Other applications"
+  }
+]

@@ -49,7 +49,7 @@
 ## 🏗️ Architecture Diagram
 
 ![Architecture](./assets/architecture.png)
-*MCP Client ↔ MCP Server ↔ 58 offline-first tool modules*
+*MCP Client ↔ MCP Server ↔ 76 offline-first tool modules*
 
 ---
 
@@ -66,7 +66,7 @@
 - **Offline-First Architecture**: Bundles compressed datasets for zero-latency lookups (IFSC, Pincodes, HSN/SAC). No API rate limits.
 - **Zero Authentication**: No API keys, secrets, or subscriptions required. All logic runs locally.
 - **Background Auto-Updates**: Non-blocking CDN fetching ensures your datasets never go stale without impacting request latency.
-- **Comprehensive Coverage**: 58 dedicated tools for identity validation (PAN, Aadhaar, GSTIN, TAN, PRAN), tax calculation (Income Tax, TDS, GST), savings calculators (EPF, PPF, SIP), and master data lookups.
+- **Comprehensive Coverage**: 76 dedicated tools for identity validation (PAN, Aadhaar, GSTIN, TAN, PRAN), tax calculation (Income Tax, TDS, GST), savings calculators (EPF, PPF, SIP), and master data lookups.
 - **Enterprise-Ready**: Thread-pool accelerated bulk validation tools for processing large batches of vendor or customer data.
 
 ---
@@ -190,6 +190,28 @@ Add the following to your `claude_desktop_config.json` file to enable the India 
 - `get_stock_quote` — Fetch live/delayed Indian stock quotes and summaries (NSE/BSE) using yfinance.
 - `get_stock_history` — Fetch historical end-of-day data for Indian stocks using yfinance.
 
+### ⚖️ Legal Reference
+- [`decode_cnr_number`](docs/legal_reference.md) — CNR (Case Number Record) decoder and validator
+- [`lookup_court_establishment_code`](docs/legal_reference.md) — Court establishment code directory lookup
+- [`lookup_ipc_section`](docs/legal_reference.md) — IPC section lookup with BNS crosswalk
+- [`lookup_bns_section`](docs/legal_reference.md) — BNS section lookup with IPC crosswalk
+- [`lookup_crpc_section`](docs/legal_reference.md) — CrPC section lookup with BNSS crosswalk
+- [`lookup_bnss_section`](docs/legal_reference.md) — BNSS section lookup with CrPC crosswalk
+- [`lookup_evidence_act_section`](docs/legal_reference.md) — Indian Evidence Act section lookup
+- [`lookup_bsa_section`](docs/legal_reference.md) — BSA section lookup with IEA crosswalk
+- [`decode_ipc_bns_crosswalk`](docs/legal_reference.md) — Bidirectional IPC↔BNS section crosswalk
+- [`calculate_limitation_deadline`](docs/legal_reference.md) — Limitation Act 1963 deadline calculator
+- [`calculate_court_fee`](docs/legal_reference.md) — State-wise court fee calculator
+- [`calculate_stamp_duty`](docs/legal_reference.md) — State-wise stamp duty and registration fee calculator
+
+### 📋 RTI Toolkit
+- [`calculate_rti_fee`](docs/rti_toolkit.md) — RTI application fee calculator (central + state)
+- [`calculate_rti_deadline`](docs/rti_toolkit.md) — RTI response and appeal deadline calculator
+- [`calculate_rti_penalty_estimate`](docs/rti_toolkit.md) — RTI penalty estimator (Section 20)
+- [`draft_rti_application`](docs/rti_toolkit.md) — RTI application drafter (Section 6)
+- [`draft_first_appeal`](docs/rti_toolkit.md) — First appeal template generator (Section 19)
+- [`draft_second_appeal`](docs/rti_toolkit.md) — Second appeal template generator (Section 19)
+
 ### 🔐 Account Aggregator (Offline)
 - [`build_aa_consent_request`](docs/banking_and_aa.md) — AA consent request builder
 - [`validate_aa_consent_artifact`](docs/banking_and_aa.md) — AA consent validator
@@ -238,6 +260,12 @@ An optional auto-update mechanism fetches the latest versions from the jsDelivr 
 
 See [`NOTICES`](NOTICES) for detailed dataset attribution, licensing details, and third-party acknowledgments.
 
+See [`LEGAL_NOTICE.md`](LEGAL_NOTICE.md) for important legal disclaimers including:
+- **No Government Affiliation** — This project is not affiliated with NIC, eCourts, MeitY, or any government body.
+- **Not Legal Advice** — All outputs (bare-act lookups, limitation calculations, court fee estimates, stamp duty estimates, RTI deadline/penalty calculations) are algorithmic estimates, not legal advice.
+- **Data Accuracy** — State-subject data (court fees, stamp duty) carries `as_of` / `last_verified` fields and is not live-verified against issuing authorities.
+- **Personal Data** — Identity validation (Aadhaar, PAN, etc.) is structural/checksum only. Users are responsible for DPDP Act compliance.
+
 ---
 
 
@@ -245,10 +273,16 @@ See [`NOTICES`](NOTICES) for detailed dataset attribution, licensing details, an
 ## 🚀 Launch Notes
 
 This repository is release-ready for GitHub launch with:
-- `0.4.2` package metadata and changelog coverage.
+- `0.6.0` package metadata and changelog coverage.
 - A complete MCP server-card under `docs/.well-known/mcp/server-card.json`.
 - Local setup and publishing steps in [`SETUP.md`](SETUP.md).
 - Contribution guidance and versioning policy in [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+### New in v0.6.0 — Legal Reference & RTI Toolkit
+- **Legal Reference**: CNR decoder, court establishment lookup, bare-act section lookups (IPC/BNS/CrPC/BNSS/IEA/BSA), IPC↔BNS crosswalk, limitation period calculator, court fee calculator (10 states), stamp duty calculator (10 states).
+- **RTI Toolkit**: RTI fee calculator, deadline tracker, penalty estimator, application/appeal template drafters.
+- **Capital Gains**: Updated LTCG exemption from ₹1L to ₹1.25L (Budget 2024).
+- **Stock Market**: Added yfinance-based `get_stock_quote` and `get_stock_history` tools.
 
 ### Bug fixes in v0.4.2 (Round 2 — Deep Code Audit)
 - **Capital Gains**: Asset-type-specific LTCG thresholds — real estate 24mo, gold/debentures 36mo, crypto always 30% flat.

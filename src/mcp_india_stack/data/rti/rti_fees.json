@@ -1,0 +1,100 @@
+{
+  "central": {
+    "application_fee": 10,
+    "additional_page_fee": 2,
+    "bpl_exempt": true,
+    "notes": "RTI Act 2005, Section 6"
+  },
+  "states": {
+    "MH": {
+      "state_name": "Maharashtra",
+      "application_fee": 10,
+      "additional_page_fee": 2,
+      "bpl_exempt": true
+    },
+    "UP": {
+      "state_name": "Uttar Pradesh",
+      "application_fee": 10,
+      "additional_page_fee": 2,
+      "bpl_exempt": true
+    },
+    "DL": {
+      "state_name": "Delhi",
+      "application_fee": 10,
+      "additional_page_fee": 2,
+      "bpl_exempt": true
+    },
+    "KA": {
+      "state_name": "Karnataka",
+      "application_fee": 10,
+      "additional_page_fee": 2,
+      "bpl_exempt": true
+    },
+    "TN": {
+      "state_name": "Tamil Nadu",
+      "application_fee": 10,
+      "additional_page_fee": 2,
+      "bpl_exempt": true
+    },
+    "GJ": {
+      "state_name": "Gujarat",
+      "application_fee": 20,
+      "additional_page_fee": 2,
+      "bpl_exempt": true
+    },
+    "RJ": {
+      "state_name": "Rajasthan",
+      "application_fee": 10,
+      "additional_page_fee": 2,
+      "bpl_exempt": true
+    },
+    "WB": {
+      "state_name": "West Bengal",
+      "application_fee": 10,
+      "additional_page_fee": 2,
+      "bpl_exempt": true
+    },
+    "MP": {
+      "state_name": "Madhya Pradesh",
+      "application_fee": 10,
+      "additional_page_fee": 2,
+      "bpl_exempt": true
+    },
+    "KL": {
+      "state_name": "Kerala",
+      "application_fee": 10,
+      "additional_page_fee": 2,
+      "bpl_exempt": true
+    },
+    "AP": {
+      "state_name": "Andhra Pradesh",
+      "application_fee": 10,
+      "additional_page_fee": 2,
+      "bpl_exempt": true
+    },
+    "TS": {
+      "state_name": "Telangana",
+      "application_fee": 10,
+      "additional_page_fee": 2,
+      "bpl_exempt": true
+    },
+    "BR": {
+      "state_name": "Bihar",
+      "application_fee": 10,
+      "additional_page_fee": 2,
+      "bpl_exempt": true
+    },
+    "PB": {
+      "state_name": "Punjab",
+      "application_fee": 10,
+      "additional_page_fee": 2,
+      "bpl_exempt": true
+    },
+    "HR": {
+      "state_name": "Haryana",
+      "application_fee": 50,
+      "additional_page_fee": 2,
+      "bpl_exempt": true
+    }
+  }
+}

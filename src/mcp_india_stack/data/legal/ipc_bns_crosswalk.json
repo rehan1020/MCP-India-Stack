@@ -1,0 +1,98 @@
+[
+  {
+    "ipc_section": "302",
+    "ipc_title": "Punishment for murder",
+    "bns_section": "103",
+    "bns_title": "Punishment for murder",
+    "notes": "Direct replacement, no substantive change",
+    "crosswalk_type": "IPC_BNS"
+  },
+  {
+    "ipc_section": "304",
+    "ipc_title": "Punishment for culpable homicide not amounting to murder",
+    "bns_section": "105",
+    "bns_title": "Punishment for culpable homicide not amounting to murder",
+    "notes": "Direct replacement",
+    "crosswalk_type": "IPC_BNS"
+  },
+  {
+    "ipc_section": "307",
+    "ipc_title": "Attempt to murder",
+    "bns_section": "109",
+    "bns_title": "Attempt to murder",
+    "notes": "Direct replacement",
+    "crosswalk_type": "IPC_BNS"
+  },
+  {
+    "ipc_section": "376",
+    "ipc_title": "Punishment for rape",
+    "bns_section": "64",
+    "bns_title": "Punishment for rape",
+    "notes": "Direct replacement",
+    "crosswalk_type": "IPC_BNS"
+  },
+  {
+    "ipc_section": "420",
+    "ipc_title": "Cheating and dishonestly inducing delivery of property",
+    "bns_section": "318",
+    "bns_title": "Cheating and dishonestly inducing delivery of property",
+    "notes": "Direct replacement",
+    "crosswalk_type": "IPC_BNS"
+  },
+  {
+    "ipc_section": "498A",
+    "ipc_title": "Husband or relative of husband of a woman subjecting her to cruelty",
+    "bns_section": "85",
+    "bns_title": "Husband or relative of husband of a woman subjecting her to cruelty",
+    "notes": "Direct replacement",
+    "crosswalk_type": "IPC_BNS"
+  },
+  {
+    "ipc_section": "124A",
+    "ipc_title": "Sedition",
+    "bns_section": "152",
+    "bns_title": "Act endangering sovereignty, unity and integrity of India",
+    "notes": "Substantive change: Term 'sedition' removed, scope altered",
+    "crosswalk_type": "IPC_BNS"
+  },
+  {
+    "ipc_section": "154",
+    "ipc_title": "Information in cognizable cases",
+    "bns_section": "173",
+    "bns_title": "Information in cognizable cases",
+    "notes": "Direct replacement",
+    "crosswalk_type": "CrPC_BNSS"
+  },
+  {
+    "ipc_section": "161",
+    "ipc_title": "Examination of witnesses by police",
+    "bns_section": "180",
+    "bns_title": "Examination of witnesses by police",
+    "notes": "Direct replacement",
+    "crosswalk_type": "CrPC_BNSS"
+  },
+  {
+    "ipc_section": "438",
+    "ipc_title": "Direction for grant of bail to person apprehending arrest (Anticipatory Bail)",
+    "bns_section": "482",
+    "bns_title": "Direction for grant of bail to person apprehending arrest",
+    "notes": "Direct replacement",
+    "crosswalk_type": "CrPC_BNSS"
+  },
+  {
+    "ipc_section": "65B",
+    "ipc_title": "Admissibility of electronic records",
+    "bns_section": "63",
+    "bns_title": "Admissibility of electronic records",
+    "notes": "Direct replacement with some updates",
+    "crosswalk_type": "IEA_BSA"
+  },
+  {
+    "ipc_section": "120B",
+    "ipc_title": "Punishment of criminal conspiracy",
+    "bns_section": "61",
+    "bns_title": "Punishment of criminal conspiracy",
+    "notes": "Direct replacement",
+    "crosswalk_type": "IPC_BNS"
+  }
+]

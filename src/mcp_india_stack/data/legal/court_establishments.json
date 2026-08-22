@@ -1,0 +1,122 @@
+{
+  "DLCT": {
+    "court_name": "Tis Hazari Courts Complex",
+    "district": "Central Delhi",
+    "state_code": "07",
+    "court_type": "district"
+  },
+  "MHMC": {
+    "court_name": "Bombay City Civil and Sessions Court",
+    "district": "Mumbai",
+    "state_code": "27",
+    "court_type": "district"
+  },
+  "UPKA": {
+    "court_name": "District and Sessions Court, Kanpur",
+    "district": "Kanpur Nagar",
+    "state_code": "09",
+    "court_type": "district"
+  },
+  "KABN": {
+    "court_name": "Bangalore City Civil Court",
+    "district": "Bengaluru Urban",
+    "state_code": "29",
+    "court_type": "district"
+  },
+  "TNCH": {
+    "court_name": "Chennai City Civil Court",
+    "district": "Chennai",
+    "state_code": "33",
+    "court_type": "district"
+  },
+  "GJAH": {
+    "court_name": "Ahmedabad City Civil Court",
+    "district": "Ahmedabad",
+    "state_code": "24",
+    "court_type": "district"
+  },
+  "RJJP": {
+    "court_name": "Jaipur District Court",
+    "district": "Jaipur",
+    "state_code": "08",
+    "court_type": "district"
+  },
+  "WBKO": {
+    "court_name": "Kolkata City Civil Court",
+    "district": "Kolkata",
+    "state_code": "19",
+    "court_type": "district"
+  },
+  "MPIN": {
+    "court_name": "Indore District Court",
+    "district": "Indore",
+    "state_code": "23",
+    "court_type": "district"
+  },
+  "KLER": {
+    "court_name": "Ernakulam District Court",
+    "district": "Ernakulam",
+    "state_code": "32",
+    "court_type": "district"
+  },
+  "APVI": {
+    "court_name": "Vijayawada District Court",
+    "district": "NTR",
+    "state_code": "37",
+    "court_type": "district"
+  },
+  "TSHY": {
+    "court_name": "Hyderabad City Civil Court",
+    "district": "Hyderabad",
+    "state_code": "36",
+    "court_type": "district"
+  },
+  "BRPA": {
+    "court_name": "Patna District Court",
+    "district": "Patna",
+    "state_code": "10",
+    "court_type": "district"
+  },
+  "PBCH": {
+    "court_name": "Chandigarh District Court",
+    "district": "Chandigarh",
+    "state_code": "04",
+    "court_type": "district"
+  },
+  "HRGU": {
+    "court_name": "Gurugram District Court",
+    "district": "Gurugram",
+    "state_code": "06",
+    "court_type": "district"
+  },
+  "UPHC": {
+    "court_name": "Allahabad High Court",
+    "district": "Prayagraj",
+    "state_code": "09",
+    "court_type": "high_court"
+  },
+  "MHHC": {
+    "court_name": "Bombay High Court",
+    "district": "Mumbai",
+    "state_code": "27",
+    "court_type": "high_court"
+  },
+  "DLHC": {
+    "court_name": "Delhi High Court",
+    "district": "New Delhi",
+    "state_code": "07",
+    "court_type": "high_court"
+  },
+  "KAHC": {
+    "court_name": "Karnataka High Court",
+    "district": "Bengaluru",
+    "state_code": "29",
+    "court_type": "high_court"
+  },
+  "TNHC": {
+    "court_name": "Madras High Court",
+    "district": "Chennai",
+    "state_code": "33",
+    "court_type": "high_court"
+  }
+}
