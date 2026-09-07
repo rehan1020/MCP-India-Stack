@@ -2034,9 +2034,9 @@ def main() -> None:
 
         for route in sse_app_instance.router.routes:
             if hasattr(route, "path") and route.path in ("/sse", ""):
-                route.methods = {"GET", "POST"}  # type: ignore[attr-defined]
+                route.methods = {"GET", "POST"}  # type: ignore[union-attr,attr-defined]
             if hasattr(route, "path") and route.path in ("/messages", "/messages/"):
-                route.methods = {"GET", "POST"}  # type: ignore[attr-defined]
+                route.methods = {"GET", "POST"}  # type: ignore[union-attr,attr-defined]
 
         uvicorn.run(sse_app_instance, host=args.host, port=port)
     else:

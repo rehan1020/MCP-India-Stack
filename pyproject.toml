@@ -115,6 +115,8 @@ exclude = ["^tests/", "^mcp/", "^builddir/", "^staging/", "^dist/", "^\\.venv/",
 module = "mcp_india_stack.server"
 # server.py has FastMCP internals that are hard to fully type — relax slightly
 disallow_any_generics = false
+disable_error_code = ["untyped-decorator", "attr-defined", "call-arg"]
+warn_unused_ignores = false   # different mcp versions have different stubs
 
 [[tool.mypy.overrides]]
 module = [
