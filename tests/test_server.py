@@ -173,14 +173,14 @@ class TestServerResources:
         from mcp_india_stack.server import server_status
 
         status = server_status()
-        assert status["version"] == "0.4.2"
-        assert status["tool_count"] == 58
+        assert status["version"] == "0.6.0"
+        assert status["tool_count"] == 76
 
     def test_changelog(self) -> None:
         from mcp_india_stack.server import changelog
 
         cl = changelog()
-        assert cl["current_version"] == "0.4.2"
+        assert cl["current_version"] == "0.6.0"
         assert len(cl["entries"]) > 0
 
 

@@ -85,7 +85,7 @@ class TestIpcBnsCrosswalk:
 class TestLimitation:
     def test_money_recovery(self) -> None:
         result = calculate_limitation_deadline("payment of money", "2024-01-15")
-        assert result.get("matches")[0]["limitation_years"] == 12
+        assert result.get("matches")[0]["limitation_years"] == 3
         assert "deadline_date" in result.get("matches")[0]
 
     def test_unknown_suit_type(self) -> None:

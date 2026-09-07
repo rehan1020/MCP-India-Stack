@@ -2570,7 +2570,7 @@ def server_status() -> dict[str, Any]:
         "live_lookup_enabled": _LIVE_LOOKUP_ENABLED,
         "dry_run_mode": _DRY_RUN,
         "db_url_configured": _DB_URL_SET,
-        "tool_count": 58,
+        "tool_count": 76,
         "data_version": "2025.04",
     }
 
@@ -2579,7 +2579,7 @@ def server_status() -> dict[str, Any]:
 def changelog() -> dict[str, Any]:
     """Structured changelog as JSON."""
     return {
-        "current_version": "0.4.2",
+        "current_version": "0.6.0",
         "entries": [
             {
                 "version": "0.3.0",

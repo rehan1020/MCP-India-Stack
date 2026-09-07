@@ -1,11 +1,57 @@
 [
   {
+    "article": "22",
+    "suit_type": "For money payable for money lent.",
+    "limitation_years": 3,
+    "starts_from": "When the loan is made.",
+    "part": "Part II",
+    "division": "Suits relating to contracts",
+    "keywords": ["money lent", "loan", "recovery of money", "money recovery", "payment of money", "money payable", "debt recovery"]
+  },
+  {
+    "article": "24",
+    "suit_type": "For money payable for money paid for the use of the plaintiff at his request.",
+    "limitation_years": 3,
+    "starts_from": "When the money is paid.",
+    "part": "Part II",
+    "division": "Suits relating to contracts",
+    "keywords": ["money paid", "recovery of money", "money recovery", "payment of money"]
+  },
+  {
+    "article": "25",
+    "suit_type": "For money payable by the defendant to the plaintiff for money received by the defendant for the plaintiff's use.",
+    "limitation_years": 3,
+    "starts_from": "When the money is received.",
+    "part": "Part II",
+    "division": "Suits relating to contracts",
+    "keywords": ["money received", "recovery of money", "money recovery"]
+  },
+  {
+    "article": "28",
+    "suit_type": "For the price of goods sold and delivered.",
+    "limitation_years": 3,
+    "starts_from": "When the goods are delivered.",
+    "part": "Part II",
+    "division": "Suits relating to contracts",
+    "keywords": ["goods sold", "price of goods", "sale of goods", "delivery"]
+  },
+  {
+    "article": "29",
+    "suit_type": "For the price of work done by the plaintiff at the request of the defendant.",
+    "limitation_years": 3,
+    "starts_from": "When the work is done.",
+    "part": "Part II",
+    "division": "Suits relating to contracts",
+    "keywords": ["work done", "services rendered", "price of work"]
+  },
+  {
     "article": "36",
     "suit_type": "On a promissory note or bond payable by installments.",
     "limitation_years": 3,
     "starts_from": "The expiration of the first term of payment as to the part then payable; and for the other parts, the expiration of the respective terms of payment.",
     "part": "Part II",
-    "division": "Suits relating to contracts"
+    "division": "Suits relating to contracts",
+    "keywords": ["promissory note", "bond", "installments"]
   },
   {
     "article": "37",
@@ -13,7 +59,8 @@
     "limitation_years": 3,
     "starts_from": "When the default is made, unless where the payee or obligee waives the benefit of the provision and then when fresh default is made in respect of which there is no such waiver.",
     "part": "Part II",
-    "division": "Suits relating to contracts"
+    "division": "Suits relating to contracts",
+    "keywords": ["promissory note", "bond", "installments", "default"]
   },
   {
     "article": "44",
@@ -21,15 +68,8 @@
     "limitation_years": 3,
     "starts_from": "The date fixed for the performance, or, if no such date is fixed, when the plaintiff has notice that performance is refused.",
     "part": "Part II",
-    "division": "Suits relating to contracts"
-  },
-  {
-    "article": "54",
-    "suit_type": "For specific performance of a contract.",
-    "limitation_years": 3,
-    "starts_from": "The date fixed for the performance, or, if no such date is fixed, when the plaintiff has notice that performance is refused.",
-    "part": "Part II",
-    "division": "Suits relating to contracts"
+    "division": "Suits relating to contracts",
+    "keywords": ["specific performance", "contract performance"]
   },
   {
     "article": "55",
@@ -37,7 +77,8 @@
     "limitation_years": 3,
     "starts_from": "When the contract is broken or (where there are successive breaches) when the breach in respect of which the suit is instituted occurs or (where the breach is continuing) when it ceases.",
     "part": "Part II",
-    "division": "Suits relating to contracts"
+    "division": "Suits relating to contracts",
+    "keywords": ["breach of contract", "compensation", "contract breach"]
   },
   {
     "article": "56",
@@ -45,7 +86,8 @@
     "limitation_years": 3,
     "starts_from": "When the issue or registration becomes known to the plaintiff.",
     "part": "Part III",
-    "division": "Suits relating to declarations"
+    "division": "Suits relating to declarations",
+    "keywords": ["forgery", "declaration"]
   },
   {
     "article": "58",
@@ -53,7 +95,8 @@
     "limitation_years": 3,
     "starts_from": "When the right to sue first accrues.",
     "part": "Part III",
-    "division": "Suits relating to declarations"
+    "division": "Suits relating to declarations",
+    "keywords": ["declaration"]
   },
   {
     "article": "59",
@@ -61,7 +104,8 @@
     "limitation_years": 3,
     "starts_from": "When the facts entitling the plaintiff to have the instrument or decree cancelled or set aside or the contract rescinded first become known to him.",
     "part": "Part IV",
-    "division": "Suits relating to decrees and instruments"
+    "division": "Suits relating to decrees and instruments",
+    "keywords": ["cancel", "set aside", "rescission"]
   },
   {
     "article": "62",
@@ -69,7 +113,8 @@
     "limitation_years": 12,
     "starts_from": "When the money sued for becomes due.",
     "part": "Part V",
-    "division": "Suits relating to immovable property"
+    "division": "Suits relating to immovable property",
+    "keywords": ["mortgage", "charge", "immovable property", "secured debt"]
   },
   {
     "article": "65",
@@ -77,7 +122,8 @@
     "limitation_years": 12,
     "starts_from": "When the possession of the defendant becomes adverse to the plaintiff.",
     "part": "Part V",
-    "division": "Suits relating to immovable property"
+    "division": "Suits relating to immovable property",
+    "keywords": ["possession", "immovable property", "title", "adverse possession"]
   },
   {
     "article": "67",
@@ -85,7 +131,8 @@
     "limitation_years": 12,
     "starts_from": "When the tenancy is determined.",
     "part": "Part V",
-    "division": "Suits relating to immovable property"
+    "division": "Suits relating to immovable property",
+    "keywords": ["landlord", "tenant", "eviction", "possession"]
   },
   {
     "article": "68",
@@ -93,7 +140,8 @@
     "limitation_years": 3,
     "starts_from": "When the person having the right to the possession of the property first learns in whose possession it is.",
     "part": "Part VI",
-    "division": "Suits relating to movable property"
+    "division": "Suits relating to movable property",
+    "keywords": ["movable property", "theft", "misappropriation", "conversion"]
   },
   {
     "article": "89",
@@ -101,7 +149,8 @@
     "limitation_years": 3,
     "starts_from": "When the account is, during the continuance of the agency, demanded and refused or, where no such demand is made, when the agency terminates.",
     "part": "Part VII",
-    "division": "Suits relating to torts"
+    "division": "Suits relating to torts",
+    "keywords": ["principal", "agent", "movable property"]
   },
   {
     "article": "90",
@@ -109,7 +158,8 @@
     "limitation_years": 3,
     "starts_from": "When the neglect or misconduct becomes known to the plaintiff.",
     "part": "Part VII",
-    "division": "Suits relating to torts"
+    "division": "Suits relating to torts",
+    "keywords": ["principal", "agent", "neglect", "misconduct"]
   },
   {
     "article": "113",
@@ -117,7 +167,8 @@
     "limitation_years": 3,
     "starts_from": "When the right to sue accrues.",
     "part": "Part X",
-    "division": "Suits for which there is no prescribed period"
+    "division": "Suits for which there is no prescribed period",
+    "keywords": ["residuary", "general", "other suit", "cheque bounce", "dishonour of cheque"]
   },
   {
     "article": "120",
@@ -125,7 +176,8 @@
     "limitation_years": 90,
     "starts_from": "The date of death of the plaintiff, appellant, defendant or respondent as the case may be.",
     "part": "Part I (Applications)",
-    "division": "Applications in specified cases"
+    "division": "Applications in specified cases",
+    "keywords": ["legal representative", "deceased party", "substitution"]
   },
   {
     "article": "131",
@@ -133,7 +185,8 @@
     "limitation_years": 90,
     "starts_from": "The date of the decree or order or sentence sought to be revised.",
     "part": "Part I (Applications)",
-    "division": "Applications in specified cases"
+    "division": "Applications in specified cases",
+    "keywords": ["revision", "CPC", "CrPC"]
   },
   {
     "article": "136",
@@ -141,7 +194,8 @@
     "limitation_years": 12,
     "starts_from": "When the decree or order becomes enforceable or where the decree or any subsequent order directs any payment of money or the delivery of any property to be made at a certain date or at recurring periods, when default in making the payment or delivery in respect of which execution is sought, takes place.",
     "part": "Part I (Applications)",
-    "division": "Applications in specified cases"
+    "division": "Applications in specified cases",
+    "keywords": ["execution", "decree", "enforcement"]
   },
   {
     "article": "137",
@@ -149,6 +203,7 @@
     "limitation_years": 3,
     "starts_from": "When the right to apply accrues.",
     "part": "Part II (Applications)",
-    "division": "Other applications"
+    "division": "Other applications",
+    "keywords": ["application", "residuary application"]
   }
 ]
