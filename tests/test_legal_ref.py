@@ -3,15 +3,14 @@
 from __future__ import annotations
 
 from mcp_india_stack.tools.bare_act import (
+    decode_ipc_bns_crosswalk,
     lookup_bns_section,
     lookup_crpc_section,
     lookup_evidence_act_section,
     lookup_ipc_section,
 )
-from mcp_india_stack.tools.court_establishment import lookup_court_establishment_code
-from mcp_india_stack.tools.bare_act import decode_ipc_bns_crosswalk
-
 from mcp_india_stack.tools.cnr import decode_cnr_number
+from mcp_india_stack.tools.court_establishment import lookup_court_establishment_code
 from mcp_india_stack.tools.court_fee import calculate_court_fee
 from mcp_india_stack.tools.limitation import calculate_limitation_deadline
 from mcp_india_stack.tools.stamp_duty import calculate_stamp_duty

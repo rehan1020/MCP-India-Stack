@@ -122,4 +122,3 @@ __all__ = [
     "validate_upi_vpa",
     "validate_voter_id",
 ]
-

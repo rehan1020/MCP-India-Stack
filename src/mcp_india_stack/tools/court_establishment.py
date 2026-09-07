@@ -25,9 +25,8 @@ def _load_court_establishments() -> dict[str, dict[str, Any]]:
     )
     if not path.exists():
         return {}
-    return json.loads(  # type: ignore[return-value]
-        path.read_text(encoding="utf-8")
-    )
+    data: dict[str, dict[str, Any]] = json.loads(path.read_text(encoding="utf-8"))
+    return data
 
 
 def lookup_court_establishment_code(code: str) -> dict[str, Any]:

@@ -14,7 +14,7 @@ def _load_court_fees() -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))  # type: ignore
 
 
-def calculate_court_fee(
+def calculate_court_fee(  # noqa: C901
     state_code: str, suit_value: float, suit_type: str = "money"
 ) -> dict[str, Any]:
     """
@@ -50,7 +50,7 @@ def calculate_court_fee(
 
     fee_amount = 0.0
     calculation_basis = ""
-    
+
     # Map 'money' to 'money_suit' for lookup
     lookup_type = "money_suit" if suit_type == "money" else suit_type
 

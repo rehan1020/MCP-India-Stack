@@ -17,9 +17,8 @@ def _load_limitation_periods() -> list[dict[str, Any]]:
     )
     if not path.exists():
         return []
-    return json.loads(  # type: ignore[return-value]
-        path.read_text(encoding="utf-8")
-    )
+    data: list[dict[str, Any]] = json.loads(path.read_text(encoding="utf-8"))
+    return data
 
 
 def _score_match(query: str, item: dict[str, Any]) -> float:
