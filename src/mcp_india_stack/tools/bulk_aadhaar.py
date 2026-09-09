@@ -8,7 +8,18 @@ from typing import Any
 
 from mcp_india_stack.tools.aadhaar import validate_aadhaar as core_validate_aadhaar
 
-BULK_WORKERS = int(os.environ.get("MCP_INDIA_STACK_BULK_WORKERS", "10"))
+
+def _clamp_bulk_workers() -> int:
+    """Parse MCP_INDIA_STACK_BULK_WORKERS with hard [1, 20] clamp."""
+    raw = os.environ.get("MCP_INDIA_STACK_BULK_WORKERS", "10")
+    try:
+        val = int(raw)
+    except (ValueError, TypeError):
+        return 10
+    return max(1, min(20, val))
+
+
+BULK_WORKERS = _clamp_bulk_workers()
 
 MAX_AADHAAR_BULK = 500
 

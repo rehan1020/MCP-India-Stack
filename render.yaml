@@ -7,4 +7,10 @@ services:
     envVars:
       - key: PORT
         value: "10000"
+      - key: MCP_INDIA_STACK_API_KEY
+        fromSecret: MCP_INDIA_STACK_API_KEY
+      - key: MCP_INDIA_STACK_ALLOWED_ORIGINS
+        value: ""
+      - key: MCP_INDIA_STACK_RATE_LIMIT
+        value: "60/60"
     plan: free
