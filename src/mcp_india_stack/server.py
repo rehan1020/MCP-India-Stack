@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import argparse
+import logging
 import os
 import sys
+import threading
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, Any, cast
 
@@ -292,7 +295,17 @@ def validate_gstin(
         )
 
 
-_BULK_WORKERS = int(os.environ.get("MCP_INDIA_STACK_BULK_WORKERS", "10"))
+def _clamp_bulk_workers() -> int:
+    """Parse MCP_INDIA_STACK_BULK_WORKERS with hard [1, 20] clamp."""
+    raw = os.environ.get("MCP_INDIA_STACK_BULK_WORKERS", "10")
+    try:
+        val = int(raw)
+    except (ValueError, TypeError):
+        return 10
+    return max(1, min(20, val))
+
+
+_BULK_WORKERS = _clamp_bulk_workers()
 
 
 def _validate_single_gstin(gstin: str) -> dict[str, Any]:
@@ -1975,7 +1988,7 @@ def calculate_salary_restructuring(
         )
 
 
-def main() -> None:
+def main() -> None:  # noqa: C901
     """Run MCP server with configurable transport."""
     parser = argparse.ArgumentParser(description="mcp-india-stack MCP server")
     parser.add_argument(
@@ -2016,7 +2029,12 @@ def main() -> None:
 
     if args.transport == "sse":
         import uvicorn
+        from starlette.middleware.base import BaseHTTPMiddleware
         from starlette.middleware.cors import CORSMiddleware
+        from starlette.requests import Request
+        from starlette.responses import JSONResponse
+
+        _logger = logging.getLogger("mcp_india_stack")
 
         port = args.port
         if port is None:
@@ -2024,13 +2042,92 @@ def main() -> None:
 
         sse_app_instance = mcp.sse_app()
 
+        # --- R1: CORS hardening ---
+        _raw_origins = os.environ.get("MCP_INDIA_STACK_ALLOWED_ORIGINS", "").strip()
+        _allowed_origins = (
+            [o.strip() for o in _raw_origins.split(",") if o.strip()] if _raw_origins else []
+        )
+        _allow_creds = bool(_allowed_origins)
+
+        # Hard guard: never allow wildcard + credentials
+        if _allow_creds and "*" in _allowed_origins:
+            raise RuntimeError(
+                "CORS misconfiguration: allow_origins=['*'] with "
+                "allow_credentials=True is forbidden. Set explicit "
+                "origins in MCP_INDIA_STACK_ALLOWED_ORIGINS."
+            )
+
         sse_app_instance.add_middleware(
             CORSMiddleware,
-            allow_origins=["*"],
-            allow_credentials=True,
-            allow_methods=["*"],
-            allow_headers=["*"],
+            allow_origins=_allowed_origins,
+            allow_credentials=_allow_creds,
+            allow_methods=["GET", "POST"],
+            allow_headers=["Authorization", "Content-Type"],
         )
+
+        # --- R3: Rate limiting middleware ---
+        class _RateLimitMiddleware(BaseHTTPMiddleware):  # type: ignore[misc]
+            def __init__(self, app: Any, max_requests: int = 60, window_seconds: int = 60) -> None:
+                super().__init__(app)
+                self.max_requests = max_requests
+                self.window_seconds = window_seconds
+                self._buckets: dict[str, list[float]] = {}
+                self._lock = threading.Lock()
+
+            def _get_key(self, request: Request) -> str:
+                auth = request.headers.get("Authorization", "")
+                if auth.startswith("Bearer "):
+                    return f"key:{auth[7:]}"
+                return f"ip:{request.client.host}" if request.client else "ip:unknown"
+
+            async def dispatch(self, request: Request, call_next: Any) -> Any:
+                key = self._get_key(request)
+                now = time.monotonic()
+                with self._lock:
+                    timestamps = self._buckets.setdefault(key, [])
+                    cutoff = now - self.window_seconds
+                    timestamps[:] = [t for t in timestamps if t > cutoff]
+                    if len(timestamps) >= self.max_requests:
+                        return JSONResponse({"error": "Rate limit exceeded"}, status_code=429)
+                    timestamps.append(now)
+                response: Any = await call_next(request)
+                return response
+
+        _rate_cfg = os.environ.get("MCP_INDIA_STACK_RATE_LIMIT", "60/60").strip()
+        try:
+            _rate_parts = _rate_cfg.split("/")
+            _rate_max = int(_rate_parts[0])
+            _rate_window = int(_rate_parts[1]) if len(_rate_parts) > 1 else 60
+        except (ValueError, IndexError):
+            _rate_max, _rate_window = 60, 60
+
+        sse_app_instance.add_middleware(
+            _RateLimitMiddleware,
+            max_requests=_rate_max,
+            window_seconds=_rate_window,
+        )
+
+        # --- R2: Auth gate (Bearer token middleware) ---
+        class _BearerAuthMiddleware(BaseHTTPMiddleware):  # type: ignore[misc]
+            def __init__(self, app: Any, api_key: str) -> None:
+                super().__init__(app)
+                self.api_key = api_key
+
+            async def dispatch(self, request: Request, call_next: Any) -> Any:
+                auth = request.headers.get("Authorization", "")
+                if not auth.startswith("Bearer ") or auth[7:] != self.api_key:
+                    return JSONResponse({"error": "Unauthorized"}, status_code=401)
+                response: Any = await call_next(request)
+                return response
+
+        _api_key = os.environ.get("MCP_INDIA_STACK_API_KEY", "").strip()
+        if _api_key:
+            sse_app_instance.add_middleware(_BearerAuthMiddleware, api_key=_api_key)
+        else:
+            _logger.warning(
+                "MCP_INDIA_STACK_API_KEY is not set — "
+                "SSE server is publicly reachable with no authentication"
+            )
 
         for route in sse_app_instance.router.routes:
             if hasattr(route, "path") and route.path in ("/sse", ""):
