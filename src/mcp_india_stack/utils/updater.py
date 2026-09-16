@@ -91,11 +91,35 @@ def _validate_gzip(data: bytes) -> bool:
         return False
 
 
+import hashlib
+import json
+
+_checksum_manifest: dict[str, Any] | None = None
+_manifest_lock = threading.Lock()
+
+
+def _get_manifest() -> dict[str, Any]:
+    global _checksum_manifest
+    if _checksum_manifest is not None:
+        return _checksum_manifest
+    with _manifest_lock:
+        if _checksum_manifest is not None:
+            return _checksum_manifest
+        manifest_path = DATA_ROOT / "dataset_checksums.json"
+        try:
+            _checksum_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            logger.error("Failed to load dataset_checksums.json: %s", exc)
+            _checksum_manifest = {}
+        return _checksum_manifest
+
+
 def _fetch_and_cache(dataset_name: str) -> bool:
     """Fetch dataset from CDN and write to cache. Returns True on success."""
     config = DATASET_CONFIG[dataset_name]
     url = config["cdn_url"]
     cache_file = _cached_path(dataset_name)
+    fallback_tier = "cache" if cache_file.exists() else "bundled"
 
     try:
         with httpx.Client(timeout=_CDN_TIMEOUT, follow_redirects=True) as client:
@@ -106,7 +130,7 @@ def _fetch_and_cache(dataset_name: str) -> bool:
         logger.warning("CDN fetch failed for %s: %s", dataset_name, exc)
         return False
 
-    # Integrity check
+    # Structural Integrity check
     is_gz = config["cache_filename"].endswith(".gz")
     if is_gz:
         valid = _validate_gzip(data)
@@ -115,6 +139,35 @@ def _fetch_and_cache(dataset_name: str) -> bool:
 
     if not valid:
         logger.warning("Integrity check failed for %s — discarding download", dataset_name)
+        return False
+
+    # Checksum verification (R3)
+    manifest = _get_manifest()
+    expected_entry = manifest.get(dataset_name)
+    if not expected_entry or "sha256" not in expected_entry:
+        logger.error(
+            "Supply chain verification failed: %s not in manifest. URL: %s. "
+            "Expected: N/A, Actual: %s. Fallback: %s",
+            dataset_name,
+            url,
+            "N/A",
+            fallback_tier,
+        )
+        return False
+
+    expected_hash = expected_entry["sha256"]
+    actual_hash = hashlib.sha256(data).hexdigest()
+
+    if expected_hash != actual_hash:
+        logger.error(
+            "Supply chain verification failed for %s. URL: %s. "
+            "Expected prefix: %s, Actual prefix: %s. Fallback: %s",
+            dataset_name,
+            url,
+            expected_hash[:8],
+            actual_hash[:8],
+            fallback_tier,
+        )
         return False
 
     # Atomic-ish write: write to temp then rename

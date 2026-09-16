@@ -270,3 +270,94 @@ class TestUpdateEdgeCases:
 
         info = get_cache_info("ifsc")
         assert info["cached"] is False
+
+
+class TestSupplyChainTrust:
+    @pytest.fixture(autouse=True)
+    def _reset_manifest_cache(self) -> None:
+        from mcp_india_stack.utils import updater
+
+        updater._checksum_manifest = None
+        yield
+        updater._checksum_manifest = None
+
+    def test_all_datasets_in_manifest(self) -> None:
+        """R1 Drift Guard: every DATASET_CONFIG key must be in the manifest."""
+        import json
+
+        from mcp_india_stack.utils.datasets import DATASET_CONFIG
+        from mcp_india_stack.utils.updater import DATA_ROOT
+
+        manifest_path = DATA_ROOT / "dataset_checksums.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        for name in DATASET_CONFIG:
+            assert name in manifest, f"Dataset {name} missing from checksums manifest"
+            assert "sha256" in manifest[name]
+
+    def test_happy_path_verification(self, tmp_cache: Path) -> None:
+        import hashlib
+
+        from mcp_india_stack.utils import updater
+
+        valid_data = b"col1,col2\nval1,val2\n"
+        valid_hash = hashlib.sha256(valid_data).hexdigest()
+
+        # Fake manifest
+        updater._checksum_manifest = {"ifsc": {"sha256": valid_hash}}
+
+        with patch("mcp_india_stack.utils.updater.httpx.Client") as mock_client:
+            mock_client.return_value.__enter__.return_value.get.return_value.content = valid_data
+            assert updater._fetch_and_cache("ifsc") is True
+            assert (tmp_cache / "IFSC.csv").read_bytes() == valid_data
+
+    def test_tampered_payload_verification(
+        self, tmp_cache: Path, caplog: pytest.LogCaptureFixture
+    ) -> None:
+        import logging
+
+        from mcp_india_stack.utils import updater
+
+        tampered_data = b"col1,col2\nevil,data\n"
+        updater._checksum_manifest = {"ifsc": {"sha256": "expectedhash123"}}
+
+        with patch("mcp_india_stack.utils.updater.httpx.Client") as mock_client:
+            mock_client.return_value.__enter__.return_value.get.return_value.content = tampered_data
+
+            with caplog.at_level(logging.ERROR):
+                assert updater._fetch_and_cache("ifsc") is False
+                assert not (tmp_cache / "IFSC.csv").exists()
+                assert "Supply chain verification failed for ifsc" in caplog.text
+                assert "Expected prefix: expected" in caplog.text
+                assert "Fallback: bundled" in caplog.text
+
+    def test_missing_manifest_entry(
+        self, tmp_cache: Path, caplog: pytest.LogCaptureFixture
+    ) -> None:
+        import logging
+
+        from mcp_india_stack.utils import updater
+
+        updater._checksum_manifest = {}
+
+        with patch("mcp_india_stack.utils.updater.httpx.Client") as mock_client:
+            mock_client.return_value.__enter__.return_value.get.return_value.content = b"col1\nval1"
+
+            with caplog.at_level(logging.ERROR):
+                assert updater._fetch_and_cache("ifsc") is False
+                assert "not in manifest" in caplog.text
+
+    def test_manifest_loaded_once(self) -> None:
+        from mcp_india_stack.utils import updater
+
+        with patch(
+            "pathlib.Path.read_text", return_value='{"ifsc": {"sha256": "dummy"}}'
+        ) as mock_read:
+            with patch("mcp_india_stack.utils.updater.httpx.Client") as mock_client:
+                mock_resp = (
+                    mock_client.return_value.__enter__
+                    .return_value.get.return_value
+                )
+                mock_resp.content = b"col1,col2\nval,val\n"
+                updater._fetch_and_cache("ifsc")
+                updater._fetch_and_cache("ifsc")
+            mock_read.assert_called_once()

@@ -239,17 +239,49 @@ def write_report(results: dict[str, Any]) -> None:
     report_path.write_text("\n".join(lines), encoding="utf-8")
 
 
-def write_checksums(results: dict[str, Any]) -> None:
-    checksum_path = ROOT / "data" / "dataset_checksums.json"
-    checksum_payload = {
-        key: {
-            "file": value["file"],
-            "sha256": value["sha256"],
-            "rows": value["rows"],
+def write_checksums() -> None:
+    import gzip
+    import sys
+
+    from mcp_india_stack.utils.datasets import DATASET_CONFIG
+
+    checksum_path = DATA / "dataset_checksums.json"
+    checksum_payload = {}
+    missing = []
+
+    for name, config in DATASET_CONFIG.items():
+        rel_path = config["bundled_path"].removeprefix("data/")
+        abs_path = DATA / rel_path
+        if not abs_path.exists():
+            missing.append(name)
+            continue
+
+        # Count rows (informational only)
+        rows = 0
+        try:
+            if abs_path.name.endswith(".gz"):
+                with gzip.open(abs_path, "rt", encoding="utf-8") as f:
+                    rows = sum(1 for _ in f)
+            else:
+                with open(abs_path, encoding="utf-8") as f:
+                    rows = sum(1 for _ in f)
+        except Exception:
+            rows = 0
+
+        checksum_payload[name] = {
+            "file": f"src/mcp_india_stack/data/{rel_path}",
+            "sha256": sha256(abs_path),
+            "rows": rows,
         }
-        for key, value in results.items()
-    }
+
+    if missing:
+        print(f"ERROR: Missing files for datasets: {missing}", file=sys.stderr)
+        sys.exit(1)
+
     checksum_path.write_text(json.dumps(checksum_payload, indent=2), encoding="utf-8")
+    print(
+        f"Wrote checksums for {len(checksum_payload)} datasets to {checksum_path.relative_to(ROOT)}"
+    )
 
 
 def main() -> None:
@@ -258,9 +290,6 @@ def main() -> None:
     parser.add_argument("--refresh-pincode", action="store_true")
     parser.add_argument("--refresh-hsn", action="store_true")
     args = parser.parse_args()
-
-    if not any([args.refresh_ifsc, args.refresh_pincode, args.refresh_hsn]):
-        parser.error("Select at least one refresh flag")
 
     STAGING.mkdir(parents=True, exist_ok=True)
     results: dict[str, Any] = {}
@@ -272,7 +301,7 @@ def main() -> None:
         results["HSN"] = refresh_hsn()
 
     write_report(results)
-    write_checksums(results)
+    write_checksums()
     print(json.dumps(results, indent=2))
 
 
