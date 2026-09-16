@@ -353,10 +353,7 @@ class TestSupplyChainTrust:
             "pathlib.Path.read_text", return_value='{"ifsc": {"sha256": "dummy"}}'
         ) as mock_read:
             with patch("mcp_india_stack.utils.updater.httpx.Client") as mock_client:
-                mock_resp = (
-                    mock_client.return_value.__enter__
-                    .return_value.get.return_value
-                )
+                mock_resp = mock_client.return_value.__enter__.return_value.get.return_value
                 mock_resp.content = b"col1,col2\nval,val\n"
                 updater._fetch_and_cache("ifsc")
                 updater._fetch_and_cache("ifsc")
