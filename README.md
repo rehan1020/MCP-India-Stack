@@ -53,9 +53,8 @@
 
 ---
 
-## 🔗 Demo & Links
+## 🔗 Links
 
-- **Demo Video:** [https://youtu.be/KAy6043Co0w?si=FIFfVRM2y3Zwv8oK](https://youtu.be/KAy6043Co0w?si=FIFfVRM2y3Zwv8oK)
 - **Deployment:** [https://pypi.org/project/mcp-india-stack/](https://pypi.org/project/mcp-india-stack/)
 - **PPT:** [https://gamma.app/docs/Problem-India-lacks-native-fintech-primitives-for-AI-agents-d1izzfemlvfvkf0?mode=doc](https://gamma.app/docs/Problem-India-lacks-native-fintech-primitives-for-AI-agents-d1izzfemlvfvkf0?mode=doc)
 - **GitHub:** [https://github.com/rehan1020/MCP-India-Stack](https://github.com/rehan1020/MCP-India-Stack)
