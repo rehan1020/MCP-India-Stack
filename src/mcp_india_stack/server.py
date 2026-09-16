@@ -2676,7 +2676,7 @@ def server_status() -> dict[str, Any]:
 def changelog() -> dict[str, Any]:
     """Structured changelog as JSON."""
     return {
-        "current_version": "0.6.3",
+        "current_version": "0.6.4",
         "entries": [
             {
                 "version": "0.3.0",
