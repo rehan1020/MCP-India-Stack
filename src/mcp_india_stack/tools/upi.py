@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from mcp_india_stack.normalization import normalize_upi
 from mcp_india_stack.utils.loader import load_upi_handles
 
 UPI_RE = re.compile(r"^[A-Za-z0-9._-]{3,256}@[A-Za-z0-9.-]{2,100}$")
@@ -16,9 +17,11 @@ def validate_upi_vpa(vpa: str) -> dict[str, Any]:
     if vpa is None:
         return {"valid": False, "errors": ["UPI VPA is required"]}
 
-    value = str(vpa).strip()
+    norm_result = normalize_upi(str(vpa))
+    value = norm_result["normalized_input"]
+    
     errors: list[str] = []
-    warnings: list[str] = []
+    warnings: list[str] = norm_result.get("warnings", [])
 
     if not value:
         errors.append("UPI VPA cannot be empty")

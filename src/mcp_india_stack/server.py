@@ -9,6 +9,7 @@ import sys
 import threading
 import time
 from collections.abc import Callable
+from mcp_india_stack.normalization import normalize_aadhaar, normalize_cin, normalize_fssai, normalize_gstin, normalize_pan
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, Any, cast
 
@@ -447,7 +448,6 @@ def validate_gstin(
     Notes:
             Validates structure and checksum only; does not verify active GSTN registration status.
     """
-    from mcp_india_stack.normalization import normalize_gstin
 
     normalized = normalize_gstin(gstin)["normalized_input"]
     try:
@@ -591,7 +591,6 @@ def validate_pan(
     Notes:
             PAN check character is not publicly verifiable algorithmically.
     """
-    from mcp_india_stack.normalization import normalize_pan
 
     normalized = normalize_pan(pan)["normalized_input"]
     try:
@@ -814,7 +813,6 @@ def validate_aadhaar(
     Notes:
             Validates format and Verhoeff checksum only. Not connected to UIDAI.
     """
-    from mcp_india_stack.normalization import normalize_aadhaar
 
     normalized = normalize_aadhaar(aadhaar)["normalized_input"]
     try:
@@ -1010,7 +1008,6 @@ def validate_cin(
     Notes:
             Format validation with field decoding. No public checksum.
     """
-    from mcp_india_stack.normalization import normalize_cin
 
     normalized = normalize_cin(cin)["normalized_input"]
     try:
@@ -1109,7 +1106,6 @@ def validate_fssai(
             The 14-digit format encodes: state(2) + year(2) + type(1) + sequence(9).
             Type: 1=Central, 2=State, 3=State (turnover-based).
     """
-    from mcp_india_stack.normalization import normalize_fssai
 
     normalized = normalize_fssai(license_number)["normalized_input"]
     try:

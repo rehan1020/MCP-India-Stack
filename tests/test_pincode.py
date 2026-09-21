@@ -63,3 +63,10 @@ def test_lookup_pincode_6_digits_still_works() -> None:
     result = lookup_pincode("400001")
     assert result["valid"] is True
     assert result["normalized_input"] == "400001"
+
+def test_lookup_pincode_extracts_digits() -> None:
+    # 110 001 ABC -> 110001
+    result = lookup_pincode("110 001 (Delhi)")
+    assert "found" in result
+    assert result["normalized_input"] == "110001"
+    assert len(result["warnings"]) >= 1

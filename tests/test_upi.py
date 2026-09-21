@@ -71,3 +71,9 @@ def test_upi_unknown_handle_at_freshbank() -> None:
     assert result["valid"] is True
     assert result["known_provider"] is False
     assert len(result["warnings"]) >= 1
+
+def test_upi_whitespace_correction() -> None:
+    result = validate_upi_vpa(" John Doe @ okicici ")
+    assert result["valid"] is True
+    assert result["vpa"] == "johndoe@okicici"
+    assert len(result["warnings"]) >= 1

@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from mcp_india_stack.normalization import normalize_pincode
 from mcp_india_stack.tools.state_code import decode_state_code
 from mcp_india_stack.utils.loader import load_pincode_index, load_state_codes
 
@@ -22,10 +23,11 @@ def lookup_pincode(pincode: str | int) -> dict[str, Any]:
     if pincode is None:
         return {"found": False, "errors": ["Pincode is required"], "valid": False}
 
-    value = str(pincode).strip().replace(" ", "").replace("-", "")
+    norm_result = normalize_pincode(str(pincode))
+    value = norm_result["normalized_input"]
 
     errors: list[str] = []
-    warnings: list[str] = []
+    warnings: list[str] = norm_result.get("warnings", [])
 
     # Format validation BEFORE any lookup - reject invalid lengths immediately
     if not value.isdigit():
