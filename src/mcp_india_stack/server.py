@@ -8,6 +8,7 @@ import os
 import sys
 import threading
 import time
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, Any, cast
 
@@ -294,9 +295,6 @@ TOOL_TIERS: dict[str, PermissionTier] = {
 }
 
 _original_mcp_tool = mcp.tool
-
-
-from collections.abc import Callable
 
 
 def _wrapped_mcp_tool(
