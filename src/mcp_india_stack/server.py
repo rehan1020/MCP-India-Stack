@@ -296,12 +296,13 @@ TOOL_TIERS: dict[str, PermissionTier] = {
 _original_mcp_tool = mcp.tool
 
 
+from typing import Callable
 def _wrapped_mcp_tool(
     name: str | None = None,
     description: str | None = None,
     annotations: Any = None,
-):
-    def decorator(func):
+) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         tool_name = name or func.__name__
         tier = TOOL_TIERS.get(tool_name)
 
@@ -316,7 +317,7 @@ def _wrapped_mcp_tool(
             return func  # Skip registering this tool with MCP
 
         @functools.wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             start = time.perf_counter()
             success = False
             result_type = "error"
@@ -362,7 +363,7 @@ def _wrapped_mcp_tool(
     return decorator
 
 
-mcp.tool = _wrapped_mcp_tool
+mcp.tool = _wrapped_mcp_tool  # type: ignore[method-assign, assignment]
 
 
 @mcp.tool(
