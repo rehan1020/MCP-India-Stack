@@ -1,12 +1,6 @@
-from mcp_india_stack.server import (
-    decode_state_code,
-    lookup_hsn_code,
-    lookup_ifsc,
-    lookup_pincode,
-    validate_gstin,
-    validate_pan,
-    validate_upi_vpa,
-)
+from mcp_india_stack.registrations.banking import lookup_ifsc
+from mcp_india_stack.registrations.kyc import validate_gstin, validate_pan, validate_upi_vpa
+from mcp_india_stack.registrations.lookup import decode_state_code, lookup_hsn_code, lookup_pincode
 
 
 def test_server_tool_wrappers_return_standard_shape() -> None:

@@ -1,0 +1,551 @@
+{
+  "tools": [
+    {
+      "name": "lookup_ifsc",
+      "start": 375,
+      "end": 391
+    },
+    {
+      "name": "validate_gstin",
+      "start": 426,
+      "end": 440
+    },
+    {
+      "name": "bulk_validate_gstin",
+      "start": 497,
+      "end": 509
+    },
+    {
+      "name": "validate_pan",
+      "start": 574,
+      "end": 585
+    },
+    {
+      "name": "validate_upi_vpa",
+      "start": 612,
+      "end": 624
+    },
+    {
+      "name": "lookup_pincode",
+      "start": 655,
+      "end": 664
+    },
+    {
+      "name": "lookup_hsn_code",
+      "start": 695,
+      "end": 711
+    },
+    {
+      "name": "decode_state_code",
+      "start": 743,
+      "end": 755
+    },
+    {
+      "name": "validate_aadhaar",
+      "start": 787,
+      "end": 805
+    },
+    {
+      "name": "validate_voter_id",
+      "start": 839,
+      "end": 855
+    },
+    {
+      "name": "validate_driving_license",
+      "start": 888,
+      "end": 904
+    },
+    {
+      "name": "validate_passport",
+      "start": 935,
+      "end": 951
+    },
+    {
+      "name": "validate_cin",
+      "start": 984,
+      "end": 1000
+    },
+    {
+      "name": "validate_din",
+      "start": 1034,
+      "end": 1050
+    },
+    {
+      "name": "validate_fssai",
+      "start": 1083,
+      "end": 1099
+    },
+    {
+      "name": "calculate_income_tax",
+      "start": 1140,
+      "end": 1188
+    },
+    {
+      "name": "calculate_tds",
+      "start": 1241,
+      "end": 1273
+    },
+    {
+      "name": "calculate_gst",
+      "start": 1316,
+      "end": 1344
+    },
+    {
+      "name": "calculate_surcharge",
+      "start": 1385,
+      "end": 1405
+    },
+    {
+      "name": "calculate_hra_exemption",
+      "start": 1443,
+      "end": 1471
+    },
+    {
+      "name": "calculate_capital_gains",
+      "start": 1516,
+      "end": 1558
+    },
+    {
+      "name": "calculate_advance_tax",
+      "start": 1607,
+      "end": 1631
+    },
+    {
+      "name": "lookup_bbps_biller",
+      "start": 1672,
+      "end": 1694
+    },
+    {
+      "name": "calculate_epf_esic",
+      "start": 1732,
+      "end": 1752
+    },
+    {
+      "name": "calculate_emi",
+      "start": 1790,
+      "end": 1814
+    },
+    {
+      "name": "calculate_gratuity",
+      "start": 1853,
+      "end": 1873
+    },
+    {
+      "name": "calculate_ppf_maturity",
+      "start": 1911,
+      "end": 1931
+    },
+    {
+      "name": "bulk_validate_aadhaar",
+      "start": 1969,
+      "end": 1981
+    },
+    {
+      "name": "get_regulatory_deadlines",
+      "start": 2012,
+      "end": 2032
+    },
+    {
+      "name": "calculate_salary_restructuring",
+      "start": 2069,
+      "end": 2113
+    },
+    {
+      "name": "bulk_validate_pan",
+      "start": 2898,
+      "end": 2907
+    },
+    {
+      "name": "bulk_validate_ifsc",
+      "start": 2937,
+      "end": 2946
+    },
+    {
+      "name": "decode_pan_type",
+      "start": 2978,
+      "end": 2987
+    },
+    {
+      "name": "lookup_bank",
+      "start": 3031,
+      "end": 3040
+    },
+    {
+      "name": "validate_epf_code",
+      "start": 3134,
+      "end": 3143
+    },
+    {
+      "name": "validate_esic_code",
+      "start": 3171,
+      "end": 3180
+    },
+    {
+      "name": "decode_digilocker_uri",
+      "start": 3207,
+      "end": 3216
+    },
+    {
+      "name": "build_aa_consent_request",
+      "start": 3280,
+      "end": 3309
+    },
+    {
+      "name": "validate_aa_consent_artifact",
+      "start": 3354,
+      "end": 3363
+    },
+    {
+      "name": "decode_aa_fi_type",
+      "start": 3407,
+      "end": 3416
+    },
+    {
+      "name": "calculate_fd_maturity",
+      "start": 3443,
+      "end": 3463
+    },
+    {
+      "name": "calculate_rd_maturity",
+      "start": 3502,
+      "end": 3513
+    },
+    {
+      "name": "calculate_sip_returns",
+      "start": 3546,
+      "end": 3558
+    },
+    {
+      "name": "calculate_step_up_sip",
+      "start": 3593,
+      "end": 3605
+    },
+    {
+      "name": "calculate_nps_projection",
+      "start": 3640,
+      "end": 3656
+    },
+    {
+      "name": "calculate_sukanya_samriddhi",
+      "start": 3695,
+      "end": 3711
+    },
+    {
+      "name": "calculate_home_vs_rent",
+      "start": 3744,
+      "end": 3769
+    },
+    {
+      "name": "calculate_gst_late_fee",
+      "start": 3814,
+      "end": 3826
+    },
+    {
+      "name": "calculate_income_tax_interest",
+      "start": 3861,
+      "end": 3878
+    },
+    {
+      "name": "calculate_presumptive_tax",
+      "start": 3916,
+      "end": 3932
+    },
+    {
+      "name": "calculate_professional_tax",
+      "start": 3971,
+      "end": 3981
+    },
+    {
+      "name": "calculate_leave_encashment_tax",
+      "start": 4012,
+      "end": 4027
+    },
+    {
+      "name": "validate_tan",
+      "start": 4064,
+      "end": 4073
+    },
+    {
+      "name": "validate_mobile_number",
+      "start": 4100,
+      "end": 4109
+    },
+    {
+      "name": "validate_pran",
+      "start": 4136,
+      "end": 4145
+    },
+    {
+      "name": "validate_llpin",
+      "start": 4172,
+      "end": 4181
+    },
+    {
+      "name": "decode_isin",
+      "start": 4208,
+      "end": 4217
+    },
+    {
+      "name": "calculate_neft_rtgs_imps_charges",
+      "start": 4244,
+      "end": 4256
+    },
+    {
+      "name": "get_stock_quote",
+      "start": 4291,
+      "end": 4307
+    },
+    {
+      "name": "get_stock_history",
+      "start": 4312,
+      "end": 4338
+    },
+    {
+      "name": "decode_cnr_number",
+      "start": 4348,
+      "end": 4362
+    },
+    {
+      "name": "lookup_court_establishment_code",
+      "start": 4388,
+      "end": 4400
+    },
+    {
+      "name": "lookup_ipc_section",
+      "start": 4425,
+      "end": 4437
+    },
+    {
+      "name": "lookup_bns_section",
+      "start": 4462,
+      "end": 4474
+    },
+    {
+      "name": "lookup_crpc_section",
+      "start": 4499,
+      "end": 4511
+    },
+    {
+      "name": "lookup_bnss_section",
+      "start": 4536,
+      "end": 4548
+    },
+    {
+      "name": "lookup_evidence_act_section",
+      "start": 4574,
+      "end": 4586
+    },
+    {
+      "name": "lookup_bsa_section",
+      "start": 4611,
+      "end": 4623
+    },
+    {
+      "name": "decode_ipc_bns_crosswalk",
+      "start": 4648,
+      "end": 4664
+    },
+    {
+      "name": "calculate_limitation_deadline",
+      "start": 4690,
+      "end": 4706
+    },
+    {
+      "name": "calculate_court_fee",
+      "start": 4742,
+      "end": 4762
+    },
+    {
+      "name": "calculate_stamp_duty",
+      "start": 4799,
+      "end": 4819
+    },
+    {
+      "name": "calculate_rti_fee",
+      "start": 4856,
+      "end": 4872
+    },
+    {
+      "name": "calculate_rti_deadline",
+      "start": 4907,
+      "end": 4927
+    },
+    {
+      "name": "calculate_rti_penalty_estimate",
+      "start": 4964,
+      "end": 4980
+    },
+    {
+      "name": "draft_rti_application",
+      "start": 5015,
+      "end": 5039
+    },
+    {
+      "name": "draft_first_appeal",
+      "start": 5078,
+      "end": 5094
+    },
+    {
+      "name": "draft_second_appeal",
+      "start": 5129,
+      "end": 5145
+    }
+  ],
+  "resources": [
+    {
+      "name": "schema_lookup_ifsc",
+      "uri": "india://schema/lookup_ifsc",
+      "start": 2310,
+      "end": 2337
+    },
+    {
+      "name": "schema_validate_gstin",
+      "uri": "india://schema/validate_gstin",
+      "start": 2339,
+      "end": 2361
+    },
+    {
+      "name": "schema_validate_pan",
+      "uri": "india://schema/validate_pan",
+      "start": 2363,
+      "end": 2377
+    },
+    {
+      "name": "schema_validate_upi_vpa",
+      "uri": "india://schema/validate_upi_vpa",
+      "start": 2379,
+      "end": 2394
+    },
+    {
+      "name": "schema_lookup_pincode",
+      "uri": "india://schema/lookup_pincode",
+      "start": 2396,
+      "end": 2411
+    },
+    {
+      "name": "schema_lookup_hsn_code",
+      "uri": "india://schema/lookup_hsn_code",
+      "start": 2413,
+      "end": 2427
+    },
+    {
+      "name": "schema_decode_state_code",
+      "uri": "india://schema/decode_state_code",
+      "start": 2429,
+      "end": 2444
+    },
+    {
+      "name": "schema_validate_aadhaar",
+      "uri": "india://schema/validate_aadhaar",
+      "start": 2446,
+      "end": 2460
+    },
+    {
+      "name": "schema_validate_voter_id",
+      "uri": "india://schema/validate_voter_id",
+      "start": 2462,
+      "end": 2477
+    },
+    {
+      "name": "schema_validate_driving_license",
+      "uri": "india://schema/validate_driving_license",
+      "start": 2479,
+      "end": 2496
+    },
+    {
+      "name": "schema_validate_passport",
+      "uri": "india://schema/validate_passport",
+      "start": 2498,
+      "end": 2512
+    },
+    {
+      "name": "schema_validate_cin",
+      "uri": "india://schema/validate_cin",
+      "start": 2514,
+      "end": 2532
+    },
+    {
+      "name": "schema_validate_din",
+      "uri": "india://schema/validate_din",
+      "start": 2534,
+      "end": 2547
+    },
+    {
+      "name": "schema_calculate_income_tax",
+      "uri": "india://schema/calculate_income_tax",
+      "start": 2549,
+      "end": 2569
+    },
+    {
+      "name": "schema_calculate_tds",
+      "uri": "india://schema/calculate_tds",
+      "start": 2571,
+      "end": 2587
+    },
+    {
+      "name": "schema_calculate_gst",
+      "uri": "india://schema/calculate_gst",
+      "start": 2589,
+      "end": 2607
+    },
+    {
+      "name": "schema_calculate_surcharge",
+      "uri": "india://schema/calculate_surcharge",
+      "start": 2609,
+      "end": 2626
+    },
+    {
+      "name": "schema_calculate_hra_exemption",
+      "uri": "india://schema/calculate_hra_exemption",
+      "start": 2628,
+      "end": 2646
+    },
+    {
+      "name": "schema_calculate_capital_gains",
+      "uri": "india://schema/calculate_capital_gains",
+      "start": 2648,
+      "end": 2669
+    },
+    {
+      "name": "schema_calculate_advance_tax",
+      "uri": "india://schema/calculate_advance_tax",
+      "start": 2671,
+      "end": 2690
+    },
+    {
+      "name": "schema_bulk_validate_gstin",
+      "uri": "india://schema/bulk_validate_gstin",
+      "start": 2692,
+      "end": 2704
+    },
+    {
+      "name": "server_status",
+      "uri": "india://status",
+      "start": 2828,
+      "end": 2840
+    },
+    {
+      "name": "changelog",
+      "uri": "india://changelog",
+      "start": 2842,
+      "end": 2873
+    }
+  ],
+  "prompts": [
+    {
+      "name": "vendor_kyc",
+      "start": 2706,
+      "end": 2714
+    },
+    {
+      "name": "salary_planner",
+      "start": 2739,
+      "end": 2746
+    },
+    {
+      "name": "invoice_audit",
+      "start": 2778,
+      "end": 2785
+    }
+  ]
+}

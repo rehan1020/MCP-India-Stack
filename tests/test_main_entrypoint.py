@@ -11,5 +11,4 @@ def test_module_entrypoint_calls_server_main(monkeypatch: MonkeyPatch) -> None:
 
     monkeypatch.setattr("mcp_india_stack.server.main", fake_main)
     runpy.run_module("mcp_india_stack", run_name="__main__")
-
     assert calls == ["called"]

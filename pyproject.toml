@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mcp-india-stack"
-version = "0.6.6"
+version = "0.6.7"
 description = "Model Context Protocol server for Indian financial, tax, and regulatory APIs — GSTIN, IFSC, PAN, UPI, pincode, HSN/SAC — for AI agents. Zero auth. Offline-first."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -110,13 +110,6 @@ warn_unused_configs = true
 warn_unused_ignores = true        # catches stale type: ignore comments
 ignore_missing_imports = true
 exclude = ["^tests/", "^mcp/", "^builddir/", "^staging/", "^dist/", "^\\.venv/", "^test_install/", "^check_coverage\\.py$"]
-
-[[tool.mypy.overrides]]
-module = "mcp_india_stack.server"
-# server.py has FastMCP internals that are hard to fully type — relax slightly
-disallow_any_generics = false
-disable_error_code = ["untyped-decorator", "attr-defined", "call-arg"]
-warn_unused_ignores = false   # different mcp versions have different stubs
 
 [[tool.mypy.overrides]]
 module = [

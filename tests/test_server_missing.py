@@ -1,6 +1,11 @@
-# ruff: noqa
-
-from mcp_india_stack.server import *
+# ruff: noqa: F403, F405, C901
+from mcp_india_stack.registrations.banking import *
+from mcp_india_stack.registrations.finance import *
+from mcp_india_stack.registrations.kyc import *
+from mcp_india_stack.registrations.legal import *
+from mcp_india_stack.registrations.lookup import *
+from mcp_india_stack.registrations.markets import *
+from mcp_india_stack.registrations.tax import *
 
 
 def test_all_server_wrappers_with_dummy_args():

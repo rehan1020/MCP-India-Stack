@@ -3,11 +3,10 @@ from unittest.mock import patch
 
 import pytest
 
-from mcp_india_stack.server import (
-    _validate_single_ifsc,
+from mcp_india_stack.registrations.banking import _validate_single_ifsc, bulk_validate_ifsc
+from mcp_india_stack.registrations.kyc import (
     _validate_single_pan,
     bulk_validate_aadhaar,
-    bulk_validate_ifsc,
     bulk_validate_pan,
 )
 from mcp_india_stack.tools.bulk_aadhaar import _validate_single_aadhaar
@@ -16,22 +15,22 @@ from mcp_india_stack.tools.salary_restructuring import _quick_tax_estimate
 
 class TestSalaryRestructuringTaxEstimate:
     def test_zero_income_returns_zero_tax(self) -> None:
-        assert _quick_tax_estimate(300_000) == 0.0
+        assert _quick_tax_estimate(300000) == 0.0
 
     def test_rebate_87A_new_regime(self) -> None:
-        assert _quick_tax_estimate(650_000) == 0.0
+        assert _quick_tax_estimate(650000) == 0.0
 
     def test_basic_slab_new_regime(self) -> None:
-        tax = _quick_tax_estimate(1_300_000)
-        assert tax == pytest.approx(75_000, abs=1)
+        tax = _quick_tax_estimate(1300000)
+        assert tax == pytest.approx(75000, abs=1)
 
     def test_top_slab_new_regime(self) -> None:
-        tax = _quick_tax_estimate(2_500_000)
-        assert tax == pytest.approx(330_000, abs=1)
+        tax = _quick_tax_estimate(2500000)
+        assert tax == pytest.approx(330000, abs=1)
 
     def test_none_or_missing_income_raises_or_returns_error(self) -> None:
         with pytest.raises(TypeError):
-            _quick_tax_estimate(None)  # type: ignore
+            _quick_tax_estimate(None)
 
 
 class TestBulkAadhaarValidation:
@@ -41,7 +40,7 @@ class TestBulkAadhaarValidation:
         assert len(results) == 1
 
     def test_none_in_bulk_list(self) -> None:
-        res = bulk_validate_aadhaar([None])  # type: ignore
+        res = bulk_validate_aadhaar([None])
         results = res["data"]["results"]
         assert not results[0]["valid"]
 
@@ -61,6 +60,7 @@ class TestBulkAadhaarValidation:
         assert not results[0]["valid"]
 
     def test_exception_path(self, monkeypatch) -> None:
+
         def mock_validate(*args, **kwargs):
             raise ValueError("Simulated Aadhaar error")
 
@@ -79,7 +79,7 @@ class TestBulkPANValidation:
         assert res["data"]["results"][0]["valid"]
 
     def test_none_pan_in_bulk(self) -> None:
-        res = bulk_validate_pan([None])  # type: ignore
+        res = bulk_validate_pan([None])
         assert not res["data"]["results"][0]["valid"]
 
     def test_wrong_length_pan(self) -> None:
@@ -95,6 +95,7 @@ class TestBulkPANValidation:
         assert res["data"]["results"][0]["pan"] == "AAAAA9999A"
 
     def test_exception_path(self, monkeypatch) -> None:
+
         def mock_validate(*args, **kwargs):
             raise ValueError("Simulated PAN error")
 
@@ -116,7 +117,7 @@ class TestBulkIFSCValidation:
         assert len(res["data"]["results"]) == 1
 
     def test_none_ifsc_in_bulk(self) -> None:
-        res = bulk_validate_ifsc([None])  # type: ignore
+        res = bulk_validate_ifsc([None])
         assert not res["data"]["results"][0]["found"]
 
     def test_wrong_format_ifsc(self) -> None:
@@ -132,6 +133,7 @@ class TestBulkIFSCValidation:
         assert not res["data"]["results"][0]["found"]
 
     def test_exception_path(self, monkeypatch) -> None:
+
         def mock_lookup(*args, **kwargs):
             raise ValueError("Simulated IFSC error")
 
@@ -193,14 +195,11 @@ class TestPresumptiveTaxOldRegime:
         from mcp_india_stack.tools.presumptive_tax import calculate_presumptive_tax
 
         r = calculate_presumptive_tax(
-            scheme="44ADA",
-            gross_receipts=40_00_000,
-            digital_receipt_percent=100,
-            regime="old",
+            scheme="44ADA", gross_receipts=4000000, digital_receipt_percent=100, regime="old"
         )
         assert not r.get("errors"), f"Should be eligible: {r.get('errors')}"
         tax = r.get("tax_after_cess") or r.get("total_tax", 0)
-        assert tax > 3_00_000, f"Old regime tax on 20L should be >Ã¢â€šÂ¹3L, got {tax}"
+        assert tax > 300000, f"Old regime tax on 20L should be >Ã¢â€šÂ¹3L, got {tax}"
 
     def test_44AD_old_regime_with_80c(self) -> None:
         """44AD old regime with 80C deduction. Covers lines 71-74."""
@@ -208,10 +207,10 @@ class TestPresumptiveTaxOldRegime:
 
         r = calculate_presumptive_tax(
             scheme="44AD",
-            gross_receipts=50_00_000,
+            gross_receipts=5000000,
             digital_receipt_percent=100,
             regime="old",
-            deductions_80c=1_50_000,
+            deductions_80c=150000,
         )
         assert not r.get("errors"), f"Should be eligible: {r.get('errors')}"
         assert r.get("presumptive_income", 0) > 0
@@ -221,10 +220,7 @@ class TestPresumptiveTaxOldRegime:
         from mcp_india_stack.tools.presumptive_tax import calculate_presumptive_tax
 
         r = calculate_presumptive_tax(
-            scheme="44ADA",
-            gross_receipts=80_00_000,
-            digital_receipt_percent=100,
-            regime="old",
+            scheme="44ADA", gross_receipts=8000000, digital_receipt_percent=100, regime="old"
         )
         assert r.get("errors"), "Should error for 44ADA > Ã¢â€šÂ¹75L limit"
 
@@ -238,15 +234,15 @@ class TestGSTCalculatorEdgeCases:
 
         from mcp_india_stack.tools.gst_calculator import calculate_gst
 
-        r = calculate_gst(amount=10_000, gst_rate=0, transaction_type="intra_state")
+        r = calculate_gst(amount=10000, gst_rate=0, transaction_type="intra_state")
         assert r.get("total_gst") == pytest.approx(0, abs=1)
-        assert r.get("base_amount") == pytest.approx(10_000, abs=1)
+        assert r.get("base_amount") == pytest.approx(10000, abs=1)
 
     def test_invalid_amount_returns_error(self) -> None:
         """Line 46: negative amount guard."""
         from mcp_india_stack.tools.gst_calculator import calculate_gst
 
-        r = calculate_gst(amount=-1_000, gst_rate=18, transaction_type="intra_state")
+        r = calculate_gst(amount=-1000, gst_rate=18, transaction_type="intra_state")
         assert r.get("errors"), "Negative amount should return errors"
 
     def test_28pct_with_cess(self) -> None:
@@ -256,20 +252,20 @@ class TestGSTCalculatorEdgeCases:
         from mcp_india_stack.tools.gst_calculator import calculate_gst
 
         r = calculate_gst(
-            amount=10_000,
+            amount=10000,
             gst_rate=28,
             transaction_type="intra_state",
             cess_category="aerated_drinks",
         )
         cess = r.get("cess_amount", 0)
-        assert cess == pytest.approx(1_200, abs=10), f"Aerated drinks cess=12%, got {cess}"
-        assert r.get("cgst", 0) == pytest.approx(1_400, abs=5)
+        assert cess == pytest.approx(1200, abs=10), f"Aerated drinks cess=12%, got {cess}"
+        assert r.get("cgst", 0) == pytest.approx(1400, abs=5)
 
     def test_invalid_gst_rate_returns_error(self) -> None:
         """Line 106: non-standard rate error."""
         from mcp_india_stack.tools.gst_calculator import calculate_gst
 
-        r = calculate_gst(amount=10_000, gst_rate=7, transaction_type="intra_state")
+        r = calculate_gst(amount=10000, gst_rate=7, transaction_type="intra_state")
         assert r.get("errors"), "Rate 7% is non-standard, should error"
 
     def test_amount_includes_gst_intra_state(self) -> None:
@@ -279,12 +275,9 @@ class TestGSTCalculatorEdgeCases:
         from mcp_india_stack.tools.gst_calculator import calculate_gst
 
         r = calculate_gst(
-            amount=11_800,
-            gst_rate=18,
-            amount_includes_gst=True,
-            transaction_type="intra_state",
+            amount=11800, gst_rate=18, amount_includes_gst=True, transaction_type="intra_state"
         )
-        assert r.get("base_amount") == pytest.approx(10_000, abs=1)
+        assert r.get("base_amount") == pytest.approx(10000, abs=1)
         assert r.get("cgst") == pytest.approx(900, abs=1)
         assert r.get("sgst") == pytest.approx(900, abs=1)
 
@@ -293,13 +286,13 @@ class TestDINEdgeCases:
     def test_din_none_input(self) -> None:
         from mcp_india_stack.tools.din import validate_din
 
-        r = validate_din(None)  # type: ignore
+        r = validate_din(None)
         assert not r.get("valid")
 
     def test_din_wrong_format(self) -> None:
         from mcp_india_stack.tools.din import validate_din
 
-        r = validate_din("ABCDE12")  # not 8 digits
+        r = validate_din("ABCDE12")
         assert not r.get("valid")
 
 
@@ -308,7 +301,7 @@ class TestFSSAIEdgeCases:
         """Lines 26: handle None input."""
         from mcp_india_stack.tools.fssai import validate_fssai
 
-        r = validate_fssai(None)  # type: ignore
+        r = validate_fssai(None)
         assert not r["valid"]
 
     def test_fssai_invalid_length(self) -> None:
@@ -333,14 +326,14 @@ class TestEMIEdgeCases:
 
         from mcp_india_stack.tools.emi import calculate_emi
 
-        r = calculate_emi(principal=1_00_000, annual_interest_rate=0, tenure_months=12)
+        r = calculate_emi(principal=100000, annual_interest_rate=0, tenure_months=12)
         emi = r.get("emi") or r.get("monthly_emi", 0)
-        assert emi == pytest.approx(1_00_000 / 12, abs=1)
+        assert emi == pytest.approx(100000 / 12, abs=1)
 
     def test_emi_negative_tenure(self) -> None:
         from mcp_india_stack.tools.emi import calculate_emi
 
-        r = calculate_emi(principal=1_00_000, annual_interest_rate=10, tenure_months=-1)
+        r = calculate_emi(principal=100000, annual_interest_rate=10, tenure_months=-1)
         assert r.get("errors"), "Negative tenure should return error"
 
     def test_main_with_port_flag(self, monkeypatch) -> None:
@@ -378,84 +371,64 @@ class TestEMIEdgeCases:
 class TestFinalCoverageGap:
     """One-shot class to close the last sub-1% coverage gaps."""
 
-    # --- salary_restructuring lines 89, 101 ---
     def test_salary_restructuring_meal_wallet_included(self) -> None:
         from mcp_india_stack.tools.salary_restructuring import calculate_salary_restructuring
 
         r = calculate_salary_restructuring(
-            current_gross=12_00_000,
-            include_meal_card=True,  # hits line 89
-            include_wallet_allowance=True,  # hits line 101
+            current_gross=1200000, include_meal_card=True, include_wallet_allowance=True
         )
         assert r.get("restructured_components", {}).get("meal_card", 0) > 0
         assert r.get("restructured_components", {}).get("wallet_allowance", 0) > 0
 
-    # --- salary_restructuring lines 156, 162 (_quick_tax_estimate mid-slabs) ---
     def test_quick_tax_estimate_mid_slabs(self) -> None:
         from mcp_india_stack.tools.salary_restructuring import _quick_tax_estimate
 
-        # Line 156: 8L-12L slab (10%)
-        tax_10pct_slab = _quick_tax_estimate(10_00_000)
-        assert tax_10pct_slab == 0.0  # (10L-8L)Ã—10% = 20K; <=12L -> rebate = 0
-        # Line 162: 16L-20L slab (20%)
-        tax_20pct_slab = _quick_tax_estimate(18_00_000)
-        assert tax_20pct_slab > 1_50_000  # well above basic slab; just check non-zero
+        tax_10pct_slab = _quick_tax_estimate(1000000)
+        assert tax_10pct_slab == 0.0
+        tax_20pct_slab = _quick_tax_estimate(1800000)
+        assert tax_20pct_slab > 150000
 
-    # --- fd_maturity lines 42, 45-48 (senior citizen bonus and TDS branches) ---
     def test_fd_senior_citizen_bonus_branch(self) -> None:
         from mcp_india_stack.tools.fd_maturity import calculate_fd_maturity
 
         r = calculate_fd_maturity(
-            principal=5_00_000,
+            principal=500000,
             annual_interest_rate=7.0,
             tenure_days=365,
-            is_senior_citizen=True,  # hits senior_citizen bonus branch (line 42)
-            tds_applicable=True,  # hits TDS branch (lines 45-48)
+            is_senior_citizen=True,
+            tds_applicable=True,
         )
-        assert r.get("maturity_amount", 0) > 5_00_000
+        assert r.get("maturity_amount", 0) > 500000
         assert r.get("errors", []) == []
 
     def test_fd_tds_not_applicable(self) -> None:
         from mcp_india_stack.tools.fd_maturity import calculate_fd_maturity
 
         r = calculate_fd_maturity(
-            principal=1_00_000,
-            annual_interest_rate=6.5,
-            tenure_days=365,
-            tds_applicable=False,  # hits else branch of TDS check
+            principal=100000, annual_interest_rate=6.5, tenure_days=365, tds_applicable=False
         )
-        assert r.get("maturity_amount", 0) > 1_00_000
+        assert r.get("maturity_amount", 0) > 100000
 
-    # --- fssai lines 52-53 (invalid state code prefix) ---
     def test_fssai_invalid_state_code(self) -> None:
         from mcp_india_stack.tools.fssai import validate_fssai
 
-        # 14-digit number with invalid state prefix (99 is not a valid FSSAI state code)
         r = validate_fssai("99123456789012")
-        # Either valid=False or found=False; just assert it doesn't crash
         assert "valid" in r or "found" in r
 
-    # --- tds lines 137, 141 (aggregate threshold not exceeded) ---
     def test_tds_below_aggregate_threshold(self) -> None:
         from mcp_india_stack.tools.tds import calculate_tds
 
-        # Payment below annual threshold -> no TDS
         r = calculate_tds(
             section="194C_individual",
-            payment_amount=10_000,  # single payment below Ã¢â€šÂ¹30K single limit
+            payment_amount=10000,
             pan_available=True,
-            aggregate_payments_ytd=0,  # no prior payments; hits threshold-check branch
+            aggregate_payments_ytd=0,
         )
         tds = r.get("tds_amount", -1)
         assert tds == pytest.approx(0, abs=1), f"Below threshold should give 0 TDS, got {tds}"
 
-    # --- tds lines 194, 196 (no-PAN rate branch) ---
     def test_tds_194a_other_no_pan(self) -> None:
         from mcp_india_stack.tools.tds import calculate_tds
 
-        r = calculate_tds(
-            section="194A_other",
-            payment_amount=50_000,
-            pan_available=False,  # no PAN -> 20% rate branch
-        )
-        assert r.get("tds_amount", 0) == pytest.approx(10_000, abs=100)
+        r = calculate_tds(section="194A_other", payment_amount=50000, pan_available=False)
+        assert r.get("tds_amount", 0) == pytest.approx(10000, abs=100)
