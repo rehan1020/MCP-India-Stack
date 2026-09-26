@@ -11,7 +11,7 @@ Returns the current server configuration, versioning, and runtime status.
 **Example Output:**
 ```json
 {
-  "version": "0.6.5",
+  "version": "0.6.6",
   "db_connected": true,
   "live_lookup_enabled": false,
   "dry_run_mode": false,
