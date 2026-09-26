@@ -19,7 +19,7 @@ def validate_upi_vpa(vpa: str) -> dict[str, Any]:
 
     norm_result = normalize_upi(str(vpa))
     value = norm_result["normalized_input"]
-    
+
     errors: list[str] = []
     warnings: list[str] = norm_result.get("warnings", [])
 

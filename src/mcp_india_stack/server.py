@@ -9,7 +9,6 @@ import sys
 import threading
 import time
 from collections.abc import Callable
-from mcp_india_stack.normalization import normalize_aadhaar, normalize_cin, normalize_fssai, normalize_gstin, normalize_pan
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, Any, cast
 
@@ -17,6 +16,13 @@ from mcp.server.fastmcp import FastMCP
 from mcp.types import ToolAnnotations
 from pydantic import Field
 
+from mcp_india_stack.normalization import (
+    normalize_aadhaar,
+    normalize_cin,
+    normalize_fssai,
+    normalize_gstin,
+    normalize_pan,
+)
 from mcp_india_stack.tools import (
     bulk_validate_aadhaar as core_bulk_validate_aadhaar,
 )
