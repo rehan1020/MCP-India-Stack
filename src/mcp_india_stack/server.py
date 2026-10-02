@@ -57,15 +57,15 @@ def changelog() -> dict[str, Any]:
     """Structured changelog as JSON."""
     return {
         "current_version": __version__,
-                "entries": [
+        "entries": [
             {
                 "version": "0.6.7",
                 "date": "2026-10-02",
                 "changes": [
                     "Update 5/7: Decomposed server.py by domain",
                     "Extracted 7 registration modules (kyc, tax, banking, finance, etc)",
-                    "Extracted inline tools (esic_code, epf_code, digilocker, etc) to tools dir"
-                ]
+                    "Extracted inline tools (esic_code, epf_code, digilocker, etc) to tools dir",
+                ],
             },
             {
                 "version": "0.6.6",
