@@ -63,8 +63,8 @@ def changelog() -> dict[str, Any]:
                 "date": "2026-10-02",
                 "changes": [
                     "Update 5/7: Decomposed server.py by domain",
-                    "Extracted 7 registration modules (kyc, tax, banking, finance, legal, markets, lookup)",
-                    "Extracted inline tools (esic_code, epf_code, digilocker, bank_lookup) to tools directory"
+                    "Extracted 7 registration modules (kyc, tax, banking, finance, etc)",
+                    "Extracted inline tools (esic_code, epf_code, digilocker, etc) to tools dir"
                 ]
             },
             {
