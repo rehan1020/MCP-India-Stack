@@ -24,3 +24,11 @@ Use `scripts/update_datasets.py --refresh-all` (or individual flags) and include
 - Minor bump (`0.x+1.0`): behavior changes, new tools, response-structure changes
 - `1.0.0` is deferred until external contributor activity and stable API commitments
 
+
+## Managing dependencies
+
+We use `pip-tools` to ensure reproducible builds. If you add or bump a dependency in `pyproject.toml`, you must regenerate the lockfile:
+
+1. Install pip-tools: `pip install pip-tools`
+2. Recompile the lockfile: `pip-compile pyproject.toml --extra dev -o requirements.txt`
+3. Commit both `pyproject.toml` and `requirements.txt`

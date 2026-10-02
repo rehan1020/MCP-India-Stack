@@ -59,6 +59,16 @@ def changelog() -> dict[str, Any]:
         "current_version": __version__,
         "entries": [
             {
+                "version": "0.6.8",
+                "date": "2026-10-02",
+                "changes": [
+                    "Update 6/7: Dependency reproducibility",
+                    "Added requirements.txt lockfile for deterministic CI builds",
+                    "Pinned upper bounds for behavior-sensitive dependencies (polars, yfinance)",
+                    "Isolated yfinance behind a clean provider abstraction",
+                ],
+            },
+            {
                 "version": "0.6.7",
                 "date": "2026-10-02",
                 "changes": [
