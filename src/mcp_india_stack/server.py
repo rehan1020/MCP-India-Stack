@@ -59,7 +59,7 @@ def changelog() -> dict[str, Any]:
         "current_version": __version__,
         "entries": [
             {
-                "version": "0.6.8",
+                "version": "0.6.9",
                 "date": "2026-10-02",
                 "changes": [
                     "Update 6/7: Dependency reproducibility",
