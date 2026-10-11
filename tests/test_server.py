@@ -619,3 +619,42 @@ class TestMoreSchemas:
         assert captured_args is not None
         assert captured_args.host == "127.0.0.1"
         assert ipaddress.ip_address(captured_args.host).is_loopback
+
+    def test_bearer_auth_constant_time_comparison(self) -> None:
+        """P4: Bearer token validation uses constant-time comparison (hmac.compare_digest)."""
+        import inspect
+        import os
+        from typing import Any
+        from unittest.mock import patch
+
+        from starlette.responses import JSONResponse
+        from starlette.testclient import TestClient
+
+        import mcp_india_stack.server as server_module
+
+        source = inspect.getsource(server_module.main)
+        assert "hmac.compare_digest" in source
+
+        with patch.dict(os.environ, {"MCP_INDIA_STACK_API_KEY": "constant-time-token"}):
+            captured_app = None
+
+            def fake_uvicorn_run(app: Any, **kwargs: Any) -> None:
+                nonlocal captured_app
+                captured_app = app
+
+            with patch("sys.argv", ["mcp-india-stack", "--transport", "sse"]):
+                with patch("uvicorn.run", side_effect=fake_uvicorn_run):
+                    server_module.main()
+
+            assert captured_app is not None
+            captured_app.add_route("/probe_auth", lambda r: JSONResponse({"ok": True}))
+            client = TestClient(captured_app)
+
+            assert client.get("/probe_auth").status_code == 401
+            assert (
+                client.get("/probe_auth", headers={"Authorization": "Bearer wrong"}).status_code
+                == 401
+            )
+            r = client.get("/probe_auth", headers={"Authorization": "Bearer constant-time-token"})
+            assert r.status_code == 200
+            assert r.json() == {"ok": True}

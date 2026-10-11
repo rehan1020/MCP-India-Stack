@@ -10,6 +10,7 @@ This is a thin entry point that:
 from __future__ import annotations
 
 import argparse
+import hmac
 import logging
 import os
 import sys
@@ -369,7 +370,9 @@ def main() -> None:  # noqa: C901
 
             async def dispatch(self, request: Request, call_next: Any) -> Any:
                 auth = request.headers.get("Authorization", "")
-                if not auth.startswith("Bearer ") or auth[7:] != self.api_key:
+                if not auth.startswith("Bearer ") or not hmac.compare_digest(
+                    auth[7:], self.api_key
+                ):
                     return JSONResponse({"error": "Unauthorized"}, status_code=401)
                 response: Any = await call_next(request)
                 return response
