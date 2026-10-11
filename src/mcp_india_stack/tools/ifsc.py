@@ -10,6 +10,7 @@ from typing import Any
 
 import httpx
 
+from mcp_india_stack.normalization import normalize_ifsc
 from mcp_india_stack.utils.loader import load_ifsc_index
 
 IFSC_RE = re.compile(r"^[A-Z]{4}0[A-Z0-9]{6}$")
@@ -69,8 +70,6 @@ def lookup_ifsc(code: str) -> dict[str, Any]:
         Dict with found flag, branch details, payment rails, source,
         live_verified flag, and verification_source.
     """
-    from mcp_india_stack.normalization import normalize_ifsc
-
     if code is None:
         return {"found": False, "errors": ["IFSC code is required"]}
 

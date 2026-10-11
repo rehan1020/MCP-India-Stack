@@ -261,8 +261,8 @@ def main() -> None:  # noqa: C901
     parser.add_argument(
         "--host",
         type=str,
-        default="0.0.0.0",
-        help="Host to bind to for SSE transport (default: 0.0.0.0)",
+        default="127.0.0.1",
+        help="Host to bind to for SSE transport (default: 127.0.0.1)",
     )
     parser.add_argument(
         "--port",

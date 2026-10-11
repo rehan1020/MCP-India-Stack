@@ -593,3 +593,29 @@ class TestMoreSchemas:
 
         schema = schema_calculate_hra_exemption()
         assert schema.get("type") == "object"
+
+    def test_sse_default_host_is_loopback(self) -> None:
+        """P3 / G13: The argparse default for --host is a loopback address (127.0.0.1)."""
+        import argparse
+        import ipaddress
+        from typing import Any
+        from unittest.mock import patch
+
+        import mcp_india_stack.server as server_module
+
+        captured_args = None
+        orig_parse = argparse.ArgumentParser.parse_args
+
+        def fake_parse_args(self: Any, args: Any = None, namespace: Any = None) -> Any:
+            nonlocal captured_args
+            res = orig_parse(self, [] if args is None else args, namespace)
+            captured_args = res
+            return res
+
+        with patch.object(argparse.ArgumentParser, "parse_args", fake_parse_args):
+            with patch.object(server_module.mcp, "run"):
+                server_module.main()
+
+        assert captured_args is not None
+        assert captured_args.host == "127.0.0.1"
+        assert ipaddress.ip_address(captured_args.host).is_loopback
