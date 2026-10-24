@@ -6,6 +6,7 @@ import os
 import re
 from typing import Any
 
+from mcp_india_stack.normalization import normalize_gstin
 from mcp_india_stack.tools.pan import validate_pan
 from mcp_india_stack.tools.state_code import decode_state_code
 from mcp_india_stack.utils.responses import build_response
@@ -59,8 +60,6 @@ def validate_gstin(gstin: str) -> dict[str, Any]:
         Dict with validity, state decode, embedded PAN, entity number,
         category, checksum info, live_verified flag, and verification_source.
     """
-    from mcp_india_stack.normalization import normalize_gstin
-
     if gstin is None:
         return build_response(
             success=False,

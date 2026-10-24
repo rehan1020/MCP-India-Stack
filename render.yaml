@@ -3,7 +3,7 @@ services:
     name: mcp-india-stack
     env: python
     buildCommand: pip install .
-    startCommand: mcp-india-stack --transport sse
+    startCommand: mcp-india-stack --transport sse --host 0.0.0.0
     envVars:
       - key: PORT
         value: "10000"

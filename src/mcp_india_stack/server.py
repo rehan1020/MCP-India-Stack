@@ -10,6 +10,8 @@ This is a thin entry point that:
 from __future__ import annotations
 
 import argparse
+import hashlib
+import hmac
 import logging
 import os
 import sys
@@ -261,8 +263,8 @@ def main() -> None:  # noqa: C901
     parser.add_argument(
         "--host",
         type=str,
-        default="0.0.0.0",
-        help="Host to bind to for SSE transport (default: 0.0.0.0)",
+        default="127.0.0.1",
+        help="Host to bind to for SSE transport (default: 127.0.0.1)",
     )
     parser.add_argument(
         "--port",
@@ -369,7 +371,11 @@ def main() -> None:  # noqa: C901
 
             async def dispatch(self, request: Request, call_next: Any) -> Any:
                 auth = request.headers.get("Authorization", "")
-                if not auth.startswith("Bearer ") or auth[7:] != self.api_key:
+                if not auth.startswith("Bearer "):
+                    return JSONResponse({"error": "Unauthorized"}, status_code=401)
+                token_hash = hashlib.sha256(auth[7:].encode("utf-8", errors="replace")).digest()
+                expected_hash = hashlib.sha256(self.api_key.encode("utf-8")).digest()
+                if not hmac.compare_digest(token_hash, expected_hash):
                     return JSONResponse({"error": "Unauthorized"}, status_code=401)
                 response: Any = await call_next(request)
                 return response

@@ -593,3 +593,106 @@ class TestMoreSchemas:
 
         schema = schema_calculate_hra_exemption()
         assert schema.get("type") == "object"
+
+
+class TestServerTransportSecurity:
+    """Security tests for SSE transport, loopback default, and constant-time bearer auth."""
+
+    def test_sse_default_host_is_loopback(self) -> None:
+        """P3 / G13: The argparse default for --host is a loopback address (127.0.0.1)."""
+        import argparse
+        import ipaddress
+        from typing import Any
+        from unittest.mock import patch
+
+        import mcp_india_stack.server as server_module
+
+        captured_args = None
+        orig_parse = argparse.ArgumentParser.parse_args
+
+        def fake_parse_args(self: Any, args: Any = None, namespace: Any = None) -> Any:
+            nonlocal captured_args
+            res = orig_parse(self, [] if args is None else args, namespace)
+            captured_args = res
+            return res
+
+        with patch.object(argparse.ArgumentParser, "parse_args", fake_parse_args):
+            with patch.object(server_module.mcp, "run"):
+                server_module.main()
+
+        assert captured_args is not None
+        assert captured_args.host == "127.0.0.1"
+        assert ipaddress.ip_address(captured_args.host).is_loopback
+
+    def test_bearer_auth_constant_time_comparison(self) -> None:
+        """P4: Bearer token validation uses constant-time comparison (hmac.compare_digest)."""
+        import inspect
+        import os
+        from typing import Any
+        from unittest.mock import patch
+
+        from starlette.responses import JSONResponse
+        from starlette.testclient import TestClient
+
+        import mcp_india_stack.server as server_module
+
+        source = inspect.getsource(server_module.main)
+        assert "hmac.compare_digest" in source
+
+        with patch.dict(os.environ, {"MCP_INDIA_STACK_API_KEY": "constant-time-token"}):
+            captured_app = None
+
+            def fake_uvicorn_run(app: Any, **kwargs: Any) -> None:
+                nonlocal captured_app
+                captured_app = app
+
+            with patch("sys.argv", ["mcp-india-stack", "--transport", "sse"]):
+                with patch("uvicorn.run", side_effect=fake_uvicorn_run):
+                    server_module.main()
+
+            assert captured_app is not None
+            captured_app.add_route("/probe_auth", lambda r: JSONResponse({"ok": True}))
+            client = TestClient(captured_app)
+
+            assert client.get("/probe_auth").status_code == 401
+            assert (
+                client.get("/probe_auth", headers={"Authorization": "Bearer wrong"}).status_code
+                == 401
+            )
+            r = client.get("/probe_auth", headers={"Authorization": "Bearer constant-time-token"})
+            assert r.status_code == 200
+            assert r.json() == {"ok": True}
+
+    def test_bearer_auth_non_ascii_token_returns_401_not_500(self) -> None:
+        """P4: Non-ASCII token in Authorization header returns 401, not 500 TypeError."""
+        import os
+        from typing import Any
+        from unittest.mock import patch
+
+        from starlette.responses import JSONResponse
+        from starlette.testclient import TestClient
+
+        import mcp_india_stack.server as server_module
+
+        with patch.dict(os.environ, {"MCP_INDIA_STACK_API_KEY": "ascii-secret-token"}):
+            captured_app = None
+
+            def fake_uvicorn_run(app: Any, **kwargs: Any) -> None:
+                nonlocal captured_app
+                captured_app = app
+
+            with patch("sys.argv", ["mcp-india-stack", "--transport", "sse"]):
+                with patch("uvicorn.run", side_effect=fake_uvicorn_run):
+                    server_module.main()
+
+            assert captured_app is not None
+            captured_app.add_route("/probe_non_ascii", lambda r: JSONResponse({"ok": True}))
+            client = TestClient(captured_app)
+
+            # Test latin-1 / non-ASCII raw bytes in header: \x80, \xff
+            resp = client.get(
+                "/probe_non_ascii",
+                headers={b"authorization": b"Bearer \x80\xff\xfe\xab"},
+            )
+            assert resp.status_code == 401
+            assert resp.json() == {"error": "Unauthorized"}

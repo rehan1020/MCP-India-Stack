@@ -134,7 +134,9 @@ Linux config path:
 
 ## 9. SSE Transport Security
 
-When running with `--transport sse` (e.g. on Render), the server supports several security controls via environment variables:
+When running with `--transport sse` (e.g. on Render), the server binds to loopback (`127.0.0.1`) by default for safety. For cloud or containerized environments (such as Render), specify `--host 0.0.0.0` explicitly.
+
+The server supports several security controls via environment variables:
 
 ### `MCP_INDIA_STACK_API_KEY`
 
