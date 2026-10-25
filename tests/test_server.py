@@ -635,11 +635,12 @@ class TestServerTransportSecurity:
         from starlette.testclient import TestClient
 
         import mcp_india_stack.server as server_module
+        from tests._app_harness import VALID_TEST_API_KEY
 
         source = inspect.getsource(server_module.main)
         assert "hmac.compare_digest" in source
 
-        with patch.dict(os.environ, {"MCP_INDIA_STACK_API_KEY": "constant-time-token"}):
+        with patch.dict(os.environ, {"MCP_INDIA_STACK_API_KEY": VALID_TEST_API_KEY}):
             captured_app = None
 
             def fake_uvicorn_run(app: Any, **kwargs: Any) -> None:
@@ -659,7 +660,7 @@ class TestServerTransportSecurity:
                 client.get("/probe_auth", headers={"Authorization": "Bearer wrong"}).status_code
                 == 401
             )
-            r = client.get("/probe_auth", headers={"Authorization": "Bearer constant-time-token"})
+            r = client.get("/probe_auth", headers={"Authorization": f"Bearer {VALID_TEST_API_KEY}"})
             assert r.status_code == 200
             assert r.json() == {"ok": True}
 
@@ -673,8 +674,9 @@ class TestServerTransportSecurity:
         from starlette.testclient import TestClient
 
         import mcp_india_stack.server as server_module
+        from tests._app_harness import VALID_TEST_API_KEY
 
-        with patch.dict(os.environ, {"MCP_INDIA_STACK_API_KEY": "ascii-secret-token"}):
+        with patch.dict(os.environ, {"MCP_INDIA_STACK_API_KEY": VALID_TEST_API_KEY}):
             captured_app = None
 
             def fake_uvicorn_run(app: Any, **kwargs: Any) -> None:
