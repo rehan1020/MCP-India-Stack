@@ -136,32 +136,32 @@ Linux config path:
 
 When running with `--transport sse` (e.g. on Render), the server binds to loopback (`127.0.0.1`) by default for safety. For cloud or containerized environments (such as Render), specify `--host 0.0.0.0` explicitly.
 
-The server supports several security controls via environment variables:
+### Environment Variables
 
-### `MCP_INDIA_STACK_API_KEY`
+| Variable | Description | Default |
+|---|---|---|
+| `MCP_INDIA_STACK_API_KEY` | Secret bearer token required for requests (minimum 32 characters). Generated via `python -c "import secrets; print(secrets.token_urlsafe(32))"`. | None (unauthenticated) |
+| `MCP_INDIA_STACK_AUTH_FAIL_LIMIT` | Maximum failed authentication attempts allowed per client IP within a 60-second window before throttling with HTTP 429 and `Retry-After`. | `10` |
+| `MCP_INDIA_STACK_ALLOWED_HOSTS` | Comma-separated list of additional allowed host headers for DNS rebinding protection (e.g. `api.example.com`). Bare hostnames automatically allow both port-wildcard (`H:*`) and portless (`H`) hosts. | Loopback hosts only (`127.0.0.1`, `localhost`, `[::1]`) |
+| `MCP_INDIA_STACK_ALLOWED_ORIGINS` | Comma-separated list of allowed origins. Feeds both Starlette `CORSMiddleware` and MCP SDK transport security origin checks (e.g. `https://app.example.com`). Wildcards with credentials are strictly forbidden. | Empty (cross-origin disabled) |
+| `MCP_INDIA_STACK_ALLOW_UNAUTHENTICATED_NETWORK` | Set to `"1"` to explicitly permit binding to a non-loopback address without configuring an API key. Otherwise, non-loopback startup without a key is refused. | Unset |
+| `MCP_INDIA_STACK_RATE_LIMIT` | Sliding window rate limit in `<requests>/<window_seconds>` format (e.g. `60/60`). Keyed by token hash when authenticated, or client IP when unauthenticated. | `60/60` |
+| `MCP_INDIA_STACK_BULK_WORKERS` | Maximum concurrent threads for bulk validation tools (`bulk_validate_gstin`, `bulk_validate_ifsc`, `bulk_validate_pan`, `bulk_validate_aadhaar`), clamped to 1–20. | `10` |
 
-If set, every HTTP request to the SSE server must include a `Authorization: Bearer <key>` header matching this value. Requests without a valid token receive a `401 Unauthorized` response.
+### Client Authentication
 
-If unset, the server starts in unauthenticated mode and logs a warning at startup.
+Clients must send the configured API key in the standard HTTP `Authorization` header:
 
-### `MCP_INDIA_STACK_ALLOWED_ORIGINS`
+```http
+Authorization: Bearer <your-32-plus-character-api-key>
+```
 
-Comma-separated list of allowed CORS origins (e.g. `https://example.com,https://app.example.com`).
+- Valid requests pass directly without touching the authentication failure throttle.
+- Missing or invalid tokens count as failures against the caller host. Exceeding `MCP_INDIA_STACK_AUTH_FAIL_LIMIT` returns HTTP 429 Too Many Requests with a `Retry-After` header.
+- Valid requests are rate-limited separately by a truncated SHA-256 hash of the validated token (`key:<hash[:16]>`), preventing raw tokens from ever being stored in memory.
 
-- **Unset/empty**: Cross-origin requests are rejected (no origins allowed, credentials disabled).
-- **Set**: Only listed origins are allowed, credentials are enabled.
-- **Never set to `*`**: The server will refuse to start if `*` is combined with credentials.
+### Render & Reverse Proxy Deployment
 
-### `MCP_INDIA_STACK_RATE_LIMIT`
-
-Rate limit in `<requests>/<window_seconds>` format (e.g. `60/60` = 60 requests per minute).
-
-Default: `60/60`. Applied per IP address, or per API key if `MCP_INDIA_STACK_API_KEY` is set.
-
-### `MCP_INDIA_STACK_BULK_WORKERS`
-
-Maximum number of concurrent workers for bulk validation tools (`bulk_validate_gstin`, `bulk_validate_ifsc`, `bulk_validate_pan`, `bulk_validate_aadhaar`).
-
-- Valid range: **1–20** (values outside this range are clamped)
-- Default: `10`
-- Non-integer input falls back to default
+- **Automatic Host Detection**: Render sets `RENDER_EXTERNAL_HOSTNAME` (e.g. `mcp-india-stack.onrender.com`), which the server automatically includes in `allowed_hosts`.
+- **Custom Domains**: If using a custom domain (e.g. `mcp.mycompany.com`), configure `MCP_INDIA_STACK_ALLOWED_HOSTS=mcp.mycompany.com`.
+- **Client IP Attribution**: Behind Render's reverse proxy, connecting socket peers are Render's internal proxy routers. As a result, `request.client.host` attributes to the proxy IP. This means the authentication failure throttle acts as a global brute-force ceiling across failed attempts. Valid tokens are completely immune to failure throttling and will never be locked out by third-party failures. With a single shared API key, validated-token rate limiting functions effectively across all clients sharing that key.

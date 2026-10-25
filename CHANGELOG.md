@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Security & Network Boundary Completion (Update 6.6)
+
+- **Middleware Ordering**: Hardened middleware stack order to CORS (outermost) -> Auth -> RateLimit (innermost). Preflights succeed without credentials, and 401/429 error responses reliably preserve CORS headers.
+- **Brute-Force Authentication Throttling**: Added `MCP_INDIA_STACK_AUTH_FAIL_LIMIT` (default 10) to track failed authentication attempts per host in a bounded, sliding 60-second window, responding with HTTP 429 and `Retry-After`. Valid tokens pass directly and are unaffected by third-party failure state.
+- **Key-Hashed Rate Limiting**: Validated requests are rate-limited in a bounded store keyed by the truncated SHA-256 digest of the token (`key:<hash[:16]>`), completely removing raw secret tokens from memory. Unauthenticated requests key by client IP.
+- **Fail-Closed Startup Safeguards**: Refuses startup if `MCP_INDIA_STACK_API_KEY` is shorter than 32 characters, or if attempting to bind to a non-loopback interface without an API key (unless explicitly opted-in with `MCP_INDIA_STACK_ALLOW_UNAUTHENTICATED_NETWORK=1`).
+- **DNS Rebinding & Transport Security**: Auto-configures `allowed_hosts` and `allowed_origins` in FastMCP transport security using `MCP_INDIA_STACK_ALLOWED_HOSTS`, `MCP_INDIA_STACK_ALLOWED_ORIGINS`, and Render's `RENDER_EXTERNAL_HOSTNAME`.
+
 ## [0.4.2] - 2026-05-31
 
 ### Bug Fixes (Round 2 — Deep Code Audit)
