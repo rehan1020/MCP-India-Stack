@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.utils.responses import build_response
+
 # Bundled bank master data (sample)
 _BANKS: list[dict[str, Any]] = [
     {
@@ -86,8 +88,12 @@ def lookup_bank(name_or_code: str) -> dict[str, Any]:
         name_or_code: Bank name or IFSC code prefix to search.
 
     Returns:
-        Dict with matched banks and count.
+        Standard envelope with matched banks and count.
     """
     search = name_or_code.upper().strip()
     matches = [b for b in _BANKS if search in b["name"].upper() or search in b["code"]]
-    return {"banks": matches, "count": len(matches), "found": len(matches) > 0}
+    return build_response(
+        success=len(matches) > 0,
+        data={"banks": matches, "count": len(matches)},
+        source="bundled_dataset",
+    )

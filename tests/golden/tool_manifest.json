@@ -1,0 +1,2797 @@
+{
+  "build_aa_consent_request": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Build AA (Account Aggregator) consent request JSON per ReBIT spec.\n\nUse when setting up data sharing consent for open banking workflows.\n\nArgs:\n    customer_id: AA customer address (user@provider)\n    fi_types: Financial information types to request\n    date_range_from: Data fetch range start\n    date_range_to: Data fetch range end\n    consent_expiry_days: How many days consent remains valid\n    purpose_code: ReBIT purpose code (default \"101\")\n    fetch_type: \"ONETIME\" or \"PERIODIC\"\n    frequency_unit: \"HOUR\", \"DAY\", \"MONTH\", \"YEAR\" - for PERIODIC\n    frequency_value: Numeric frequency - for PERIODIC\n\nReturns:\n    Consent request payload and validation notes.\n",
+    "name": "build_aa_consent_request",
+    "parameters": {
+      "properties": {
+        "consent_expiry_days": {
+          "default": 30,
+          "description": "Days until consent expires",
+          "title": "Consent Expiry Days",
+          "type": "integer"
+        },
+        "customer_id": {
+          "description": "AA customer address (e.g., user@onemoney)",
+          "title": "Customer Id",
+          "type": "string"
+        },
+        "date_range_from": {
+          "description": "Start date YYYY-MM-DD",
+          "title": "Date Range From",
+          "type": "string"
+        },
+        "date_range_to": {
+          "description": "End date YYYY-MM-DD",
+          "title": "Date Range To",
+          "type": "string"
+        },
+        "fetch_type": {
+          "default": "ONETIME",
+          "description": "ONETIME or PERIODIC",
+          "title": "Fetch Type",
+          "type": "string"
+        },
+        "fi_types": {
+          "description": "FI types: DEPOSIT, MUTUAL_FUNDS, INSURANCE, NPS, EQUITIES, GSTIN_DATA, CREDIT_CARD, RECURRING_DEPOSIT",
+          "items": {
+            "type": "string"
+          },
+          "title": "Fi Types",
+          "type": "array"
+        },
+        "frequency_unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "HOUR, DAY, MONTH, YEAR for PERIODIC",
+          "title": "Frequency Unit"
+        },
+        "frequency_value": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Frequency value for PERIODIC",
+          "title": "Frequency Value"
+        },
+        "purpose_code": {
+          "default": "101",
+          "description": "ReBIT purpose code (101-106)",
+          "title": "Purpose Code",
+          "type": "string"
+        }
+      },
+      "required": [
+        "customer_id",
+        "fi_types",
+        "date_range_from",
+        "date_range_to"
+      ],
+      "title": "build_aa_consent_requestArguments",
+      "type": "object"
+    }
+  },
+  "bulk_validate_aadhaar": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate multiple Aadhaar numbers in parallel using ThreadPoolExecutor.\n\nUse when batch-validating Aadhaar numbers for KYC, onboarding, or\ncompliance workflows.\n\nArgs:\n    numbers: List of Aadhaar numbers (with or without spaces/hyphens).\n\nReturns:\n    Standard envelope with per-Aadhaar results and valid/invalid counts.\n\nNotes:\n    Max 500 Aadhaars per call. Uses same Verhoeff validation as single tool.\n",
+    "name": "bulk_validate_aadhaar",
+    "parameters": {
+      "properties": {
+        "numbers": {
+          "description": "List of Aadhaar numbers to validate (max 500)",
+          "items": {
+            "type": "string"
+          },
+          "title": "Numbers",
+          "type": "array"
+        }
+      },
+      "required": [
+        "numbers"
+      ],
+      "title": "bulk_validate_aadhaarArguments",
+      "type": "object"
+    }
+  },
+  "bulk_validate_gstin": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate multiple GSTINs in parallel using ThreadPoolExecutor.\n\nUse when batch-validating vendor GSTINs for onboarding or reconciliation.\nReduces N serial calls to ~N/10 parallel batches.\n\nArgs:\n        gstins: List of 15-character GSTIN strings.\n\nReturns:\n        Standard envelope with per-GSTIN results, valid/invalid counts.\n\nNotes:\n        Max 500 GSTINs per call. Configurable via MCP_INDIA_STACK_BULK_WORKERS.\n        Individual validation errors don't fail the entire batch.\n",
+    "name": "bulk_validate_gstin",
+    "parameters": {
+      "properties": {
+        "gstins": {
+          "description": "List of GSTINs to validate (max 500)",
+          "items": {
+            "type": "string"
+          },
+          "title": "Gstins",
+          "type": "array"
+        }
+      },
+      "required": [
+        "gstins"
+      ],
+      "title": "bulk_validate_gstinArguments",
+      "type": "object"
+    }
+  },
+  "bulk_validate_ifsc": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate multiple IFSC codes in parallel.",
+    "name": "bulk_validate_ifsc",
+    "parameters": {
+      "properties": {
+        "ifscs": {
+          "description": "List of IFSC codes to validate (max 500)",
+          "items": {
+            "type": "string"
+          },
+          "title": "Ifscs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "ifscs"
+      ],
+      "title": "bulk_validate_ifscArguments",
+      "type": "object"
+    }
+  },
+  "bulk_validate_pan": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate multiple PANs in parallel.",
+    "name": "bulk_validate_pan",
+    "parameters": {
+      "properties": {
+        "pans": {
+          "description": "List of PANs to validate (max 500)",
+          "items": {
+            "type": "string"
+          },
+          "title": "Pans",
+          "type": "array"
+        }
+      },
+      "required": [
+        "pans"
+      ],
+      "title": "bulk_validate_panArguments",
+      "type": "object"
+    }
+  },
+  "calculate_advance_tax": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate quarterly advance tax installment schedule per Sections 234B and 234C.\n\nUse when planning quarterly tax payments to avoid interest penalties.\nProvides due dates and amounts for each installment.\n\nArgs:\n        estimated_income: Estimated annual income for FY2025-26.\n        regime: Tax regime for calculation.\n        taxpayer_type: Category for slab selection.\n        existing_tds: TDS already likely to be deducted.\n\nReturns:\n        Standard envelope with quarterly breakdown and interest rules.\n\nNotes:\n        Due dates: June 15 (15%), Sept 15 (45%), Dec 15 (75%), Mar 15 (100%).\n        Interest 1% per month for delay under Section 234C.\n",
+    "name": "calculate_advance_tax",
+    "parameters": {
+      "properties": {
+        "estimated_income": {
+          "description": "Estimated total income for FY in rupees",
+          "title": "Estimated Income",
+          "type": "number"
+        },
+        "existing_tds": {
+          "default": 0,
+          "description": "TDS already deducted or to be deducted in rupees",
+          "title": "Existing Tds",
+          "type": "number"
+        },
+        "regime": {
+          "default": "new",
+          "description": "'new' or 'old' tax regime",
+          "title": "Regime",
+          "type": "string"
+        },
+        "taxpayer_type": {
+          "default": "individual",
+          "description": "'individual', 'senior_citizen', or 'super_senior_citizen'",
+          "title": "Taxpayer Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "estimated_income"
+      ],
+      "title": "calculate_advance_taxArguments",
+      "type": "object"
+    }
+  },
+  "calculate_capital_gains": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate capital gains tax for various asset types (FY2025-26).\n\nUse when computing tax liability on sale of equity, mutual funds,\nreal estate, gold, or other capital assets.\n\nArgs:\n        sale_price: Sale proceeds after expenses.\n        purchase_price: Original purchase price.\n        asset_type: Type of asset sold.\n        holding_period_days: Days held before sale.\n        inflation_index_purchase: Cost Inflation Index for purchase year.\n        inflation_index_sale: Cost Inflation Index for sale year.\n        expenses_on_sale: Expenses incurred during sale.\n        improvements: Cost of improvements (for real estate).\n\nReturns:\n        Standard envelope with STCG/LTCG breakdown, tax rates, and liability.\n\nNotes:\n        Budget 2024 rates: STCG 20% (equity/MF), LTCG 12.5% (equity/MF threshold 100K).\n        Real estate without indexation taxed at 20%.\n",
+    "name": "calculate_capital_gains",
+    "parameters": {
+      "properties": {
+        "asset_type": {
+          "default": "equity",
+          "description": "Asset type: equity, mutual_fund, real_estate, gold, debentures, crypto",
+          "title": "Asset Type",
+          "type": "string"
+        },
+        "expenses_on_sale": {
+          "default": 0,
+          "description": "Brokerage, registration and other expenses on sale",
+          "title": "Expenses On Sale",
+          "type": "number"
+        },
+        "holding_period_days": {
+          "default": 365,
+          "description": "Number of days held before sale",
+          "title": "Holding Period Days",
+          "type": "integer"
+        },
+        "improvements": {
+          "default": 0,
+          "description": "Cost of improvements (for real estate)",
+          "title": "Improvements",
+          "type": "number"
+        },
+        "inflation_index_purchase": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "CII for purchase year (for indexation)",
+          "title": "Inflation Index Purchase"
+        },
+        "inflation_index_sale": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "CII for sale year (for indexation)",
+          "title": "Inflation Index Sale"
+        },
+        "purchase_price": {
+          "description": "Original purchase price in rupees",
+          "title": "Purchase Price",
+          "type": "number"
+        },
+        "sale_price": {
+          "description": "Sale proceeds in rupees",
+          "title": "Sale Price",
+          "type": "number"
+        }
+      },
+      "required": [
+        "sale_price",
+        "purchase_price"
+      ],
+      "title": "calculate_capital_gainsArguments",
+      "type": "object"
+    }
+  },
+  "calculate_court_fee": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate ad valorem court fees for a specific state.\n\nUse when you need to estimate the court fee required to be paid for filing a suit.\n\nArgs:\n    state_code: State code (e.g., 'MH', 'DL', 'KA').\n    suit_value: Value of the suit.\n    suit_type: Type of suit.\n\nReturns:\n    Standard envelope with calculated court fee and computation details.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
+    "name": "calculate_court_fee",
+    "parameters": {
+      "properties": {
+        "state_code": {
+          "description": "State code where suit is filed (e.g., MH, DL, KA)",
+          "title": "State Code",
+          "type": "string"
+        },
+        "suit_type": {
+          "default": "money",
+          "description": "Type of suit (default: 'money')",
+          "title": "Suit Type",
+          "type": "string"
+        },
+        "suit_value": {
+          "description": "Value of the suit in INR",
+          "title": "Suit Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "state_code",
+        "suit_value"
+      ],
+      "title": "calculate_court_feeArguments",
+      "type": "object"
+    }
+  },
+  "calculate_emi": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate EMI for a loan with year-by-year amortization schedule.\n\nUse when computing loan EMIs, comparing loan options, or planning\nprepayment strategies.\n\nArgs:\n    principal: Loan amount in INR.\n    annual_interest_rate: Annual rate as percentage.\n    tenure_months: Loan tenure in months (max 360).\n    loan_type: Label for the loan type.\n\nReturns:\n    Standard envelope with EMI, total payment, interest, and amortization.\n\nNotes:\n    Uses standard reducing balance formula. Actual EMI may vary by lender.\n",
+    "name": "calculate_emi",
+    "parameters": {
+      "properties": {
+        "annual_interest_rate": {
+          "description": "Annual interest rate as percentage (e.g., 8.5)",
+          "title": "Annual Interest Rate",
+          "type": "number"
+        },
+        "loan_type": {
+          "default": "other",
+          "description": "Loan type: home, personal, car, education, other",
+          "title": "Loan Type",
+          "type": "string"
+        },
+        "principal": {
+          "description": "Loan amount in INR",
+          "title": "Principal",
+          "type": "number"
+        },
+        "tenure_months": {
+          "description": "Loan tenure in months",
+          "title": "Tenure Months",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "principal",
+        "annual_interest_rate",
+        "tenure_months"
+      ],
+      "title": "calculate_emiArguments",
+      "type": "object"
+    }
+  },
+  "calculate_epf_esic": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate EPF and ESIC contributions for employer and employee.\n\nUse when computing payroll costs, employee deductions, or comparing\nCTC structures across different salary levels.\n\nArgs:\n    basic_wages: Basic salary + DA per month in INR.\n    gross_wages: Total gross monthly salary in INR.\n    include_employer_share: If True, return employer costs.\n\nReturns:\n    Standard envelope with EPF breakdown, ESIC applicability, and totals.\n\nNotes:\n    EPF ceiling is \u20b915,000/month for statutory computation.\n    ESIC applicable when gross wages \u2264 \u20b921,000/month.\n",
+    "name": "calculate_epf_esic",
+    "parameters": {
+      "properties": {
+        "basic_wages": {
+          "description": "Basic salary + DA per month in INR",
+          "title": "Basic Wages",
+          "type": "number"
+        },
+        "gross_wages": {
+          "description": "Total gross monthly salary in INR",
+          "title": "Gross Wages",
+          "type": "number"
+        },
+        "include_employer_share": {
+          "default": true,
+          "description": "If True, return employer costs",
+          "title": "Include Employer Share",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "basic_wages",
+        "gross_wages"
+      ],
+      "title": "calculate_epf_esicArguments",
+      "type": "object"
+    }
+  },
+  "calculate_fd_maturity": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate Fixed Deposit maturity amount.\n\nUse when projecting FD returns or comparing deposit options.\n\nArgs:\n    principal: Deposit amount in INR\n    annual_interest_rate: Rate as percentage\n    tenure_days: Deposit tenure in days\n    compounding: Compounding frequency\n    is_senior_citizen: Senior citizen flag (0.25% extra rate)\n    tds_applicable: Apply TDS if interest > \u20b940,000/yr\n\nReturns:\n    Maturity amount with interest breakdown and TDS if applicable.\n",
+    "name": "calculate_fd_maturity",
+    "parameters": {
+      "properties": {
+        "annual_interest_rate": {
+          "description": "Interest rate as percentage (e.g., 6.5)",
+          "title": "Annual Interest Rate",
+          "type": "number"
+        },
+        "compounding": {
+          "default": "quarterly",
+          "description": "monthly, quarterly, half_yearly, yearly, simple",
+          "title": "Compounding",
+          "type": "string"
+        },
+        "is_senior_citizen": {
+          "default": false,
+          "description": "Senior citizen flag",
+          "title": "Is Senior Citizen",
+          "type": "boolean"
+        },
+        "principal": {
+          "description": "Deposit amount in INR",
+          "title": "Principal",
+          "type": "number"
+        },
+        "tds_applicable": {
+          "default": true,
+          "description": "Apply 10% TDS if interest exceeds threshold",
+          "title": "Tds Applicable",
+          "type": "boolean"
+        },
+        "tenure_days": {
+          "description": "Deposit tenure in days",
+          "title": "Tenure Days",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "principal",
+        "annual_interest_rate",
+        "tenure_days"
+      ],
+      "title": "calculate_fd_maturityArguments",
+      "type": "object"
+    }
+  },
+  "calculate_gratuity": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate gratuity under the Payment of Gratuity Act, 1972.\n\nUse when computing terminal benefits, comparing CTC packages, or\nplanning retirement benefits.\n\nArgs:\n    last_drawn_salary: Basic + DA per month.\n    years_of_service: Total service duration.\n    is_covered_under_act: True for establishments with 10+ employees.\n\nReturns:\n    Standard envelope with gratuity amount, tax-exempt limit, and breakdown.\n\nNotes:\n    Minimum 5 years service required (except death/disablement).\n    Tax-exempt ceiling is \u20b920,00,000.\n",
+    "name": "calculate_gratuity",
+    "parameters": {
+      "properties": {
+        "is_covered_under_act": {
+          "default": true,
+          "description": "True if establishment has 10+ employees",
+          "title": "Is Covered Under Act",
+          "type": "boolean"
+        },
+        "last_drawn_salary": {
+          "description": "Last basic salary + DA per month in INR",
+          "title": "Last Drawn Salary",
+          "type": "number"
+        },
+        "years_of_service": {
+          "description": "Total years served (e.g., 5.8 = 5 yrs 9 months)",
+          "title": "Years Of Service",
+          "type": "number"
+        }
+      },
+      "required": [
+        "last_drawn_salary",
+        "years_of_service"
+      ],
+      "title": "calculate_gratuityArguments",
+      "type": "object"
+    }
+  },
+  "calculate_gst": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate GST breakdown with CGST/SGST/IGST split and optional cess.\n\nUse when computing tax for invoices, quotations, or GST compliance.\n\nArgs:\n        amount: Base amount or GST-inclusive amount in rupees.\n        gst_rate: Valid GST rate percentage.\n        transaction_type: 'intra_state' or 'inter_state'.\n        amount_includes_gst: Set True to back-calculate base.\n        cess_category: For 28% items, specify applicable cess.\n\nReturns:\n        Standard envelope with base amount, CGST/SGST/IGST breakdown,\n        cess amount, total GST, and total payable amount.\n\nNotes:\n        Rates are for general reference. Actual classification may vary.\n",
+    "name": "calculate_gst",
+    "parameters": {
+      "properties": {
+        "amount": {
+          "description": "Base amount in rupees (or inclusive amount if flagged)",
+          "title": "Amount",
+          "type": "number"
+        },
+        "amount_includes_gst": {
+          "default": false,
+          "description": "If True, back-calculate base from GST-inclusive amount",
+          "title": "Amount Includes Gst",
+          "type": "boolean"
+        },
+        "cess_category": {
+          "default": "default",
+          "description": "Cess category for 28% items. Default: 'default' (no cess)",
+          "title": "Cess Category",
+          "type": "string"
+        },
+        "gst_rate": {
+          "description": "GST rate as percentage: 0, 0.1, 0.25, 1.5, 3, 5, 12, 18, 28",
+          "title": "Gst Rate",
+          "type": "number"
+        },
+        "transaction_type": {
+          "description": "'intra_state' (CGST+SGST) or 'inter_state' (IGST)",
+          "title": "Transaction Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "gst_rate",
+        "transaction_type"
+      ],
+      "title": "calculate_gstArguments",
+      "type": "object"
+    }
+  },
+  "calculate_gst_late_fee": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate GST late filing penalty.\n\nUse when estimating late filing fees or planning compliance.\n\nArgs:\n    return_type: \"GSTR1\", \"GSTR3B\", or \"GSTR9\"\n    days_delayed: Number of days delayed\n    annual_turnover: Annual turnover for cap calculation\n    has_nil_liability: True if nil return\n\nReturns:\n    Late fee breakdown with CGST/SGST split.\n",
+    "name": "calculate_gst_late_fee",
+    "parameters": {
+      "properties": {
+        "annual_turnover": {
+          "description": "Annual turnover in INR",
+          "title": "Annual Turnover",
+          "type": "number"
+        },
+        "days_delayed": {
+          "description": "Number of days delayed",
+          "title": "Days Delayed",
+          "type": "integer"
+        },
+        "has_nil_liability": {
+          "default": false,
+          "description": "True if nil return",
+          "title": "Has Nil Liability",
+          "type": "boolean"
+        },
+        "return_type": {
+          "description": "GSTR1, GSTR3B, or GSTR9",
+          "title": "Return Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "return_type",
+        "days_delayed",
+        "annual_turnover"
+      ],
+      "title": "calculate_gst_late_feeArguments",
+      "type": "object"
+    }
+  },
+  "calculate_home_vs_rent": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Compare buying vs renting financial outcome.\n\nUse when deciding between buying a home or renting.\n\nArgs:\n    home_price: Property price in INR\n    down_payment_percent: Down payment as %\n    loan_interest_rate: Home loan interest rate %\n    loan_tenure_years: Loan tenure\n    monthly_rent: Current monthly rent\n    annual_rent_increase: Expected rent increase %/year\n    expected_property_appreciation: Property appreciation %/year\n    investment_return: Return on invested down payment %\n    analysis_years: Years to compare\n\nReturns:\n    Buy/rent comparison with yearly breakdown and break-even analysis.\n",
+    "name": "calculate_home_vs_rent",
+    "parameters": {
+      "properties": {
+        "analysis_years": {
+          "default": 20,
+          "description": "Years to compare",
+          "title": "Analysis Years",
+          "type": "integer"
+        },
+        "annual_rent_increase": {
+          "default": 5.0,
+          "description": "Expected rent increase percentage/year",
+          "title": "Annual Rent Increase",
+          "type": "number"
+        },
+        "down_payment_percent": {
+          "default": 20.0,
+          "description": "Down payment as percentage",
+          "title": "Down Payment Percent",
+          "type": "number"
+        },
+        "expected_property_appreciation": {
+          "default": 6.0,
+          "description": "Property appreciation percentage/year",
+          "title": "Expected Property Appreciation",
+          "type": "number"
+        },
+        "home_price": {
+          "description": "Property price in INR",
+          "title": "Home Price",
+          "type": "number"
+        },
+        "investment_return": {
+          "default": 12.0,
+          "description": "Return on invested down payment percentage",
+          "title": "Investment Return",
+          "type": "number"
+        },
+        "loan_interest_rate": {
+          "default": 8.5,
+          "description": "Home loan interest rate percentage",
+          "title": "Loan Interest Rate",
+          "type": "number"
+        },
+        "loan_tenure_years": {
+          "default": 20,
+          "description": "Loan tenure in years",
+          "title": "Loan Tenure Years",
+          "type": "integer"
+        },
+        "monthly_rent": {
+          "default": 25000,
+          "description": "Current monthly rent in INR",
+          "title": "Monthly Rent",
+          "type": "number"
+        }
+      },
+      "required": [
+        "home_price"
+      ],
+      "title": "calculate_home_vs_rentArguments",
+      "type": "object"
+    }
+  },
+  "calculate_hra_exemption": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate House Rent Allowance (HRA) exemption under Section 10(13A).\n\nUse when computing tax-exempt HRA component for salary structuring or\nincome tax filing. Compares three conditions and takes minimum.\n\nArgs:\n        basic_salary: Monthly basic salary.\n        hra_received: Annual HRA received from employer.\n        rent_paid: Annual rent paid.\n        city_type: 'metro' (50% of salary) or 'non_metro' (40% of salary).\n        is_government_employee: Use simplified formula for government employees.\n\nReturns:\n        Standard envelope with exemption amount, taxable HRA, and breakdown.\n\nNotes:\n        The actual exemption is the minimum of:\n        1. HRA received\n        2. Rent paid minus 10% of salary\n        3. 50% of salary (metro) or 40% (non_metro)\n",
+    "name": "calculate_hra_exemption",
+    "parameters": {
+      "properties": {
+        "basic_salary": {
+          "description": "Monthly basic salary in rupees",
+          "title": "Basic Salary",
+          "type": "number"
+        },
+        "city_type": {
+          "default": "non_metro",
+          "description": "'metro' (Delhi/Mumbai/Chennai/Kolkata) or 'non_metro'",
+          "title": "City Type",
+          "type": "string"
+        },
+        "hra_received": {
+          "description": "Annual HRA received from employer in rupees",
+          "title": "Hra Received",
+          "type": "number"
+        },
+        "is_government_employee": {
+          "default": false,
+          "description": "True for government employees using simplified formula",
+          "title": "Is Government Employee",
+          "type": "boolean"
+        },
+        "rent_paid": {
+          "description": "Annual rent paid in rupees",
+          "title": "Rent Paid",
+          "type": "number"
+        }
+      },
+      "required": [
+        "basic_salary",
+        "hra_received",
+        "rent_paid"
+      ],
+      "title": "calculate_hra_exemptionArguments",
+      "type": "object"
+    }
+  },
+  "calculate_income_tax": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate Indian income tax for FY2025-26 under old, new, or both regimes.\n\nUse when computing tax liability, comparing regimes, or planning deductions.\nIncludes slab computation, Section 87A rebate, surcharge with marginal relief,\nand health & education cess.\n\nArgs:\n        gross_income: Annual gross income in rupees.\n        regime: 'new', 'old', or 'both' for side-by-side comparison.\n        taxpayer_type: Category for slab selection.\n        deduction_80c: Old regime only \u2014 Section 80C amount.\n        deduction_80d_self: Old regime only \u2014 medical insurance self.\n        deduction_80d_parents: Old regime only \u2014 medical insurance parents.\n        deduction_80d_senior_parents: Old regime only \u2014 senior parent flag.\n        deduction_80ccd_nps: Old regime only \u2014 NPS additional.\n        deduction_24b: Old regime only \u2014 home loan interest.\n        other_deductions: Old regime only \u2014 other amounts.\n\nReturns:\n        Standard envelope with per-regime breakdown, effective rate, monthly tax,\n        take-home, and regime recommendation when both requested.\n\nNotes:\n        FY2025-26 rates. Estimate only \u2014 consult a CA for filing.\n",
+    "name": "calculate_income_tax",
+    "parameters": {
+      "properties": {
+        "deduction_24b": {
+          "default": 0,
+          "description": "Home loan interest under Section 24(b), capped at 2L",
+          "title": "Deduction 24B",
+          "type": "number"
+        },
+        "deduction_80c": {
+          "default": 0,
+          "description": "Section 80C deduction (PF, ELSS, LIC), capped at 1.5L",
+          "title": "Deduction 80C",
+          "type": "number"
+        },
+        "deduction_80ccd_nps": {
+          "default": 0,
+          "description": "Additional NPS deduction under 80CCD(1B), capped at 50K",
+          "title": "Deduction 80Ccd Nps",
+          "type": "number"
+        },
+        "deduction_80d_parents": {
+          "default": 0,
+          "description": "Section 80D medical insurance parents, capped at 25K/50K",
+          "title": "Deduction 80D Parents",
+          "type": "number"
+        },
+        "deduction_80d_self": {
+          "default": 0,
+          "description": "Section 80D medical insurance self, capped at 25K",
+          "title": "Deduction 80D Self",
+          "type": "number"
+        },
+        "deduction_80d_senior_parents": {
+          "default": false,
+          "description": "If True, parents 80D cap is 50K instead of 25K",
+          "title": "Deduction 80D Senior Parents",
+          "type": "boolean"
+        },
+        "gross_income": {
+          "description": "Annual gross income in rupees. Example: 1500000",
+          "title": "Gross Income",
+          "type": "number"
+        },
+        "other_deductions": {
+          "default": 0,
+          "description": "Other deductions (no cap)",
+          "title": "Other Deductions",
+          "type": "number"
+        },
+        "regime": {
+          "default": "both",
+          "description": "Tax regime: 'new', 'old', or 'both' for comparison",
+          "title": "Regime",
+          "type": "string"
+        },
+        "taxpayer_type": {
+          "default": "individual",
+          "description": "'individual', 'senior_citizen', or 'super_senior_citizen'",
+          "title": "Taxpayer Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "gross_income"
+      ],
+      "title": "calculate_income_taxArguments",
+      "type": "object"
+    }
+  },
+  "calculate_income_tax_interest": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate interest under Sections 234A, 234B, 234C.\n\nUse when computing penalty interest for late tax filing or short advance tax payments.\n\nArgs:\n    total_tax_liability: Total tax liability\n    tds_deducted: TDS already deducted\n    advance_tax_paid: Dict with q1,q2,q3,q4 quarterly payments\n    filing_date: YYYY-MM-DD when return filed (None if not filed)\n    due_date: Due date for filing\n\nReturns:\n    Interest breakdown for Sections 234A, 234B, 234C.\n",
+    "name": "calculate_income_tax_interest",
+    "parameters": {
+      "properties": {
+        "advance_tax_paid": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "number"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Dict with q1,q2,q3,q4 quarterly payments",
+          "title": "Advance Tax Paid"
+        },
+        "due_date": {
+          "default": "2025-07-31",
+          "description": "Due date YYYY-MM-DD",
+          "title": "Due Date",
+          "type": "string"
+        },
+        "filing_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Filing date YYYY-MM-DD or None if not filed",
+          "title": "Filing Date"
+        },
+        "tds_deducted": {
+          "default": 0.0,
+          "description": "TDS already deducted in INR",
+          "title": "Tds Deducted",
+          "type": "number"
+        },
+        "total_tax_liability": {
+          "description": "Total tax liability in INR",
+          "title": "Total Tax Liability",
+          "type": "number"
+        }
+      },
+      "required": [
+        "total_tax_liability"
+      ],
+      "title": "calculate_income_tax_interestArguments",
+      "type": "object"
+    }
+  },
+  "calculate_leave_encashment_tax": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate tax-exempt portion of leave encashment under Section 10(10AA).\n\nUse when computing leave encashment tax exemption or planning retirement benefits.\n\nArgs:\n    leave_encashment_amount: Actual amount received\n    average_monthly_salary: Average of last 10 months basic + DA\n    earned_leave_balance_days: Days of earned leave\n    years_of_service: Total years of service\n    is_government_employee: Government employee flag\n\nReturns:\n    Exemption amount and taxable portion breakdown.\n",
+    "name": "calculate_leave_encashment_tax",
+    "parameters": {
+      "properties": {
+        "average_monthly_salary": {
+          "description": "Average of last 10 months basic + DA",
+          "title": "Average Monthly Salary",
+          "type": "number"
+        },
+        "earned_leave_balance_days": {
+          "description": "Days of earned leave",
+          "title": "Earned Leave Balance Days",
+          "type": "integer"
+        },
+        "is_government_employee": {
+          "default": false,
+          "description": "Government employee flag",
+          "title": "Is Government Employee",
+          "type": "boolean"
+        },
+        "leave_encashment_amount": {
+          "description": "Actual amount received in INR",
+          "title": "Leave Encashment Amount",
+          "type": "number"
+        },
+        "years_of_service": {
+          "description": "Total years of service",
+          "title": "Years Of Service",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "leave_encashment_amount",
+        "average_monthly_salary",
+        "earned_leave_balance_days",
+        "years_of_service"
+      ],
+      "title": "calculate_leave_encashment_taxArguments",
+      "type": "object"
+    }
+  },
+  "calculate_limitation_deadline": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate the deadline under the Limitation Act.\n\nUse when computing the last date to file a suit, appeal, or application based on\ncause of action.\n\nArgs:\n    suit_type: Type of suit/appeal/application.\n    cause_of_action_date: Date the cause of action arose (YYYY-MM-DD).\n\nReturns:\n    Standard envelope with deadline date and limitation period.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
+    "name": "calculate_limitation_deadline",
+    "parameters": {
+      "properties": {
+        "cause_of_action_date": {
+          "description": "Date when the cause of action arose (YYYY-MM-DD)",
+          "title": "Cause Of Action Date",
+          "type": "string"
+        },
+        "suit_type": {
+          "description": "Type of suit/appeal/application to calculate limitation for",
+          "title": "Suit Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "suit_type",
+        "cause_of_action_date"
+      ],
+      "title": "calculate_limitation_deadlineArguments",
+      "type": "object"
+    }
+  },
+  "calculate_neft_rtgs_imps_charges": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate NEFT/RTGS/IMPS/UPI transaction charges.\n\nUse when estimating bank transfer costs or comparing payment modes.\n\nArgs:\n    transfer_mode: \"NEFT\", \"RTGS\", \"IMPS\", or \"UPI\"\n    amount: Transfer amount in INR\n    account_type: \"savings\" or \"current\"\n    is_online: True if done via online banking\n\nReturns:\n    Charge breakdown with base charge, GST, and total.\n",
+    "name": "calculate_neft_rtgs_imps_charges",
+    "parameters": {
+      "properties": {
+        "account_type": {
+          "default": "savings",
+          "description": "'savings' or 'current'",
+          "title": "Account Type",
+          "type": "string"
+        },
+        "amount": {
+          "description": "Transfer amount in INR",
+          "title": "Amount",
+          "type": "number"
+        },
+        "is_online": {
+          "default": true,
+          "description": "True if done via online banking",
+          "title": "Is Online",
+          "type": "boolean"
+        },
+        "transfer_mode": {
+          "description": "NEFT, RTGS, IMPS, or UPI",
+          "title": "Transfer Mode",
+          "type": "string"
+        }
+      },
+      "required": [
+        "transfer_mode",
+        "amount"
+      ],
+      "title": "calculate_neft_rtgs_imps_chargesArguments",
+      "type": "object"
+    }
+  },
+  "calculate_nps_projection": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate NPS corpus and monthly pension at retirement.\n\nUse when planning retirement with NPS or projecting pension.\n\nArgs:\n    monthly_contribution: Monthly NPS contribution\n    current_age: Current age\n    retirement_age: Retirement age (default 60)\n    expected_annual_return: Expected annual return %\n    annuity_rate: Annuity rate %\n    annuity_percent: % of corpus to buy annuity (min 40%)\n\nReturns:\n    Projected corpus, lump sum, and monthly pension estimate.\n",
+    "name": "calculate_nps_projection",
+    "parameters": {
+      "properties": {
+        "annuity_percent": {
+          "default": 40.0,
+          "description": "Corpus for annuity (min 40%)",
+          "title": "Annuity Percent",
+          "type": "number"
+        },
+        "annuity_rate": {
+          "default": 6.0,
+          "description": "Annuity rate percentage",
+          "title": "Annuity Rate",
+          "type": "number"
+        },
+        "current_age": {
+          "description": "Current age",
+          "title": "Current Age",
+          "type": "integer"
+        },
+        "expected_annual_return": {
+          "default": 10.0,
+          "description": "Expected annual return percentage",
+          "title": "Expected Annual Return",
+          "type": "number"
+        },
+        "monthly_contribution": {
+          "description": "Monthly NPS contribution in INR",
+          "title": "Monthly Contribution",
+          "type": "number"
+        },
+        "retirement_age": {
+          "default": 60,
+          "description": "Retirement age",
+          "title": "Retirement Age",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "monthly_contribution",
+        "current_age"
+      ],
+      "title": "calculate_nps_projectionArguments",
+      "type": "object"
+    }
+  },
+  "calculate_ppf_maturity": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate PPF maturity amount with year-by-year breakdown.\n\nUse when planning long-term savings, comparing investment options, or\ncalculating retirement corpus.\n\nArgs:\n    annual_investment: Amount invested per year (max \u20b91,50,000).\n    tenure_years: PPF tenure (15, 20, 25, or 30 years).\n    annual_interest_rate: PPF rate (default 7.1% for FY2025-26).\n\nReturns:\n    Standard envelope with maturity amount, total invested, interest earned.\n\nNotes:\n    EEE tax status: exempt at investment, accumulation, and maturity.\n    Rate is government-administered and revised quarterly.\n",
+    "name": "calculate_ppf_maturity",
+    "parameters": {
+      "properties": {
+        "annual_interest_rate": {
+          "default": 7.1,
+          "description": "Annual interest rate percentage (default 7.1 for FY2025-26)",
+          "title": "Annual Interest Rate",
+          "type": "number"
+        },
+        "annual_investment": {
+          "description": "Amount invested per year in INR",
+          "title": "Annual Investment",
+          "type": "number"
+        },
+        "tenure_years": {
+          "default": 15,
+          "description": "PPF tenure in years (15, 20, 25, or 30)",
+          "title": "Tenure Years",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "annual_investment"
+      ],
+      "title": "calculate_ppf_maturityArguments",
+      "type": "object"
+    }
+  },
+  "calculate_presumptive_tax": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate tax under presumptive scheme (Sections 44AD, 44ADA).\n\nUse when computing tax for small businesses or professionals under presumptive taxation.\n\nArgs:\n    scheme: \"44AD\" or \"44ADA\"\n    gross_receipts: Total gross receipts\n    digital_receipt_percent: % of receipts via digital mode\n    regime: \"new\" or \"old\"\n    age: Assessee age\n    deductions_80c: Section 80C deductions (old regime)\n\nReturns:\n    Presumptive income and total tax payable.\n",
+    "name": "calculate_presumptive_tax",
+    "parameters": {
+      "properties": {
+        "age": {
+          "default": 35,
+          "description": "Assessee age",
+          "title": "Age",
+          "type": "integer"
+        },
+        "deductions_80c": {
+          "default": 0,
+          "description": "Section 80C deductions (old regime)",
+          "title": "Deductions 80C",
+          "type": "number"
+        },
+        "digital_receipt_percent": {
+          "default": 100.0,
+          "description": "Percentage via digital mode",
+          "title": "Digital Receipt Percent",
+          "type": "number"
+        },
+        "gross_receipts": {
+          "description": "Total gross receipts in INR",
+          "title": "Gross Receipts",
+          "type": "number"
+        },
+        "regime": {
+          "default": "new",
+          "description": "'new' or 'old' tax regime",
+          "title": "Regime",
+          "type": "string"
+        },
+        "scheme": {
+          "description": "'44AD' for business or '44ADA' for professionals",
+          "title": "Scheme",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scheme",
+        "gross_receipts"
+      ],
+      "title": "calculate_presumptive_taxArguments",
+      "type": "object"
+    }
+  },
+  "calculate_professional_tax": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate state-wise professional tax.\n\nUse when computing total tax liability including professional tax deductions.\n\nArgs:\n    gross_salary_monthly: Monthly gross salary\n    state_code: 2-char state code (e.g., \"MH\", \"KA\", \"TN\")\n\nReturns:\n    Monthly and annual professional tax amount.\n",
+    "name": "calculate_professional_tax",
+    "parameters": {
+      "properties": {
+        "gross_salary_monthly": {
+          "description": "Monthly gross salary in INR",
+          "title": "Gross Salary Monthly",
+          "type": "number"
+        },
+        "state_code": {
+          "description": "2-char state code (e.g., MH, KA, TN)",
+          "title": "State Code",
+          "type": "string"
+        }
+      },
+      "required": [
+        "gross_salary_monthly",
+        "state_code"
+      ],
+      "title": "calculate_professional_taxArguments",
+      "type": "object"
+    }
+  },
+  "calculate_rd_maturity": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate Recurring Deposit maturity amount.\n\nUse when projecting RD returns or planning recurring deposits.\n\nArgs:\n    monthly_installment: Monthly deposit amount\n    annual_interest_rate: Annual rate as percentage\n    tenure_months: Deposit tenure in months\n\nReturns:\n    Maturity amount with total interest earned.\n",
+    "name": "calculate_rd_maturity",
+    "parameters": {
+      "properties": {
+        "annual_interest_rate": {
+          "description": "Annual interest rate as percentage",
+          "title": "Annual Interest Rate",
+          "type": "number"
+        },
+        "monthly_installment": {
+          "description": "Monthly deposit amount in INR",
+          "title": "Monthly Installment",
+          "type": "number"
+        },
+        "tenure_months": {
+          "description": "Deposit tenure in months",
+          "title": "Tenure Months",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "monthly_installment",
+        "annual_interest_rate",
+        "tenure_months"
+      ],
+      "title": "calculate_rd_maturityArguments",
+      "type": "object"
+    }
+  },
+  "calculate_rti_deadline": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate standard, life/liberty, or APIO-routed RTI response deadlines.\n\nUse when determining the due date for receiving a response to an RTI application.\n\nArgs:\n    filed_date: Date filed (YYYY-MM-DD).\n    concerns_life_or_liberty: True if information concerns life or liberty.\n    routed_through_apio: True if submitted via Assistant PIO.\n\nReturns:\n    Standard envelope with the calculated deadline date.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
+    "name": "calculate_rti_deadline",
+    "parameters": {
+      "properties": {
+        "concerns_life_or_liberty": {
+          "default": false,
+          "description": "Whether the info sought concerns life or liberty of a person",
+          "title": "Concerns Life Or Liberty",
+          "type": "boolean"
+        },
+        "filed_date": {
+          "description": "Date the RTI application was filed (YYYY-MM-DD)",
+          "title": "Filed Date",
+          "type": "string"
+        },
+        "routed_through_apio": {
+          "default": false,
+          "description": "Whether the application was submitted through an APIO",
+          "title": "Routed Through Apio",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "filed_date"
+      ],
+      "title": "calculate_rti_deadlineArguments",
+      "type": "object"
+    }
+  },
+  "calculate_rti_fee": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate the required RTI application fee for central or state authorities.\n\nUse when determining the application fee required to file an RTI request.\n\nArgs:\n    state_code: State code or 'central'.\n    applicant_category: 'general' or 'bpl' (Below Poverty Line).\n\nReturns:\n    Standard envelope with the applicable fee amount and mode of payment.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
+    "name": "calculate_rti_fee",
+    "parameters": {
+      "properties": {
+        "applicant_category": {
+          "default": "general",
+          "description": "Category of the applicant ('general' or 'bpl')",
+          "title": "Applicant Category",
+          "type": "string"
+        },
+        "state_code": {
+          "default": "central",
+          "description": "State code or 'central' (default: 'central')",
+          "title": "State Code",
+          "type": "string"
+        }
+      },
+      "title": "calculate_rti_feeArguments",
+      "type": "object"
+    }
+  },
+  "calculate_rti_penalty_estimate": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Estimate potential penalties for delayed RTI responses under Section 20.\n\nUse when computing the estimated penalty that may be imposed on a PIO for delay.\n\nArgs:\n    due_date: Due date of the response (YYYY-MM-DD).\n    response_received_date: Actual response date (YYYY-MM-DD) or None if still pending.\n\nReturns:\n    Standard envelope with penalty estimate and days delayed.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
+    "name": "calculate_rti_penalty_estimate",
+    "parameters": {
+      "properties": {
+        "due_date": {
+          "description": "The date the RTI response was due (YYYY-MM-DD)",
+          "title": "Due Date",
+          "type": "string"
+        },
+        "response_received_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Date the response was received, if any (YYYY-MM-DD)",
+          "title": "Response Received Date"
+        }
+      },
+      "required": [
+        "due_date"
+      ],
+      "title": "calculate_rti_penalty_estimateArguments",
+      "type": "object"
+    }
+  },
+  "calculate_salary_restructuring": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate salary restructuring options for tax optimization.\n\nUse when advising employees on tax-efficient salary structures,\ncomparing restructuring options, or planning CTC optimization.\n\nArgs:\n    current_gross: Current gross annual salary in INR\n    current_basic_ratio: Current basic salary as ratio of gross\n    structure_type: Structure option (standard, optimized, startup)\n    include_meal_card: Include Sodexo/Food card allowance\n    include_wallet_allowance: Include flexible wallet allowance\n    has_hra: Employee receives HRA\n    rent_in_metro: Rent paid in metro city (higher HRA)\n    family_medical: Include family medical insurance\n    parents_medical: Include parents medical insurance\n\nReturns:\n    Standard envelope with tax-optimized structure, deductions, and estimated tax\n",
+    "name": "calculate_salary_restructuring",
+    "parameters": {
+      "properties": {
+        "current_basic_ratio": {
+          "default": 0.5,
+          "description": "Current basic salary as ratio of gross (0.40-0.60)",
+          "title": "Current Basic Ratio",
+          "type": "number"
+        },
+        "current_gross": {
+          "description": "Current gross annual salary in INR",
+          "title": "Current Gross",
+          "type": "number"
+        },
+        "family_medical": {
+          "default": false,
+          "description": "Include family medical insurance",
+          "title": "Family Medical",
+          "type": "boolean"
+        },
+        "has_hra": {
+          "default": true,
+          "description": "Employee receives HRA",
+          "title": "Has Hra",
+          "type": "boolean"
+        },
+        "include_meal_card": {
+          "default": false,
+          "description": "Include Sodexo/Food card allowance",
+          "title": "Include Meal Card",
+          "type": "boolean"
+        },
+        "include_wallet_allowance": {
+          "default": false,
+          "description": "Include flexible wallet allowance",
+          "title": "Include Wallet Allowance",
+          "type": "boolean"
+        },
+        "parents_medical": {
+          "default": false,
+          "description": "Include parents medical insurance (additional)",
+          "title": "Parents Medical",
+          "type": "boolean"
+        },
+        "rent_in_metro": {
+          "default": false,
+          "description": "Rent paid in metro city (higher HRA)",
+          "title": "Rent In Metro",
+          "type": "boolean"
+        },
+        "structure_type": {
+          "default": "standard",
+          "description": "Structure option: standard, optimized, or startup",
+          "title": "Structure Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "current_gross"
+      ],
+      "title": "calculate_salary_restructuringArguments",
+      "type": "object"
+    }
+  },
+  "calculate_sip_returns": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate SIP maturity with inflation-adjusted returns.\n\nUse when projecting mutual fund SIP returns or planning systematic investments.\n\nArgs:\n    monthly_investment: Monthly SIP amount\n    expected_annual_return: Expected CAGR %\n    tenure_years: Investment tenure\n    inflation_rate: Expected inflation %\n\nReturns:\n    Corpus with wealth gained and inflation-adjusted value.\n",
+    "name": "calculate_sip_returns",
+    "parameters": {
+      "properties": {
+        "expected_annual_return": {
+          "description": "Expected CAGR as percentage",
+          "title": "Expected Annual Return",
+          "type": "number"
+        },
+        "inflation_rate": {
+          "default": 6.0,
+          "description": "Expected inflation rate percentage",
+          "title": "Inflation Rate",
+          "type": "number"
+        },
+        "monthly_investment": {
+          "description": "Monthly SIP amount in INR",
+          "title": "Monthly Investment",
+          "type": "number"
+        },
+        "tenure_years": {
+          "description": "Investment tenure in years",
+          "title": "Tenure Years",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "monthly_investment",
+        "expected_annual_return",
+        "tenure_years"
+      ],
+      "title": "calculate_sip_returnsArguments",
+      "type": "object"
+    }
+  },
+  "calculate_stamp_duty": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate state stamp duty for various instruments.\n\nUse when estimating the stamp duty payable on legal documents like conveyance or lease.\n\nArgs:\n    state_code: State code (e.g., 'MH', 'DL', 'KA').\n    instrument_type: Type of instrument.\n    transaction_value: Value of the transaction.\n\nReturns:\n    Standard envelope with stamp duty amount and surcharge components.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
+    "name": "calculate_stamp_duty",
+    "parameters": {
+      "properties": {
+        "instrument_type": {
+          "description": "Type of instrument (e.g., conveyance, lease, agreement)",
+          "title": "Instrument Type",
+          "type": "string"
+        },
+        "state_code": {
+          "description": "State code where instrument is executed (e.g., MH, DL, KA)",
+          "title": "State Code",
+          "type": "string"
+        },
+        "transaction_value": {
+          "description": "Value of the transaction/consideration in INR",
+          "title": "Transaction Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "state_code",
+        "instrument_type",
+        "transaction_value"
+      ],
+      "title": "calculate_stamp_dutyArguments",
+      "type": "object"
+    }
+  },
+  "calculate_step_up_sip": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate SIP with annual step-up increment.\n\nUse when comparing step-up SIP vs flat SIP or planning salary-linked investments.\n\nArgs:\n    initial_monthly_investment: Starting SIP amount\n    annual_step_up_percent: % increase each year\n    expected_annual_return: Expected CAGR %\n    tenure_years: Investment tenure\n\nReturns:\n    Corpus comparison between step-up and flat SIP.\n",
+    "name": "calculate_step_up_sip",
+    "parameters": {
+      "properties": {
+        "annual_step_up_percent": {
+          "description": "Annual step-up percentage",
+          "title": "Annual Step Up Percent",
+          "type": "number"
+        },
+        "expected_annual_return": {
+          "description": "Expected CAGR as percentage",
+          "title": "Expected Annual Return",
+          "type": "number"
+        },
+        "initial_monthly_investment": {
+          "description": "Starting SIP amount in INR",
+          "title": "Initial Monthly Investment",
+          "type": "number"
+        },
+        "tenure_years": {
+          "description": "Investment tenure in years",
+          "title": "Tenure Years",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "initial_monthly_investment",
+        "annual_step_up_percent",
+        "expected_annual_return",
+        "tenure_years"
+      ],
+      "title": "calculate_step_up_sipArguments",
+      "type": "object"
+    }
+  },
+  "calculate_sukanya_samriddhi": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate SSY or SCSS maturity amount.\n\nUse when planning long-term savings for girl child (SSY) or retirement (SCSS).\n\nArgs:\n    scheme: \"ssy\" or \"scss\"\n    annual_investment: Annual deposit amount\n    annual_interest_rate: Interest rate (default 8.2%)\n\nReturns:\n    Maturity amount with interest breakdown and tax status.\n",
+    "name": "calculate_sukanya_samriddhi",
+    "parameters": {
+      "properties": {
+        "annual_interest_rate": {
+          "default": 8.2,
+          "description": "Interest rate as percentage",
+          "title": "Annual Interest Rate",
+          "type": "number"
+        },
+        "annual_investment": {
+          "description": "Annual deposit amount in INR",
+          "title": "Annual Investment",
+          "type": "number"
+        },
+        "scheme": {
+          "description": "'ssy' for Sukanya Samriddhi or 'scss' for Senior Citizen Savings Scheme",
+          "title": "Scheme",
+          "type": "string"
+        }
+      },
+      "required": [
+        "scheme",
+        "annual_investment"
+      ],
+      "title": "calculate_sukanya_samriddhiArguments",
+      "type": "object"
+    }
+  },
+  "calculate_surcharge": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate surcharge and marginal relief for a given income and base tax.\n\nUse when computing surcharge as a standalone calculation, separate from\nthe full income tax tool. The income tax tool uses this logic internally.\n\nArgs:\n        total_income: Total income in rupees.\n        base_tax: Base tax amount before surcharge.\n        regime: 'new' (capped at 25%) or 'old' (up to 37%).\n\nReturns:\n        Standard envelope with surcharge rate, before/after marginal relief,\n        and cess base.\n\nNotes:\n        FY2025-26 rates. New regime surcharge capped at 25%.\n",
+    "name": "calculate_surcharge",
+    "parameters": {
+      "properties": {
+        "base_tax": {
+          "description": "Base tax amount before surcharge",
+          "title": "Base Tax",
+          "type": "number"
+        },
+        "regime": {
+          "description": "'new' or 'old' tax regime",
+          "title": "Regime",
+          "type": "string"
+        },
+        "total_income": {
+          "description": "Total income in rupees",
+          "title": "Total Income",
+          "type": "number"
+        }
+      },
+      "required": [
+        "total_income",
+        "base_tax",
+        "regime"
+      ],
+      "title": "calculate_surchargeArguments",
+      "type": "object"
+    }
+  },
+  "calculate_tds": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate TDS for a given section and payment amount (FY2025-26).\n\nUse when computing withholding tax on contractor payments, professional fees,\ninterest, rent, commissions, or purchase of goods.\n\nArgs:\n        section: TDS section key from supported sections.\n        payment_amount: Gross payment in rupees.\n        pan_available: Whether payee PAN is available (affects rate).\n        is_senior_citizen: For 194A bank interest threshold.\n        aggregate_payments_ytd: Prior payments to same payee in current FY.\n        payee_type: 'individual_huf' or 'other' - affects 194C rate.\n\nReturns:\n        Standard envelope with TDS applicability, rate, amount, net payment.\n\nNotes:\n        FY2025-26 rates. Actual rates may vary by DTAA or Form 15G/15H.\n",
+    "name": "calculate_tds",
+    "parameters": {
+      "properties": {
+        "aggregate_payments_ytd": {
+          "default": 0.0,
+          "description": "Prior payments to same payee under this section in current FY",
+          "title": "Aggregate Payments Ytd",
+          "type": "number"
+        },
+        "is_senior_citizen": {
+          "default": false,
+          "description": "For 194A bank interest \u2014 applies higher threshold for seniors",
+          "title": "Is Senior Citizen",
+          "type": "boolean"
+        },
+        "pan_available": {
+          "description": "Whether payee has provided PAN",
+          "title": "Pan Available",
+          "type": "boolean"
+        },
+        "payee_type": {
+          "default": "individual_huf",
+          "description": "Payee type: 'individual_huf' or 'other' (affects 194C rate)",
+          "title": "Payee Type",
+          "type": "string"
+        },
+        "payment_amount": {
+          "description": "Gross payment amount in rupees",
+          "title": "Payment Amount",
+          "type": "number"
+        },
+        "section": {
+          "description": "TDS section key, e.g. '194C_individual', '194J_professional'",
+          "title": "Section",
+          "type": "string"
+        }
+      },
+      "required": [
+        "section",
+        "payment_amount",
+        "pan_available"
+      ],
+      "title": "calculate_tdsArguments",
+      "type": "object"
+    }
+  },
+  "decode_aa_fi_type": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Decode AA Financial Information type and get MCP tool pairings.\n\nUse when mapping FI types to validation/calculation tools.\n\nArgs:\n    fi_type: FI type code (e.g., \"DEPOSIT\", \"MUTUAL_FUNDS\")\n\nReturns:\n    FI type description, typical fields, and MCP tool pairings.\n",
+    "name": "decode_aa_fi_type",
+    "parameters": {
+      "properties": {
+        "fi_type": {
+          "description": "FI type code (e.g., DEPOSIT, MUTUAL_FUNDS)",
+          "title": "Fi Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "fi_type"
+      ],
+      "title": "decode_aa_fi_typeArguments",
+      "type": "object"
+    }
+  },
+  "decode_cnr_number": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Decode and validate a 16-character CNR.\n\nUse when extracting state, district, establishment, case type, year, and\nserial from a CNR number.\n\nArgs:\n    cnr: 16-character CNR string.\n\nReturns:\n    Standard envelope containing decoded fields.\n\nNotes:\n    Format validation with field decoding. Not legal advice. Consult a qualified advocate.\n",
+    "name": "decode_cnr_number",
+    "parameters": {
+      "properties": {
+        "cnr": {
+          "description": "16-character CNR string. Spaces and hyphens are stripped automatically.",
+          "title": "Cnr",
+          "type": "string"
+        }
+      },
+      "required": [
+        "cnr"
+      ],
+      "title": "decode_cnr_numberArguments",
+      "type": "object"
+    }
+  },
+  "decode_digilocker_uri": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Decode DigiLocker document URI and map to validator.",
+    "name": "decode_digilocker_uri",
+    "parameters": {
+      "properties": {
+        "uri": {
+          "description": "DigiLocker document URI",
+          "title": "Uri",
+          "type": "string"
+        }
+      },
+      "required": [
+        "uri"
+      ],
+      "title": "decode_digilocker_uriArguments",
+      "type": "object"
+    }
+  },
+  "decode_ipc_bns_crosswalk": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Provide a bidirectional crosswalk between IPC and BNS sections.\n\nUse when you need to find the equivalent section in BNS from IPC or vice versa.\n\nArgs:\n    section: Section number to map.\n    from_act: Source Act (\"IPC\" or \"BNS\").\n\nReturns:\n    Standard envelope with crosswalk mapping details.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
+    "name": "decode_ipc_bns_crosswalk",
+    "parameters": {
+      "properties": {
+        "from_act": {
+          "default": "IPC",
+          "description": "The source Act (IPC or BNS). Default: IPC",
+          "title": "From Act",
+          "type": "string"
+        },
+        "section": {
+          "description": "Section number to map across Acts",
+          "title": "Section",
+          "type": "string"
+        }
+      },
+      "required": [
+        "section"
+      ],
+      "title": "decode_ipc_bns_crosswalkArguments",
+      "type": "object"
+    }
+  },
+  "decode_isin": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Decode ISIN (International Securities Identification Number) with Luhn check.\n\nUse when validating ISIN for Indian securities.\n\nArgs:\n    isin: 12-character ISIN\n\nReturns:\n    Decoded fields with country, NSIN, security type, and Luhn validation.\n",
+    "name": "decode_isin",
+    "parameters": {
+      "properties": {
+        "isin": {
+          "description": "12-character ISIN (e.g., INE1234567890)",
+          "title": "Isin",
+          "type": "string"
+        }
+      },
+      "required": [
+        "isin"
+      ],
+      "title": "decode_isinArguments",
+      "type": "object"
+    }
+  },
+  "decode_pan_type": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Decode PAN entity type from 4th character.",
+    "name": "decode_pan_type",
+    "parameters": {
+      "properties": {
+        "pan": {
+          "description": "10-character PAN",
+          "title": "Pan",
+          "type": "string"
+        }
+      },
+      "required": [
+        "pan"
+      ],
+      "title": "decode_pan_typeArguments",
+      "type": "object"
+    }
+  },
+  "decode_state_code": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Decode Indian GST state code metadata from a code or GSTIN prefix.\n\nUse when you need canonical state name, abbreviation, capital, and GST zone mapping.\n\nArgs:\n        value: Two-digit code like 27 or GSTIN like 27AAPFU0939F1ZV.\n\nReturns:\n        Standard envelope containing decoded state metadata.\n",
+    "name": "decode_state_code",
+    "parameters": {
+      "properties": {
+        "value": {
+          "description": "2-digit state code or GSTIN",
+          "maxLength": 15,
+          "minLength": 2,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "decode_state_codeArguments",
+      "type": "object"
+    }
+  },
+  "draft_first_appeal": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Generate a draft First Appeal under the RTI Act.\n\nUse when the PIO fails to respond or provides unsatisfactory information.\n\nArgs:\n    original_application_ref: Reference to the original RTI application.\n    grounds: Grounds for the first appeal.\n\nReturns:\n    Standard envelope with the drafted text of the first appeal.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
+    "name": "draft_first_appeal",
+    "parameters": {
+      "properties": {
+        "grounds": {
+          "description": "List of grounds for filing the first appeal",
+          "items": {
+            "type": "string"
+          },
+          "title": "Grounds",
+          "type": "array"
+        },
+        "original_application_ref": {
+          "description": "Reference number or details of the original RTI application",
+          "title": "Original Application Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "original_application_ref",
+        "grounds"
+      ],
+      "title": "draft_first_appealArguments",
+      "type": "object"
+    }
+  },
+  "draft_rti_application": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Generate a draft RTI application format based on provided parameters.\n\nUse when you need a boilerplate template for filing an RTI request.\n\nArgs:\n    pio_office: PIO office details.\n    subject: Subject of the RTI.\n    information_sought: List of points of information requested.\n    applicant_category: 'general' or 'bpl'.\n\nReturns:\n    Standard envelope with the drafted text of the RTI application.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
+    "name": "draft_rti_application",
+    "parameters": {
+      "properties": {
+        "applicant_category": {
+          "default": "general",
+          "description": "Category of the applicant ('general' or 'bpl')",
+          "title": "Applicant Category",
+          "type": "string"
+        },
+        "information_sought": {
+          "description": "List of specific information items sought",
+          "items": {
+            "type": "string"
+          },
+          "title": "Information Sought",
+          "type": "array"
+        },
+        "pio_office": {
+          "description": "Name and address of the PIO office",
+          "title": "Pio Office",
+          "type": "string"
+        },
+        "subject": {
+          "description": "Subject line for the RTI application",
+          "title": "Subject",
+          "type": "string"
+        }
+      },
+      "required": [
+        "pio_office",
+        "subject",
+        "information_sought"
+      ],
+      "title": "draft_rti_applicationArguments",
+      "type": "object"
+    }
+  },
+  "draft_second_appeal": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Generate a draft Second Appeal to the Information Commission.\n\nUse when the First Appellate Authority fails to respond or provides an unsatisfactory decision.\n\nArgs:\n    original_application_ref: Reference to the original RTI application.\n    grounds: Grounds for the second appeal.\n\nReturns:\n    Standard envelope with the drafted text of the second appeal.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
+    "name": "draft_second_appeal",
+    "parameters": {
+      "properties": {
+        "grounds": {
+          "description": "List of grounds for filing the second appeal",
+          "items": {
+            "type": "string"
+          },
+          "title": "Grounds",
+          "type": "array"
+        },
+        "original_application_ref": {
+          "description": "Reference number or details of the original RTI application",
+          "title": "Original Application Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "original_application_ref",
+        "grounds"
+      ],
+      "title": "draft_second_appealArguments",
+      "type": "object"
+    }
+  },
+  "get_regulatory_deadlines": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Get India's tax & regulatory compliance calendar for FY2025-26.\n\nUse when planning tax compliance schedules, setting reminders for deadlines,\nor building financial compliance dashboards.\n\nArgs:\n    category: Filter by category (Income Tax, TDS, GST, PF/ESIC, ROC, etc.)\n    from_date: Start date filter (YYYY-MM-DD)\n    to_date: End date filter (YYYY-MM-DD)\n\nReturns:\n    Standard envelope with deadlines grouped by month for FY2025-26\n\nNotes:\n    Covers ITR filing, TDS deposits, GST returns, PF/ESIC, ROC filings,\n    advance tax, and professional tax deadlines.\n",
+    "name": "get_regulatory_deadlines",
+    "parameters": {
+      "properties": {
+        "category": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Filter by category (Income Tax, TDS, GST, PF/ESIC, ROC, etc.)",
+          "title": "Category"
+        },
+        "from_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Start date filter (YYYY-MM-DD)",
+          "title": "From Date"
+        },
+        "to_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "End date filter (YYYY-MM-DD)",
+          "title": "To Date"
+        }
+      },
+      "title": "get_regulatory_deadlinesArguments",
+      "type": "object"
+    }
+  },
+  "get_stock_history": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": true
+    },
+    "description": "Fetch historical end-of-day data for a given Indian stock ticker.",
+    "name": "get_stock_history",
+    "parameters": {
+      "properties": {
+        "period": {
+          "default": "1mo",
+          "description": "Time period to fetch data for. Valid periods: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max",
+          "title": "Period",
+          "type": "string"
+        },
+        "symbol": {
+          "description": "Stock symbol/ticker to fetch. Examples: RELIANCE.NS, INFY.NS",
+          "maxLength": 20,
+          "minLength": 1,
+          "title": "Symbol",
+          "type": "string"
+        }
+      },
+      "required": [
+        "symbol"
+      ],
+      "title": "get_stock_historyArguments",
+      "type": "object"
+    }
+  },
+  "get_stock_quote": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": true
+    },
+    "description": "Fetch current (delayed) price and summary for a given Indian stock ticker.",
+    "name": "get_stock_quote",
+    "parameters": {
+      "properties": {
+        "symbol": {
+          "description": "Stock symbol/ticker to fetch. Examples: RELIANCE.NS, INFY.NS, TCS.BO",
+          "maxLength": 20,
+          "minLength": 1,
+          "title": "Symbol",
+          "type": "string"
+        }
+      },
+      "required": [
+        "symbol"
+      ],
+      "title": "get_stock_quoteArguments",
+      "type": "object"
+    }
+  },
+  "lookup_bank": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Look up bank details from RBI master list.",
+    "name": "lookup_bank",
+    "parameters": {
+      "properties": {
+        "name_or_code": {
+          "description": "Bank name or IFSC code prefix",
+          "title": "Name Or Code",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name_or_code"
+      ],
+      "title": "lookup_bankArguments",
+      "type": "object"
+    }
+  },
+  "lookup_bbps_biller": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Look up BBPS (Bharat Bill Payment System) biller details.\n\nUse when setting up bill payments for electricity, gas, DTH, water,\nbroadband, FASTag, insurance, or mobile recharges.\n\nArgs:\n        category: Category of biller to filter by.\n        state: State to filter by (or 'all' for pan-India).\n        biller_id: Direct biller ID for specific lookup.\n\nReturns:\n        Standard envelope with matching billers and parameter schemas.\n\nNotes:\n        Data is bundled offline. For real-time directory, check NPCI BBPS.\n",
+    "name": "lookup_bbps_biller",
+    "parameters": {
+      "properties": {
+        "biller_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Direct biller ID lookup",
+          "title": "Biller Id"
+        },
+        "category": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "electricity, gas, dth, water, broadband, fastag, insurance, mobile",
+          "title": "Category"
+        },
+        "state": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "State name (e.g., 'Maharashtra', 'Delhi') or 'all'",
+          "title": "State"
+        }
+      },
+      "title": "lookup_bbps_billerArguments",
+      "type": "object"
+    }
+  },
+  "lookup_bns_section": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Look up a BNS section detail.\n\nUse when you need the title and description of a section in the Bharatiya Nyaya Sanhita.\n\nArgs:\n    section: BNS section number.\n\nReturns:\n    Standard envelope with section details.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
+    "name": "lookup_bns_section",
+    "parameters": {
+      "properties": {
+        "section": {
+          "description": "BNS section number to lookup (e.g., 316)",
+          "title": "Section",
+          "type": "string"
+        }
+      },
+      "required": [
+        "section"
+      ],
+      "title": "lookup_bns_sectionArguments",
+      "type": "object"
+    }
+  },
+  "lookup_bnss_section": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Look up a BNSS section detail.\n\nUse when you need the title and description of a section in the Bharatiya Nagarik\nSuraksha Sanhita.\n\nArgs:\n    section: BNSS section number.\n\nReturns:\n    Standard envelope with section details.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
+    "name": "lookup_bnss_section",
+    "parameters": {
+      "properties": {
+        "section": {
+          "description": "BNSS section number to lookup",
+          "title": "Section",
+          "type": "string"
+        }
+      },
+      "required": [
+        "section"
+      ],
+      "title": "lookup_bnss_sectionArguments",
+      "type": "object"
+    }
+  },
+  "lookup_bsa_section": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Look up a BSA section detail.\n\nUse when you need the title and description of a section in the Bharatiya Sakshya Adhiniyam.\n\nArgs:\n    section: BSA section number.\n\nReturns:\n    Standard envelope with section details.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
+    "name": "lookup_bsa_section",
+    "parameters": {
+      "properties": {
+        "section": {
+          "description": "BSA section number to lookup",
+          "title": "Section",
+          "type": "string"
+        }
+      },
+      "required": [
+        "section"
+      ],
+      "title": "lookup_bsa_sectionArguments",
+      "type": "object"
+    }
+  },
+  "lookup_court_establishment_code": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Look up court establishment codes for states, districts, and complexes.\n\nUse when you need to decode the state and district court location from a code.\n\nArgs:\n    code: Court establishment code.\n\nReturns:\n    Standard envelope containing location metadata.\n\nNotes:\n    Returns static master data. Not legal advice. Consult a qualified advocate.\n",
+    "name": "lookup_court_establishment_code",
+    "parameters": {
+      "properties": {
+        "code": {
+          "description": "State and district court establishment code (e.g. MH, MHPU, MHPU01)",
+          "title": "Code",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code"
+      ],
+      "title": "lookup_court_establishment_codeArguments",
+      "type": "object"
+    }
+  },
+  "lookup_crpc_section": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Look up a CrPC section detail.\n\nUse when you need the title and description of a section in the Code of Criminal Procedure.\n\nArgs:\n    section: CrPC section number.\n\nReturns:\n    Standard envelope with section details.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
+    "name": "lookup_crpc_section",
+    "parameters": {
+      "properties": {
+        "section": {
+          "description": "CrPC section number to lookup",
+          "title": "Section",
+          "type": "string"
+        }
+      },
+      "required": [
+        "section"
+      ],
+      "title": "lookup_crpc_sectionArguments",
+      "type": "object"
+    }
+  },
+  "lookup_evidence_act_section": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Look up an Indian Evidence Act section detail.\n\nUse when you need the title and description of a section in the Indian Evidence Act.\n\nArgs:\n    section: Indian Evidence Act section number.\n\nReturns:\n    Standard envelope with section details.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
+    "name": "lookup_evidence_act_section",
+    "parameters": {
+      "properties": {
+        "section": {
+          "description": "Indian Evidence Act section number to lookup",
+          "title": "Section",
+          "type": "string"
+        }
+      },
+      "required": [
+        "section"
+      ],
+      "title": "lookup_evidence_act_sectionArguments",
+      "type": "object"
+    }
+  },
+  "lookup_hsn_code": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Lookup HSN/SAC by exact code or search by keyword in code descriptions.\n\nUse for GST classification workflows where users provide a code or only a product keyword.\n\nArgs:\n        code: Optional exact HSN/SAC code (2, 4, 6, or 8 digits).\n        keyword: Optional plain-text search token over description field.\n\nReturns:\n        Standard envelope with exact match data or top 5 keyword matches.\n\nNotes:\n        Returns static master data; GST applicability can vary by conditions.\n",
+    "name": "lookup_hsn_code",
+    "parameters": {
+      "properties": {
+        "code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "HSN/SAC code (2-8 digits) for exact lookup",
+          "title": "Code"
+        },
+        "keyword": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Keyword for description search, example: coffee",
+          "title": "Keyword"
+        }
+      },
+      "title": "lookup_hsn_codeArguments",
+      "type": "object"
+    }
+  },
+  "lookup_ifsc": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Look up an Indian IFSC code from bundled dataset with live fallback support.\n\nUse this when you need bank branch details from an IFSC code in invoices,\nonboarding forms, or payment validation workflows.\n\nArgs:\n        ifsc_code: IFSC string to validate and lookup. Case-insensitive; whitespace is trimmed.\n\nReturns:\n        Standard envelope containing found flag, branch details, payment rails, and source.\n\nNotes:\n        If not found locally, attempts live lookup at ifsc.razorpay.com with 3s timeout.\n",
+    "name": "lookup_ifsc",
+    "parameters": {
+      "properties": {
+        "ifsc_code": {
+          "description": "IFSC code, expected 11 chars. Example: HDFC0000001",
+          "maxLength": 32,
+          "minLength": 1,
+          "title": "Ifsc Code",
+          "type": "string"
+        }
+      },
+      "required": [
+        "ifsc_code"
+      ],
+      "title": "lookup_ifscArguments",
+      "type": "object"
+    }
+  },
+  "lookup_ipc_section": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Look up an IPC section detail.\n\nUse when you need the title and description of a section in the Indian Penal Code.\n\nArgs:\n    section: IPC section number.\n\nReturns:\n    Standard envelope with section details.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
+    "name": "lookup_ipc_section",
+    "parameters": {
+      "properties": {
+        "section": {
+          "description": "IPC section number to lookup (e.g., 420)",
+          "title": "Section",
+          "type": "string"
+        }
+      },
+      "required": [
+        "section"
+      ],
+      "title": "lookup_ipc_sectionArguments",
+      "type": "object"
+    }
+  },
+  "lookup_pincode": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Look up India pincode details and return all post offices for that code.\n\nUse for address normalization, district/state extraction, and GST state crosswalk use-cases.\n\nArgs:\n        pincode: 6-digit pincode; spaces/hyphens are accepted and normalized.\n\nReturns:\n        Standard envelope with location hierarchy and post_offices array.\n\nNotes:\n        One pincode may map to multiple post offices and all are returned.\n",
+    "name": "lookup_pincode",
+    "parameters": {
+      "properties": {
+        "pincode": {
+          "description": "6-digit pincode",
+          "maxLength": 16,
+          "minLength": 1,
+          "title": "Pincode",
+          "type": "string"
+        }
+      },
+      "required": [
+        "pincode"
+      ],
+      "title": "lookup_pincodeArguments",
+      "type": "object"
+    }
+  },
+  "validate_aa_consent_artifact": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate AA consent artifact structure and flags.\n\nUse when verifying consent artifacts received from AA before processing.\n\nArgs:\n    artifact: Consent artifact JSON from AA response\n\nReturns:\n    Validation result with consent details.\n",
+    "name": "validate_aa_consent_artifact",
+    "parameters": {
+      "properties": {
+        "artifact": {
+          "additionalProperties": true,
+          "description": "AA consent artifact JSON",
+          "title": "Artifact",
+          "type": "object"
+        }
+      },
+      "required": [
+        "artifact"
+      ],
+      "title": "validate_aa_consent_artifactArguments",
+      "type": "object"
+    }
+  },
+  "validate_aadhaar": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate an Indian Aadhaar number with Verhoeff checksum verification.\n\nUse when checking Aadhaar format and checksum in KYC, identity verification,\nor government benefit workflows.\n\nArgs:\n        aadhaar: 12-digit Aadhaar number. Spaces and hyphens are stripped.\n\nReturns:\n        Standard envelope containing validity, checksum result, formatted display,\n        and first-digit check.\n\nNotes:\n        Validates format and Verhoeff checksum only. Not connected to UIDAI.\n",
+    "name": "validate_aadhaar",
+    "parameters": {
+      "properties": {
+        "aadhaar": {
+          "description": "12-digit Aadhaar number. Spaces and hyphens accepted. Example: 2959 4583 7261",
+          "maxLength": 20,
+          "minLength": 1,
+          "title": "Aadhaar",
+          "type": "string"
+        }
+      },
+      "required": [
+        "aadhaar"
+      ],
+      "title": "validate_aadhaarArguments",
+      "type": "object"
+    }
+  },
+  "validate_cin": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate and decode an Indian CIN (Company Identification Number).\n\nUse when verifying company registration data, extracting listing status,\nNIC code, state, year, and company type from a CIN.\n\nArgs:\n        cin: 21-character CIN string. Spaces and hyphens stripped automatically.\n\nReturns:\n        Standard envelope containing decoded fields: listing status, NIC code,\n        state, year of incorporation, company type, and serial number.\n\nNotes:\n        Format validation with field decoding. No public checksum.\n",
+    "name": "validate_cin",
+    "parameters": {
+      "properties": {
+        "cin": {
+          "description": "21-character CIN (spaces/hyphens allowed). Example: L17110MH1973PLC019786",
+          "maxLength": 30,
+          "minLength": 1,
+          "title": "Cin",
+          "type": "string"
+        }
+      },
+      "required": [
+        "cin"
+      ],
+      "title": "validate_cinArguments",
+      "type": "object"
+    }
+  },
+  "validate_din": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate an Indian DIN (Director Identification Number) format.\n\nUse when verifying director identity numbers in MCA compliance workflows.\n\nArgs:\n        din: 8-digit numeric DIN string. Shorter inputs zero-padded. Spaces stripped.\n\nReturns:\n        Standard envelope containing validity and normalized DIN.\n\nNotes:\n        Format validation only. Cannot verify director status with MCA.\n",
+    "name": "validate_din",
+    "parameters": {
+      "properties": {
+        "din": {
+          "description": "8-digit DIN (spaces allowed). Example: 00012345",
+          "maxLength": 15,
+          "minLength": 1,
+          "title": "Din",
+          "type": "string"
+        }
+      },
+      "required": [
+        "din"
+      ],
+      "title": "validate_dinArguments",
+      "type": "object"
+    }
+  },
+  "validate_driving_license": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate an Indian driving license number format and decode segments.\n\nUse when verifying DL format, extracting state/RTO/year in KYC workflows.\n\nArgs:\n        dl_number: Driving license number. Hyphens/spaces stripped automatically.\n\nReturns:\n        Standard envelope containing validity, state code, state name, RTO code,\n        year of issue, and serial number.\n\nNotes:\n        Format validation only. Handles non-standard pre-Sarathi formats gracefully.\n",
+    "name": "validate_driving_license",
+    "parameters": {
+      "properties": {
+        "dl_number": {
+          "description": "Indian DL number, 15 chars (spaces/hyphens allowed). Ex: MH0220191234567",
+          "maxLength": 25,
+          "minLength": 1,
+          "title": "Dl Number",
+          "type": "string"
+        }
+      },
+      "required": [
+        "dl_number"
+      ],
+      "title": "validate_driving_licenseArguments",
+      "type": "object"
+    }
+  },
+  "validate_epf_code": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate EPF establishment code.",
+    "name": "validate_epf_code",
+    "parameters": {
+      "properties": {
+        "code": {
+          "description": "EPF establishment code (XX/XXXXX/XXXXXX/XXX)",
+          "title": "Code",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code"
+      ],
+      "title": "validate_epf_codeArguments",
+      "type": "object"
+    }
+  },
+  "validate_esic_code": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate ESIC employer code.",
+    "name": "validate_esic_code",
+    "parameters": {
+      "properties": {
+        "code": {
+          "description": "ESIC employer code (XX-XXXXX-XXXXX)",
+          "title": "Code",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code"
+      ],
+      "title": "validate_esic_codeArguments",
+      "type": "object"
+    }
+  },
+  "validate_fssai": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate FSSAI (Food Safety) license number format and decode details.\n\nUse when verifying food business operator licenses in compliance checks.\n\nArgs:\n        license_number: 14-digit FSSAI license. Spaces/hyphens stripped.\n\nReturns:\n        Standard envelope with validation, state, license type, year decoded.\n\nNotes:\n        The 14-digit format encodes: state(2) + year(2) + type(1) + sequence(9).\n        Type: 1=Central, 2=State, 3=State (turnover-based).\n",
+    "name": "validate_fssai",
+    "parameters": {
+      "properties": {
+        "license_number": {
+          "description": "14-digit FSSAI license (spaces/hyphens allowed). Ex: 10019000000001",
+          "maxLength": 25,
+          "minLength": 1,
+          "title": "License Number",
+          "type": "string"
+        }
+      },
+      "required": [
+        "license_number"
+      ],
+      "title": "validate_fssaiArguments",
+      "type": "object"
+    }
+  },
+  "validate_gstin": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate and decode an Indian GSTIN with checksum verification.\n\nUse when checking supplier/customer GSTINs before invoicing, reconciliation,\nor compliance workflows.\n\nArgs:\n        gstin: 15-character GSTIN (e.g., 27AAPFU0939F1ZV). Spaces/hyphens stripped.\n\nReturns:\n        Standard envelope containing validity, state decode, embedded PAN,\n        entity number, category, and checksum information.\n\nNotes:\n        Validates structure and checksum only; does not verify active GSTN registration status.\n",
+    "name": "validate_gstin",
+    "parameters": {
+      "properties": {
+        "gstin": {
+          "description": "15-character GSTIN (spaces/hyphens allowed)",
+          "maxLength": 30,
+          "minLength": 1,
+          "title": "Gstin",
+          "type": "string"
+        }
+      },
+      "required": [
+        "gstin"
+      ],
+      "title": "validate_gstinArguments",
+      "type": "object"
+    }
+  },
+  "validate_llpin": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate LLPIN (Limited Liability Partnership Identification Number).\n\nUse when verifying LLP registration numbers.\n\nArgs:\n    llpin: LLPIN in format AAA-XXXX\n\nReturns:\n    Validation result with decoded segments.\n",
+    "name": "validate_llpin",
+    "parameters": {
+      "properties": {
+        "llpin": {
+          "description": "LLPIN in format AAA-XXXX or AAAXXXX",
+          "title": "Llpin",
+          "type": "string"
+        }
+      },
+      "required": [
+        "llpin"
+      ],
+      "title": "validate_llpinArguments",
+      "type": "object"
+    }
+  },
+  "validate_mobile_number": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate Indian mobile number and detect operator/circle.\n\nUse when validating mobile numbers for KYC or contact verification.\n\nArgs:\n    mobile: Mobile number with or without +91/0\n\nReturns:\n    Validation result with operator and telecom circle.\n",
+    "name": "validate_mobile_number",
+    "parameters": {
+      "properties": {
+        "mobile": {
+          "description": "10-digit mobile number with or without +91/0",
+          "title": "Mobile",
+          "type": "string"
+        }
+      },
+      "required": [
+        "mobile"
+      ],
+      "title": "validate_mobile_numberArguments",
+      "type": "object"
+    }
+  },
+  "validate_pan": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate Indian PAN format and decode entity type from the 4th character.\n\nUse when normalizing tax identity records in KYC, invoicing, or vendor onboarding.\n\nArgs:\n        pan: PAN string, example: AAAPL1234C. Spaces and hyphens stripped automatically.\n\nReturns:\n        Standard envelope containing format validity, entity type, and decoded segments.\n\nNotes:\n        PAN check character is not publicly verifiable algorithmically.\n",
+    "name": "validate_pan",
+    "parameters": {
+      "properties": {
+        "pan": {
+          "description": "10-char PAN (spaces/hyphens allowed)",
+          "maxLength": 20,
+          "minLength": 1,
+          "title": "Pan",
+          "type": "string"
+        }
+      },
+      "required": [
+        "pan"
+      ],
+      "title": "validate_panArguments",
+      "type": "object"
+    }
+  },
+  "validate_passport": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate an Indian passport number format.\n\nUse when verifying passport format in KYC, travel, or identity workflows.\n\nArgs:\n        passport_number: 1 letter + 7 digits. Spaces and hyphens stripped automatically.\n\nReturns:\n        Standard envelope containing validity, series letter, and serial number.\n\nNotes:\n        Format validation only. No public checksum algorithm exists.\n",
+    "name": "validate_passport",
+    "parameters": {
+      "properties": {
+        "passport_number": {
+          "description": "8-char Indian passport (spaces/hyphens allowed). Ex: A1234567",
+          "maxLength": 15,
+          "minLength": 1,
+          "title": "Passport Number",
+          "type": "string"
+        }
+      },
+      "required": [
+        "passport_number"
+      ],
+      "title": "validate_passportArguments",
+      "type": "object"
+    }
+  },
+  "validate_pran": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate PRAN (Permanent Retirement Account Number) for NPS.\n\nUse when verifying NPS account numbers.\n\nArgs:\n    pran: 12-digit PRAN\n\nReturns:\n    Validation result with subscriber category.\n",
+    "name": "validate_pran",
+    "parameters": {
+      "properties": {
+        "pran": {
+          "description": "12-digit PRAN",
+          "title": "Pran",
+          "type": "string"
+        }
+      },
+      "required": [
+        "pran"
+      ],
+      "title": "validate_pranArguments",
+      "type": "object"
+    }
+  },
+  "validate_tan": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate TAN (Tax Deduction Account Number) format.\n\nUse when verifying TAN format for TDS compliance.\n\nArgs:\n    tan: 10-character TAN\n\nReturns:\n    Validation result with decoded segments.\n",
+    "name": "validate_tan",
+    "parameters": {
+      "properties": {
+        "tan": {
+          "description": "10-character TAN (e.g., ABCD12345E)",
+          "title": "Tan",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tan"
+      ],
+      "title": "validate_tanArguments",
+      "type": "object"
+    }
+  },
+  "validate_upi_vpa": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate UPI VPA structure and decode known provider handles.\n\nUse when checking whether a UPI address is structurally valid before payment routing.\n\nArgs:\n        vpa: UPI virtual payment address in username@handle format.\n\nReturns:\n        Standard envelope containing normalized VPA, known_provider flag, and provider metadata.\n\nNotes:\n        Unknown handles are not auto-invalidated because NPCI handle lists evolve over time.\n",
+    "name": "validate_upi_vpa",
+    "parameters": {
+      "properties": {
+        "vpa": {
+          "description": "UPI VPA, example: user@okaxis",
+          "maxLength": 300,
+          "minLength": 3,
+          "title": "Vpa",
+          "type": "string"
+        }
+      },
+      "required": [
+        "vpa"
+      ],
+      "title": "validate_upi_vpaArguments",
+      "type": "object"
+    }
+  },
+  "validate_voter_id": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate an Indian Voter ID (EPIC) number format.\n\nUse when verifying voter ID format in KYC, identity, or electoral workflows.\n\nArgs:\n        voter_id: EPIC number (3 letters + 7 digits). Spaces/hyphens stripped.\n\nReturns:\n        Standard envelope containing validity, prefix, serial, and format type.\n\nNotes:\n        Format validation only. Detects possible legacy EPIC formats.\n",
+    "name": "validate_voter_id",
+    "parameters": {
+      "properties": {
+        "voter_id": {
+          "description": "10-character EPIC number (spaces/hyphens allowed). Example: ABC1234567",
+          "maxLength": 20,
+          "minLength": 1,
+          "title": "Voter Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "voter_id"
+      ],
+      "title": "validate_voter_idArguments",
+      "type": "object"
+    }
+  }
+}

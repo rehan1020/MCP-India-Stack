@@ -1,0 +1,194 @@
+# .pip-audit-ignore.toml
+# Allowlist for known vulnerabilities in pinned dependencies with scheduled review dates.
+
+[[ignore]]
+id = "CVE-2026-96760"
+package = "authlib"
+justification = "Pinned dependency for FastMCP auth; to be addressed in dependency lock refresh"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-114618"
+package = "authlib"
+justification = "Pinned dependency for FastMCP auth; to be addressed in dependency lock refresh"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-114615"
+package = "authlib"
+justification = "Pinned dependency for FastMCP auth; to be addressed in dependency lock refresh"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-114617"
+package = "authlib"
+justification = "Pinned dependency for FastMCP auth; to be addressed in dependency lock refresh"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-114620"
+package = "authlib"
+justification = "Pinned dependency for FastMCP auth; to be addressed in dependency lock refresh"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-114616"
+package = "authlib"
+justification = "Pinned dependency for FastMCP auth; to be addressed in dependency lock refresh"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "PYSEC-2026-4320"
+package = "certifi"
+justification = "Standard CA bundle update; to be refreshed with lockfile update"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-114605"
+package = "dnspython"
+justification = "Transitive dependency of email-validator; review before year-end"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "GHSA-7xgj-8392-5q4r"
+package = "fastmcp"
+justification = "FastMCP upstream advisory; upgrade planned in subsequent dependency cycle"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-112940"
+package = "filelock"
+justification = "Virtualenv filelock dependency; dev only"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-112913"
+package = "filelock"
+justification = "Virtualenv filelock dependency; dev only"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-112907"
+package = "filelock"
+justification = "Virtualenv filelock dependency; dev only"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-112938"
+package = "filelock"
+justification = "Virtualenv filelock dependency; dev only"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-112910"
+package = "filelock"
+justification = "Virtualenv filelock dependency; dev only"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-112934"
+package = "filelock"
+justification = "Virtualenv filelock dependency; dev only"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-112909"
+package = "filelock"
+justification = "Virtualenv filelock dependency; dev only"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-112911"
+package = "filelock"
+justification = "Virtualenv filelock dependency; dev only"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-112939"
+package = "filelock"
+justification = "Virtualenv filelock dependency; dev only"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-112915"
+package = "filelock"
+justification = "Virtualenv filelock dependency; dev only"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-112935"
+package = "filelock"
+justification = "Virtualenv filelock dependency; dev only"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-112912"
+package = "filelock"
+justification = "Virtualenv filelock dependency; dev only"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-112908"
+package = "filelock"
+justification = "Virtualenv filelock dependency; dev only"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-114603"
+package = "opentelemetry-api"
+justification = "Telemetry dependency advisory; reviewed for scope"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-113726"
+package = "virtualenv"
+justification = "Dev dependency in pre-commit environment"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-113725"
+package = "virtualenv"
+justification = "Dev dependency in pre-commit environment"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-113722"
+package = "virtualenv"
+justification = "Dev dependency in pre-commit environment"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-113714"
+package = "virtualenv"
+justification = "Dev dependency in pre-commit environment"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-113723"
+package = "virtualenv"
+justification = "Dev dependency in pre-commit environment"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-113715"
+package = "virtualenv"
+justification = "Dev dependency in pre-commit environment"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-113720"
+package = "virtualenv"
+justification = "Dev dependency in pre-commit environment"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-113717"
+package = "virtualenv"
+justification = "Dev dependency in pre-commit environment"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-113718"
+package = "virtualenv"
+justification = "Dev dependency in pre-commit environment"
+review_by = "2026-12-31"

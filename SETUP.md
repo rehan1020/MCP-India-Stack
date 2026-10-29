@@ -37,15 +37,15 @@ pip install -e ".[dev]"
 pre-commit install
 ```
 
-## 4. Refresh datasets
+## 4. Upstream datasets (maintainers)
 
-```bash
-python scripts/update_datasets.py --refresh-all
-```
-
-Alternatively, refresh individual datasets:
+Datasets are bundled offline in the package. Maintainers can refresh upstream datasets and regenerate checksums:
 ```bash
 python scripts/update_datasets.py --refresh-ifsc --refresh-pincode --refresh-hsn
+```
+Or regenerate checksum manifests without downloading:
+```bash
+python scripts/update_datasets.py --write-checksums
 ```
 
 If HSN auto-download fails, manually download `HSN_SAC.xlsx` and place at `staging/HSN_SAC.xlsx`, then rerun.

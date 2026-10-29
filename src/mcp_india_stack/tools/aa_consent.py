@@ -5,6 +5,8 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 from typing import Any
 
+from mcp_india_stack.utils.responses import build_response
+
 PURPOSE_CODE_MAP: dict[str, str] = {
     "101": "Wealth management",
     "102": "Customer spending analysis",
@@ -134,3 +136,42 @@ def build_aa_consent_request(
         ),
         "disclaimer": DISCLAIMER,
     }
+
+
+def validate_aa_consent_artifact(artifact: dict[str, Any]) -> dict[str, Any]:
+    """Validate AA consent artifact structure and flags.
+
+    Args:
+        artifact: Consent artifact JSON from AA response.
+
+    Returns:
+        Validation result with consent details.
+    """
+    errors: list[str] = []
+    warnings: list[str] = []
+
+    if "consentStart" not in artifact:
+        errors.append("Missing consentStart")
+    if "consentExpiry" not in artifact:
+        errors.append("Missing consentExpiry")
+    if "fiTypes" not in artifact:
+        errors.append("Missing fiTypes")
+    elif not isinstance(artifact.get("fiTypes"), list):
+        errors.append("fiTypes must be a list")
+    else:
+        for ft in artifact.get("fiTypes", []):
+            if ft not in FI_TYPE_VALID:
+                warnings.append(f"Unknown fi_type: {ft}")
+    if "Purpose" in artifact and artifact["Purpose"].get("code") not in PURPOSE_CODE_MAP:
+        warnings.append(f"Unknown purpose code: {artifact['Purpose'].get('code')}")
+
+    return build_response(
+        success=len(errors) == 0,
+        data={
+            "artifact": artifact,
+            "errors": errors,
+            "warnings": warnings,
+            "validated": len(errors) == 0,
+        },
+        source="offline_algorithm",
+    )

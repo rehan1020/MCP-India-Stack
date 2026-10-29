@@ -2,6 +2,25 @@
 
 ## [Unreleased]
 
+### Refactoring & Core Parity (Update 5b)
+
+- **Inline Tool Extraction**: Extracted the remaining 9 inline registration tools into modular core implementations under `src/mcp_india_stack/tools/`: `bulk_validate_gstin` (`tools/bulk_gstin.py`), `bulk_validate_pan` (`tools/bulk_pan.py`), `bulk_validate_ifsc` (`tools/bulk_ifsc.py`), `decode_pan_type` (`tools/pan_type.py`), `decode_digilocker_uri` (`tools/digilocker.py`), `lookup_bank` (`tools/bank_lookup.py`), `validate_aa_consent_artifact` (`tools/aa_consent.py`), `validate_epf_code` (`tools/epf_code.py`), and `validate_esic_code` (`tools/esic_code.py`).
+- **Thin Registration Wrappers**: Reduced all tool wrappers in `src/mcp_india_stack/registrations/*.py` to thin exception-handling delegates ($\le 3$ statements) delegating to core functions, satisfying regression guard G11 with zero non-delegating exceptions.
+- **Worker Clamping Consolidation**: Consolidated duplicate `_clamp_bulk_workers` implementations into a single canonical definition in `src/mcp_india_stack/tools/bulk_common.py`, satisfying regression guard G03.
+- **100% Core Parity**: Achieved 100% core module function parity across all 78 registered tools with zero parity exclusions. Verified with comprehensive golden output tests (`tests/test_golden_outputs.py`).
+
+### Security & CI Hardening (Update 7)
+
+- **Comprehensive Regression Guards (G01–G20)**: Added suite of architectural and security invariant tests enforcing CORS rules, constant-time auth, worker clamping bounds, dataset integrity, network import restrictions, dead code elimination, telemetry pseudonymization, elevated tool gating, line count bounds, wrapper delegation, single imports, loopback defaults, middleware order, fail-closed startup refusal, host allowlists, rate limiting, and zero-skip/nosec rules.
+- **CI Hardening & Pinned Actions**: Pinned all GitHub Actions to exact immutable commit SHAs across CI, Publish, and Security Audit workflows. Added workflow call support, job timeouts, minimal required permissions, and tag-version checks.
+- **Automated Security Gates**: Added Bandit SAST scanning and `pip-audit` dependency vulnerability scanning backed by `.pip-audit-ignore.toml` with strict expiry enforcement.
+- **Lockfile & Distribution Smoke Testing**: Added automated lockfile drift detection with `uv` and clean-environment wheel installation smoke test.
+
+### Removed (Update 6.7)
+
+- **Runtime Dataset Refresh & Caching**: Removed runtime CDN fetching, background updater threads, cache directory resolution, and staleness logic. All datasets are strictly bundled offline and updated with package releases.
+- **CLI `--refresh-all`**: Flag is deprecated and hidden (`help=argparse.SUPPRESS`). Invoking it now outputs a removal notice to stderr and exits with code 2 (breaking for callers relying on `--refresh-all`).
+
 ### Security & Network Boundary Completion (Update 6.6)
 
 - **Middleware Ordering**: Hardened middleware stack order to CORS (outermost) -> Auth -> RateLimit (innermost). Preflights succeed without credentials, and 401/429 error responses reliably preserve CORS headers.

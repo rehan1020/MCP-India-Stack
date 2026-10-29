@@ -5,24 +5,29 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_call:
+
+permissions:
+  contents: read
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
-      fail-fast: false          # all 3 Python versions always run
+      fail-fast: false
       matrix:
         python-version: ["3.10", "3.11", "3.12"]
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4   # ← was @v6 (does not exist)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5   # ← was @v6 (does not exist)
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: ${{ matrix.python-version }}
-          cache: "pip"            # ← caches pip downloads between runs
+          cache: "pip"
 
       - name: Install dependencies
         run: |
@@ -40,7 +45,7 @@ jobs:
       - name: Mypy
         run: mypy src
         env:
-          MYPY_CACHE_DIR: .mypy_cache   # persisted by pip cache step
+          MYPY_CACHE_DIR: .mypy_cache
 
       - name: Pytest with coverage
         run: |
@@ -52,8 +57,89 @@ jobs:
             --cov-fail-under=80
 
       - name: Upload coverage report
-        if: matrix.python-version == '3.12'   # upload once, from latest Python
-        uses: actions/upload-artifact@v4
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: coverage-xml
           path: coverage.xml
+
+  bandit:
+    name: Bandit Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Setup Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.11"
+
+      - name: Install Bandit
+        run: pip install "bandit[toml]"
+
+      - name: Run Bandit
+        run: bandit -r src -ll -ii
+
+  pip-audit:
+    name: Dependency Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Setup Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.11"
+
+      - name: Install pip-audit
+        run: pip install pip-audit
+
+      - name: Run pip-audit
+        run: |
+          IGNORE_ARGS=$(python scripts/audit_allowlist.py)
+          pip-audit $IGNORE_ARGS -r requirements.txt
+
+  lock-check:
+    name: Lockfile Drift Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Setup uv
+        run: curl -LsSf https://astral.sh/uv/0.12.17/install.sh | sh
+
+      - name: Check lockfile drift
+        run: python scripts/check_lock.py
+
+  wheel-smoke:
+    name: Wheel Smoke Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Setup Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+
+      - name: Build and install wheel into clean environment
+        run: |
+          pip install build
+          python -m build --wheel
+          mkdir /tmp/smoke_run
+          cp dist/*.whl /tmp/smoke_run/
+          cp -r scripts /tmp/smoke_run/
+          cp -r tests /tmp/smoke_run/
+          cd /tmp/smoke_run
+          python -m venv clean_env
+          source clean_env/bin/activate
+          pip install *.whl pytest pytest-asyncio
+          python scripts/smoke_wheel.py --constants tests/constants.py
