@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.utils.responses import build_response
+
 
 def decode_digilocker_uri(uri: str) -> dict[str, Any]:
     """Decode DigiLocker document URI and map to validator.
@@ -12,26 +14,25 @@ def decode_digilocker_uri(uri: str) -> dict[str, Any]:
         uri: DigiLocker document URI (e.g., dlg://uidai/aadhaar).
 
     Returns:
-        Dict with parsed URI components, document type, and recommended validator.
+        Standard envelope with parsed URI components, document type, and validator routing.
     """
     errors: list[str] = []
     warnings: list[str] = []
 
     if not uri.startswith("dlg://"):
         errors.append("Invalid DigiLocker URI format. Must start with 'dlg://'")
-        return {"valid": False, "errors": errors}
+        return build_response(success=False, data=None, errors=errors, source="offline_algorithm")
 
     path = uri.replace("dlg://", "")
     parts = path.split("/")
 
     if len(parts) < 2:
         errors.append("Invalid DigiLocker URI format")
-        return {"valid": False, "errors": errors}
+        return build_response(success=False, data=None, errors=errors, source="offline_algorithm")
 
     issuer = parts[0].lower()
     doc_type = parts[1].lower() if len(parts) > 1 else ""
 
-    # Map to validators
     validators = {
         ("uidai", "aadhaar"): ("validate_aadhaar", "Aadhaar Card", ["aadhaar_number"]),
         ("mha", "passport"): ("validate_passport", "Passport", ["passport_number"]),
@@ -60,14 +61,16 @@ def decode_digilocker_uri(uri: str) -> dict[str, Any]:
         document_type = f"Document from {issuer}"
         expected_fields = ["document_id"]
 
-    return {
-        "valid": True,
-        "uri": uri,
-        "issuer": issuer,
-        "document_type": document_type,
-        "expected_fields": expected_fields,
-        "verification_pairing": verification_pairing,
-        "normalized_input": uri.strip(),
-        "errors": errors,
-        "warnings": warnings,
-    }
+    return build_response(
+        success=True,
+        data={
+            "uri": uri,
+            "issuer": issuer,
+            "document_type": document_type,
+            "expected_fields": expected_fields,
+            "verification_pairing": verification_pairing,
+            "normalized_input": uri.strip(),
+        },
+        validated_by=["format"],
+        source="offline_algorithm",
+    )

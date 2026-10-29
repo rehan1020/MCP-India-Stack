@@ -1,5 +1,3 @@
-import os
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Annotated, Any, cast
 
 from mcp.types import ToolAnnotations
@@ -15,63 +13,25 @@ from mcp_india_stack.normalization import (
 )
 from mcp_india_stack.tools.aadhaar import validate_aadhaar as core_validate_aadhaar
 from mcp_india_stack.tools.bulk_aadhaar import bulk_validate_aadhaar as core_bulk_validate_aadhaar
+from mcp_india_stack.tools.bulk_gstin import bulk_validate_gstin as core_bulk_validate_gstin
+from mcp_india_stack.tools.bulk_pan import bulk_validate_pan as core_bulk_validate_pan
 from mcp_india_stack.tools.cin import validate_cin as core_validate_cin
+from mcp_india_stack.tools.digilocker import decode_digilocker_uri as core_decode_digilocker_uri
 from mcp_india_stack.tools.driving_license import (
     validate_driving_license as core_validate_driving_license,
 )
+from mcp_india_stack.tools.epf_code import validate_epf_code as core_validate_epf_code
+from mcp_india_stack.tools.esic_code import validate_esic_code as core_validate_esic_code
 from mcp_india_stack.tools.fssai import validate_fssai as core_validate_fssai
 from mcp_india_stack.tools.gstin import validate_gstin as core_validate_gstin
 from mcp_india_stack.tools.llpin import validate_llpin as core_validate_llpin
 from mcp_india_stack.tools.mobile import validate_mobile_number as core_validate_mobile_number
 from mcp_india_stack.tools.pan import validate_pan as core_validate_pan
+from mcp_india_stack.tools.pan_type import decode_pan_type as core_decode_pan_type
 from mcp_india_stack.tools.pran import validate_pran as core_validate_pran
 from mcp_india_stack.tools.tan import validate_tan as core_validate_tan
 from mcp_india_stack.tools.upi import validate_upi_vpa as core_validate_upi_vpa
 from mcp_india_stack.utils.responses import build_response
-
-
-def _clamp_bulk_workers() -> int:
-    """Parse MCP_INDIA_STACK_BULK_WORKERS with hard [1, 20] clamp."""
-    raw = os.environ.get("MCP_INDIA_STACK_BULK_WORKERS", "10")
-    try:
-        val = int(raw)
-    except (ValueError, TypeError):
-        return 10
-    return max(1, min(20, val))
-
-
-_BULK_WORKERS = _clamp_bulk_workers()
-
-
-def _validate_single_gstin(gstin: str) -> dict[str, Any]:
-    """Validate a single GSTIN with error isolation."""
-    try:
-        return core_validate_gstin(gstin)
-    except Exception as exc:
-        return {
-            "valid": False,
-            "gstin": gstin,
-            "errors": [f"Validation error: {exc}"],
-            "warnings": [],
-            "live_verified": False,
-            "verification_source": "offline",
-        }
-
-
-def _validate_single_pan(pan: str) -> dict[str, Any]:
-    """Validate a single PAN with error isolation."""
-    from mcp_india_stack.tools import validate_pan as _validate_pan
-
-    try:
-        return _validate_pan(pan)
-    except Exception as exc:
-        return {"valid": False, "pan": pan, "errors": [f"Validation error: {exc}"], "warnings": []}
-
-
-import re as _re
-
-EPF_RE = _re.compile("^\\d{2}/\\d{5,6}/\\d{5,6}/\\d{3}$")
-ESIC_RE = _re.compile("^[\\d]{2}-[\\d]+-[\\d]+$")
 
 
 @mcp.tool(annotations=ToolAnnotations(readOnlyHint=True, idempotentHint=True, openWorldHint=False))
@@ -127,44 +87,14 @@ def bulk_validate_gstin(
             Max 500 GSTINs per call. Configurable via MCP_INDIA_STACK_BULK_WORKERS.
             Individual validation errors don't fail the entire batch.
     """
-    if not gstins:
-        return build_response(
-            success=False, data=None, errors=["Empty GSTIN list"], source="offline_algorithm"
-        )
-    if len(gstins) > 500:
+    try:
+        return core_bulk_validate_gstin(gstins)
+    except Exception as exc:
         return build_response(
             success=False,
-            data=None,
-            errors=["Maximum 500 GSTINs per call"],
+            errors=[f"Bulk GSTIN validation failed: {exc}"],
             source="offline_algorithm",
         )
-    results: list[tuple[int, dict[str, Any]]] = []
-    valid_count = 0
-    invalid_count = 0
-    with ThreadPoolExecutor(max_workers=_BULK_WORKERS) as executor:
-        future_to_index: dict[Any, int] = {
-            executor.submit(_validate_single_gstin, gstin): idx for idx, gstin in enumerate(gstins)
-        }
-        for future in as_completed(future_to_index):
-            idx = future_to_index[future]
-            result = future.result()
-            results.append((idx, result))
-            if result.get("valid"):
-                valid_count += 1
-            else:
-                invalid_count += 1
-    results.sort(key=lambda x: x[0])
-    ordered_results = [r for _, r in results]
-    return build_response(
-        success=True,
-        data={
-            "results": ordered_results,
-            "total": len(gstins),
-            "valid_count": valid_count,
-            "invalid_count": invalid_count,
-        },
-        source="offline_algorithm",
-    )
 
 
 @mcp.tool(annotations=ToolAnnotations(readOnlyHint=True, idempotentHint=True, openWorldHint=False))
@@ -201,67 +131,23 @@ def bulk_validate_pan(
     pans: Annotated[list[str], Field(description="List of PANs to validate (max 500)")],
 ) -> dict[str, Any]:
     """Validate multiple PANs in parallel."""
-    if not pans:
-        return build_response(success=False, data=None, errors=["Empty PAN list"])
-    if len(pans) > 500:
-        return build_response(success=False, data=None, errors=["Maximum 500 PANs per call"])
-    from concurrent.futures import ThreadPoolExecutor, as_completed
-
-    results = []
-    valid_count = 0
-    with ThreadPoolExecutor(max_workers=_BULK_WORKERS) as executor:
-        futures = {executor.submit(_validate_single_pan, pan): idx for idx, pan in enumerate(pans)}
-        for future in as_completed(futures):
-            result = future.result()
-            results.append((futures[future], result))
-            if result.get("valid"):
-                valid_count += 1
-    results.sort(key=lambda x: x[0])
-    ordered_results = [r for _, r in results]
-    return build_response(
-        success=True,
-        data={"results": ordered_results, "total": len(pans), "valid_count": valid_count},
-        source="offline_algorithm",
-    )
+    try:
+        return core_bulk_validate_pan(pans)
+    except Exception as exc:
+        return build_response(
+            success=False, errors=[f"Bulk PAN validation failed: {exc}"], source="offline_algorithm"
+        )
 
 
 @mcp.tool(annotations=ToolAnnotations(readOnlyHint=True, idempotentHint=True, openWorldHint=False))
 def decode_pan_type(pan: Annotated[str, Field(description="10-character PAN")]) -> dict[str, Any]:
     """Decode PAN entity type from 4th character."""
-    from mcp_india_stack.tools.pan import validate_pan
-
-    result = validate_pan(pan)
-    if result.get("success"):
-        entity_code = result.get("data", {}).get("entity_code", "")
-        entity_types = {
-            "P": ("Individual", "NRI requires Form 60/61"),
-            "C": ("Company", "Requires DIN for directors"),
-            "H": ("Hindu Undivided Family (HUF)", "HUF"),
-            "F": ("Firm", "Partnership/LLP"),
-            "A": ("Association of Persons (AOP)", "AOP"),
-            "B": ("Body of Individuals (BOI)", "BOI"),
-            "G": ("Government", "Central/State"),
-            "J": ("Artificial Juridical Person", "AJP"),
-            "L": ("Local Authority", "Panchayat/Municipal"),
-            "T": ("Trust", "Trust"),
-            "E": ("Limited Liability Partnership (LLP)", "LLP"),
-        }
-        entity_label, kyc_hint = entity_types.get(entity_code, ("Unknown", ""))
+    try:
+        return core_decode_pan_type(pan)
+    except Exception as exc:
         return build_response(
-            success=True,
-            data={
-                "pan": pan.upper(),
-                "entity_type_code": entity_code,
-                "entity_type_label": entity_label,
-                "kyc_routing_hint": kyc_hint,
-                "normalized_input": pan.upper().strip(),
-            },
-            validated_by=["format", "checksum"],
-            source="offline_algorithm",
+            success=False, errors=[f"PAN decode failed: {exc}"], source="offline_algorithm"
         )
-    return build_response(
-        success=False, data=result, errors=result.get("errors", []), source="offline_algorithm"
-    )
 
 
 @mcp.tool(annotations=ToolAnnotations(readOnlyHint=True, idempotentHint=True, openWorldHint=False))
@@ -736,28 +622,12 @@ def validate_epf_code(
     code: Annotated[str, Field(description="EPF establishment code (XX/XXXXX/XXXXXX/XXX)")],
 ) -> dict[str, Any]:
     """Validate EPF establishment code."""
-    normalized = code.strip().upper().replace(" ", "")
-    if not EPF_RE.match(normalized):
+    try:
+        return core_validate_epf_code(code)
+    except Exception as exc:
         return build_response(
-            success=False,
-            data={"code": code, "normalized_input": normalized},
-            errors=["Invalid EPF format. Expected: XX/XXXXX/XXXXXX/XXX"],
-            source="offline_algorithm",
+            success=False, errors=[f"EPF code validation failed: {exc}"], source="offline_algorithm"
         )
-    parts = normalized.split("/")
-    return build_response(
-        success=True,
-        data={
-            "code": code,
-            "normalized_input": normalized,
-            "region_code": parts[0],
-            "office_code": parts[1],
-            "establishment_code": parts[2],
-            "extension": parts[3],
-        },
-        validated_by=["format"],
-        source="offline_algorithm",
-    )
 
 
 @mcp.tool(annotations=ToolAnnotations(readOnlyHint=True, idempotentHint=True, openWorldHint=False))
@@ -765,27 +635,14 @@ def validate_esic_code(
     code: Annotated[str, Field(description="ESIC employer code (XX-XXXXX-XXXXX)")],
 ) -> dict[str, Any]:
     """Validate ESIC employer code."""
-    normalized = code.strip().upper().replace(" ", "")
-    if not ESIC_RE.match(normalized):
+    try:
+        return core_validate_esic_code(code)
+    except Exception as exc:
         return build_response(
             success=False,
-            data={"code": code, "normalized_input": normalized},
-            errors=["Invalid ESIC format. Expected: XX-XXXXX-XXXXX"],
+            errors=[f"ESIC code validation failed: {exc}"],
             source="offline_algorithm",
         )
-    parts = normalized.split("-")
-    return build_response(
-        success=True,
-        data={
-            "code": code,
-            "normalized_input": normalized,
-            "regional_code": parts[0],
-            "employer_code": parts[1],
-            "sub_code": parts[2],
-        },
-        validated_by=["format"],
-        source="offline_algorithm",
-    )
 
 
 @mcp.tool(annotations=ToolAnnotations(readOnlyHint=True, idempotentHint=True, openWorldHint=False))
@@ -793,55 +650,12 @@ def decode_digilocker_uri(
     uri: Annotated[str, Field(description="DigiLocker document URI")],
 ) -> dict[str, Any]:
     """Decode DigiLocker document URI and map to validator."""
-    errors = []
-    warnings = []
-    if not uri.startswith("dlg://"):
-        errors.append("Invalid DigiLocker URI format. Must start with 'dlg://'")
-        return build_response(success=False, data=None, errors=errors, source="offline_algorithm")
-    path = uri.replace("dlg://", "")
-    parts = path.split("/")
-    if len(parts) < 2:
-        errors.append("Invalid DigiLocker URI format")
-        return build_response(success=False, data=None, errors=errors, source="offline_algorithm")
-    issuer = parts[0].lower()
-    doc_type = parts[1].lower() if len(parts) > 1 else ""
-    validators = {
-        ("uidai", "aadhaar"): ("validate_aadhaar", "Aadhaar Card", ["aadhaar_number"]),
-        ("mha", "passport"): ("validate_passport", "Passport", ["passport_number"]),
-        ("parivahan", "dl", "driving_license"): (
-            "validate_driving_license",
-            "Driving License",
-            ["dl_number"],
-        ),
-        ("epic", "voter"): ("validate_voter_id", "Voter ID", ["epic_number"]),
-        ("incometax", "pan"): ("validate_pan", "PAN Card", ["pan"]),
-    }
-    verification_pairing = None
-    document_type = "Unknown"
-    expected_fields = []
-    for key, (validator, doc_type_label, fields) in validators.items():
-        if any(k in issuer or k in doc_type for k in key):
-            verification_pairing = validator
-            document_type = doc_type_label
-            expected_fields = fields
-            break
-    if not verification_pairing:
-        warnings.append(f"Unknown issuer: {issuer}. Manual verification recommended.")
-        document_type = f"Document from {issuer}"
-        expected_fields = ["document_id"]
-    return build_response(
-        success=True,
-        data={
-            "uri": uri,
-            "issuer": issuer,
-            "document_type": document_type,
-            "expected_fields": expected_fields,
-            "verification_pairing": verification_pairing,
-            "normalized_input": uri.strip(),
-        },
-        validated_by=["format"],
-        source="offline_algorithm",
-    )
+    try:
+        return core_decode_digilocker_uri(uri)
+    except Exception as exc:
+        return build_response(
+            success=False, errors=[f"DigiLocker decode failed: {exc}"], source="offline_algorithm"
+        )
 
 
 @mcp.resource("india://schema/validate_gstin")

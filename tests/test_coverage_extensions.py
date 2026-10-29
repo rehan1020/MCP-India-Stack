@@ -3,13 +3,14 @@ from unittest.mock import patch
 
 import pytest
 
-from mcp_india_stack.registrations.banking import _validate_single_ifsc, bulk_validate_ifsc
+from mcp_india_stack.registrations.banking import bulk_validate_ifsc
 from mcp_india_stack.registrations.kyc import (
-    _validate_single_pan,
     bulk_validate_aadhaar,
     bulk_validate_pan,
 )
 from mcp_india_stack.tools.bulk_aadhaar import _validate_single_aadhaar
+from mcp_india_stack.tools.bulk_ifsc import _validate_single_ifsc
+from mcp_india_stack.tools.bulk_pan import _validate_single_pan
 from mcp_india_stack.tools.salary_restructuring import _quick_tax_estimate
 
 
