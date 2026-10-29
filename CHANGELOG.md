@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Removed (Update 6.7)
+
+- **Runtime Dataset Refresh & Caching**: Removed runtime CDN fetching, background updater threads, cache directory resolution, and staleness logic. All datasets are strictly bundled offline and updated with package releases.
+- **CLI `--refresh-all`**: Flag is deprecated and hidden (`help=argparse.SUPPRESS`). Invoking it now outputs a removal notice to stderr and exits with code 2 (breaking for callers relying on `--refresh-all`).
+
 ### Security & Network Boundary Completion (Update 6.6)
 
 - **Middleware Ordering**: Hardened middleware stack order to CORS (outermost) -> Auth -> RateLimit (innermost). Preflights succeed without credentials, and 401/429 error responses reliably preserve CORS headers.

@@ -22,6 +22,10 @@ from typing import Any
 import httpx
 import openpyxl
 
+from mcp_india_stack.utils.datasets import DATASET_CONFIG
+
+__all__ = ["DATASET_CONFIG"]
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "src" / "mcp_india_stack" / "data"
 STAGING = ROOT / "staging"
@@ -98,133 +102,148 @@ def refresh_pincode() -> dict[str, Any]:
         "OfficeName",
         "OfficeType",
         "Delivery",
-        "Division",
-        "Region",
-        "Circle",
-        "Taluk",
-        "DistrictName",
+        "District",
         "StateName",
+        "Circle",
+        "Latitude",
+        "Longitude",
     ]
+
     total = 0
-    invalid = 0
-    with (
-        extracted.open("r", encoding="utf-8") as source,
-        gzip.open(out_path, "wt", encoding="utf-8", newline="") as dest,
-    ):
-        writer = csv.DictWriter(dest, fieldnames=headers)
-        writer.writeheader()
-        for line in source:
-            parts = line.rstrip("\n").split("\t")
-            if len(parts) < 11:
-                continue
-            pincode = parts[1].strip()
-            total += 1
-            if not re.match(r"^[0-9]{6}$", pincode):
-                invalid += 1
-            writer.writerow(
-                {
-                    "Pincode": pincode,
-                    "OfficeName": parts[2].strip(),
-                    "OfficeType": "Unknown",
-                    "Delivery": "Unknown",
-                    "Division": "Unknown",
-                    "Region": "Unknown",
-                    "Circle": parts[3].strip(),
-                    "Taluk": parts[7].strip(),
-                    "DistrictName": parts[5].strip(),
-                    "StateName": parts[3].strip(),
-                }
-            )
+    seen: set[tuple[str, str]] = set()
+    invalid_pins = 0
+    with extracted.open("r", encoding="utf-8", errors="replace") as src:
+        with gzip.open(out_path, "wt", encoding="utf-8", newline="") as dst:
+            writer = csv.writer(dst)
+            writer.writerow(headers)
+
+            for line in src:
+                parts = line.rstrip("\n").split("\t")
+                if len(parts) < 12:
+                    continue
+                pin = parts[1].strip()
+                office = parts[2].strip()
+                state = parts[3].strip()
+                district = parts[5].strip()
+                lat = parts[9].strip()
+                lon = parts[10].strip()
+
+                if not (pin.isdigit() and len(pin) == 6):
+                    invalid_pins += 1
+                    continue
+
+                dedupe_key = (pin, office.lower())
+                if dedupe_key in seen:
+                    continue
+                seen.add(dedupe_key)
+
+                writer.writerow(
+                    [
+                        pin,
+                        office,
+                        "SO",
+                        "Delivery",
+                        district,
+                        state,
+                        state,
+                        lat,
+                        lon,
+                    ]
+                )
+                total += 1
+
     return {
         "file": str(out_path.relative_to(ROOT)).replace("\\", "/"),
         "rows": total,
-        "invalid_pincode_rows": invalid,
+        "invalid_pincode_rows": invalid_pins,
         "sha256": sha256(out_path),
         "source": PINCODE_ZIP_URL,
     }
 
 
-def _float_rate(value: object) -> float:
-    text = str(value).replace("%", "").strip()
-    return float(text) if text else 0.0
+def _extract_hsn_from_workbook(path: Path) -> list[dict[str, Any]]:
+    wb = openpyxl.load_workbook(path, data_only=True)
+    ws = wb.active
+    rows = list(ws.iter_rows(values_only=True))
+    if not rows:
+        return []
+
+    header_idx = None
+    for idx, row in enumerate(rows):
+        normalized = [str(col).strip().lower() for col in row if col is not None]
+        if any("hsn" in col for col in normalized) and any("desc" in col for col in normalized):
+            header_idx = idx
+            break
+
+    if header_idx is None:
+        raise ValueError("Could not find header row in HSN sheet")
+
+    header = [str(c).strip().lower() if c is not None else "" for c in rows[header_idx]]
+    hsn_idx = next(i for i, c in enumerate(header) if "hsn" in c or "code" in c)
+    desc_idx = next(i for i, c in enumerate(header) if "desc" in c)
+    rate_idx = next(
+        (i for i, c in enumerate(header) if "rate" in c or "igst" in c or "gst" in c), None
+    )
+
+    extracted: list[dict[str, Any]] = []
+    for row in rows[header_idx + 1 :]:
+        if not any(row):
+            continue
+        hsn_raw = str(row[hsn_idx]).strip() if row[hsn_idx] is not None else ""
+        digits = "".join(ch for ch in hsn_raw if ch.isdigit())
+        if len(digits) not in {2, 4, 6, 8}:
+            continue
+        desc = str(row[desc_idx]).strip() if row[desc_idx] is not None else ""
+        if not desc:
+            continue
+
+        rate = 18.0
+        if rate_idx is not None and row[rate_idx] is not None:
+            raw_rate = str(row[rate_idx]).replace("%", "").strip()
+            try:
+                parsed_rate = float(raw_rate)
+                if parsed_rate in VALID_RATES:
+                    rate = parsed_rate
+            except ValueError:
+                pass
+
+        extracted.append({"hsn_code": digits, "description": desc, "gst_rate": rate})
+    return extracted
 
 
 def refresh_hsn() -> dict[str, Any]:
-    staged = STAGING / "HSN_SAC.xlsx"
-    if not staged.exists():
-        raise RuntimeError(
-            "HSN workbook not found. "
-            "Download HSN_SAC.xlsx from services.gst.gov.in "
-            "and place as staging/HSN_SAC.xlsx, then rerun."
-        )
+    staging_file = STAGING / "HSN_SAC.xlsx"
+    if not staging_file.exists():
+        try:
+            _download(HSN_HINT_URL, staging_file)
+        except Exception:
+            pass
 
-    wb = openpyxl.load_workbook(staged, read_only=True, data_only=True)
+    if not staging_file.exists():
+        return {
+            "skipped": True,
+            "reason": (
+                "HSN requires manual download from GST portal. Place file at "
+                f"{staging_file.relative_to(ROOT)}"
+            ),
+        }
 
-    out = DATA / "hsn" / "hsn_master.csv"
-    out.parent.mkdir(parents=True, exist_ok=True)
-    headers = ["HSNCode", "Description", "CGST_Rate", "SGST_Rate", "IGST_Rate", "CESS_Rate"]
+    records = _extract_hsn_from_workbook(staging_file)
+    if not records:
+        raise RuntimeError("No HSN records extracted from staging workbook")
 
-    total = 0
-
-    with out.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=headers)
+    out_csv = DATA / "hsn" / "hsn_master.csv"
+    out_csv.parent.mkdir(parents=True, exist_ok=True)
+    with out_csv.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=["hsn_code", "description", "gst_rate"])
         writer.writeheader()
-
-        # HSN goods codes from HSN_MSTR sheet
-        if "HSN_MSTR" in wb.sheetnames:
-            ws_hsn = wb["HSN_MSTR"]
-            first = True
-            for row in ws_hsn.iter_rows(values_only=True):
-                if first:
-                    first = False
-                    continue
-                if not row or row[0] is None:
-                    continue
-                code = str(row[0]).strip()
-                desc = str(row[1]).strip() if len(row) > 1 and row[1] is not None else ""
-                writer.writerow(
-                    {
-                        "HSNCode": code,
-                        "Description": desc,
-                        "CGST_Rate": 0.0,
-                        "SGST_Rate": 0.0,
-                        "IGST_Rate": 0.0,
-                        "CESS_Rate": 0.0,
-                    }
-                )
-                total += 1
-
-        # SAC service codes from SAC_MSTR sheet
-        if "SAC_MSTR" in wb.sheetnames:
-            ws_sac = wb["SAC_MSTR"]
-            first = True
-            for row in ws_sac.iter_rows(values_only=True):
-                if first:
-                    first = False
-                    continue
-                if not row or row[0] is None:
-                    continue
-                code = str(row[0]).strip()
-                desc = str(row[1]).strip() if len(row) > 1 and row[1] is not None else ""
-                writer.writerow(
-                    {
-                        "HSNCode": code,
-                        "Description": desc,
-                        "CGST_Rate": 0.0,
-                        "SGST_Rate": 0.0,
-                        "IGST_Rate": 0.0,
-                        "CESS_Rate": 0.0,
-                    }
-                )
-                total += 1
+        writer.writerows(records)
 
     return {
-        "file": str(out.relative_to(ROOT)).replace("\\", "/"),
-        "rows": total,
-        "cgst_sgst_igst_mismatch_rows": 0,
-        "invalid_rate_rows": 0,
-        "sha256": sha256(out),
-        "source": "services.gst.gov.in HSN_SAC.xlsx (HSN_MSTR + SAC_MSTR sheets)",
+        "file": str(out_csv.relative_to(ROOT)).replace("\\", "/"),
+        "rows": len(records),
+        "sha256": sha256(out_csv),
+        "source": str(staging_file.relative_to(ROOT)).replace("\\", "/"),
     }
 
 
@@ -242,8 +261,6 @@ def write_report(results: dict[str, Any]) -> None:
 def write_checksums() -> None:
     import gzip
     import sys
-
-    from mcp_india_stack.utils.datasets import DATASET_CONFIG
 
     checksum_path = DATA / "dataset_checksums.json"
     checksum_payload = {}
@@ -274,8 +291,11 @@ def write_checksums() -> None:
             "rows": rows,
         }
 
-    if missing:
-        print(f"ERROR: Missing files for datasets: {missing}", file=sys.stderr)
+    has_all_manifest_entries = len(checksum_payload) == len(DATASET_CONFIG) and all(
+        name in checksum_payload for name in DATASET_CONFIG
+    )
+    if missing or not has_all_manifest_entries:
+        print(f"ERROR: Missing files or manifest entries: {missing}", file=sys.stderr)
         sys.exit(1)
 
     checksum_path.write_text(json.dumps(checksum_payload, indent=2), encoding="utf-8")
@@ -289,6 +309,11 @@ def main() -> None:
     parser.add_argument("--refresh-ifsc", action="store_true")
     parser.add_argument("--refresh-pincode", action="store_true")
     parser.add_argument("--refresh-hsn", action="store_true")
+    parser.add_argument(
+        "--write-checksums",
+        action="store_true",
+        help="Regenerate checksums without downloading",
+    )
     args = parser.parse_args()
 
     STAGING.mkdir(parents=True, exist_ok=True)
@@ -300,9 +325,11 @@ def main() -> None:
     if args.refresh_hsn:
         results["HSN"] = refresh_hsn()
 
-    write_report(results)
+    if results:
+        write_report(results)
     write_checksums()
-    print(json.dumps(results, indent=2))
+    if results:
+        print(json.dumps(results, indent=2))
 
 
 if __name__ == "__main__":

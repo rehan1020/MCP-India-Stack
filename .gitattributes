@@ -1,0 +1,2 @@
+# Ensure datasets are treated as binary to prevent line-ending mutations
+src/mcp_india_stack/data/** binary

@@ -252,7 +252,7 @@ def main() -> None:  # noqa: C901
     parser.add_argument(
         "--refresh-all",
         action="store_true",
-        help="Refresh all cached datasets from CDN and exit without starting the server.",
+        help=argparse.SUPPRESS,
     )
     parser.add_argument(
         "--transport",
@@ -276,14 +276,8 @@ def main() -> None:  # noqa: C901
     args = parser.parse_args()
 
     if args.refresh_all:
-        from mcp_india_stack.utils.updater import force_refresh_all
-
-        print("Refreshing all datasets from CDN...")
-        results = force_refresh_all()
-        for name, ok in results.items():
-            status = "✓ updated" if ok else "✗ failed (using existing data)"
-            print(f"  {name}: {status}")
-        sys.exit(0)
+        sys.stderr.write("dataset refresh was removed; upgrade the package to receive new data\n")
+        sys.exit(2)
 
     if args.transport == "sse":
         import uvicorn

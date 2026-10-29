@@ -238,11 +238,10 @@ Dynamic JSON resources provided directly to the LLM context:
 
 This package bundles static datasets for offline-first workflows (approx. 10-11MB compressed footprint), covering IFSCs, Pincodes, HSN/SAC masters, and curated UPI handles.
 
-An optional auto-update mechanism fetches the latest versions from the jsDelivr CDN in the background:
-- **Non-blocking**: Stale data triggers a background refresh; the current request immediately uses existing cached data to ensure zero latency.
-- **Opt out**: Set the `MCP_INDIA_STACK_NO_AUTO_UPDATE=1` environment variable to disable all update checks.
-- **Manual refresh**: Run `mcp-india-stack --refresh-all` to synchronously refresh all datasets from the CDN.
-- **Cache location**: Platform-specific via `platformdirs` (e.g., `~/.cache/mcp-india-stack` on Linux).
+All datasets are bundled directly within the package and checksum-verified at build time:
+- **Offline First**: Zero runtime network calls for dataset queries. No external CDN dependency or cache shadowing.
+- **Deterministic**: Data freshness is tied to package releases. To receive updated datasets, upgrade `mcp-india-stack`.
+- **Integrity**: Bundled dataset integrity is verified against a build-time SHA-256 manifest.
 
 ---
 
