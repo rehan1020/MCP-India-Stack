@@ -25,7 +25,7 @@
               "errors": [],
               "source": "offline_static",
               "success": true,
-              "tool_version": "0.6.9",
+              "tool_version": "0.7.0",
               "validated_by": [
                 "format_check",
                 "checksum"
@@ -39,7 +39,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -78,7 +78,7 @@
               ],
               "source": "offline_static",
               "success": false,
-              "tool_version": "0.6.9",
+              "tool_version": "0.7.0",
               "validated_by": [
                 "format_check",
                 "checksum"
@@ -92,7 +92,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -129,7 +129,7 @@
               "errors": [],
               "source": "offline_static",
               "success": true,
-              "tool_version": "0.6.9",
+              "tool_version": "0.7.0",
               "validated_by": [
                 "format_check",
                 "checksum"
@@ -157,7 +157,7 @@
               ],
               "source": "offline_static",
               "success": false,
-              "tool_version": "0.6.9",
+              "tool_version": "0.7.0",
               "validated_by": [
                 "format_check",
                 "checksum"
@@ -171,7 +171,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -202,7 +202,7 @@
               ],
               "source": "offline_static",
               "success": false,
-              "tool_version": "0.6.9",
+              "tool_version": "0.7.0",
               "warnings": []
             },
             {
@@ -224,7 +224,7 @@
               "errors": [],
               "source": "offline_static",
               "success": true,
-              "tool_version": "0.6.9",
+              "tool_version": "0.7.0",
               "validated_by": [
                 "format_check",
                 "checksum"
@@ -238,7 +238,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -260,7 +260,7 @@
         ],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -276,7 +276,7 @@
         ],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -820,7 +820,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -854,7 +854,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -920,7 +920,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -977,7 +977,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -999,7 +999,7 @@
         ],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -1015,7 +1015,7 @@
         ],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -1557,7 +1557,7 @@
               "series": "ABC",
               "source": "offline_static",
               "success": true,
-              "tool_version": "0.6.9",
+              "tool_version": "0.7.0",
               "valid": true,
               "validated_by": [
                 "format_check"
@@ -1573,7 +1573,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -1604,7 +1604,7 @@
               "pan": "INVALID123",
               "source": "offline_static",
               "success": false,
-              "tool_version": "0.6.9",
+              "tool_version": "0.7.0",
               "valid": false,
               "warnings": []
             }
@@ -1615,7 +1615,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -1658,7 +1658,7 @@
               "series": "ABC",
               "source": "offline_static",
               "success": true,
-              "tool_version": "0.6.9",
+              "tool_version": "0.7.0",
               "valid": true,
               "validated_by": [
                 "format_check"
@@ -1693,7 +1693,7 @@
               "series": "XYZ",
               "source": "offline_static",
               "success": true,
-              "tool_version": "0.6.9",
+              "tool_version": "0.7.0",
               "valid": true,
               "validated_by": [
                 "format_check"
@@ -1707,7 +1707,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -1751,7 +1751,7 @@
               "series": "ABC",
               "source": "offline_static",
               "success": true,
-              "tool_version": "0.6.9",
+              "tool_version": "0.7.0",
               "valid": true,
               "validated_by": [
                 "format_check"
@@ -1774,7 +1774,7 @@
               "pan": "SHORT",
               "source": "offline_static",
               "success": false,
-              "tool_version": "0.6.9",
+              "tool_version": "0.7.0",
               "valid": false,
               "warnings": []
             }
@@ -1785,7 +1785,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -1807,7 +1807,7 @@
         ],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -1823,7 +1823,7 @@
         ],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -2350,7 +2350,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -2376,7 +2376,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -2402,7 +2402,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -2428,7 +2428,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -2447,7 +2447,7 @@
         ],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -2463,7 +2463,7 @@
         ],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -2485,7 +2485,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format",
           "checksum"
@@ -2509,7 +2509,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format",
           "checksum"
@@ -2533,7 +2533,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format",
           "checksum"
@@ -2557,7 +2557,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format",
           "checksum"
@@ -2581,7 +2581,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format",
           "checksum"
@@ -2609,7 +2609,7 @@
           "pan": "INVALID",
           "source": "offline_static",
           "success": false,
-          "tool_version": "0.6.9",
+          "tool_version": "0.7.0",
           "valid": false,
           "warnings": []
         },
@@ -2618,7 +2618,7 @@
         ],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -2645,7 +2645,7 @@
         "errors": [],
         "source": "bundled_dataset",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -2673,7 +2673,7 @@
         "errors": [],
         "source": "bundled_dataset",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -2701,7 +2701,7 @@
         "errors": [],
         "source": "bundled_dataset",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -2792,7 +2792,7 @@
         "errors": [],
         "source": "bundled_dataset",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -2812,7 +2812,7 @@
         "errors": [],
         "source": "bundled_dataset",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -2900,7 +2900,7 @@
         "errors": [],
         "source": "bundled_dataset",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -2933,7 +2933,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -2971,7 +2971,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -3002,7 +3002,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -3031,7 +3031,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -3059,7 +3059,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -3094,7 +3094,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -3127,7 +3127,7 @@
         ],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -3146,7 +3146,7 @@
         ],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -3165,7 +3165,7 @@
         ],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -3184,7 +3184,7 @@
         ],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -3203,7 +3203,7 @@
         ],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -3222,7 +3222,7 @@
         ],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -3244,7 +3244,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -3267,7 +3267,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -3290,7 +3290,7 @@
         "errors": [],
         "source": "offline_algorithm",
         "success": true,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "validated_by": [
           "format"
         ],
@@ -3312,7 +3312,7 @@
         ],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -3331,7 +3331,7 @@
         ],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {
@@ -3350,7 +3350,7 @@
         ],
         "source": "offline_algorithm",
         "success": false,
-        "tool_version": "0.6.9",
+        "tool_version": "0.7.0",
         "warnings": []
       },
       "input": {

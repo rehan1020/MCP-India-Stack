@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.7.0] - 2026-10-29
 
 ### Refactoring & Core Parity (Update 5b)
 
