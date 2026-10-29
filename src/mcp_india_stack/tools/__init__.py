@@ -14,8 +14,13 @@ PAN_ENTITY_TYPE_LABELS = {
     "E": "Limited Liability Partnership (LLP)",
 }
 
+from mcp_india_stack.tools.aa_consent import (
+    build_aa_consent_request,
+    validate_aa_consent_artifact,
+)
 from mcp_india_stack.tools.aadhaar import validate_aadhaar
 from mcp_india_stack.tools.advance_tax import calculate_advance_tax, calculate_interest_penalty
+from mcp_india_stack.tools.bank_lookup import lookup_bank
 from mcp_india_stack.tools.bare_act import (
     decode_ipc_bns_crosswalk,
     lookup_bns_section,
@@ -27,15 +32,21 @@ from mcp_india_stack.tools.bare_act import (
 )
 from mcp_india_stack.tools.bbps import lookup_bbps_biller
 from mcp_india_stack.tools.bulk_aadhaar import bulk_validate_aadhaar
+from mcp_india_stack.tools.bulk_gstin import bulk_validate_gstin
+from mcp_india_stack.tools.bulk_ifsc import bulk_validate_ifsc
+from mcp_india_stack.tools.bulk_pan import bulk_validate_pan
 from mcp_india_stack.tools.capital_gains import calculate_capital_gains, calculate_home_loan_savings
 from mcp_india_stack.tools.cin import validate_cin
 from mcp_india_stack.tools.cnr import decode_cnr_number
 from mcp_india_stack.tools.court_establishment import lookup_court_establishment_code
 from mcp_india_stack.tools.court_fee import calculate_court_fee
+from mcp_india_stack.tools.digilocker import decode_digilocker_uri
 from mcp_india_stack.tools.din import validate_din
 from mcp_india_stack.tools.driving_license import validate_driving_license
 from mcp_india_stack.tools.emi import calculate_emi
+from mcp_india_stack.tools.epf_code import validate_epf_code
 from mcp_india_stack.tools.epf_esic import calculate_epf_esic
+from mcp_india_stack.tools.esic_code import validate_esic_code
 from mcp_india_stack.tools.fssai import validate_fssai
 from mcp_india_stack.tools.gratuity import calculate_gratuity
 from mcp_india_stack.tools.gst_calculator import calculate_gst
@@ -46,6 +57,7 @@ from mcp_india_stack.tools.ifsc import lookup_ifsc
 from mcp_india_stack.tools.income_tax import calculate_income_tax
 from mcp_india_stack.tools.limitation import calculate_limitation_deadline
 from mcp_india_stack.tools.pan import validate_pan
+from mcp_india_stack.tools.pan_type import decode_pan_type
 from mcp_india_stack.tools.passport import validate_passport
 from mcp_india_stack.tools.pincode import lookup_pincode
 from mcp_india_stack.tools.ppf_maturity import calculate_ppf_maturity
@@ -69,7 +81,11 @@ from mcp_india_stack.tools.voter_id import validate_voter_id
 
 __all__ = [
     "PAN_ENTITY_TYPE_LABELS",
+    "build_aa_consent_request",
     "bulk_validate_aadhaar",
+    "bulk_validate_gstin",
+    "bulk_validate_ifsc",
+    "bulk_validate_pan",
     "calculate_advance_tax",
     "calculate_capital_gains",
     "calculate_court_fee",
@@ -92,7 +108,9 @@ __all__ = [
     "calculate_surcharge",
     "calculate_tds",
     "decode_cnr_number",
+    "decode_digilocker_uri",
     "decode_ipc_bns_crosswalk",
+    "decode_pan_type",
     "decode_state_code",
     "draft_first_appeal",
     "draft_rti_application",
@@ -100,6 +118,7 @@ __all__ = [
     "get_regulatory_deadlines",
     "get_stock_history",
     "get_stock_quote",
+    "lookup_bank",
     "lookup_bbps_biller",
     "lookup_bns_section",
     "lookup_bnss_section",
@@ -111,10 +130,13 @@ __all__ = [
     "lookup_ifsc",
     "lookup_ipc_section",
     "lookup_pincode",
+    "validate_aa_consent_artifact",
     "validate_aadhaar",
     "validate_cin",
     "validate_din",
     "validate_driving_license",
+    "validate_epf_code",
+    "validate_esic_code",
     "validate_fssai",
     "validate_gstin",
     "validate_pan",

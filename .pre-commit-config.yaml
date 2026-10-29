@@ -9,3 +9,9 @@ repos:
     hooks:
       - id: mypy
         additional_dependencies: [types-requests]
+  - repo: https://github.com/PyCQA/bandit
+    rev: 92ae8b82fb422a639f0ed8d99e96cea769594e08 # 1.9.4
+    hooks:
+      - id: bandit
+        args: ["-r", "src", "-ll", "-ii"]
+        additional_dependencies: ["bandit[toml]"]
