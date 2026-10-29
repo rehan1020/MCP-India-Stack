@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Security & CI Hardening (Update 7)
+
+- **Comprehensive Regression Guards (G01–G20)**: Added suite of architectural and security invariant tests enforcing CORS rules, constant-time auth, worker clamping bounds, dataset integrity, network import restrictions, dead code elimination, telemetry pseudonymization, elevated tool gating, line count bounds, wrapper delegation, single imports, loopback defaults, middleware order, fail-closed startup refusal, host allowlists, rate limiting, and zero-skip/nosec rules.
+- **CI Hardening & Pinned Actions**: Pinned all GitHub Actions to exact immutable commit SHAs across CI, Publish, and Security Audit workflows. Added workflow call support, job timeouts, minimal required permissions, and tag-version checks.
+- **Automated Security Gates**: Added Bandit SAST scanning and `pip-audit` dependency vulnerability scanning backed by `.pip-audit-ignore.toml` with strict expiry enforcement.
+- **Lockfile & Distribution Smoke Testing**: Added automated lockfile drift detection with `uv` and clean-environment wheel installation smoke test.
+
 ### Removed (Update 6.7)
 
 - **Runtime Dataset Refresh & Caching**: Removed runtime CDN fetching, background updater threads, cache directory resolution, and staleness logic. All datasets are strictly bundled offline and updated with package releases.

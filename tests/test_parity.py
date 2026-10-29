@@ -9,8 +9,6 @@ from __future__ import annotations
 import importlib
 import pkgutil
 
-import pytest
-
 
 def _get_registered_tool_names() -> set[str]:
     """Return the set of all tool names registered on the MCP instance."""
@@ -86,8 +84,7 @@ class TestToolParity:
         import pathlib
 
         server_py = pathlib.Path(__file__).parent.parent / "src" / "mcp_india_stack" / "server.py"
-        if not server_py.exists():
-            pytest.skip("server.py not found at expected path")
+        assert server_py.exists(), "server.py not found at expected path"
         content = server_py.read_text(encoding="utf-8")
         matches = [
             line.strip()
@@ -100,33 +97,8 @@ class TestToolParity:
         )
 
 
-EXPECTED_TOOL_COUNT_ELEVATED_OFF: int = 74
-EXPECTED_TOOL_COUNT_ELEVATED_ON: int = 78
-
-SCHEMA_TOOLS: frozenset[str] = frozenset(
-    {
-        "validate_gstin",
-        "validate_pan",
-        "validate_upi_vpa",
-        "validate_aadhaar",
-        "validate_voter_id",
-        "validate_driving_license",
-        "validate_passport",
-        "validate_cin",
-        "validate_din",
-        "bulk_validate_gstin",
-        "calculate_income_tax",
-        "calculate_tds",
-        "calculate_gst",
-        "calculate_surcharge",
-        "calculate_hra_exemption",
-        "calculate_capital_gains",
-        "calculate_advance_tax",
-        "lookup_pincode",
-        "lookup_hsn_code",
-        "decode_state_code",
-        "lookup_ifsc",
-    }
+from tests.constants import (
+    SCHEMA_TOOLS,
 )
 
 
