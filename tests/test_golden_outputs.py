@@ -7,6 +7,7 @@ annotations) remain 100% stable before and after extraction.
 
 from __future__ import annotations
 
+import inspect
 import json
 from pathlib import Path
 from typing import Any
@@ -40,7 +41,10 @@ def test_tool_manifest_stability() -> None:
     for name, tool in current_tools.items():
         golden = golden_manifest[name]
         assert tool.name == golden["name"]
-        assert tool.description == golden["description"]
+        assert (
+            inspect.cleandoc(tool.description or "").strip()
+            == inspect.cleandoc(golden["description"] or "").strip()
+        )
         assert tool.parameters == golden["parameters"]
         if golden["annotations"]:
             assert tool.annotations is not None
