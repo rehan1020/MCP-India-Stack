@@ -1,0 +1,3361 @@
+{
+  "bulk_validate_gstin": [
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "invalid_count": 1,
+          "results": [
+            {
+              "confidence": 0.65,
+              "data": {
+                "category": "standard",
+                "checksum_valid": true,
+                "entity_number": "1",
+                "expected_checksum": "V",
+                "format_validity": "full",
+                "gstin": "27AAPFU0939F1ZV",
+                "live_verified": false,
+                "normalized_input": "27AAPFU0939F1ZV",
+                "pan": "AAPFU0939F",
+                "state_code": "27",
+                "state_name": "Maharashtra",
+                "valid": true
+              },
+              "errors": [],
+              "source": "offline_static",
+              "success": true,
+              "tool_version": "0.6.9",
+              "validated_by": [
+                "format_check",
+                "checksum"
+              ],
+              "warnings": []
+            }
+          ],
+          "total": 1,
+          "valid_count": 0
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "gstins": [
+          "27AAPFU0939F1ZV"
+        ]
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "invalid_count": 1,
+          "results": [
+            {
+              "confidence": 0.0,
+              "data": {
+                "category": "standard",
+                "checksum_valid": false,
+                "entity_number": "1",
+                "expected_checksum": "V",
+                "format_validity": "full",
+                "gstin": "27AAPFU0939F1Z0",
+                "live_verified": false,
+                "normalized_input": "27AAPFU0939F1Z0",
+                "pan": "AAPFU0939F",
+                "state_code": "27",
+                "state_name": "Maharashtra",
+                "valid": false
+              },
+              "errors": [
+                "Checksum character is invalid"
+              ],
+              "source": "offline_static",
+              "success": false,
+              "tool_version": "0.6.9",
+              "validated_by": [
+                "format_check",
+                "checksum"
+              ],
+              "warnings": []
+            }
+          ],
+          "total": 1,
+          "valid_count": 0
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "gstins": [
+          "27AAPFU0939F1Z0"
+        ]
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "invalid_count": 2,
+          "results": [
+            {
+              "confidence": 0.65,
+              "data": {
+                "category": "standard",
+                "checksum_valid": true,
+                "entity_number": "1",
+                "expected_checksum": "V",
+                "format_validity": "full",
+                "gstin": "27AAPFU0939F1ZV",
+                "live_verified": false,
+                "normalized_input": "27AAPFU0939F1ZV",
+                "pan": "AAPFU0939F",
+                "state_code": "27",
+                "state_name": "Maharashtra",
+                "valid": true
+              },
+              "errors": [],
+              "source": "offline_static",
+              "success": true,
+              "tool_version": "0.6.9",
+              "validated_by": [
+                "format_check",
+                "checksum"
+              ],
+              "warnings": []
+            },
+            {
+              "confidence": 0.0,
+              "data": {
+                "category": "standard",
+                "checksum_valid": false,
+                "entity_number": "1",
+                "expected_checksum": "J",
+                "format_validity": "full",
+                "gstin": "29AABCU9603R1ZM",
+                "live_verified": false,
+                "normalized_input": "29AABCU9603R1ZM",
+                "pan": "AABCU9603R",
+                "state_code": "29",
+                "state_name": "Karnataka",
+                "valid": false
+              },
+              "errors": [
+                "Checksum character is invalid"
+              ],
+              "source": "offline_static",
+              "success": false,
+              "tool_version": "0.6.9",
+              "validated_by": [
+                "format_check",
+                "checksum"
+              ],
+              "warnings": []
+            }
+          ],
+          "total": 2,
+          "valid_count": 0
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "gstins": [
+          "27AAPFU0939F1ZV",
+          "29AABCU9603R1ZM"
+        ]
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "invalid_count": 2,
+          "results": [
+            {
+              "confidence": 0.0,
+              "data": {
+                "gstin": "INVALID_GSTIN",
+                "live_verified": false,
+                "valid": false
+              },
+              "errors": [
+                "GSTIN must be exactly 15 characters"
+              ],
+              "source": "offline_static",
+              "success": false,
+              "tool_version": "0.6.9",
+              "warnings": []
+            },
+            {
+              "confidence": 0.65,
+              "data": {
+                "category": "standard",
+                "checksum_valid": true,
+                "entity_number": "1",
+                "expected_checksum": "V",
+                "format_validity": "full",
+                "gstin": "27AAPFU0939F1ZV",
+                "live_verified": false,
+                "normalized_input": "27AAPFU0939F1ZV",
+                "pan": "AAPFU0939F",
+                "state_code": "27",
+                "state_name": "Maharashtra",
+                "valid": true
+              },
+              "errors": [],
+              "source": "offline_static",
+              "success": true,
+              "tool_version": "0.6.9",
+              "validated_by": [
+                "format_check",
+                "checksum"
+              ],
+              "warnings": []
+            }
+          ],
+          "total": 2,
+          "valid_count": 0
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "gstins": [
+          "INVALID_GSTIN",
+          "27AAPFU0939F1ZV"
+        ]
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": null,
+        "errors": [
+          "Empty GSTIN list"
+        ],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "gstins": []
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": null,
+        "errors": [
+          "Maximum 500 GSTINs per call"
+        ],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "gstins": [
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV",
+          "27AAPFU0939F1ZV"
+        ]
+      }
+    }
+  ],
+  "bulk_validate_ifsc": [
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "found_count": 1,
+          "results": [
+            {
+              "address": null,
+              "bank": "SBI",
+              "branch": "TEST BRANCH",
+              "city": "TEST CITY",
+              "district": null,
+              "errors": [],
+              "found": true,
+              "ifsc": "SBIN0001234",
+              "imps_enabled": false,
+              "live_verified": false,
+              "micr": null,
+              "neft_enabled": false,
+              "rtgs_enabled": false,
+              "source": "bundled_dataset",
+              "state": "TEST STATE",
+              "swift": null,
+              "upi_enabled": false,
+              "verification_source": "offline",
+              "warnings": []
+            }
+          ],
+          "total": 1
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "ifscs": [
+          "SBIN0001234"
+        ]
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "found_count": 0,
+          "results": [
+            {
+              "errors": [
+                "IFSC code must be exactly 11 characters"
+              ],
+              "found": false,
+              "ifsc": "INVALID999",
+              "live_verified": false,
+              "verification_source": "offline",
+              "warnings": []
+            }
+          ],
+          "total": 1
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "ifscs": [
+          "INVALID999"
+        ]
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "found_count": 2,
+          "results": [
+            {
+              "address": null,
+              "bank": "SBI",
+              "branch": "TEST BRANCH",
+              "city": "TEST CITY",
+              "district": null,
+              "errors": [],
+              "found": true,
+              "ifsc": "SBIN0001234",
+              "imps_enabled": false,
+              "live_verified": false,
+              "micr": null,
+              "neft_enabled": false,
+              "rtgs_enabled": false,
+              "source": "bundled_dataset",
+              "state": "TEST STATE",
+              "swift": null,
+              "upi_enabled": false,
+              "verification_source": "offline",
+              "warnings": []
+            },
+            {
+              "address": null,
+              "bank": "HDFC",
+              "branch": "TEST",
+              "city": "TEST",
+              "district": null,
+              "errors": [],
+              "found": true,
+              "ifsc": "HDFC0000001",
+              "imps_enabled": false,
+              "live_verified": false,
+              "micr": null,
+              "neft_enabled": false,
+              "rtgs_enabled": false,
+              "source": "bundled_dataset",
+              "state": "TEST",
+              "swift": null,
+              "upi_enabled": false,
+              "verification_source": "offline",
+              "warnings": []
+            }
+          ],
+          "total": 2
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "ifscs": [
+          "SBIN0001234",
+          "HDFC0000001"
+        ]
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "found_count": 1,
+          "results": [
+            {
+              "address": null,
+              "bank": "SBI",
+              "branch": "TEST BRANCH",
+              "city": "TEST CITY",
+              "district": null,
+              "errors": [],
+              "found": true,
+              "ifsc": "SBIN0001234",
+              "imps_enabled": false,
+              "live_verified": false,
+              "micr": null,
+              "neft_enabled": false,
+              "rtgs_enabled": false,
+              "source": "bundled_dataset",
+              "state": "TEST STATE",
+              "swift": null,
+              "upi_enabled": false,
+              "verification_source": "offline",
+              "warnings": []
+            },
+            {
+              "errors": [
+                "IFSC not found in local dataset"
+              ],
+              "found": false,
+              "ifsc": "ZZZZ0999999",
+              "live_verified": false,
+              "source": "bundled_dataset",
+              "verification_source": "offline",
+              "warnings": []
+            }
+          ],
+          "total": 2
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "ifscs": [
+          "SBIN0001234",
+          "ZZZZ0999999"
+        ]
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": null,
+        "errors": [
+          "Empty IFSC list"
+        ],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "ifscs": []
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": null,
+        "errors": [
+          "Maximum 500 IFSCs per call"
+        ],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "ifscs": [
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234",
+          "SBIN0001234"
+        ]
+      }
+    }
+  ],
+  "bulk_validate_pan": [
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "results": [
+            {
+              "check_character": "F",
+              "checksum_verifiable": false,
+              "confidence": 0.0,
+              "data": {
+                "check_character": "F",
+                "checksum_verifiable": false,
+                "entity_code": "D",
+                "entity_type": "Unknown",
+                "name_initial": "E",
+                "normalized_input": "ABCDE1234F",
+                "pan": "ABCDE1234F",
+                "sequence": "1234",
+                "series": "ABC",
+                "valid": true
+              },
+              "entity_code": "D",
+              "entity_type": "Unknown",
+              "errors": [],
+              "name_initial": "E",
+              "normalized_input": "ABCDE1234F",
+              "pan": "ABCDE1234F",
+              "sequence": "1234",
+              "series": "ABC",
+              "source": "offline_static",
+              "success": true,
+              "tool_version": "0.6.9",
+              "valid": true,
+              "validated_by": [
+                "format_check"
+              ],
+              "warnings": [
+                "PAN entity code is not in the common official list"
+              ]
+            }
+          ],
+          "total": 1,
+          "valid_count": 1
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "pans": [
+          "ABCDE1234F"
+        ]
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "results": [
+            {
+              "checksum_verifiable": false,
+              "confidence": 0.0,
+              "data": {
+                "checksum_verifiable": false,
+                "pan": "INVALID123",
+                "valid": false
+              },
+              "errors": [
+                "PAN must match format AAAAA9999A"
+              ],
+              "pan": "INVALID123",
+              "source": "offline_static",
+              "success": false,
+              "tool_version": "0.6.9",
+              "valid": false,
+              "warnings": []
+            }
+          ],
+          "total": 1,
+          "valid_count": 0
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "pans": [
+          "INVALID123"
+        ]
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "results": [
+            {
+              "check_character": "F",
+              "checksum_verifiable": false,
+              "confidence": 0.0,
+              "data": {
+                "check_character": "F",
+                "checksum_verifiable": false,
+                "entity_code": "D",
+                "entity_type": "Unknown",
+                "name_initial": "E",
+                "normalized_input": "ABCDE1234F",
+                "pan": "ABCDE1234F",
+                "sequence": "1234",
+                "series": "ABC",
+                "valid": true
+              },
+              "entity_code": "D",
+              "entity_type": "Unknown",
+              "errors": [],
+              "name_initial": "E",
+              "normalized_input": "ABCDE1234F",
+              "pan": "ABCDE1234F",
+              "sequence": "1234",
+              "series": "ABC",
+              "source": "offline_static",
+              "success": true,
+              "tool_version": "0.6.9",
+              "valid": true,
+              "validated_by": [
+                "format_check"
+              ],
+              "warnings": [
+                "PAN entity code is not in the common official list"
+              ]
+            },
+            {
+              "check_character": "G",
+              "checksum_verifiable": false,
+              "confidence": 0.0,
+              "data": {
+                "check_character": "G",
+                "checksum_verifiable": false,
+                "entity_code": "A",
+                "entity_type": "Association of Persons (AOP)",
+                "name_initial": "B",
+                "normalized_input": "XYZAB5678G",
+                "pan": "XYZAB5678G",
+                "sequence": "5678",
+                "series": "XYZ",
+                "valid": true
+              },
+              "entity_code": "A",
+              "entity_type": "Association of Persons (AOP)",
+              "errors": [],
+              "name_initial": "B",
+              "normalized_input": "XYZAB5678G",
+              "pan": "XYZAB5678G",
+              "sequence": "5678",
+              "series": "XYZ",
+              "source": "offline_static",
+              "success": true,
+              "tool_version": "0.6.9",
+              "valid": true,
+              "validated_by": [
+                "format_check"
+              ],
+              "warnings": []
+            }
+          ],
+          "total": 2,
+          "valid_count": 2
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "pans": [
+          "ABCDE1234F",
+          "XYZAB5678G"
+        ]
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "results": [
+            {
+              "check_character": "F",
+              "checksum_verifiable": false,
+              "confidence": 0.0,
+              "data": {
+                "check_character": "F",
+                "checksum_verifiable": false,
+                "entity_code": "D",
+                "entity_type": "Unknown",
+                "name_initial": "E",
+                "normalized_input": "ABCDE1234F",
+                "pan": "ABCDE1234F",
+                "sequence": "1234",
+                "series": "ABC",
+                "valid": true
+              },
+              "entity_code": "D",
+              "entity_type": "Unknown",
+              "errors": [],
+              "name_initial": "E",
+              "normalized_input": "ABCDE1234F",
+              "pan": "ABCDE1234F",
+              "sequence": "1234",
+              "series": "ABC",
+              "source": "offline_static",
+              "success": true,
+              "tool_version": "0.6.9",
+              "valid": true,
+              "validated_by": [
+                "format_check"
+              ],
+              "warnings": [
+                "PAN entity code is not in the common official list"
+              ]
+            },
+            {
+              "checksum_verifiable": false,
+              "confidence": 0.0,
+              "data": {
+                "checksum_verifiable": false,
+                "pan": "SHORT",
+                "valid": false
+              },
+              "errors": [
+                "PAN must be exactly 10 characters"
+              ],
+              "pan": "SHORT",
+              "source": "offline_static",
+              "success": false,
+              "tool_version": "0.6.9",
+              "valid": false,
+              "warnings": []
+            }
+          ],
+          "total": 2,
+          "valid_count": 1
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "pans": [
+          "ABCDE1234F",
+          "SHORT"
+        ]
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": null,
+        "errors": [
+          "Empty PAN list"
+        ],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "pans": []
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": null,
+        "errors": [
+          "Maximum 500 PANs per call"
+        ],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "pans": [
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F",
+          "ABCDE1234F"
+        ]
+      }
+    }
+  ],
+  "decode_digilocker_uri": [
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "document_type": "Aadhaar Card",
+          "expected_fields": [
+            "aadhaar_number"
+          ],
+          "issuer": "uidai",
+          "normalized_input": "dlg://uidai/aadhaar/12345",
+          "uri": "dlg://uidai/aadhaar/12345",
+          "verification_pairing": "validate_aadhaar"
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "uri": "dlg://uidai/aadhaar/12345"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "document_type": "PAN Card",
+          "expected_fields": [
+            "pan"
+          ],
+          "issuer": "incometax",
+          "normalized_input": "dlg://incometax/pan/ABCDE1234F",
+          "uri": "dlg://incometax/pan/ABCDE1234F",
+          "verification_pairing": "validate_pan"
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "uri": "dlg://incometax/pan/ABCDE1234F"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "document_type": "Passport",
+          "expected_fields": [
+            "passport_number"
+          ],
+          "issuer": "mha",
+          "normalized_input": "dlg://mha/passport/A1234567",
+          "uri": "dlg://mha/passport/A1234567",
+          "verification_pairing": "validate_passport"
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "uri": "dlg://mha/passport/A1234567"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "document_type": "Document from custom",
+          "expected_fields": [
+            "document_id"
+          ],
+          "issuer": "custom",
+          "normalized_input": "dlg://custom/unknown_doc",
+          "uri": "dlg://custom/unknown_doc",
+          "verification_pairing": null
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "uri": "dlg://custom/unknown_doc"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": null,
+        "errors": [
+          "Invalid DigiLocker URI format. Must start with 'dlg://'"
+        ],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "uri": "http://example.com"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": null,
+        "errors": [
+          "Invalid DigiLocker URI format"
+        ],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "uri": "dlg://onlyonepart"
+      }
+    }
+  ],
+  "decode_pan_type": [
+    {
+      "expected": {
+        "confidence": 0.65,
+        "data": {
+          "entity_type_code": "P",
+          "entity_type_label": "Individual",
+          "kyc_routing_hint": "NRI requires Form 60/61",
+          "normalized_input": "ABCPE1234F",
+          "pan": "ABCPE1234F"
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format",
+          "checksum"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "pan": "ABCPE1234F"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.65,
+        "data": {
+          "entity_type_code": "C",
+          "entity_type_label": "Company",
+          "kyc_routing_hint": "Requires DIN for directors",
+          "normalized_input": "ABCCE1234F",
+          "pan": "ABCCE1234F"
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format",
+          "checksum"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "pan": "ABCCE1234F"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.65,
+        "data": {
+          "entity_type_code": "H",
+          "entity_type_label": "Hindu Undivided Family (HUF)",
+          "kyc_routing_hint": "HUF",
+          "normalized_input": "ABCHE1234F",
+          "pan": "ABCHE1234F"
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format",
+          "checksum"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "pan": "ABCHE1234F"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.65,
+        "data": {
+          "entity_type_code": "F",
+          "entity_type_label": "Firm",
+          "kyc_routing_hint": "Partnership/LLP",
+          "normalized_input": "ABCFE1234F",
+          "pan": "ABCFE1234F"
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format",
+          "checksum"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "pan": "ABCFE1234F"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.65,
+        "data": {
+          "entity_type_code": "Z",
+          "entity_type_label": "Unknown",
+          "kyc_routing_hint": "",
+          "normalized_input": "ABCZE1234F",
+          "pan": "ABCZE1234F"
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format",
+          "checksum"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "pan": "ABCZE1234F"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": {
+          "checksum_verifiable": false,
+          "confidence": 0.0,
+          "data": {
+            "checksum_verifiable": false,
+            "pan": "INVALID",
+            "valid": false
+          },
+          "errors": [
+            "PAN must be exactly 10 characters"
+          ],
+          "pan": "INVALID",
+          "source": "offline_static",
+          "success": false,
+          "tool_version": "0.6.9",
+          "valid": false,
+          "warnings": []
+        },
+        "errors": [
+          "PAN must be exactly 10 characters"
+        ],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "pan": "INVALID"
+      }
+    }
+  ],
+  "lookup_bank": [
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "banks": [
+            {
+              "code": "SBIN",
+              "hq": "Mumbai",
+              "name": "State Bank of India",
+              "rbi_licensed": true,
+              "type": "commercial"
+            }
+          ],
+          "count": 1
+        },
+        "errors": [],
+        "source": "bundled_dataset",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "name_or_code": "SBIN"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "banks": [
+            {
+              "code": "SBIN",
+              "hq": "Mumbai",
+              "name": "State Bank of India",
+              "rbi_licensed": true,
+              "type": "commercial"
+            }
+          ],
+          "count": 1
+        },
+        "errors": [],
+        "source": "bundled_dataset",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "name_or_code": "State Bank"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "banks": [
+            {
+              "code": "HDFC",
+              "hq": "Mumbai",
+              "name": "HDFC Bank Limited",
+              "rbi_licensed": true,
+              "type": "commercial"
+            }
+          ],
+          "count": 1
+        },
+        "errors": [],
+        "source": "bundled_dataset",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "name_or_code": "HDFC"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "banks": [
+            {
+              "code": "SBIN",
+              "hq": "Mumbai",
+              "name": "State Bank of India",
+              "rbi_licensed": true,
+              "type": "commercial"
+            },
+            {
+              "code": "HDFC",
+              "hq": "Mumbai",
+              "name": "HDFC Bank Limited",
+              "rbi_licensed": true,
+              "type": "commercial"
+            },
+            {
+              "code": "ICICI",
+              "hq": "Mumbai",
+              "name": "ICICI Bank Limited",
+              "rbi_licensed": true,
+              "type": "commercial"
+            },
+            {
+              "code": "PNB",
+              "hq": "New Delhi",
+              "name": "Punjab National Bank",
+              "rbi_licensed": true,
+              "type": "commercial"
+            },
+            {
+              "code": "BARODA",
+              "hq": "Vadodara",
+              "name": "Bank of Baroda",
+              "rbi_licensed": true,
+              "type": "commercial"
+            },
+            {
+              "code": "CANARA",
+              "hq": "Bengaluru",
+              "name": "Canara Bank",
+              "rbi_licensed": true,
+              "type": "commercial"
+            },
+            {
+              "code": "AXIS",
+              "hq": "Mumbai",
+              "name": "Axis Bank Limited",
+              "rbi_licensed": true,
+              "type": "commercial"
+            },
+            {
+              "code": "KOTAK",
+              "hq": "Mumbai",
+              "name": "Kotak Mahindra Bank",
+              "rbi_licensed": true,
+              "type": "commercial"
+            },
+            {
+              "code": "YES",
+              "hq": "Mumbai",
+              "name": "Yes Bank Limited",
+              "rbi_licensed": true,
+              "type": "commercial"
+            },
+            {
+              "code": "IDBI",
+              "hq": "Mumbai",
+              "name": "IDBI Bank Limited",
+              "rbi_licensed": true,
+              "type": "commercial"
+            }
+          ],
+          "count": 10
+        },
+        "errors": [],
+        "source": "bundled_dataset",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "name_or_code": "bank"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": {
+          "banks": [],
+          "count": 0
+        },
+        "errors": [],
+        "source": "bundled_dataset",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "name_or_code": "NONEXISTENT_BANK_XYZ"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "banks": [
+            {
+              "code": "SBIN",
+              "hq": "Mumbai",
+              "name": "State Bank of India",
+              "rbi_licensed": true,
+              "type": "commercial"
+            },
+            {
+              "code": "HDFC",
+              "hq": "Mumbai",
+              "name": "HDFC Bank Limited",
+              "rbi_licensed": true,
+              "type": "commercial"
+            },
+            {
+              "code": "ICICI",
+              "hq": "Mumbai",
+              "name": "ICICI Bank Limited",
+              "rbi_licensed": true,
+              "type": "commercial"
+            },
+            {
+              "code": "PNB",
+              "hq": "New Delhi",
+              "name": "Punjab National Bank",
+              "rbi_licensed": true,
+              "type": "commercial"
+            },
+            {
+              "code": "BARODA",
+              "hq": "Vadodara",
+              "name": "Bank of Baroda",
+              "rbi_licensed": true,
+              "type": "commercial"
+            },
+            {
+              "code": "CANARA",
+              "hq": "Bengaluru",
+              "name": "Canara Bank",
+              "rbi_licensed": true,
+              "type": "commercial"
+            },
+            {
+              "code": "AXIS",
+              "hq": "Mumbai",
+              "name": "Axis Bank Limited",
+              "rbi_licensed": true,
+              "type": "commercial"
+            },
+            {
+              "code": "KOTAK",
+              "hq": "Mumbai",
+              "name": "Kotak Mahindra Bank",
+              "rbi_licensed": true,
+              "type": "commercial"
+            },
+            {
+              "code": "YES",
+              "hq": "Mumbai",
+              "name": "Yes Bank Limited",
+              "rbi_licensed": true,
+              "type": "commercial"
+            },
+            {
+              "code": "IDBI",
+              "hq": "Mumbai",
+              "name": "IDBI Bank Limited",
+              "rbi_licensed": true,
+              "type": "commercial"
+            }
+          ],
+          "count": 10
+        },
+        "errors": [],
+        "source": "bundled_dataset",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "name_or_code": ""
+      }
+    }
+  ],
+  "validate_aa_consent_artifact": [
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "artifact": {
+            "Purpose": {
+              "code": "101"
+            },
+            "consentExpiry": "2026-12-31T23:59:59Z",
+            "consentStart": "2026-01-01T00:00:00Z",
+            "fiTypes": [
+              "DEPOSIT"
+            ]
+          },
+          "errors": [],
+          "validated": true,
+          "warnings": []
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "artifact": {
+          "Purpose": {
+            "code": "101"
+          },
+          "consentExpiry": "2026-12-31T23:59:59Z",
+          "consentStart": "2026-01-01T00:00:00Z",
+          "fiTypes": [
+            "DEPOSIT"
+          ]
+        }
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": {
+          "artifact": {
+            "consentExpiry": "2026-12-31T23:59:59Z",
+            "fiTypes": [
+              "DEPOSIT"
+            ]
+          },
+          "errors": [
+            "Missing consentStart"
+          ],
+          "validated": false,
+          "warnings": []
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "artifact": {
+          "consentExpiry": "2026-12-31T23:59:59Z",
+          "fiTypes": [
+            "DEPOSIT"
+          ]
+        }
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": {
+          "artifact": {
+            "consentStart": "2026-01-01T00:00:00Z",
+            "fiTypes": [
+              "DEPOSIT"
+            ]
+          },
+          "errors": [
+            "Missing consentExpiry"
+          ],
+          "validated": false,
+          "warnings": []
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "artifact": {
+          "consentStart": "2026-01-01T00:00:00Z",
+          "fiTypes": [
+            "DEPOSIT"
+          ]
+        }
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": {
+          "artifact": {
+            "consentExpiry": "2026-12-31T23:59:59Z",
+            "consentStart": "2026-01-01T00:00:00Z"
+          },
+          "errors": [
+            "Missing fiTypes"
+          ],
+          "validated": false,
+          "warnings": []
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "artifact": {
+          "consentExpiry": "2026-12-31T23:59:59Z",
+          "consentStart": "2026-01-01T00:00:00Z"
+        }
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": {
+          "artifact": {
+            "consentExpiry": "2026-12-31T23:59:59Z",
+            "consentStart": "2026-01-01T00:00:00Z",
+            "fiTypes": "DEPOSIT"
+          },
+          "errors": [
+            "fiTypes must be a list"
+          ],
+          "validated": false,
+          "warnings": []
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "artifact": {
+          "consentExpiry": "2026-12-31T23:59:59Z",
+          "consentStart": "2026-01-01T00:00:00Z",
+          "fiTypes": "DEPOSIT"
+        }
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "artifact": {
+            "Purpose": {
+              "code": "999"
+            },
+            "consentExpiry": "2026-12-31T23:59:59Z",
+            "consentStart": "2026-01-01T00:00:00Z",
+            "fiTypes": [
+              "UNKNOWN_TYPE"
+            ]
+          },
+          "errors": [],
+          "validated": true,
+          "warnings": [
+            "Unknown fi_type: UNKNOWN_TYPE",
+            "Unknown purpose code: 999"
+          ]
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "artifact": {
+          "Purpose": {
+            "code": "999"
+          },
+          "consentExpiry": "2026-12-31T23:59:59Z",
+          "consentStart": "2026-01-01T00:00:00Z",
+          "fiTypes": [
+            "UNKNOWN_TYPE"
+          ]
+        }
+      }
+    }
+  ],
+  "validate_epf_code": [
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": {
+          "code": "MH/BAN/0012345/000",
+          "normalized_input": "MH/BAN/0012345/000"
+        },
+        "errors": [
+          "Invalid EPF format. Expected: XX/XXXXX/XXXXXX/XXX"
+        ],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "code": "MH/BAN/0012345/000"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": {
+          "code": "DL/CPM/123456/123",
+          "normalized_input": "DL/CPM/123456/123"
+        },
+        "errors": [
+          "Invalid EPF format. Expected: XX/XXXXX/XXXXXX/XXX"
+        ],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "code": "DL/CPM/123456/123"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": {
+          "code": "mh/ban/0012345/000",
+          "normalized_input": "MH/BAN/0012345/000"
+        },
+        "errors": [
+          "Invalid EPF format. Expected: XX/XXXXX/XXXXXX/XXX"
+        ],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "code": "mh/ban/0012345/000"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": {
+          "code": "MH-BAN-0012345-000",
+          "normalized_input": "MH-BAN-0012345-000"
+        },
+        "errors": [
+          "Invalid EPF format. Expected: XX/XXXXX/XXXXXX/XXX"
+        ],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "code": "MH-BAN-0012345-000"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": {
+          "code": "INVALID",
+          "normalized_input": "INVALID"
+        },
+        "errors": [
+          "Invalid EPF format. Expected: XX/XXXXX/XXXXXX/XXX"
+        ],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "code": "INVALID"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": {
+          "code": "",
+          "normalized_input": ""
+        },
+        "errors": [
+          "Invalid EPF format. Expected: XX/XXXXX/XXXXXX/XXX"
+        ],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "code": ""
+      }
+    }
+  ],
+  "validate_esic_code": [
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "code": "11-00012-00034",
+          "employer_code": "00012",
+          "normalized_input": "11-00012-00034",
+          "regional_code": "11",
+          "sub_code": "00034"
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "code": "11-00012-00034"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "code": "31-123456-78901",
+          "employer_code": "123456",
+          "normalized_input": "31-123456-78901",
+          "regional_code": "31",
+          "sub_code": "78901"
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "code": "31-123456-78901"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.4,
+        "data": {
+          "code": " 11-00012-00034 ",
+          "employer_code": "00012",
+          "normalized_input": "11-00012-00034",
+          "regional_code": "11",
+          "sub_code": "00034"
+        },
+        "errors": [],
+        "source": "offline_algorithm",
+        "success": true,
+        "tool_version": "0.6.9",
+        "validated_by": [
+          "format"
+        ],
+        "warnings": []
+      },
+      "input": {
+        "code": " 11-00012-00034 "
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": {
+          "code": "11/00012/00034",
+          "normalized_input": "11/00012/00034"
+        },
+        "errors": [
+          "Invalid ESIC format. Expected: XX-XXXXX-XXXXX"
+        ],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "code": "11/00012/00034"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": {
+          "code": "INVALID",
+          "normalized_input": "INVALID"
+        },
+        "errors": [
+          "Invalid ESIC format. Expected: XX-XXXXX-XXXXX"
+        ],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "code": "INVALID"
+      }
+    },
+    {
+      "expected": {
+        "confidence": 0.0,
+        "data": {
+          "code": "",
+          "normalized_input": ""
+        },
+        "errors": [
+          "Invalid ESIC format. Expected: XX-XXXXX-XXXXX"
+        ],
+        "source": "offline_algorithm",
+        "success": false,
+        "tool_version": "0.6.9",
+        "warnings": []
+      },
+      "input": {
+        "code": ""
+      }
+    }
+  ]
+}

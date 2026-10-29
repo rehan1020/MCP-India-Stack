@@ -5,6 +5,8 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from mcp_india_stack.utils.responses import build_response
+
 ESIC_RE = re.compile(r"^[\d]{2}-[\d]+-[\d]+$")
 
 
@@ -15,25 +17,28 @@ def validate_esic_code(code: str) -> dict[str, Any]:
         code: ESIC employer code (XX-XXXXX-XXXXX).
 
     Returns:
-        Dict with validation result, parsed components, and errors.
+        Standard envelope with validation result and parsed components.
     """
     normalized = code.strip().upper().replace(" ", "")
 
     if not ESIC_RE.match(normalized):
-        return {
-            "valid": False,
-            "code": code,
-            "normalized_input": normalized,
-            "errors": ["Invalid ESIC format. Expected: XX-XXXXX-XXXXX"],
-        }
+        return build_response(
+            success=False,
+            data={"code": code, "normalized_input": normalized},
+            errors=["Invalid ESIC format. Expected: XX-XXXXX-XXXXX"],
+            source="offline_algorithm",
+        )
 
     parts = normalized.split("-")
-    return {
-        "valid": True,
-        "code": code,
-        "normalized_input": normalized,
-        "regional_code": parts[0],
-        "employer_code": parts[1],
-        "sub_code": parts[2],
-        "errors": [],
-    }
+    return build_response(
+        success=True,
+        data={
+            "code": code,
+            "normalized_input": normalized,
+            "regional_code": parts[0],
+            "employer_code": parts[1],
+            "sub_code": parts[2],
+        },
+        validated_by=["format"],
+        source="offline_algorithm",
+    )

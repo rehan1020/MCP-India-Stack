@@ -141,7 +141,7 @@ def test_g03_clamp_bulk_workers_bounds(monkeypatch: pytest.MonkeyPatch) -> None:
             if isinstance(node, ast.FunctionDef) and node.name == "_clamp_bulk_workers":
                 definitions.append(py_path)
 
-    assert len(definitions) >= 1, "At least one _clamp_bulk_workers must exist"
+    assert len(definitions) == 1, f"Expected exactly 1 definition, got {len(definitions)}"
 
     test_inputs = [None, "0", "-5", "9999", "abc", "10", "20", "1"]
     for path in definitions:
@@ -351,17 +351,7 @@ def test_g11_delegation_rule() -> None:
 
     Set of non-delegating tools must EQUAL the canonical allowlist.
     """
-    allowlist = {
-        "bulk_validate_gstin",
-        "bulk_validate_pan",
-        "bulk_validate_ifsc",
-        "decode_digilocker_uri",
-        "decode_pan_type",
-        "lookup_bank",
-        "validate_aa_consent_artifact",
-        "validate_epf_code",
-        "validate_esic_code",
-    }
+    allowlist: set[str] = set()
 
     non_delegating = set()
     registrations_dir = SRC / "mcp_india_stack" / "registrations"

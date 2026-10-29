@@ -56,17 +56,7 @@ class TestToolParity:
         registered = _get_registered_tool_names()
         core_functions = _get_tools_module_functions()
 
-        missing = (
-            registered
-            - core_functions
-            - {
-                "bulk_validate_gstin",
-                "bulk_validate_pan",
-                "decode_pan_type",
-                "bulk_validate_ifsc",
-                "validate_aa_consent_artifact",
-            }
-        )
+        missing = registered - core_functions
         assert not missing, (
             f"The following {len(missing)} registered tool(s) have no tools/ "
             f"core module counterpart: {sorted(missing)}"
