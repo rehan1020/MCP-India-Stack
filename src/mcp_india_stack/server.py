@@ -258,6 +258,11 @@ Provide a consolidated report with:
 
 def main() -> None:  # noqa: C901
     """Run MCP server with configurable transport."""
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(line_buffering=True)
+    if hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(line_buffering=True)
+
     parser = argparse.ArgumentParser(description="mcp-india-stack MCP server")
     parser.add_argument(
         "--refresh-all",
@@ -299,6 +304,10 @@ def main() -> None:  # noqa: C901
 
         sse_logger = logging.getLogger("mcp_india_stack")
 
+        effective_host = args.host
+        if effective_host == "127.0.0.1" and os.environ.get("RENDER"):
+            effective_host = str(ipaddress.IPv4Address(0))
+
         port = args.port
         if port is None:
             port = int(os.environ.get("PORT", "8000"))
@@ -314,13 +323,13 @@ def main() -> None:  # noqa: C901
 
         is_loopback = False
         try:
-            is_loopback = ipaddress.ip_address(args.host).is_loopback or args.host in (
+            is_loopback = ipaddress.ip_address(effective_host).is_loopback or effective_host in (
                 "127.0.0.1",
                 "localhost",
                 "::1",
             )
         except ValueError:
-            is_loopback = args.host == "localhost"
+            is_loopback = effective_host == "localhost"
 
         if not is_loopback and not _api_key:
             _allow_unauth = os.environ.get(
@@ -336,7 +345,7 @@ def main() -> None:  # noqa: C901
             sse_logger.warning(
                 "Running unauthenticated on non-loopback host %s because "
                 "MCP_INDIA_STACK_ALLOW_UNAUTHENTICATED_NETWORK=1",
-                args.host,
+                effective_host,
             )
 
         _raw_hosts = os.environ.get("MCP_INDIA_STACK_ALLOWED_HOSTS", "").strip()
@@ -345,7 +354,7 @@ def main() -> None:  # noqa: C901
             sse_logger.warning(
                 "Non-loopback host %s without MCP_INDIA_STACK_ALLOWED_HOSTS or "
                 "RENDER_EXTERNAL_HOSTNAME; requests will be rejected with 421",
-                args.host,
+                effective_host,
             )
 
         # --- D5: Transport security settings ---
@@ -437,6 +446,8 @@ def main() -> None:  # noqa: C901
                 return f"ip:{client_host}"
 
             async def dispatch(self, request: Request, call_next: Any) -> Any:
+                if request.url.path in ("/health", "/health/", "/"):
+                    return await call_next(request)
                 key = self._get_key(request)
                 now = time.monotonic()
                 with self._lock:
@@ -480,6 +491,12 @@ def main() -> None:  # noqa: C901
                 self._lock = threading.Lock()
 
             async def dispatch(self, request: Request, call_next: Any) -> Any:
+                if request.method == "OPTIONS" or request.url.path in (
+                    "/health",
+                    "/health/",
+                    "/",
+                ):
+                    return await call_next(request)
                 auth = request.headers.get("Authorization", "")
                 valid = False
                 if auth.startswith("Bearer "):
@@ -559,13 +576,30 @@ def main() -> None:  # noqa: C901
             allow_headers=["Authorization", "Content-Type"],
         )
 
+        async def _health_check(request: Request) -> JSONResponse:
+            return JSONResponse({"status": "ok", "version": __version__})
+
+        async def _root_check(request: Request) -> JSONResponse:
+            return JSONResponse(
+                {"status": "ok", "service": "mcp-india-stack", "version": __version__}
+            )
+
+        sse_app_instance.add_route("/health", _health_check, methods=["GET"])
+        sse_app_instance.add_route("/health/", _health_check, methods=["GET"])
+        sse_app_instance.add_route("/", _root_check, methods=["GET"])
+
         for route in sse_app_instance.router.routes:
             if hasattr(route, "path") and route.path in ("/sse", ""):
                 route.methods = {"GET", "POST"}  # type: ignore
             if hasattr(route, "path") and route.path in ("/messages", "/messages/"):
                 route.methods = {"GET", "POST"}  # type: ignore
 
-        uvicorn.run(sse_app_instance, host=args.host, port=port)
+        sys.stdout.write(
+            f"Starting mcp-india-stack v{__version__} on {effective_host}:{port} (transport=sse)\n"
+        )
+        sys.stdout.flush()
+
+        uvicorn.run(sse_app_instance, host=effective_host, port=port)
     else:
         mcp.run(transport="stdio")
 

@@ -4,9 +4,12 @@ services:
     env: python
     buildCommand: pip install .
     startCommand: mcp-india-stack --transport sse --host 0.0.0.0
+    healthCheckPath: /health
     envVars:
       - key: PORT
         value: "10000"
+      - key: PYTHONUNBUFFERED
+        value: "1"
       - key: MCP_INDIA_STACK_API_KEY
         fromSecret: MCP_INDIA_STACK_API_KEY
       - key: MCP_INDIA_STACK_ALLOWED_ORIGINS
