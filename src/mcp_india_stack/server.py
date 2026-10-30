@@ -62,6 +62,16 @@ def changelog() -> dict[str, Any]:
         "current_version": __version__,
         "entries": [
             {
+                "version": "0.7.0",
+                "date": "2026-10-29",
+                "changes": [
+                    "Offline-only bundled datasets; removed runtime CDN downloads and caching",
+                    "Hardened CI security gates (Bandit, pip-audit, lock drift, smoke test)",
+                    "Added 20 architectural regression guards (G01-G20)",
+                    "Extracted 9 inline tools to tools/ package and achieved 100% core parity",
+                ],
+            },
+            {
                 "version": "0.6.9",
                 "date": "2026-10-02",
                 "changes": [
