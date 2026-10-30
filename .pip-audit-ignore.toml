@@ -38,6 +38,12 @@ justification = "Pinned dependency for FastMCP auth; to be addressed in dependen
 review_by = "2026-12-31"
 
 [[ignore]]
+id = "PYSEC-2026-4359"
+package = "authlib"
+justification = "Pinned dependency for FastMCP auth; to be addressed in dependency lock refresh"
+review_by = "2026-12-31"
+
+[[ignore]]
 id = "PYSEC-2026-4320"
 package = "certifi"
 justification = "Standard CA bundle update; to be refreshed with lockfile update"
