@@ -698,3 +698,68 @@ class TestServerTransportSecurity:
             )
             assert resp.status_code == 401
             assert resp.json() == {"error": "Unauthorized"}
+
+    def test_health_and_root_endpoints_unauthenticated(self) -> None:
+        """Verify /health, /health/, and / return 200 without auth even with API key set."""
+        import os
+        from typing import Any
+        from unittest.mock import patch
+
+        from starlette.testclient import TestClient
+
+        import mcp_india_stack.server as server_module
+        from tests._app_harness import VALID_TEST_API_KEY
+
+        with patch.dict(os.environ, {"MCP_INDIA_STACK_API_KEY": VALID_TEST_API_KEY}):
+            captured_app = None
+
+            def fake_uvicorn_run(app: Any, **kwargs: Any) -> None:
+                nonlocal captured_app
+                captured_app = app
+
+            with patch("sys.argv", ["mcp-india-stack", "--transport", "sse"]):
+                with patch("uvicorn.run", side_effect=fake_uvicorn_run):
+                    server_module.main()
+
+            assert captured_app is not None
+            client = TestClient(captured_app)
+
+            r_health = client.get("/health")
+            assert r_health.status_code == 200
+            assert r_health.json() == {"status": "ok", "version": server_module.__version__}
+
+            r_health_slash = client.get("/health/")
+            assert r_health_slash.status_code == 200
+            assert r_health_slash.json() == {"status": "ok", "version": server_module.__version__}
+
+            r_root = client.get("/")
+            assert r_root.status_code == 200
+            assert r_root.json() == {
+                "status": "ok",
+                "service": "mcp-india-stack",
+                "version": server_module.__version__,
+            }
+
+    def test_render_environment_binds_to_all_interfaces(self) -> None:
+        """Verify that running on Render automatically binds to 0.0.0.0 even without --host."""
+        import os
+        from typing import Any
+        from unittest.mock import patch
+
+        import mcp_india_stack.server as server_module
+        from tests._app_harness import VALID_TEST_API_KEY
+
+        run_kwargs: dict[str, Any] = {}
+
+        def fake_uvicorn_run(app: Any, **kwargs: Any) -> None:
+            nonlocal run_kwargs
+            run_kwargs = kwargs
+
+        with patch.dict(
+            os.environ, {"MCP_INDIA_STACK_API_KEY": VALID_TEST_API_KEY, "RENDER": "true"}
+        ):
+            with patch("sys.argv", ["mcp-india-stack", "--transport", "sse"]):
+                with patch("uvicorn.run", side_effect=fake_uvicorn_run):
+                    server_module.main()
+
+        assert run_kwargs.get("host") == "0.0.0.0"
