@@ -89,14 +89,8 @@
     }
   },
   "bulk_validate_aadhaar": {
-    "annotations": {
-      "destructiveHint": null,
-      "idempotentHint": true,
-      "openWorldHint": false,
-      "readOnlyHint": true
-    },
-    "description": "Validate multiple Aadhaar numbers in parallel using ThreadPoolExecutor.\n\nUse when batch-validating Aadhaar numbers for KYC, onboarding, or\ncompliance workflows.\n\nArgs:\n    numbers: List of Aadhaar numbers (with or without spaces/hyphens).\n\nReturns:\n    Standard envelope with per-Aadhaar results and valid/invalid counts.\n\nNotes:\n    Max 500 Aadhaars per call. Uses same Verhoeff validation as single tool.\n",
     "name": "bulk_validate_aadhaar",
+    "description": "Validate multiple Aadhaar numbers in parallel using ThreadPoolExecutor.\n\n    Use when batch-validating Aadhaar numbers for KYC, onboarding, or\n    compliance workflows.\n\n    Args:\n        numbers: List of Aadhaar numbers (with or without spaces/hyphens).\n\n    Returns:\n        Standard envelope with per-Aadhaar results and valid/invalid counts.\n\n    Notes:\n        Max 500 Aadhaars per call. Uses same Verhoeff validation as single tool.\n        Not connected to UIDAI. In compliance with DPDP Act 2023, results are masked\n        and raw numbers are never stored or logged.\n    ",
     "parameters": {
       "properties": {
         "numbers": {
@@ -113,6 +107,12 @@
       ],
       "title": "bulk_validate_aadhaarArguments",
       "type": "object"
+    },
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
     }
   },
   "bulk_validate_gstin": {
@@ -2566,14 +2566,8 @@
     }
   },
   "validate_aadhaar": {
-    "annotations": {
-      "destructiveHint": null,
-      "idempotentHint": true,
-      "openWorldHint": false,
-      "readOnlyHint": true
-    },
-    "description": "Validate an Indian Aadhaar number with Verhoeff checksum verification.\n\nUse when checking Aadhaar format and checksum in KYC, identity verification,\nor government benefit workflows.\n\nArgs:\n        aadhaar: 12-digit Aadhaar number. Spaces and hyphens are stripped.\n\nReturns:\n        Standard envelope containing validity, checksum result, formatted display,\n        and first-digit check.\n\nNotes:\n        Validates format and Verhoeff checksum only. Not connected to UIDAI.\n",
     "name": "validate_aadhaar",
+    "description": "Validate an Indian Aadhaar number with Verhoeff checksum verification.\n\n    Use when checking Aadhaar format and checksum in KYC, identity verification,\n    or government benefit workflows.\n\n    Args:\n            aadhaar: 12-digit Aadhaar number. Spaces and hyphens are stripped.\n\n    Returns:\n            Standard envelope containing validity, checksum result, formatted display,\n            and first-digit check.\n\n    Notes:\n            Validates format and Verhoeff checksum only. Not connected to UIDAI.\n            In compliance with the Digital Personal Data Protection Act, 2023 (DPDP Act)\n            and UIDAI guidelines, raw Aadhaar numbers are never stored, logged, or exposed.\n    ",
     "parameters": {
       "properties": {
         "aadhaar": {
@@ -2589,6 +2583,12 @@
       ],
       "title": "validate_aadhaarArguments",
       "type": "object"
+    },
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
     }
   },
   "validate_cin": {

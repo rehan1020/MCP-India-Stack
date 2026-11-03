@@ -52,10 +52,23 @@ def normalize_input(value: str, input_type: str) -> dict[str, Any]:
 
     # Warn if normalization made significant changes
     if original != normalized:
-        warnings.append(f"Input normalized: '{original}' -> '{normalized}'")
+        if input_type == "aadhaar":
+            from mcp_india_stack.logging_filter import mask_aadhaar_text
+
+            m_orig = mask_aadhaar_text(original)
+            m_norm = mask_aadhaar_text(normalized)
+            warnings.append(f"Input normalized: '{m_orig}' -> '{m_norm}'")
+        else:
+            warnings.append(f"Input normalized: '{original}' -> '{normalized}'")
+
+    out_original = original
+    if input_type == "aadhaar":
+        from mcp_india_stack.logging_filter import mask_aadhaar_text
+
+        out_original = mask_aadhaar_text(original)
 
     return {
-        "original_input": original,
+        "original_input": out_original,
         "normalized_input": normalized,
         "warnings": warnings,
     }

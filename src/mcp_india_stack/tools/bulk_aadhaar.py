@@ -5,12 +5,21 @@ from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 
-from mcp_india_stack.tools.aadhaar import validate_aadhaar as core_validate_aadhaar
+from mcp_india_stack.logging_filter import mask_aadhaar_text
+from mcp_india_stack.tools.aadhaar import (
+    _mask_aadhaar,
+)
+from mcp_india_stack.tools.aadhaar import (
+    validate_aadhaar as core_validate_aadhaar,
+)
 from mcp_india_stack.tools.bulk_common import BULK_WORKERS, _clamp_bulk_workers  # noqa: F401
 
 MAX_AADHAAR_BULK = 500
 
-DISCLAIMER = "Structural and Verhoeff checksum validation only. Not connected to UIDAI."
+DISCLAIMER = (
+    "Structural and Verhoeff checksum validation only. Not connected to UIDAI. "
+    "In compliance with DPDP Act 2023, raw Aadhaar numbers are never stored or logged."
+)
 
 
 def _validate_single_aadhaar(aadhaar: str) -> dict[str, Any]:
@@ -20,18 +29,25 @@ def _validate_single_aadhaar(aadhaar: str) -> dict[str, Any]:
         return {
             "masked": result.get("masked", ""),
             "valid": result.get("valid", False),
-            "errors": result.get("errors", []),
+            "errors": [mask_aadhaar_text(str(e)) for e in result.get("errors", [])],
         }
     except Exception as exc:
+        masked_input = _mask_aadhaar(str(aadhaar)) if aadhaar else ""
         return {
-            "masked": "",
+            "masked": masked_input,
             "valid": False,
-            "errors": [f"Validation error: {exc}"],
+            "errors": [f"Validation error: {mask_aadhaar_text(str(exc))}"],
         }
 
 
 def bulk_validate_aadhaar(numbers: list[str]) -> dict[str, Any]:
     """Validate multiple Aadhaar numbers in parallel using ThreadPoolExecutor.
+
+    UIDAI & DPDP Compliance:
+    Validates structural format and Verhoeff checksum only. Not connected to UIDAI.
+    In compliance with the Digital Personal Data Protection Act, 2023 (DPDP Act)
+    and UIDAI guidelines, all Aadhaar outputs are masked to the last 4 digits and
+    raw 12-digit numbers are never stored or logged.
 
     Args:
         numbers: List of Aadhaar numbers (with or without spaces/hyphens).
@@ -94,6 +110,6 @@ def bulk_validate_aadhaar(numbers: list[str]) -> dict[str, Any]:
             "valid_count": 0,
             "invalid_count": 0,
             "results": [],
-            "errors": [f"Bulk validation failed: {exc}"],
+            "errors": [f"Bulk validation failed: {mask_aadhaar_text(str(exc))}"],
             "disclaimer": DISCLAIMER,
         }

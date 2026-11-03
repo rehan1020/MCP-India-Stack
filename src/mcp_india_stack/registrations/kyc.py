@@ -4,6 +4,7 @@ from mcp.types import ToolAnnotations
 from pydantic import Field
 
 from mcp_india_stack.app import mcp
+from mcp_india_stack.logging_filter import mask_aadhaar_text
 from mcp_india_stack.normalization import (
     normalize_aadhaar,
     normalize_cin,
@@ -209,6 +210,8 @@ def validate_aadhaar(
 
     Notes:
             Validates format and Verhoeff checksum only. Not connected to UIDAI.
+            In compliance with the Digital Personal Data Protection Act, 2023 (DPDP Act)
+            and UIDAI guidelines, raw Aadhaar numbers are never stored, logged, or exposed.
     """
     normalized = normalize_aadhaar(aadhaar)["normalized_input"]
     try:
@@ -220,8 +223,11 @@ def validate_aadhaar(
             source="offline_algorithm",
         )
     except Exception as exc:
+        masked_exc = mask_aadhaar_text(str(exc))
         return build_response(
-            success=False, errors=[f"Aadhaar validation failed: {exc}"], source="offline_algorithm"
+            success=False,
+            errors=[f"Aadhaar validation failed: {masked_exc}"],
+            source="offline_algorithm",
         )
 
 
@@ -244,6 +250,8 @@ def bulk_validate_aadhaar(
 
     Notes:
         Max 500 Aadhaars per call. Uses same Verhoeff validation as single tool.
+        Not connected to UIDAI. In compliance with DPDP Act 2023, results are masked
+        and raw numbers are never stored or logged.
     """
     try:
         result = core_bulk_validate_aadhaar(numbers=numbers)
@@ -254,9 +262,10 @@ def bulk_validate_aadhaar(
             source="offline_algorithm",
         )
     except Exception as exc:
+        masked_exc = mask_aadhaar_text(str(exc))
         return build_response(
             success=False,
-            errors=[f"Bulk Aadhaar validation failed: {exc}"],
+            errors=[f"Bulk Aadhaar validation failed: {masked_exc}"],
             source="offline_algorithm",
         )
 
