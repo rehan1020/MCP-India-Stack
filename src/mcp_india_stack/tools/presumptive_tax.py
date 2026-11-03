@@ -13,6 +13,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.tools.rules_metadata import (
+    attach_rule_metadata,
+    validate_financial_year,
+)
+
 # --- Eligibility thresholds ---
 LIMIT_44AD_DIGITAL = 3_00_00_000  # ₹3 crore (>95% digital receipts/payments)
 LIMIT_44AD_CASH = 2_00_00_000  # ₹2 crore (general / cash-heavy)
@@ -60,6 +65,7 @@ def calculate_presumptive_tax(
     regime: str = "new",
     age: int = 35,
     deductions_80c: float = 0,
+    financial_year: str = "2025-26",
 ) -> dict[str, Any]:
     """Calculate tax under presumptive scheme.
 
@@ -70,10 +76,15 @@ def calculate_presumptive_tax(
         regime: "new" or "old"
         age: Assessee age
         deductions_80c: Section 80C deductions (old regime)
+        financial_year: Financial year (defaults to "2025-26")
 
     Returns:
         Dict with presumptive income and tax.
     """
+    is_valid_fy, err_resp = validate_financial_year("presumptive_tax", financial_year)
+    if not is_valid_fy:
+        assert err_resp is not None
+        return err_resp
     errors = []
     if scheme not in ("44AD", "44ADA"):
         errors.append("Invalid scheme")
@@ -134,7 +145,7 @@ def calculate_presumptive_tax(
     tax_after_cess = round(tax + cess, 2)
     effective_rate = (tax_after_cess / gross_receipts * 100) if gross_receipts > 0 else 0
 
-    return {
+    res = {
         "scheme": scheme,
         "gross_receipts": gross_receipts,
         "presumptive_income": round(presumptive_income, 2),
@@ -148,3 +159,4 @@ def calculate_presumptive_tax(
         "advance_tax_note": "Entire advance tax can be paid in one installment by March 15.",
         "disclaimer": DISCLAIMER,
     }
+    return attach_rule_metadata(res, "presumptive_tax", financial_year)

@@ -8,6 +8,10 @@ from mcp_india_stack.tools.income_tax import (
     NEW_REGIME_MAX_SURCHARGE,
     SURCHARGE_RATES,
 )
+from mcp_india_stack.tools.rules_metadata import (
+    attach_rule_metadata,
+    validate_financial_year,
+)
 
 DISCLAIMER = (
     "Surcharge computation is based on FY2025-26 rates. "
@@ -33,6 +37,7 @@ def calculate_surcharge(  # noqa: C901
     total_income: float,
     base_tax: float,
     regime: str,
+    financial_year: str = "2025-26",
 ) -> dict[str, Any]:  # noqa: C901
     """Calculate surcharge and marginal relief for a given income and base tax.
 
@@ -43,11 +48,17 @@ def calculate_surcharge(  # noqa: C901
         total_income: Total income in rupees.
         base_tax: Base tax amount before surcharge.
         regime: "new" or "old".
+        financial_year: Financial year (defaults to "2025-26").
 
     Returns:
         Dict with surcharge breakdown including marginal relief.
     """
     try:
+        is_valid_fy, err_resp = validate_financial_year("surcharge", financial_year)
+        if not is_valid_fy:
+            assert err_resp is not None
+            return err_resp
+
         errors: list[str] = []
 
         if total_income is None or not isinstance(total_income, (int, float)):
@@ -64,8 +75,8 @@ def calculate_surcharge(  # noqa: C901
             errors.append("regime must be 'new' or 'old'")
 
         if errors:
-            return {
-                "financial_year": "2025-26",
+            err_dict = {
+                "financial_year": financial_year,
                 "total_income": total_income if isinstance(total_income, (int, float)) else 0,
                 "base_tax": base_tax if isinstance(base_tax, (int, float)) else 0,
                 "surcharge_rate": 0,
@@ -76,6 +87,7 @@ def calculate_surcharge(  # noqa: C901
                 "errors": errors,
                 "disclaimer": DISCLAIMER,
             }
+            return attach_rule_metadata(err_dict, "surcharge", financial_year)
 
         surcharge_rate = _get_surcharge_rate(total_income, regime)
         surcharge_before_relief = round(base_tax * surcharge_rate, 2)
@@ -112,8 +124,8 @@ def calculate_surcharge(  # noqa: C901
 
         cess_base = round(base_tax + surcharge_after_relief, 2)
 
-        return {
-            "financial_year": "2025-26",
+        res_dict = {
+            "financial_year": financial_year,
             "total_income": total_income,
             "base_tax": base_tax,
             "surcharge_rate": surcharge_rate,
@@ -124,10 +136,11 @@ def calculate_surcharge(  # noqa: C901
             "errors": [],
             "disclaimer": DISCLAIMER,
         }
+        return attach_rule_metadata(res_dict, "surcharge", financial_year)
 
     except Exception as exc:
-        return {
-            "financial_year": "2025-26",
+        exc_dict = {
+            "financial_year": financial_year,
             "total_income": total_income if isinstance(total_income, (int, float)) else 0,
             "base_tax": base_tax if isinstance(base_tax, (int, float)) else 0,
             "surcharge_rate": 0,
@@ -138,3 +151,4 @@ def calculate_surcharge(  # noqa: C901
             "errors": [f"Surcharge calculation failed: {exc}"],
             "disclaimer": DISCLAIMER,
         }
+        return attach_rule_metadata(exc_dict, "surcharge", financial_year)

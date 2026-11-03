@@ -4,6 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.tools.rules_metadata import (
+    attach_rule_metadata,
+    validate_financial_year,
+)
+
 EPF_WAGE_CEILING = 15000
 ESIC_WAGE_CEILING = 21000
 EPS_CEILING = 1250
@@ -19,6 +24,7 @@ def calculate_epf_esic(
     gross_wages: float,
     include_employer_share: bool = True,
     voluntary_pf_on_actual: bool = False,
+    financial_year: str = "2025-26",
 ) -> dict[str, Any]:
     """Calculate EPF and ESIC contributions for employer and employee.
 
@@ -28,11 +34,17 @@ def calculate_epf_esic(
         include_employer_share: If True, return employer costs.
         voluntary_pf_on_actual: If True, compute employee EPF on actual basic
             (VPF) instead of capping at ₹15,000 wage ceiling.
+        financial_year: Financial year (defaults to "2025-26").
 
     Returns:
         Dict with EPF, ESIC breakdown and totals.
     """
     try:
+        is_valid_fy, err_resp = validate_financial_year("epf_esic", financial_year)
+        if not is_valid_fy:
+            assert err_resp is not None
+            return err_resp
+
         errors: list[str] = []
 
         if basic_wages <= 0:
@@ -43,12 +55,13 @@ def calculate_epf_esic(
             errors.append("gross_wages cannot be less than basic_wages")
 
         if errors:
-            return {
+            err_dict = {
                 "basic_wages": basic_wages,
                 "gross_wages": gross_wages,
                 "errors": errors,
                 "disclaimer": DISCLAIMER,
             }
+            return attach_rule_metadata(err_dict, "epf_esic", financial_year)
 
         epf_base = min(basic_wages, EPF_WAGE_CEILING)
 
@@ -129,12 +142,13 @@ def calculate_epf_esic(
             "disclaimer": DISCLAIMER,
         }
 
-        return result
+        return attach_rule_metadata(result, "epf_esic", financial_year)
 
     except Exception as exc:
-        return {
+        exc_dict = {
             "basic_wages": basic_wages if isinstance(basic_wages, (int, float)) else 0,
             "gross_wages": gross_wages if isinstance(gross_wages, (int, float)) else 0,
             "errors": [f"EPF/ESIC calculation failed: {exc}"],
             "disclaimer": DISCLAIMER,
         }
+        return attach_rule_metadata(exc_dict, "epf_esic", financial_year)

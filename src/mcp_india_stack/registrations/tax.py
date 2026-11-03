@@ -62,6 +62,9 @@ def calculate_income_tax(
         float, Field(description="Home loan interest under Section 24(b), capped at 2L")
     ] = 0,
     other_deductions: Annotated[float, Field(description="Other deductions (no cap)")] = 0,
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate Indian income tax for FY2025-26 under old, new, or both regimes.
 
@@ -100,6 +103,7 @@ def calculate_income_tax(
             deduction_80ccd_nps=deduction_80ccd_nps,
             deduction_24b=deduction_24b,
             other_deductions=other_deductions,
+            financial_year=financial_year,
         )
         return build_response(
             success=len(result.get("errors", [])) == 0,
@@ -131,6 +135,9 @@ def calculate_tds(
     payee_type: Annotated[
         str, Field(description="Payee type: 'individual_huf' or 'other' (affects 194C rate)")
     ] = "individual_huf",
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate TDS for a given section and payment amount (FY2025-26).
 
@@ -159,6 +166,7 @@ def calculate_tds(
             is_senior_citizen=is_senior_citizen,
             aggregate_payments_ytd=aggregate_payments_ytd,
             payee_type=payee_type,
+            financial_year=financial_year,
         )
         return build_response(
             success=len(result.get("errors", [])) == 0,
@@ -189,6 +197,9 @@ def calculate_gst(
     cess_category: Annotated[
         str, Field(description="Cess category for 28% items. Default: 'default' (no cess)")
     ] = "default",
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate GST breakdown with CGST/SGST/IGST split and optional cess.
 
@@ -215,6 +226,7 @@ def calculate_gst(
             transaction_type=transaction_type,
             amount_includes_gst=amount_includes_gst,
             cess_category=cess_category,
+            financial_year=financial_year,
         )
         return build_response(
             success=len(result.get("errors", [])) == 0,
@@ -233,6 +245,9 @@ def calculate_surcharge(
     total_income: Annotated[float, Field(description="Total income in rupees")],
     base_tax: Annotated[float, Field(description="Base tax amount before surcharge")],
     regime: Annotated[str, Field(description="'new' or 'old' tax regime")],
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate surcharge and marginal relief for a given income and base tax.
 
@@ -253,7 +268,10 @@ def calculate_surcharge(
     """
     try:
         result = core_calculate_surcharge(
-            total_income=total_income, base_tax=base_tax, regime=regime
+            total_income=total_income,
+            base_tax=base_tax,
+            regime=regime,
+            financial_year=financial_year,
         )
         return build_response(
             success=len(result.get("errors", [])) == 0,
@@ -282,6 +300,9 @@ def calculate_hra_exemption(
     is_government_employee: Annotated[
         bool, Field(description="True for government employees using simplified formula")
     ] = False,
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate House Rent Allowance (HRA) exemption under Section 10(13A).
 
@@ -311,6 +332,7 @@ def calculate_hra_exemption(
             rent_paid=rent_paid,
             city_type=city_type,
             is_government_employee=is_government_employee,
+            financial_year=financial_year,
         )
         return build_response(
             success=len(result.get("errors", [])) == 0,
@@ -344,6 +366,9 @@ def calculate_capital_gains(
         float, Field(description="Brokerage, registration and other expenses on sale")
     ] = 0,
     improvements: Annotated[float, Field(description="Cost of improvements (for real estate)")] = 0,
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate capital gains tax for various asset types (FY2025-26).
 
@@ -377,6 +402,7 @@ def calculate_capital_gains(
             inflation_index_sale=inflation_index_sale,
             expenses_on_sale=expenses_on_sale,
             improvements=improvements,
+            financial_year=financial_year,
         )
         return build_response(
             success=len(result.get("errors", [])) == 0,
@@ -405,6 +431,9 @@ def calculate_advance_tax(
     existing_tds: Annotated[
         float, Field(description="TDS already deducted or to be deducted in rupees")
     ] = 0,
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate quarterly advance tax installment schedule per Sections 234B and 234C.
 
@@ -430,6 +459,7 @@ def calculate_advance_tax(
             regime=regime,
             taxpayer_type=taxpayer_type,
             existing_tds=existing_tds,
+            financial_year=financial_year,
         )
         return build_response(
             success=len(result.get("errors", [])) == 0,
@@ -452,6 +482,9 @@ def calculate_gst_late_fee(
     days_delayed: Annotated[int, Field(description="Number of days delayed")],
     annual_turnover: Annotated[float, Field(description="Annual turnover in INR")],
     has_nil_liability: Annotated[bool, Field(description="True if nil return")] = False,
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate GST late filing penalty.
 
@@ -472,6 +505,7 @@ def calculate_gst_late_fee(
             days_delayed=days_delayed,
             annual_turnover=annual_turnover,
             has_nil_liability=has_nil_liability,
+            financial_year=financial_year,
         )
         return build_response(
             success="errors" not in result,
@@ -498,6 +532,9 @@ def calculate_income_tax_interest(
         str | None, Field(description="Filing date YYYY-MM-DD or None if not filed")
     ] = None,
     due_date: Annotated[str, Field(description="Due date YYYY-MM-DD")] = "2025-07-31",
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate interest under Sections 234A, 234B, 234C.
 
@@ -522,6 +559,7 @@ def calculate_income_tax_interest(
             tds_deducted=tds_deducted,
             filing_date=filing_date,
             due_date=due_date,
+            financial_year=financial_year,
         )
         return build_response(success=True, data=result, source="offline_algorithm")
     except Exception as exc:
@@ -542,6 +580,9 @@ def calculate_presumptive_tax(
     regime: Annotated[str, Field(description="'new' or 'old' tax regime")] = "new",
     age: Annotated[int, Field(description="Assessee age")] = 35,
     deductions_80c: Annotated[float, Field(description="Section 80C deductions (old regime)")] = 0,
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate tax under presumptive scheme (Sections 44AD, 44ADA).
 
@@ -566,6 +607,7 @@ def calculate_presumptive_tax(
             regime=regime,
             age=age,
             deductions_80c=deductions_80c,
+            financial_year=financial_year,
         )
         return build_response(
             success="errors" not in result,
@@ -585,6 +627,9 @@ def calculate_presumptive_tax(
 def calculate_professional_tax(
     gross_salary_monthly: Annotated[float, Field(description="Monthly gross salary in INR")],
     state_code: Annotated[str, Field(description="2-char state code (e.g., MH, KA, TN)")],
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate state-wise professional tax.
 
@@ -599,7 +644,9 @@ def calculate_professional_tax(
     """
     try:
         result = core_calculate_professional_tax(
-            gross_salary_monthly=gross_salary_monthly, state_code=state_code
+            gross_salary_monthly=gross_salary_monthly,
+            state_code=state_code,
+            financial_year=financial_year,
         )
         return build_response(
             success=result.get("applicable", False),
@@ -624,6 +671,9 @@ def calculate_leave_encashment_tax(
     earned_leave_balance_days: Annotated[int, Field(description="Days of earned leave")],
     years_of_service: Annotated[int, Field(description="Total years of service")],
     is_government_employee: Annotated[bool, Field(description="Government employee flag")] = False,
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate tax-exempt portion of leave encashment under Section 10(10AA).
 
@@ -646,6 +696,7 @@ def calculate_leave_encashment_tax(
             earned_leave_balance_days=earned_leave_balance_days,
             years_of_service=years_of_service,
             is_government_employee=is_government_employee,
+            financial_year=financial_year,
         )
         return build_response(
             success="errors" not in result,
@@ -684,6 +735,9 @@ def calculate_salary_restructuring(
     parents_medical: Annotated[
         bool, Field(description="Include parents medical insurance (additional)")
     ] = False,
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate salary restructuring options for tax optimization.
 
@@ -715,6 +769,7 @@ def calculate_salary_restructuring(
             rent_in_metro=rent_in_metro,
             family_medical=family_medical,
             parents_medical=parents_medical,
+            financial_year=financial_year,
         )
         return build_response(success=True, data=result, source="offline_algorithm")
     except Exception as exc:
@@ -743,6 +798,10 @@ def schema_calculate_income_tax() -> dict[str, Any]:
             "monthly_take_home": {"type": "number"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "rules_version": {"type": "string"},
+            "effective_from": {"type": "string"},
+            "effective_to": {"type": "string"},
+            "source_ref": {"type": "string"},
         },
     }
 
@@ -761,6 +820,10 @@ def schema_calculate_tds() -> dict[str, Any]:
             "threshold_applicable": {"type": "boolean"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "rules_version": {"type": "string"},
+            "effective_from": {"type": "string"},
+            "effective_to": {"type": "string"},
+            "source_ref": {"type": "string"},
         },
     }
 
@@ -781,6 +844,10 @@ def schema_calculate_gst() -> dict[str, Any]:
             "total_amount": {"type": "number"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "rules_version": {"type": "string"},
+            "effective_from": {"type": "string"},
+            "effective_to": {"type": "string"},
+            "source_ref": {"type": "string"},
         },
     }
 
@@ -800,6 +867,10 @@ def schema_calculate_surcharge() -> dict[str, Any]:
             "cess_base": {"type": "number"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "rules_version": {"type": "string"},
+            "effective_from": {"type": "string"},
+            "effective_to": {"type": "string"},
+            "source_ref": {"type": "string"},
         },
     }
 
@@ -820,6 +891,10 @@ def schema_calculate_hra_exemption() -> dict[str, Any]:
             "breakdown": {"type": "object"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "rules_version": {"type": "string"},
+            "effective_from": {"type": "string"},
+            "effective_to": {"type": "string"},
+            "source_ref": {"type": "string"},
         },
     }
 
@@ -843,6 +918,10 @@ def schema_calculate_capital_gains() -> dict[str, Any]:
             "exemption_threshold": {"type": "number"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "rules_version": {"type": "string"},
+            "effective_from": {"type": "string"},
+            "effective_to": {"type": "string"},
+            "source_ref": {"type": "string"},
         },
     }
 
@@ -864,5 +943,9 @@ def schema_calculate_advance_tax() -> dict[str, Any]:
             "interest_rules": {"type": "object"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "rules_version": {"type": "string"},
+            "effective_from": {"type": "string"},
+            "effective_to": {"type": "string"},
+            "source_ref": {"type": "string"},
         },
     }

@@ -4,6 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.tools.rules_metadata import (
+    attach_rule_metadata,
+    validate_financial_year,
+)
+
 LTCG_EQUITY_EXEMPTION = 125000  # ₹1,25,000 per year (Section 112A)
 
 # LTCG holding period thresholds per Income Tax Act (in days)
@@ -37,6 +42,7 @@ def calculate_capital_gains(  # noqa: C901
     sell_price: float | None = None,
     holding_days: int | None = None,
     reinvestment_amount: float = 0.0,
+    financial_year: str = "2025-26",
 ) -> dict[str, Any]:  # noqa: C901
     """Calculate capital gains for various asset types.
 
@@ -54,10 +60,15 @@ def calculate_capital_gains(  # noqa: C901
         sell_price: Per-unit sale price (alternative to sale_price).
         holding_days: Alias for holding_period_days.
         reinvestment_amount: Amount reinvested in Section 54/54F eligible assets.
+        financial_year: Financial year (defaults to "2025-26").
 
     Returns:
         Dict with gains, tax rates, exemption eligibility, and tax liability.
     """
+    is_valid_fy, err_resp = validate_financial_year("capital_gains", financial_year)
+    if not is_valid_fy:
+        assert err_resp is not None
+        return err_resp
     if buy_price is not None and sell_price is not None and quantity is not None:
         sale_price = sell_price * quantity
         purchase_price = buy_price * quantity
@@ -247,7 +258,7 @@ def calculate_capital_gains(  # noqa: C901
     if stcg_note and not is_long_term:
         result["stcg_note"] = stcg_note
 
-    return result
+    return attach_rule_metadata(result, "capital_gains", financial_year)
 
 
 def calculate_home_loan_savings(

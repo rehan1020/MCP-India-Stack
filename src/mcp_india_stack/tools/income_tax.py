@@ -4,6 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.tools.rules_metadata import (
+    attach_rule_metadata,
+    validate_financial_year,
+)
+
 # --- FY2025-26 Rate Tables ---
 
 NEW_REGIME_SLABS: list[tuple[float, float]] = [
@@ -197,8 +202,9 @@ def calculate_income_tax(
     other_deductions: float = 0,
     age: int = 35,
     health_insurance_premium: float | None = None,
+    financial_year: str = "2025-26",
 ) -> dict[str, Any]:
-    """Calculate income tax for FY2025-26 under old, new, or both regimes.
+    """Calculate income tax for FY2025-26 / FY2026-27 under old, new, or both regimes.
 
     Args:
         gross_income: Annual gross income in rupees.
@@ -213,11 +219,18 @@ def calculate_income_tax(
         other_deductions: Other deductions (no cap).
         age: Taxpayer's age (used for senior citizen 80D limit).
         health_insurance_premium: Alias for deduction_80d_self (if provided, overrides it).
+        financial_year: Financial year (defaults to "2025-26").
 
     Returns:
         Dict with tax breakdown per regime and comparison.
     """
     try:
+        is_valid_fy, err_resp = validate_financial_year("income_tax", financial_year)
+        if not is_valid_fy:
+            assert err_resp is not None
+            return err_resp
+
+        ay = "2027-28" if financial_year == "2026-27" else "2026-27"
         errors: list[str] = []
 
         if gross_income is None or not isinstance(gross_income, (int, float)):
@@ -240,18 +253,19 @@ def calculate_income_tax(
             errors.append(f"taxpayer_type must be one of {sorted(VALID_TAXPAYER_TYPES)}")
 
         if errors:
-            return {
-                "financial_year": "2025-26",
-                "assessment_year": "2026-27",
+            res_err = {
+                "financial_year": financial_year,
+                "assessment_year": ay,
                 "gross_income": gross_income if isinstance(gross_income, (int, float)) else 0,
                 "regime": regime,
                 "errors": errors,
                 "disclaimer": DISCLAIMER,
             }
+            return attach_rule_metadata(res_err, "income_tax", financial_year)
 
         result: dict[str, Any] = {
-            "financial_year": "2025-26",
-            "assessment_year": "2026-27",
+            "financial_year": financial_year,
+            "assessment_year": ay,
             "gross_income": gross_income,
             "regime": regime,
             "errors": [],
@@ -342,14 +356,16 @@ def calculate_income_tax(
                 result["recommendation"] = "old_regime"
                 result["savings"] = round(new_tax - old_tax, 2)
 
-        return result
+        return attach_rule_metadata(result, "income_tax", financial_year)
 
     except Exception as exc:
-        return {
-            "financial_year": "2025-26",
-            "assessment_year": "2026-27",
+        ay = "2027-28" if financial_year == "2026-27" else "2026-27"
+        err_res = {
+            "financial_year": financial_year,
+            "assessment_year": ay,
             "gross_income": gross_income if isinstance(gross_income, (int, float)) else 0,
             "regime": regime if isinstance(regime, str) else "both",
             "errors": [f"Income tax calculation failed: {exc}"],
             "disclaimer": DISCLAIMER,
         }
+        return attach_rule_metadata(err_res, "income_tax", financial_year)

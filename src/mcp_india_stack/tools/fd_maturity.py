@@ -4,6 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.tools.rules_metadata import (
+    attach_rule_metadata,
+    validate_financial_year,
+)
+
 DISCLAIMER = "Submit Form 15G/15H to avoid TDS if income is below taxable limit."
 
 
@@ -15,6 +20,7 @@ def calculate_fd_maturity(
     is_senior_citizen: bool = False,
     senior_citizen_bonus: float = 0.25,
     tds_applicable: bool = True,
+    financial_year: str = "2025-26",
     **kwargs: Any,
 ) -> dict[str, Any]:
     """Calculate FD maturity amount.
@@ -27,10 +33,15 @@ def calculate_fd_maturity(
         is_senior_citizen: Senior citizen flag
         senior_citizen_bonus: Extra rate in percentage points
         tds_applicable: Apply 10% TDS if interest > ₹40,000/yr
+        financial_year: Financial year (defaults to "2025-26")
 
     Returns:
         Dict with maturity amount and breakdown.
     """
+    is_valid_fy, err_resp = validate_financial_year("fd_maturity", financial_year)
+    if not is_valid_fy:
+        assert err_resp is not None
+        return err_resp
     annual_interest_rate = kwargs.get("annual_rate", annual_interest_rate)
 
     if "tenure_years" in kwargs and tenure_days == 0:
@@ -56,7 +67,8 @@ def calculate_fd_maturity(
         errors.append("Invalid compounding type")
 
     if errors:
-        return {"errors": errors, "disclaimer": DISCLAIMER}
+        err_res = {"errors": errors, "disclaimer": DISCLAIMER}
+        return attach_rule_metadata(err_res, "fd_maturity", financial_year)
 
     effective_rate = annual_interest_rate + (senior_citizen_bonus if is_senior_citizen else 0)
     t = tenure_days / 365
@@ -78,7 +90,7 @@ def calculate_fd_maturity(
     )
     net_maturity = maturity - tds_deducted
 
-    return {
+    res = {
         "principal": principal,
         "effective_rate": effective_rate,
         "tenure_days": tenure_days,
@@ -95,3 +107,4 @@ def calculate_fd_maturity(
         ],
         "disclaimer": DISCLAIMER,
     }
+    return attach_rule_metadata(res, "fd_maturity", financial_year)

@@ -4,6 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.tools.rules_metadata import (
+    attach_rule_metadata,
+    validate_financial_year,
+)
+
 DISCLAIMER = "Subject to market risk. Not a guaranteed return product."
 
 
@@ -12,6 +17,7 @@ def calculate_sip_returns(
     expected_annual_return: float,
     tenure_years: int,
     inflation_rate: float = 6.0,
+    financial_year: str = "2025-26",
 ) -> dict[str, Any]:
     """Calculate SIP maturity with inflation-adjusted returns.
 
@@ -20,12 +26,19 @@ def calculate_sip_returns(
         expected_annual_return: Expected CAGR %
         tenure_years: Investment tenure
         inflation_rate: Expected inflation %
+        financial_year: Financial year (defaults to "2025-26")
 
     Returns:
         Dict with corpus and real returns.
     """
+    is_valid_fy, err_resp = validate_financial_year("sip_returns", financial_year)
+    if not is_valid_fy:
+        assert err_resp is not None
+        return err_resp
+
     if monthly_investment <= 0 or tenure_years <= 0:
-        return {"errors": ["Invalid parameters"], "disclaimer": DISCLAIMER}
+        err_res = {"errors": ["Invalid parameters"], "disclaimer": DISCLAIMER}
+        return attach_rule_metadata(err_res, "sip_returns", financial_year)
 
     r = expected_annual_return / (12 * 100)
     n = tenure_years * 12
@@ -36,7 +49,7 @@ def calculate_sip_returns(
 
     real_corpus = corpus / ((1 + inflation_rate / 100) ** tenure_years)
 
-    return {
+    res = {
         "monthly_investment": monthly_investment,
         "expected_annual_return": expected_annual_return,
         "tenure_years": tenure_years,
@@ -46,3 +59,4 @@ def calculate_sip_returns(
         "inflation_adjusted_corpus": round(real_corpus, 2),
         "disclaimer": DISCLAIMER,
     }
+    return attach_rule_metadata(res, "sip_returns", financial_year)

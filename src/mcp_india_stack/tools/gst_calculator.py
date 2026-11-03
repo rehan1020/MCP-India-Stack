@@ -4,6 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.tools.rules_metadata import (
+    attach_rule_metadata,
+    validate_financial_year,
+)
+
 VALID_GST_RATES = [0, 0.1, 0.25, 1.5, 3, 5, 12, 18, 28]
 
 CESS_RATES: dict[str, float] = {
@@ -69,6 +74,7 @@ def calculate_gst(  # noqa: C901
     amount_includes_gst: bool = False,
     cess_category: str = "default",
     hsn_code: str | None = None,
+    financial_year: str = "2025-26",
 ) -> dict[str, Any]:  # noqa: C901
     """Calculate GST breakdown for a given amount and rate.
 
@@ -79,11 +85,16 @@ def calculate_gst(  # noqa: C901
         amount_includes_gst: If True, back-calculate base from inclusive amount.
         cess_category: For 28% items, specify cess category key.
         hsn_code: Optional HSN/SAC code to look up rate automatically.
+        financial_year: Financial year (defaults to "2025-26").
 
     Returns:
         Dict with full GST breakdown.
     """
     try:
+        is_valid_fy, err_resp = validate_financial_year("gst_calculator", financial_year)
+        if not is_valid_fy:
+            assert err_resp is not None
+            return err_resp
         errors: list[str] = []
         rate_source = "explicit"
         hsn_used = None
@@ -209,10 +220,10 @@ def calculate_gst(  # noqa: C901
                 "product/service with the GST rate schedule."
             )
 
-        return result
+        return attach_rule_metadata(result, "gst_calculator", financial_year)
 
     except Exception as exc:
-        return {
+        err_res = {
             "base_amount": 0,
             "gst_rate": 0,
             "transaction_type": "",
@@ -229,3 +240,4 @@ def calculate_gst(  # noqa: C901
             "errors": [f"GST calculation failed: {exc}"],
             "disclaimer": DISCLAIMER,
         }
+        return attach_rule_metadata(err_res, "gst_calculator", financial_year)
