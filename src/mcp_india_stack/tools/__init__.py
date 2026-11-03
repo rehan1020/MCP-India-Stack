@@ -48,6 +48,7 @@ from mcp_india_stack.tools.epf_code import validate_epf_code
 from mcp_india_stack.tools.epf_esic import calculate_epf_esic
 from mcp_india_stack.tools.esic_code import validate_esic_code
 from mcp_india_stack.tools.fssai import validate_fssai
+from mcp_india_stack.tools.fx_rates import cbic_customs_rate, inr_reference_rate, sbi_tt_rate
 from mcp_india_stack.tools.gratuity import calculate_gratuity
 from mcp_india_stack.tools.gst_calculator import calculate_gst
 from mcp_india_stack.tools.gstin import validate_gstin
@@ -91,8 +92,8 @@ __all__ = [
     "calculate_court_fee",
     "calculate_emi",
     "calculate_epf_esic",
-    "calculate_gst",
     "calculate_gratuity",
+    "calculate_gst",
     "calculate_home_loan_savings",
     "calculate_hra_exemption",
     "calculate_hra_for_salary_structure",
@@ -107,6 +108,7 @@ __all__ = [
     "calculate_stamp_duty",
     "calculate_surcharge",
     "calculate_tds",
+    "cbic_customs_rate",
     "decode_cnr_number",
     "decode_digilocker_uri",
     "decode_ipc_bns_crosswalk",
@@ -118,6 +120,7 @@ __all__ = [
     "get_regulatory_deadlines",
     "get_stock_history",
     "get_stock_quote",
+    "inr_reference_rate",
     "lookup_bank",
     "lookup_bbps_biller",
     "lookup_bns_section",
@@ -130,6 +133,7 @@ __all__ = [
     "lookup_ifsc",
     "lookup_ipc_section",
     "lookup_pincode",
+    "sbi_tt_rate",
     "validate_aa_consent_artifact",
     "validate_aadhaar",
     "validate_cin",

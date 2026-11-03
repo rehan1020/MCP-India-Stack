@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-EXPECTED_TOOL_COUNT_ELEVATED_OFF: int = 74
-EXPECTED_TOOL_COUNT_ELEVATED_ON: int = 78
+EXPECTED_TOOL_COUNT_ELEVATED_OFF: int = 77
+EXPECTED_TOOL_COUNT_ELEVATED_ON: int = 81
 
 SCHEMA_TOOLS: frozenset[str] = frozenset(
     {

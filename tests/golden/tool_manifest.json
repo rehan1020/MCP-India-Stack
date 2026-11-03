@@ -1624,6 +1624,38 @@
       "type": "object"
     }
   },
+  "cbic_customs_rate": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": true
+    },
+    "description": "Fetch the latest CBIC customs exchange rate (import or export) for a currency against INR.",
+    "name": "cbic_customs_rate",
+    "parameters": {
+      "properties": {
+        "currency": {
+          "description": "ISO 4217 currency code quoted against INR. Examples: USD, EUR, CNY",
+          "maxLength": 3,
+          "minLength": 3,
+          "title": "Currency",
+          "type": "string"
+        },
+        "type": {
+          "default": "import",
+          "description": "Customs rate type: import or export",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "currency"
+      ],
+      "title": "cbic_customs_rateArguments",
+      "type": "object"
+    }
+  },
   "decode_aa_fi_type": {
     "annotations": {
       "destructiveHint": null,
@@ -2024,6 +2056,32 @@
       "type": "object"
     }
   },
+  "inr_reference_rate": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": true
+    },
+    "description": "Fetch the latest RBI reference rate for a currency against INR (zero-auth live lookup).",
+    "name": "inr_reference_rate",
+    "parameters": {
+      "properties": {
+        "currency": {
+          "description": "ISO 4217 currency code quoted against INR. Examples: USD, EUR, GBP, JPY",
+          "maxLength": 3,
+          "minLength": 3,
+          "title": "Currency",
+          "type": "string"
+        }
+      },
+      "required": [
+        "currency"
+      ],
+      "title": "inr_reference_rateArguments",
+      "type": "object"
+    }
+  },
   "lookup_bank": {
     "annotations": {
       "destructiveHint": null,
@@ -2362,6 +2420,32 @@
         "pincode"
       ],
       "title": "lookup_pincodeArguments",
+      "type": "object"
+    }
+  },
+  "sbi_tt_rate": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": true
+    },
+    "description": "Fetch the latest SBI telegraphic-transfer buy/sell rate for a currency against INR.",
+    "name": "sbi_tt_rate",
+    "parameters": {
+      "properties": {
+        "currency": {
+          "description": "ISO 4217 currency code quoted against INR. Examples: USD, EUR, AED",
+          "maxLength": 3,
+          "minLength": 3,
+          "title": "Currency",
+          "type": "string"
+        }
+      },
+      "required": [
+        "currency"
+      ],
+      "title": "sbi_tt_rateArguments",
       "type": "object"
     }
   },

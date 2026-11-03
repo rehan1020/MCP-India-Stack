@@ -189,6 +189,11 @@ Add the following to your `claude_desktop_config.json` file to enable the India 
 - `get_stock_quote` — Fetch live/delayed Indian stock quotes and summaries (NSE/BSE) using yfinance.
 - `get_stock_history` — Fetch historical end-of-day data for Indian stocks using yfinance.
 
+### 💱 FX Rates (INR)
+- [`inr_reference_rate`](docs/fx_rates.md) — Latest RBI reference rate for a currency against INR (zero-auth live lookup)
+- [`sbi_tt_rate`](docs/fx_rates.md) — Latest SBI telegraphic-transfer buy/sell rate against INR
+- [`cbic_customs_rate`](docs/fx_rates.md) — Latest CBIC customs import/export exchange rate against INR
+
 ### ⚖️ Legal Reference
 - [`decode_cnr_number`](docs/legal_reference.md) — CNR (Case Number Record) decoder and validator
 - [`lookup_court_establishment_code`](docs/legal_reference.md) — Court establishment code directory lookup

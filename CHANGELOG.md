@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- **FX Rates (INR)**: Three zero-auth live lookup tools (`LOOKUP_LIVE` tier) in `tools/fx_rates.py`, registered in `registrations/markets.py`: `inr_reference_rate` (RBI reference rate), `sbi_tt_rate` (SBI telegraphic-transfer buy/sell) and `cbic_customs_rate` (CBIC customs import/export rate). Latest value only, keyless endpoints at allratestoday.com, shared circuit breaker, 5-second timeout, failures reported in `errors` rather than raised. Documented in `docs/fx_rates.md`. Tool count 78 → 81.
+
 ## [0.7.0] - 2026-10-29
 
 ### Refactoring & Core Parity (Update 5b)

@@ -1,6 +1,6 @@
 """Tool registration modules organized by domain.
 
-Importing this package triggers side-effect registration of all 78 tools
+Importing this package triggers side-effect registration of all 81 tools
 onto the shared FastMCP instance from mcp_india_stack.app.
 """
 
