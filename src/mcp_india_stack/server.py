@@ -25,6 +25,7 @@ import mcp_india_stack.registrations  # noqa: F401
 from mcp_india_stack import __version__
 from mcp_india_stack.app import TOOL_NETWORK, mcp
 from mcp_india_stack.database import is_db_connected
+from mcp_india_stack.network.cdn_refresh import get_last_refresh_error
 
 _logger = logging.getLogger(__name__)
 
@@ -53,6 +54,7 @@ def server_status() -> dict[str, Any]:
         "tool_count": 78,
         "data_version": "2025.04",
         "tools_network": TOOL_NETWORK,
+        "last_refresh_error": get_last_refresh_error(),
     }
 
 
