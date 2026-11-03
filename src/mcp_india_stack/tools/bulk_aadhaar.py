@@ -1,8 +1,7 @@
-"""Bulk Aadhaar validation using thread pool."""
+"""Bulk Aadhaar validation using shared bounded executor."""
 
 from __future__ import annotations
 
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 
 from mcp_india_stack.logging_filter import mask_aadhaar_text
@@ -12,9 +11,10 @@ from mcp_india_stack.tools.aadhaar import (
 from mcp_india_stack.tools.aadhaar import (
     validate_aadhaar as core_validate_aadhaar,
 )
-from mcp_india_stack.tools.bulk_common import BULK_WORKERS, _clamp_bulk_workers  # noqa: F401
-
-MAX_AADHAAR_BULK = 500
+from mcp_india_stack.tools.bulk_common import (
+    execute_bulk_items,
+    validate_bulk_bounds,
+)
 
 DISCLAIMER = (
     "Structural and Verhoeff checksum validation only. Not connected to UIDAI. "
@@ -40,6 +40,16 @@ def _validate_single_aadhaar(aadhaar: str) -> dict[str, Any]:
         }
 
 
+def _aadhaar_fallback(val: Any, err: str) -> dict[str, Any]:
+    """Fallback representation for failed or malformed Aadhaar item."""
+    masked = _mask_aadhaar(str(val)) if val is not None else ""
+    return {
+        "masked": masked,
+        "valid": False,
+        "errors": [mask_aadhaar_text(err)],
+    }
+
+
 def bulk_validate_aadhaar(numbers: list[str]) -> dict[str, Any]:
     """Validate multiple Aadhaar numbers in parallel using ThreadPoolExecutor.
 
@@ -55,61 +65,31 @@ def bulk_validate_aadhaar(numbers: list[str]) -> dict[str, Any]:
     Returns:
         Dict with per-Aadhaar results and valid/invalid counts.
     """
-    try:
-        errors: list[str] = []
-
-        if not numbers:
-            errors.append("Empty Aadhaar list")
-
-        if len(numbers) > MAX_AADHAAR_BULK:
-            errors.append(f"Maximum {MAX_AADHAAR_BULK} Aadhaars per call")
-
-        if errors:
-            return {
-                "total": len(numbers) if numbers else 0,
-                "valid_count": 0,
-                "invalid_count": 0,
-                "results": [],
-                "errors": errors,
-                "disclaimer": DISCLAIMER,
-            }
-
-        results: list[tuple[int, dict[str, Any]]] = []
-        valid_count = 0
-        invalid_count = 0
-
-        with ThreadPoolExecutor(max_workers=BULK_WORKERS) as executor:
-            future_to_index: dict[Any, int] = {
-                executor.submit(_validate_single_aadhaar, aadhaar): idx
-                for idx, aadhaar in enumerate(numbers)
-            }
-
-            for future in as_completed(future_to_index):
-                idx = future_to_index[future]
-                result = future.result()
-                results.append((idx, result))
-                if result.get("valid"):
-                    valid_count += 1
-                else:
-                    invalid_count += 1
-
-        results.sort(key=lambda x: x[0])
-        ordered_results = [{"index": idx, **r} for idx, r in results]
-
+    is_valid, errors = validate_bulk_bounds(numbers, entity_name="Aadhaar")
+    if not is_valid:
         return {
-            "total": len(numbers),
-            "valid_count": valid_count,
-            "invalid_count": invalid_count,
-            "results": ordered_results,
-            "disclaimer": DISCLAIMER,
-        }
-
-    except Exception as exc:
-        return {
-            "total": len(numbers) if numbers else 0,
+            "total": len(numbers) if isinstance(numbers, list) else 0,
             "valid_count": 0,
             "invalid_count": 0,
             "results": [],
-            "errors": [f"Bulk validation failed: {mask_aadhaar_text(str(exc))}"],
+            "errors": errors,
             "disclaimer": DISCLAIMER,
         }
+
+    ordered_results = execute_bulk_items(
+        items=numbers,
+        validate_fn=_validate_single_aadhaar,
+        fallback_fn=_aadhaar_fallback,
+        entity_name="Aadhaar",
+    )
+    indexed_results = [{"index": idx, **r} for idx, r in enumerate(ordered_results)]
+    valid_count = sum(1 for r in ordered_results if r.get("valid"))
+    invalid_count = len(ordered_results) - valid_count
+
+    return {
+        "total": len(numbers),
+        "valid_count": valid_count,
+        "invalid_count": invalid_count,
+        "results": indexed_results,
+        "disclaimer": DISCLAIMER,
+    }
