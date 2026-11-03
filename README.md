@@ -48,8 +48,29 @@
 
 ## 🏗️ Architecture Diagram
 
-![Architecture](./assets/architecture.png)
-*MCP Client ↔ MCP Server ↔ 78 offline-first tool modules*
+```
++-----------------------------------------------------------+
+|                        MCP Clients                        |
+|       (Claude Desktop, Cursor, Custom Agent Frameworks)   |
++-----------------------------+-----------------------------+
+                              |
+                     STDIO / SSE Protocol
+                              |
++-----------------------------v-----------------------------+
+|                      MCP India Stack                      |
+|                     (FastMCP Server)                      |
++-----------------------------+-----------------------------+
+                              |
+      +-----------------------+-----------------------+
+      |                       |                       |
++-----v-------------+  +------v------------+  +-------v-----+
+| Pure Offline (71) |  |   Offline + CDN   |  |   Market    |
+| Format Validators |  |   Refresh (5)     |  |  Data (2)   |
+| Tax Calculators   |  | IFSC, HSN, Pin    |  |  yfinance   |
+| Legal Reference   |  | Bundled Datasets  |  |  Delayed    |
++-------------------+  +-------------------+  +-------------+
+```
+*MCP Client ↔ FastMCP Server ↔ 78 modular tool endpoints*
 
 ---
 
