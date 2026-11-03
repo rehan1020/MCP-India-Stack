@@ -60,6 +60,22 @@
 
 
 
+## [0.4.1] - 2026-05-15
+
+### Bug Fixes
+- **Security**: Masked Aadhaar number leakage in response fields.
+- **Validation**: Fixed mobile number over-counting digits issue.
+- **Tax Rules**: Corrected Presumptive Tax (44AD/44ADA) thresholds to FY25-26 rules.
+- **Financial**: Fixed Step-up SIP compounding return calculation.
+- **Data**: Added missing HSN codes (8517, 9401, 2523, 3004, 8708) with correct GST rates.
+- **Professional Tax**: Fixed annual total calculations based on correct monthly slabs.
+- **Income Tax**: Fixed 80D deduction cap for senior citizens.
+- **ISIN**: Fixed Luhn checksum multi-digit expansion logic.
+- **EMI Calculator**: Improved error responses to not leak fallback fields on invalid inputs.
+- **Advance Tax**: Added support for overriding internal computations with user-provided `tax_liability`.
+
+
+
 ## [0.4.0] - 2026-05-08
 
 ### Security Fix

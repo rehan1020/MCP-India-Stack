@@ -49,7 +49,7 @@
 ## 🏗️ Architecture Diagram
 
 ![Architecture](./assets/architecture.png)
-*MCP Client ↔ MCP Server ↔ 76 offline-first tool modules*
+*MCP Client ↔ MCP Server ↔ 78 offline-first tool modules*
 
 ---
 
@@ -65,7 +65,7 @@
 - **Offline-First Architecture**: Bundles compressed datasets for zero-latency lookups (IFSC, Pincodes, HSN/SAC). No API rate limits.
 - **Zero Authentication**: No API keys, secrets, or subscriptions required. All logic runs locally.
 - **Background Auto-Updates**: Non-blocking CDN fetching ensures your datasets never go stale without impacting request latency.
-- **Comprehensive Coverage**: 76 dedicated tools for identity validation (PAN, Aadhaar, GSTIN, TAN, PRAN), tax calculation (Income Tax, TDS, GST), savings calculators (EPF, PPF, SIP), and master data lookups.
+- **Comprehensive Coverage**: 78 dedicated tools for identity validation (PAN, Aadhaar, GSTIN, TAN, PRAN), tax calculation (Income Tax, TDS, GST), savings calculators (EPF, PPF, SIP), and master data lookups.
 - **Enterprise-Ready**: Thread-pool accelerated bulk validation tools for processing large batches of vendor or customer data.
 
 ---
@@ -271,38 +271,20 @@ See [`LEGAL_NOTICE.md`](LEGAL_NOTICE.md) for important legal disclaimers includi
 ## 🚀 Launch Notes
 
 This repository is release-ready for GitHub launch with:
-- `0.6.0` package metadata and changelog coverage.
+- `0.7.0` package metadata and changelog coverage.
 - A complete MCP server-card under `docs/.well-known/mcp/server-card.json`.
 - Local setup and publishing steps in [`SETUP.md`](SETUP.md).
 - Contribution guidance and versioning policy in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-### New in v0.6.0 — Legal Reference & RTI Toolkit
-- **Legal Reference**: CNR decoder, court establishment lookup, bare-act section lookups (IPC/BNS/CrPC/BNSS/IEA/BSA), IPC↔BNS crosswalk, limitation period calculator, court fee calculator (10 states), stamp duty calculator (10 states).
-- **RTI Toolkit**: RTI fee calculator, deadline tracker, penalty estimator, application/appeal template drafters.
-- **Capital Gains**: Updated LTCG exemption from ₹1L to ₹1.25L (Budget 2024).
-- **Stock Market**: Added yfinance-based `get_stock_quote` and `get_stock_history` tools.
+### What's New in v0.7.0 — Security Hardening, Full Parity & Offline Invariants
+- **Offline Architecture & Tool Network Tiers**: Canonical network classification (none/optional/required) across all 78 tools.
+- **Hardened Supply Chain**: CDN refresh pipeline with strict HTTPS, host allowlists, size/decompression bomb caps, monotonic version checks, and atomic staging.
+- **100% Modular Tool Parity**: Full core module extraction and parity across all 78 registered tools.
+- **Architectural Regression Guards**: G01-G20 invariants enforcing zero unhandled exceptions, constant-time auth, and fail-closed network safeguards.
 
-### Bug fixes in v0.4.2 (Round 2 — Deep Code Audit)
-- **Capital Gains**: Asset-type-specific LTCG thresholds — real estate 24mo, gold/debentures 36mo, crypto always 30% flat.
-- **EPF/ESIC**: Employee EPF correctly capped at ₹15K wage ceiling. Added `voluntary_pf_on_actual` for VPF.
-- **HRA**: Removed Bangalore/Hyderabad/Pune from metro cities. Only Delhi/Mumbai/Chennai/Kolkata get 50%.
-- **Presumptive Tax**: Full 7-slab new regime coverage with 87A rebate (was truncated at 3 slabs).
-- **GST Late Fee**: GSTR9 cap enforced (0.25% of turnover). Nil return rate corrected to ₹20/day.
-- **Income Tax Interest**: Section 234C uses cumulative paid vs required (not single-quarter).
-- **Advance Tax**: Installments show incremental `installment_amount` (not confusing cumulative).
-- **Salary Restructuring**: Removed obsolete ₹19,200 conveyance exemption. Standard deduction (₹75K) shown.
-
-### Bug fixes in v0.4.1
-- **Security**: Masked Aadhaar number leakage in response fields.
-- **Validation**: Fixed mobile number over-counting digits issue.
-- **Tax Rules**: Corrected Presumptive Tax (44AD/44ADA) thresholds to FY25-26 rules.
-- **Financial**: Fixed Step-up SIP compounding return calculation.
-- **Data**: Added missing HSN codes (8517, 9401, 2523, 3004, 8708) with correct GST rates.
-- **Professional Tax**: Fixed annual total calculations based on correct monthly slabs.
-- **Income Tax**: Fixed 80D deduction cap for senior citizens.
-- **ISIN**: Fixed Luhn checksum multi-digit expansion logic.
-- **EMI Calculator**: Improved error responses to not leak fallback fields on invalid inputs.
-- **Advance Tax**: Added support for overriding internal computations with user-provided `tax_liability`.
+### Previous Releases
+- **v0.6.0**: Legal Reference (CNR decoder, court establishment lookup, bare-act section lookups for IPC/BNS/CrPC/BNSS/IEA/BSA, IPC↔BNS crosswalk, limitation period calculator, court fee, stamp duty) and RTI Toolkit (fee calculator, deadline tracker, penalty estimator, templates). Added yfinance-based market data tools.
+- **v0.4.x**: Deep statutory audit across capital gains thresholds, EPF wage ceilings, metro HRA rules, 7-slab presumptive tax, and GST late fee caps. See [CHANGELOG.md](CHANGELOG.md) for detailed history.
 
 ---
 
