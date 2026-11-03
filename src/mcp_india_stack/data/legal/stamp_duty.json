@@ -3,100 +3,290 @@
     "state_name": "Maharashtra",
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
-    "sale_deed": {"duty_pct": 5.0, "registration_pct": 1.0, "surcharge_pct": 1.0, "notes": "Additional 1% metro cess in Mumbai, Pune, Nagpur"},
-    "gift_deed": {"duty_pct": 3.0, "registration_pct": 1.0, "notes": "Exempted for blood relatives in some states"},
-    "lease": {"duty_pct": 2.0, "notes": "Varies by lease term"},
-    "mortgage": {"duty_pct": 1.0, "notes": "With possession: same as conveyance"},
-    "power_of_attorney": {"fixed": 500, "notes": "General PoA; specific PoA may differ"}
+    "sale_deed": {
+      "duty_pct": 5.0,
+      "registration_pct": 1.0,
+      "surcharge_pct": 1.0,
+      "notes": "Additional 1% metro cess in Mumbai, Pune, Nagpur"
+    },
+    "gift_deed": {
+      "duty_pct": 3.0,
+      "registration_pct": 1.0,
+      "notes": "Exempted for blood relatives in some states"
+    },
+    "lease": {
+      "duty_pct": 2.0,
+      "notes": "Varies by lease term"
+    },
+    "mortgage": {
+      "duty_pct": 1.0,
+      "notes": "With possession: same as conveyance"
+    },
+    "power_of_attorney": {
+      "fixed": 500,
+      "notes": "General PoA; specific PoA may differ"
+    },
+    "source_ref": "Maharashtra Stamp Act, 1958 (Bom. Act LX of 1958)"
   },
   "UP": {
     "state_name": "Uttar Pradesh",
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
-    "sale_deed": {"duty_pct": 7.0, "registration_pct": 1.0, "surcharge_pct": 0.0, "notes": "Varies for female buyers (1% discount up to certain limit)"},
-    "gift_deed": {"duty_pct": 5.0, "registration_pct": 1.0, "notes": "Capped for family members"},
-    "lease": {"duty_pct": 4.0, "notes": "Varies by term"},
-    "mortgage": {"duty_pct": 2.0, "notes": "Depends on loan amount"},
-    "power_of_attorney": {"fixed": 100, "notes": "Depends on terms"}
+    "sale_deed": {
+      "duty_pct": 7.0,
+      "registration_pct": 1.0,
+      "surcharge_pct": 0.0,
+      "notes": "Varies for female buyers (1% discount up to certain limit)"
+    },
+    "gift_deed": {
+      "duty_pct": 5.0,
+      "registration_pct": 1.0,
+      "notes": "Capped for family members"
+    },
+    "lease": {
+      "duty_pct": 4.0,
+      "notes": "Varies by term"
+    },
+    "mortgage": {
+      "duty_pct": 2.0,
+      "notes": "Depends on loan amount"
+    },
+    "power_of_attorney": {
+      "fixed": 100,
+      "notes": "Depends on terms"
+    },
+    "source_ref": "Indian Stamp Act, 1899 (Uttar Pradesh Amendment Acts)"
   },
   "DL": {
     "state_name": "Delhi",
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
-    "sale_deed": {"duty_pct": 6.0, "registration_pct": 1.0, "surcharge_pct": 0.0, "notes": "4% for female buyers"},
-    "gift_deed": {"duty_pct": 4.0, "registration_pct": 1.0, "notes": "Depends on relation"},
-    "lease": {"duty_pct": 2.0, "notes": "Varies by term"},
-    "mortgage": {"duty_pct": 1.0, "notes": ""},
-    "power_of_attorney": {"fixed": 50, "notes": ""}
+    "sale_deed": {
+      "duty_pct": 6.0,
+      "registration_pct": 1.0,
+      "surcharge_pct": 0.0,
+      "notes": "4% for female buyers"
+    },
+    "gift_deed": {
+      "duty_pct": 4.0,
+      "registration_pct": 1.0,
+      "notes": "Depends on relation"
+    },
+    "lease": {
+      "duty_pct": 2.0,
+      "notes": "Varies by term"
+    },
+    "mortgage": {
+      "duty_pct": 1.0,
+      "notes": ""
+    },
+    "power_of_attorney": {
+      "fixed": 50,
+      "notes": ""
+    },
+    "source_ref": "Indian Stamp Act, 1899 (Delhi Amendment Acts)"
   },
   "KA": {
     "state_name": "Karnataka",
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
-    "sale_deed": {"duty_pct": 5.1, "registration_pct": 1.0, "surcharge_pct": 0.0, "notes": "Additional cesses apply"},
-    "gift_deed": {"duty_pct": 3.0, "registration_pct": 1.0, "notes": "Fixed for family"},
-    "lease": {"duty_pct": 2.0, "notes": "Varies by term"},
-    "mortgage": {"duty_pct": 1.0, "notes": ""},
-    "power_of_attorney": {"fixed": 200, "notes": ""}
+    "sale_deed": {
+      "duty_pct": 5.1,
+      "registration_pct": 1.0,
+      "surcharge_pct": 0.0,
+      "notes": "Additional cesses apply"
+    },
+    "gift_deed": {
+      "duty_pct": 3.0,
+      "registration_pct": 1.0,
+      "notes": "Fixed for family"
+    },
+    "lease": {
+      "duty_pct": 2.0,
+      "notes": "Varies by term"
+    },
+    "mortgage": {
+      "duty_pct": 1.0,
+      "notes": ""
+    },
+    "power_of_attorney": {
+      "fixed": 200,
+      "notes": ""
+    },
+    "source_ref": "Karnataka Stamp Act, 1957 (Karnataka Act No. 34 of 1957)"
   },
   "TN": {
     "state_name": "Tamil Nadu",
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
-    "sale_deed": {"duty_pct": 7.0, "registration_pct": 4.0, "surcharge_pct": 0.0, "notes": ""},
-    "gift_deed": {"duty_pct": 5.0, "registration_pct": 1.0, "notes": "Lower for family"},
-    "lease": {"duty_pct": 1.0, "notes": "Varies by term"},
-    "mortgage": {"duty_pct": 1.0, "notes": ""},
-    "power_of_attorney": {"fixed": 10000, "notes": ""}
+    "sale_deed": {
+      "duty_pct": 7.0,
+      "registration_pct": 4.0,
+      "surcharge_pct": 0.0,
+      "notes": ""
+    },
+    "gift_deed": {
+      "duty_pct": 5.0,
+      "registration_pct": 1.0,
+      "notes": "Lower for family"
+    },
+    "lease": {
+      "duty_pct": 1.0,
+      "notes": "Varies by term"
+    },
+    "mortgage": {
+      "duty_pct": 1.0,
+      "notes": ""
+    },
+    "power_of_attorney": {
+      "fixed": 10000,
+      "notes": ""
+    },
+    "source_ref": "Indian Stamp Act, 1899 (Tamil Nadu Amendment Acts)"
   },
   "GJ": {
     "state_name": "Gujarat",
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
-    "sale_deed": {"duty_pct": 4.9, "registration_pct": 1.0, "surcharge_pct": 0.0, "notes": ""},
-    "gift_deed": {"duty_pct": 4.9, "registration_pct": 1.0, "notes": "Lower for family"},
-    "lease": {"duty_pct": 1.5, "notes": "Varies by term"},
-    "mortgage": {"duty_pct": 1.0, "notes": ""},
-    "power_of_attorney": {"fixed": 300, "notes": ""}
+    "sale_deed": {
+      "duty_pct": 4.9,
+      "registration_pct": 1.0,
+      "surcharge_pct": 0.0,
+      "notes": ""
+    },
+    "gift_deed": {
+      "duty_pct": 4.9,
+      "registration_pct": 1.0,
+      "notes": "Lower for family"
+    },
+    "lease": {
+      "duty_pct": 1.5,
+      "notes": "Varies by term"
+    },
+    "mortgage": {
+      "duty_pct": 1.0,
+      "notes": ""
+    },
+    "power_of_attorney": {
+      "fixed": 300,
+      "notes": ""
+    },
+    "source_ref": "Gujarat Stamp Act, 1958 (Act No. LX of 1958 as adapted by Gujarat)"
   },
   "RJ": {
     "state_name": "Rajasthan",
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
-    "sale_deed": {"duty_pct": 6.0, "registration_pct": 1.0, "surcharge_pct": 0.0, "notes": "Discount for female buyers"},
-    "gift_deed": {"duty_pct": 4.0, "registration_pct": 1.0, "notes": "Lower for family"},
-    "lease": {"duty_pct": 2.0, "notes": "Varies by term"},
-    "mortgage": {"duty_pct": 1.5, "notes": ""},
-    "power_of_attorney": {"fixed": 500, "notes": ""}
+    "sale_deed": {
+      "duty_pct": 6.0,
+      "registration_pct": 1.0,
+      "surcharge_pct": 0.0,
+      "notes": "Discount for female buyers"
+    },
+    "gift_deed": {
+      "duty_pct": 4.0,
+      "registration_pct": 1.0,
+      "notes": "Lower for family"
+    },
+    "lease": {
+      "duty_pct": 2.0,
+      "notes": "Varies by term"
+    },
+    "mortgage": {
+      "duty_pct": 1.5,
+      "notes": ""
+    },
+    "power_of_attorney": {
+      "fixed": 500,
+      "notes": ""
+    },
+    "source_ref": "Rajasthan Stamp Act, 1998 (Act No. 14 of 1999)"
   },
   "WB": {
     "state_name": "West Bengal",
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
-    "sale_deed": {"duty_pct": 6.0, "registration_pct": 1.0, "surcharge_pct": 0.0, "notes": "Lower in non-urban areas"},
-    "gift_deed": {"duty_pct": 5.0, "registration_pct": 1.0, "notes": "Lower for family"},
-    "lease": {"duty_pct": 2.0, "notes": "Varies by term"},
-    "mortgage": {"duty_pct": 1.0, "notes": ""},
-    "power_of_attorney": {"fixed": 50, "notes": ""}
+    "sale_deed": {
+      "duty_pct": 6.0,
+      "registration_pct": 1.0,
+      "surcharge_pct": 0.0,
+      "notes": "Lower in non-urban areas"
+    },
+    "gift_deed": {
+      "duty_pct": 5.0,
+      "registration_pct": 1.0,
+      "notes": "Lower for family"
+    },
+    "lease": {
+      "duty_pct": 2.0,
+      "notes": "Varies by term"
+    },
+    "mortgage": {
+      "duty_pct": 1.0,
+      "notes": ""
+    },
+    "power_of_attorney": {
+      "fixed": 50,
+      "notes": ""
+    },
+    "source_ref": "Indian Stamp Act, 1899 (West Bengal Amendment Acts)"
   },
   "MP": {
     "state_name": "Madhya Pradesh",
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
-    "sale_deed": {"duty_pct": 7.5, "registration_pct": 3.0, "surcharge_pct": 0.0, "notes": "Various municipal cesses apply"},
-    "gift_deed": {"duty_pct": 5.0, "registration_pct": 1.0, "notes": "Lower for family"},
-    "lease": {"duty_pct": 2.0, "notes": "Varies by term"},
-    "mortgage": {"duty_pct": 1.5, "notes": ""},
-    "power_of_attorney": {"fixed": 1000, "notes": ""}
+    "sale_deed": {
+      "duty_pct": 7.5,
+      "registration_pct": 3.0,
+      "surcharge_pct": 0.0,
+      "notes": "Various municipal cesses apply"
+    },
+    "gift_deed": {
+      "duty_pct": 5.0,
+      "registration_pct": 1.0,
+      "notes": "Lower for family"
+    },
+    "lease": {
+      "duty_pct": 2.0,
+      "notes": "Varies by term"
+    },
+    "mortgage": {
+      "duty_pct": 1.5,
+      "notes": ""
+    },
+    "power_of_attorney": {
+      "fixed": 1000,
+      "notes": ""
+    },
+    "source_ref": "Indian Stamp Act, 1899 (Madhya Pradesh Amendment Acts)"
   },
   "KL": {
     "state_name": "Kerala",
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
-    "sale_deed": {"duty_pct": 8.0, "registration_pct": 2.0, "surcharge_pct": 0.0, "notes": ""},
-    "gift_deed": {"duty_pct": 5.0, "registration_pct": 2.0, "notes": "Lower for family"},
-    "lease": {"duty_pct": 2.0, "notes": "Varies by term"},
-    "mortgage": {"duty_pct": 1.0, "notes": ""},
-    "power_of_attorney": {"fixed": 600, "notes": ""}
+    "sale_deed": {
+      "duty_pct": 8.0,
+      "registration_pct": 2.0,
+      "surcharge_pct": 0.0,
+      "notes": ""
+    },
+    "gift_deed": {
+      "duty_pct": 5.0,
+      "registration_pct": 2.0,
+      "notes": "Lower for family"
+    },
+    "lease": {
+      "duty_pct": 2.0,
+      "notes": "Varies by term"
+    },
+    "mortgage": {
+      "duty_pct": 1.0,
+      "notes": ""
+    },
+    "power_of_attorney": {
+      "fixed": 600,
+      "notes": ""
+    },
+    "source_ref": "Kerala Stamp Act, 1959 (Act 17 of 1959)"
   }
 }

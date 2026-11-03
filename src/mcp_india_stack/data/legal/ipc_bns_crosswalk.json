@@ -1,98 +1,201 @@
 [
   {
+    "crosswalk_type": "IPC_BNS",
     "ipc_section": "302",
     "ipc_title": "Punishment for murder",
     "bns_section": "103",
     "bns_title": "Punishment for murder",
     "notes": "Direct replacement, no substantive change",
-    "crosswalk_type": "IPC_BNS"
+    "is_one_to_many": false,
+    "target_sections": [
+      "103"
+    ],
+    "source_ref": "Bharatiya Nyaya Sanhita, 2023 (Act No. 45 of 2023)",
+    "last_verified": "2025-01-01"
   },
   {
+    "crosswalk_type": "IPC_BNS",
     "ipc_section": "304",
     "ipc_title": "Punishment for culpable homicide not amounting to murder",
     "bns_section": "105",
     "bns_title": "Punishment for culpable homicide not amounting to murder",
     "notes": "Direct replacement",
-    "crosswalk_type": "IPC_BNS"
+    "is_one_to_many": false,
+    "target_sections": [
+      "105"
+    ],
+    "source_ref": "Bharatiya Nyaya Sanhita, 2023 (Act No. 45 of 2023)",
+    "last_verified": "2025-01-01"
   },
   {
+    "crosswalk_type": "IPC_BNS",
     "ipc_section": "307",
     "ipc_title": "Attempt to murder",
     "bns_section": "109",
     "bns_title": "Attempt to murder",
     "notes": "Direct replacement",
-    "crosswalk_type": "IPC_BNS"
+    "is_one_to_many": false,
+    "target_sections": [
+      "109"
+    ],
+    "source_ref": "Bharatiya Nyaya Sanhita, 2023 (Act No. 45 of 2023)",
+    "last_verified": "2025-01-01"
   },
   {
+    "crosswalk_type": "IPC_BNS",
     "ipc_section": "376",
     "ipc_title": "Punishment for rape",
     "bns_section": "64",
     "bns_title": "Punishment for rape",
-    "notes": "Direct replacement",
-    "crosswalk_type": "IPC_BNS"
+    "notes": "One-to-many: Split into multiple sections in BNS (64, 65, 70, 71)",
+    "is_one_to_many": true,
+    "target_sections": [
+      "64",
+      "65",
+      "70",
+      "71"
+    ],
+    "source_ref": "Bharatiya Nyaya Sanhita, 2023 (Act No. 45 of 2023)",
+    "last_verified": "2025-01-01"
   },
   {
+    "crosswalk_type": "IPC_BNS",
     "ipc_section": "420",
     "ipc_title": "Cheating and dishonestly inducing delivery of property",
     "bns_section": "318",
     "bns_title": "Cheating and dishonestly inducing delivery of property",
-    "notes": "Direct replacement",
-    "crosswalk_type": "IPC_BNS"
+    "notes": "Direct replacement (BNS 318(4))",
+    "is_one_to_many": false,
+    "target_sections": [
+      "318"
+    ],
+    "source_ref": "Bharatiya Nyaya Sanhita, 2023 (Act No. 45 of 2023)",
+    "last_verified": "2025-01-01"
   },
   {
+    "crosswalk_type": "IPC_BNS",
     "ipc_section": "498A",
     "ipc_title": "Husband or relative of husband of a woman subjecting her to cruelty",
     "bns_section": "85",
     "bns_title": "Husband or relative of husband of a woman subjecting her to cruelty",
     "notes": "Direct replacement",
-    "crosswalk_type": "IPC_BNS"
+    "is_one_to_many": false,
+    "target_sections": [
+      "85"
+    ],
+    "source_ref": "Bharatiya Nyaya Sanhita, 2023 (Act No. 45 of 2023)",
+    "last_verified": "2025-01-01"
   },
   {
+    "crosswalk_type": "IPC_BNS",
     "ipc_section": "124A",
     "ipc_title": "Sedition",
     "bns_section": "152",
     "bns_title": "Act endangering sovereignty, unity and integrity of India",
-    "notes": "Substantive change: Term 'sedition' removed, scope altered",
-    "crosswalk_type": "IPC_BNS"
+    "notes": "Substantive change: Term sedition removed, scope altered",
+    "is_one_to_many": false,
+    "target_sections": [
+      "152"
+    ],
+    "source_ref": "Bharatiya Nyaya Sanhita, 2023 (Act No. 45 of 2023)",
+    "last_verified": "2025-01-01"
   },
   {
-    "ipc_section": "154",
-    "ipc_title": "Information in cognizable cases",
-    "bns_section": "173",
-    "bns_title": "Information in cognizable cases",
-    "notes": "Direct replacement",
-    "crosswalk_type": "CrPC_BNSS"
-  },
-  {
-    "ipc_section": "161",
-    "ipc_title": "Examination of witnesses by police",
-    "bns_section": "180",
-    "bns_title": "Examination of witnesses by police",
-    "notes": "Direct replacement",
-    "crosswalk_type": "CrPC_BNSS"
-  },
-  {
-    "ipc_section": "438",
-    "ipc_title": "Direction for grant of bail to person apprehending arrest (Anticipatory Bail)",
-    "bns_section": "482",
-    "bns_title": "Direction for grant of bail to person apprehending arrest",
-    "notes": "Direct replacement",
-    "crosswalk_type": "CrPC_BNSS"
-  },
-  {
-    "ipc_section": "65B",
-    "ipc_title": "Admissibility of electronic records",
-    "bns_section": "63",
-    "bns_title": "Admissibility of electronic records",
-    "notes": "Direct replacement with some updates",
-    "crosswalk_type": "IEA_BSA"
-  },
-  {
+    "crosswalk_type": "IPC_BNS",
     "ipc_section": "120B",
     "ipc_title": "Punishment of criminal conspiracy",
     "bns_section": "61",
     "bns_title": "Punishment of criminal conspiracy",
     "notes": "Direct replacement",
-    "crosswalk_type": "IPC_BNS"
+    "is_one_to_many": false,
+    "target_sections": [
+      "61"
+    ],
+    "source_ref": "Bharatiya Nyaya Sanhita, 2023 (Act No. 45 of 2023)",
+    "last_verified": "2025-01-01"
+  },
+  {
+    "crosswalk_type": "CrPC_BNSS",
+    "crpc_section": "154",
+    "crpc_title": "Information in cognizable cases",
+    "bnss_section": "173",
+    "bnss_title": "Information in cognizable cases",
+    "notes": "Direct replacement",
+    "is_one_to_many": false,
+    "target_sections": [
+      "173"
+    ],
+    "source_ref": "Bharatiya Nagarik Suraksha Sanhita, 2023 (Act No. 46 of 2023)",
+    "last_verified": "2025-01-01"
+  },
+  {
+    "crosswalk_type": "CrPC_BNSS",
+    "crpc_section": "161",
+    "crpc_title": "Examination of witnesses by police",
+    "bnss_section": "180",
+    "bnss_title": "Examination of witnesses by police",
+    "notes": "Direct replacement",
+    "is_one_to_many": false,
+    "target_sections": [
+      "180"
+    ],
+    "source_ref": "Bharatiya Nagarik Suraksha Sanhita, 2023 (Act No. 46 of 2023)",
+    "last_verified": "2025-01-01"
+  },
+  {
+    "crosswalk_type": "CrPC_BNSS",
+    "crpc_section": "438",
+    "crpc_title": "Direction for grant of bail to person apprehending arrest (Anticipatory Bail)",
+    "bnss_section": "482",
+    "bnss_title": "Direction for grant of bail to person apprehending arrest",
+    "notes": "Direct replacement",
+    "is_one_to_many": false,
+    "target_sections": [
+      "482"
+    ],
+    "source_ref": "Bharatiya Nagarik Suraksha Sanhita, 2023 (Act No. 46 of 2023)",
+    "last_verified": "2025-01-01"
+  },
+  {
+    "crosswalk_type": "CrPC_BNSS",
+    "crpc_section": "482",
+    "crpc_title": "Saving of inherent powers of High Court",
+    "bnss_section": "528",
+    "bnss_title": "Saving of inherent powers of High Court",
+    "notes": "Direct replacement",
+    "is_one_to_many": false,
+    "target_sections": [
+      "528"
+    ],
+    "source_ref": "Bharatiya Nagarik Suraksha Sanhita, 2023 (Act No. 46 of 2023)",
+    "last_verified": "2025-01-01"
+  },
+  {
+    "crosswalk_type": "IEA_BSA",
+    "iea_section": "65B",
+    "iea_title": "Admissibility of electronic records",
+    "bsa_section": "63",
+    "bsa_title": "Admissibility of electronic records",
+    "notes": "Direct replacement with digital record updates",
+    "is_one_to_many": false,
+    "target_sections": [
+      "63"
+    ],
+    "source_ref": "Bharatiya Sakshya Adhiniyam, 2023 (Act No. 47 of 2023)",
+    "last_verified": "2025-01-01"
+  },
+  {
+    "crosswalk_type": "IEA_BSA",
+    "iea_section": "27",
+    "iea_title": "How much of information received from accused may be proved",
+    "bsa_section": "23",
+    "bsa_title": "How much of information received from accused may be proved",
+    "notes": "Direct replacement",
+    "is_one_to_many": false,
+    "target_sections": [
+      "23"
+    ],
+    "source_ref": "Bharatiya Sakshya Adhiniyam, 2023 (Act No. 47 of 2023)",
+    "last_verified": "2025-01-01"
   }
 ]

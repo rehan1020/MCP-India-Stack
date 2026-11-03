@@ -55,7 +55,13 @@ def _score_match(query: str, item: dict[str, Any]) -> float:
     return score
 
 
-def calculate_limitation_deadline(suit_type: str, cause_of_action_date: str) -> dict[str, Any]:
+def calculate_limitation_deadline(  # noqa: C901
+    suit_type: str,
+    cause_of_action_date: str,
+    exclusion_days: int = 0,
+    court_closed_on_deadline: bool = False,
+    court_reopen_date: str | None = None,
+) -> dict[str, Any]:
     """
     Calculate the limitation period deadline under the
     Limitation Act, 1963.
@@ -65,6 +71,9 @@ def calculate_limitation_deadline(suit_type: str, cause_of_action_date: str) -> 
       search for.
     - cause_of_action_date (str): Date the cause of action
       arose (YYYY-MM-DD).
+    - exclusion_days (int): Days to exclude under Section 12 (e.g. for obtaining copies).
+    - court_closed_on_deadline (bool): True if court is closed on deadline day (Section 4).
+    - court_reopen_date (str | None): Date court reopens if closed (YYYY-MM-DD).
 
     Output: suit_type, matches (list of matched articles
     with deadlines sorted by relevance), errors, warnings
@@ -73,7 +82,7 @@ def calculate_limitation_deadline(suit_type: str, cause_of_action_date: str) -> 
     recovery from 2023-01-01"
 
     Limitations: Does not account for court holidays,
-    exclusions, or valid delays.
+    exclusions, or valid delays unless parameters are provided.
     """
     errors: list[str] = []
     warnings: list[str] = []
@@ -103,13 +112,15 @@ def calculate_limitation_deadline(suit_type: str, cause_of_action_date: str) -> 
     for _score, item in scored:
         item_suit_type = item.get("suit_type", "")
         years = float(item.get("limitation_years", 0))
+        unit = item.get("limitation_unit", "days" if years > 30 else "years")
 
-        # Handle years > 365 as days (e.g. 90 days)
-        if years <= 365:
+        if unit == "days" or years > 30:
+            deadline = start_date + datetime.timedelta(days=int(years))
+        else:
             try:
                 deadline = start_date.replace(year=start_date.year + int(years))
             except ValueError:
-                # Handle Feb 29 edge case
+                # Handle Feb 29 leap day edge case -> Feb 28 in non-leap year
                 deadline = start_date.replace(
                     year=start_date.year + int(years),
                     day=28,
@@ -118,8 +129,30 @@ def calculate_limitation_deadline(suit_type: str, cause_of_action_date: str) -> 
             if years % 1 != 0:
                 extra = int((years % 1) * 365.25)
                 deadline += datetime.timedelta(days=extra)
-        else:
-            deadline = start_date + datetime.timedelta(days=int(years))
+
+        # Apply Section 12 exclusions
+        if exclusion_days > 0:
+            deadline += datetime.timedelta(days=exclusion_days)
+
+        original_deadline = deadline
+        section_4_applied = False
+
+        # Apply Section 4 court closure rule
+        if court_closed_on_deadline:
+            section_4_applied = True
+            if court_reopen_date:
+                try:
+                    deadline = datetime.date.fromisoformat(court_reopen_date)
+                except ValueError:
+                    errors.append("court_reopen_date must be in YYYY-MM-DD format.")
+            else:
+                # Next working day (skip weekend)
+                if deadline.weekday() == 5:  # Saturday -> Monday
+                    deadline += datetime.timedelta(days=2)
+                elif deadline.weekday() == 6:  # Sunday -> Monday
+                    deadline += datetime.timedelta(days=1)
+                else:
+                    deadline += datetime.timedelta(days=1)
 
         is_barred = deadline < today
         days_rem = (deadline - today).days
@@ -129,8 +162,17 @@ def calculate_limitation_deadline(suit_type: str, cause_of_action_date: str) -> 
                 "matched_article": item.get("article", ""),
                 "suit_type": item_suit_type,
                 "limitation_years": years,
-                "cause_of_action_date": (cause_of_action_date),
+                "limitation_unit": unit,
+                "cause_of_action_date": cause_of_action_date,
                 "deadline_date": deadline.isoformat(),
+                "original_deadline_date": original_deadline.isoformat(),
+                "section_4_applied": section_4_applied,
+                "section_12_applied": exclusion_days > 0,
+                "section_12_exclusion_days": exclusion_days,
+                "source_ref": item.get(
+                    "source_ref", "Limitation Act, 1963 (Act No. 36 of 1963), Schedule"
+                ),
+                "last_verified": item.get("last_verified", "2025-01-01"),
                 "starts_from": item.get("starts_from", ""),
                 "is_time_barred": is_barred,
                 "days_remaining": days_rem,
@@ -143,6 +185,11 @@ def calculate_limitation_deadline(suit_type: str, cause_of_action_date: str) -> 
     return {
         "suit_type": suit_type,
         "cause_of_action_date": cause_of_action_date,
+        "exclusion_days": exclusion_days,
+        "court_closed_on_deadline": court_closed_on_deadline,
+        "court_reopen_date": court_reopen_date,
+        "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963)",
+        "last_verified": "2025-01-01",
         "matches": matches,
         "errors": errors,
         "warnings": warnings,

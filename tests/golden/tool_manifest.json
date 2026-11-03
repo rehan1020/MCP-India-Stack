@@ -421,7 +421,7 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Calculate EPF and ESIC contributions for employer and employee.\n\nUse when computing payroll costs, employee deductions, or comparing\nCTC structures across different salary levels.\n\nArgs:\n    basic_wages: Basic salary + DA per month in INR.\n    gross_wages: Total gross monthly salary in INR.\n    include_employer_share: If True, return employer costs.\n\nReturns:\n    Standard envelope with EPF breakdown, ESIC applicability, and totals.\n\nNotes:\n    EPF ceiling is ₹15,000/month for statutory computation.\n    ESIC applicable when gross wages ≤ ₹21,000/month.\n",
+    "description": "Calculate EPF and ESIC contributions for employer and employee.\n\nUse when computing payroll costs, employee deductions, or comparing\nCTC structures across different salary levels.\n\nArgs:\n    basic_wages: Basic salary + DA per month in INR.\n    gross_wages: Total gross monthly salary in INR.\n    include_employer_share: If True, return employer costs.\n\nReturns:\n    Standard envelope with EPF breakdown, ESIC applicability, and totals.\n\nNotes:\n    EPF ceiling is \u20b915,000/month for statutory computation.\n    ESIC applicable when gross wages \u2264 \u20b921,000/month.\n",
     "name": "calculate_epf_esic",
     "parameters": {
       "properties": {
@@ -463,7 +463,7 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Calculate Fixed Deposit maturity amount.\n\nUse when projecting FD returns or comparing deposit options.\n\nArgs:\n    principal: Deposit amount in INR\n    annual_interest_rate: Rate as percentage\n    tenure_days: Deposit tenure in days\n    compounding: Compounding frequency\n    is_senior_citizen: Senior citizen flag (0.25% extra rate)\n    tds_applicable: Apply TDS if interest > ₹40,000/yr\n\nReturns:\n    Maturity amount with interest breakdown and TDS if applicable.\n",
+    "description": "Calculate Fixed Deposit maturity amount.\n\nUse when projecting FD returns or comparing deposit options.\n\nArgs:\n    principal: Deposit amount in INR\n    annual_interest_rate: Rate as percentage\n    tenure_days: Deposit tenure in days\n    compounding: Compounding frequency\n    is_senior_citizen: Senior citizen flag (0.25% extra rate)\n    tds_applicable: Apply TDS if interest > \u20b940,000/yr\n\nReturns:\n    Maturity amount with interest breakdown and TDS if applicable.\n",
     "name": "calculate_fd_maturity",
     "parameters": {
       "properties": {
@@ -523,7 +523,7 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Calculate gratuity under the Payment of Gratuity Act, 1972.\n\nUse when computing terminal benefits, comparing CTC packages, or\nplanning retirement benefits.\n\nArgs:\n    last_drawn_salary: Basic + DA per month.\n    years_of_service: Total service duration.\n    is_covered_under_act: True for establishments with 10+ employees.\n\nReturns:\n    Standard envelope with gratuity amount, tax-exempt limit, and breakdown.\n\nNotes:\n    Minimum 5 years service required (except death/disablement).\n    Tax-exempt ceiling is ₹20,00,000.\n",
+    "description": "Calculate gratuity under the Payment of Gratuity Act, 1972.\n\nUse when computing terminal benefits, comparing CTC packages, or\nplanning retirement benefits.\n\nArgs:\n    last_drawn_salary: Basic + DA per month.\n    years_of_service: Total service duration.\n    is_covered_under_act: True for establishments with 10+ employees.\n\nReturns:\n    Standard envelope with gratuity amount, tax-exempt limit, and breakdown.\n\nNotes:\n    Minimum 5 years service required (except death/disablement).\n    Tax-exempt ceiling is \u20b920,00,000.\n",
     "name": "calculate_gratuity",
     "parameters": {
       "properties": {
@@ -799,7 +799,7 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Calculate Indian income tax for FY2025-26 under old, new, or both regimes.\n\nUse when computing tax liability, comparing regimes, or planning deductions.\nIncludes slab computation, Section 87A rebate, surcharge with marginal relief,\nand health & education cess.\n\nArgs:\n        gross_income: Annual gross income in rupees.\n        regime: 'new', 'old', or 'both' for side-by-side comparison.\n        taxpayer_type: Category for slab selection.\n        deduction_80c: Old regime only — Section 80C amount.\n        deduction_80d_self: Old regime only — medical insurance self.\n        deduction_80d_parents: Old regime only — medical insurance parents.\n        deduction_80d_senior_parents: Old regime only — senior parent flag.\n        deduction_80ccd_nps: Old regime only — NPS additional.\n        deduction_24b: Old regime only — home loan interest.\n        other_deductions: Old regime only — other amounts.\n\nReturns:\n        Standard envelope with per-regime breakdown, effective rate, monthly tax,\n        take-home, and regime recommendation when both requested.\n\nNotes:\n        FY2025-26 rates. Estimate only — consult a CA for filing.\n",
+    "description": "Calculate Indian income tax for FY2025-26 under old, new, or both regimes.\n\nUse when computing tax liability, comparing regimes, or planning deductions.\nIncludes slab computation, Section 87A rebate, surcharge with marginal relief,\nand health & education cess.\n\nArgs:\n        gross_income: Annual gross income in rupees.\n        regime: 'new', 'old', or 'both' for side-by-side comparison.\n        taxpayer_type: Category for slab selection.\n        deduction_80c: Old regime only \u2014 Section 80C amount.\n        deduction_80d_self: Old regime only \u2014 medical insurance self.\n        deduction_80d_parents: Old regime only \u2014 medical insurance parents.\n        deduction_80d_senior_parents: Old regime only \u2014 senior parent flag.\n        deduction_80ccd_nps: Old regime only \u2014 NPS additional.\n        deduction_24b: Old regime only \u2014 home loan interest.\n        other_deductions: Old regime only \u2014 other amounts.\n\nReturns:\n        Standard envelope with per-regime breakdown, effective rate, monthly tax,\n        take-home, and regime recommendation when both requested.\n\nNotes:\n        FY2025-26 rates. Estimate only \u2014 consult a CA for filing.\n",
     "name": "calculate_income_tax",
     "parameters": {
       "properties": {
@@ -1002,14 +1002,8 @@
     }
   },
   "calculate_limitation_deadline": {
-    "annotations": {
-      "destructiveHint": null,
-      "idempotentHint": true,
-      "openWorldHint": false,
-      "readOnlyHint": true
-    },
-    "description": "Calculate the deadline under the Limitation Act.\n\nUse when computing the last date to file a suit, appeal, or application based on\ncause of action.\n\nArgs:\n    suit_type: Type of suit/appeal/application.\n    cause_of_action_date: Date the cause of action arose (YYYY-MM-DD).\n\nReturns:\n    Standard envelope with deadline date and limitation period.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
     "name": "calculate_limitation_deadline",
+    "description": "Calculate the deadline under the Limitation Act.\n\n    Use when computing the last date to file a suit, appeal, or application based on\n    cause of action.\n\n    Args:\n        suit_type: Type of suit/appeal/application.\n        cause_of_action_date: Date the cause of action arose (YYYY-MM-DD).\n        exclusion_days: Days excluded under Section 12.\n        court_closed_on_deadline: Whether court is closed on deadline date.\n        court_reopen_date: Date court reopens if closed on deadline.\n\n    Returns:\n        Standard envelope with deadline date and limitation period.\n\n    Notes:\n        Not legal advice. Consult a qualified advocate.\n    ",
     "parameters": {
       "properties": {
         "suit_type": {
@@ -1021,6 +1015,31 @@
           "description": "Date when the cause of action arose (YYYY-MM-DD)",
           "title": "Cause Of Action Date",
           "type": "string"
+        },
+        "exclusion_days": {
+          "default": 0,
+          "description": "Days excluded under Section 12 (e.g. for obtaining copies)",
+          "title": "Exclusion Days",
+          "type": "integer"
+        },
+        "court_closed_on_deadline": {
+          "default": false,
+          "description": "Whether court is closed on deadline day under Section 4",
+          "title": "Court Closed On Deadline",
+          "type": "boolean"
+        },
+        "court_reopen_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Next reopening date if court is closed on deadline (Section 4)",
+          "title": "Court Reopen Date"
         }
       },
       "required": [
@@ -1029,6 +1048,12 @@
       ],
       "title": "calculate_limitation_deadlineArguments",
       "type": "object"
+    },
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
     }
   },
   "calculate_neft_rtgs_imps_charges": {
@@ -1146,7 +1171,7 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Calculate PPF maturity amount with year-by-year breakdown.\n\nUse when planning long-term savings, comparing investment options, or\ncalculating retirement corpus.\n\nArgs:\n    annual_investment: Amount invested per year (max ₹1,50,000).\n    tenure_years: PPF tenure (15, 20, 25, or 30 years).\n    annual_interest_rate: PPF rate (default 7.1% for FY2025-26).\n\nReturns:\n    Standard envelope with maturity amount, total invested, interest earned.\n\nNotes:\n    EEE tax status: exempt at investment, accumulation, and maturity.\n    Rate is government-administered and revised quarterly.\n",
+    "description": "Calculate PPF maturity amount with year-by-year breakdown.\n\nUse when planning long-term savings, comparing investment options, or\ncalculating retirement corpus.\n\nArgs:\n    annual_investment: Amount invested per year (max \u20b91,50,000).\n    tenure_years: PPF tenure (15, 20, 25, or 30 years).\n    annual_interest_rate: PPF rate (default 7.1% for FY2025-26).\n\nReturns:\n    Standard envelope with maturity amount, total invested, interest earned.\n\nNotes:\n    EEE tax status: exempt at investment, accumulation, and maturity.\n    Rate is government-administered and revised quarterly.\n",
     "name": "calculate_ppf_maturity",
     "parameters": {
       "properties": {
@@ -1742,7 +1767,7 @@
         },
         "is_senior_citizen": {
           "default": false,
-          "description": "For 194A bank interest — applies higher threshold for seniors",
+          "description": "For 194A bank interest \u2014 applies higher threshold for seniors",
           "title": "Is Senior Citizen",
           "type": "boolean"
         },

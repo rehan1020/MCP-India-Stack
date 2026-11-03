@@ -6,7 +6,18 @@
     "starts_from": "When the loan is made.",
     "part": "Part II",
     "division": "Suits relating to contracts",
-    "keywords": ["money lent", "loan", "recovery of money", "money recovery", "payment of money", "money payable", "debt recovery"]
+    "keywords": [
+      "money lent",
+      "loan",
+      "recovery of money",
+      "money recovery",
+      "payment of money",
+      "money payable",
+      "debt recovery"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "24",
@@ -15,7 +26,15 @@
     "starts_from": "When the money is paid.",
     "part": "Part II",
     "division": "Suits relating to contracts",
-    "keywords": ["money paid", "recovery of money", "money recovery", "payment of money"]
+    "keywords": [
+      "money paid",
+      "recovery of money",
+      "money recovery",
+      "payment of money"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "25",
@@ -24,7 +43,14 @@
     "starts_from": "When the money is received.",
     "part": "Part II",
     "division": "Suits relating to contracts",
-    "keywords": ["money received", "recovery of money", "money recovery"]
+    "keywords": [
+      "money received",
+      "recovery of money",
+      "money recovery"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "28",
@@ -33,7 +59,15 @@
     "starts_from": "When the goods are delivered.",
     "part": "Part II",
     "division": "Suits relating to contracts",
-    "keywords": ["goods sold", "price of goods", "sale of goods", "delivery"]
+    "keywords": [
+      "goods sold",
+      "price of goods",
+      "sale of goods",
+      "delivery"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "29",
@@ -42,7 +76,14 @@
     "starts_from": "When the work is done.",
     "part": "Part II",
     "division": "Suits relating to contracts",
-    "keywords": ["work done", "services rendered", "price of work"]
+    "keywords": [
+      "work done",
+      "services rendered",
+      "price of work"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "36",
@@ -51,7 +92,14 @@
     "starts_from": "The expiration of the first term of payment as to the part then payable; and for the other parts, the expiration of the respective terms of payment.",
     "part": "Part II",
     "division": "Suits relating to contracts",
-    "keywords": ["promissory note", "bond", "installments"]
+    "keywords": [
+      "promissory note",
+      "bond",
+      "installments"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "37",
@@ -60,7 +108,15 @@
     "starts_from": "When the default is made, unless where the payee or obligee waives the benefit of the provision and then when fresh default is made in respect of which there is no such waiver.",
     "part": "Part II",
     "division": "Suits relating to contracts",
-    "keywords": ["promissory note", "bond", "installments", "default"]
+    "keywords": [
+      "promissory note",
+      "bond",
+      "installments",
+      "default"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "44",
@@ -69,7 +125,13 @@
     "starts_from": "The date fixed for the performance, or, if no such date is fixed, when the plaintiff has notice that performance is refused.",
     "part": "Part II",
     "division": "Suits relating to contracts",
-    "keywords": ["specific performance", "contract performance"]
+    "keywords": [
+      "specific performance",
+      "contract performance"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "55",
@@ -78,7 +140,14 @@
     "starts_from": "When the contract is broken or (where there are successive breaches) when the breach in respect of which the suit is instituted occurs or (where the breach is continuing) when it ceases.",
     "part": "Part II",
     "division": "Suits relating to contracts",
-    "keywords": ["breach of contract", "compensation", "contract breach"]
+    "keywords": [
+      "breach of contract",
+      "compensation",
+      "contract breach"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "56",
@@ -87,7 +156,13 @@
     "starts_from": "When the issue or registration becomes known to the plaintiff.",
     "part": "Part III",
     "division": "Suits relating to declarations",
-    "keywords": ["forgery", "declaration"]
+    "keywords": [
+      "forgery",
+      "declaration"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "58",
@@ -96,7 +171,12 @@
     "starts_from": "When the right to sue first accrues.",
     "part": "Part III",
     "division": "Suits relating to declarations",
-    "keywords": ["declaration"]
+    "keywords": [
+      "declaration"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "59",
@@ -105,7 +185,14 @@
     "starts_from": "When the facts entitling the plaintiff to have the instrument or decree cancelled or set aside or the contract rescinded first become known to him.",
     "part": "Part IV",
     "division": "Suits relating to decrees and instruments",
-    "keywords": ["cancel", "set aside", "rescission"]
+    "keywords": [
+      "cancel",
+      "set aside",
+      "rescission"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "62",
@@ -114,7 +201,15 @@
     "starts_from": "When the money sued for becomes due.",
     "part": "Part V",
     "division": "Suits relating to immovable property",
-    "keywords": ["mortgage", "charge", "immovable property", "secured debt"]
+    "keywords": [
+      "mortgage",
+      "charge",
+      "immovable property",
+      "secured debt"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "65",
@@ -123,7 +218,15 @@
     "starts_from": "When the possession of the defendant becomes adverse to the plaintiff.",
     "part": "Part V",
     "division": "Suits relating to immovable property",
-    "keywords": ["possession", "immovable property", "title", "adverse possession"]
+    "keywords": [
+      "possession",
+      "immovable property",
+      "title",
+      "adverse possession"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "67",
@@ -132,7 +235,15 @@
     "starts_from": "When the tenancy is determined.",
     "part": "Part V",
     "division": "Suits relating to immovable property",
-    "keywords": ["landlord", "tenant", "eviction", "possession"]
+    "keywords": [
+      "landlord",
+      "tenant",
+      "eviction",
+      "possession"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "68",
@@ -141,7 +252,15 @@
     "starts_from": "When the person having the right to the possession of the property first learns in whose possession it is.",
     "part": "Part VI",
     "division": "Suits relating to movable property",
-    "keywords": ["movable property", "theft", "misappropriation", "conversion"]
+    "keywords": [
+      "movable property",
+      "theft",
+      "misappropriation",
+      "conversion"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "89",
@@ -150,7 +269,14 @@
     "starts_from": "When the account is, during the continuance of the agency, demanded and refused or, where no such demand is made, when the agency terminates.",
     "part": "Part VII",
     "division": "Suits relating to torts",
-    "keywords": ["principal", "agent", "movable property"]
+    "keywords": [
+      "principal",
+      "agent",
+      "movable property"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "90",
@@ -159,7 +285,15 @@
     "starts_from": "When the neglect or misconduct becomes known to the plaintiff.",
     "part": "Part VII",
     "division": "Suits relating to torts",
-    "keywords": ["principal", "agent", "neglect", "misconduct"]
+    "keywords": [
+      "principal",
+      "agent",
+      "neglect",
+      "misconduct"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "113",
@@ -168,7 +302,16 @@
     "starts_from": "When the right to sue accrues.",
     "part": "Part X",
     "division": "Suits for which there is no prescribed period",
-    "keywords": ["residuary", "general", "other suit", "cheque bounce", "dishonour of cheque"]
+    "keywords": [
+      "residuary",
+      "general",
+      "other suit",
+      "cheque bounce",
+      "dishonour of cheque"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "120",
@@ -177,7 +320,14 @@
     "starts_from": "The date of death of the plaintiff, appellant, defendant or respondent as the case may be.",
     "part": "Part I (Applications)",
     "division": "Applications in specified cases",
-    "keywords": ["legal representative", "deceased party", "substitution"]
+    "keywords": [
+      "legal representative",
+      "deceased party",
+      "substitution"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "days"
   },
   {
     "article": "131",
@@ -186,7 +336,14 @@
     "starts_from": "The date of the decree or order or sentence sought to be revised.",
     "part": "Part I (Applications)",
     "division": "Applications in specified cases",
-    "keywords": ["revision", "CPC", "CrPC"]
+    "keywords": [
+      "revision",
+      "CPC",
+      "CrPC"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "days"
   },
   {
     "article": "136",
@@ -195,7 +352,14 @@
     "starts_from": "When the decree or order becomes enforceable or where the decree or any subsequent order directs any payment of money or the delivery of any property to be made at a certain date or at recurring periods, when default in making the payment or delivery in respect of which execution is sought, takes place.",
     "part": "Part I (Applications)",
     "division": "Applications in specified cases",
-    "keywords": ["execution", "decree", "enforcement"]
+    "keywords": [
+      "execution",
+      "decree",
+      "enforcement"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   },
   {
     "article": "137",
@@ -204,6 +368,12 @@
     "starts_from": "When the right to apply accrues.",
     "part": "Part II (Applications)",
     "division": "Other applications",
-    "keywords": ["application", "residuary application"]
+    "keywords": [
+      "application",
+      "residuary application"
+    ],
+    "source_ref": "Limitation Act, 1963 (Act No. 36 of 1963), Schedule",
+    "last_verified": "2025-01-01",
+    "limitation_unit": "years"
   }
 ]

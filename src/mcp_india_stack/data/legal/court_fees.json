@@ -4,138 +4,348 @@
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
     "money_suit": [
-      {"up_to": 500, "fee": 60},
-      {"up_to": 1000, "fee": 100},
-      {"up_to": 5000, "fee": 250},
-      {"up_to": 10000, "fee": 500},
-      {"up_to": 25000, "fee": 750},
-      {"up_to": 50000, "fee": 1500},
-      {"up_to": 100000, "fee": 3000},
-      {"up_to": 500000, "fee_pct": 5.0, "min_fee": 3000},
-      {"above": 500000, "fee_pct": 3.0, "base_fee": 25000, "max_fee": 300000}
+      {
+        "up_to": 500,
+        "fee": 60
+      },
+      {
+        "up_to": 1000,
+        "fee": 100
+      },
+      {
+        "up_to": 5000,
+        "fee": 250
+      },
+      {
+        "up_to": 10000,
+        "fee": 500
+      },
+      {
+        "up_to": 25000,
+        "fee": 750
+      },
+      {
+        "up_to": 50000,
+        "fee": 1500
+      },
+      {
+        "up_to": 100000,
+        "fee": 3000
+      },
+      {
+        "up_to": 500000,
+        "fee_pct": 5.0,
+        "min_fee": 3000
+      },
+      {
+        "above": 500000,
+        "fee_pct": 3.0,
+        "base_fee": 25000,
+        "max_fee": 300000
+      }
     ],
-    "declaration": {"fixed": 500},
-    "injunction": {"fixed": 200},
-    "partition": {"fee_pct": 2.0, "of": "share_value"},
-    "probate": {"fee_pct": 2.0, "of": "estate_value", "max_fee": 75000}
+    "declaration": {
+      "fixed": 500
+    },
+    "injunction": {
+      "fixed": 200
+    },
+    "partition": {
+      "fee_pct": 2.0,
+      "of": "share_value"
+    },
+    "probate": {
+      "fee_pct": 2.0,
+      "of": "estate_value",
+      "max_fee": 75000
+    },
+    "source_ref": "Maharashtra Court Fees Act, 1959 (Bom. Act No. XXXVI of 1959)"
   },
   "UP": {
     "state_name": "Uttar Pradesh",
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
     "money_suit": [
-      {"up_to": 100000, "fee_pct": 7.5},
-      {"above": 100000, "fee_pct": 5.0, "base_fee": 7500}
+      {
+        "up_to": 100000,
+        "fee_pct": 7.5
+      },
+      {
+        "above": 100000,
+        "fee_pct": 5.0,
+        "base_fee": 7500
+      }
     ],
-    "declaration": {"fixed": 200},
-    "injunction": {"fixed": 100},
-    "partition": {"fixed": 250},
-    "probate": {"fee_pct": 3.0, "of": "estate_value"}
+    "declaration": {
+      "fixed": 200
+    },
+    "injunction": {
+      "fixed": 100
+    },
+    "partition": {
+      "fixed": 250
+    },
+    "probate": {
+      "fee_pct": 3.0,
+      "of": "estate_value"
+    },
+    "source_ref": "Court Fees Act, 1870 (as amended by UP Court Fees (Amendment) Acts)"
   },
   "DL": {
     "state_name": "Delhi",
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
     "money_suit": [
-      {"up_to": 50000, "fee_pct": 4.0},
-      {"up_to": 100000, "fee_pct": 3.0, "base_fee": 2000},
-      {"above": 100000, "fee_pct": 2.0, "base_fee": 3500}
+      {
+        "up_to": 50000,
+        "fee_pct": 4.0
+      },
+      {
+        "up_to": 100000,
+        "fee_pct": 3.0,
+        "base_fee": 2000
+      },
+      {
+        "above": 100000,
+        "fee_pct": 2.0,
+        "base_fee": 3500
+      }
     ],
-    "declaration": {"fixed": 200},
-    "injunction": {"fixed": 200},
-    "partition": {"fixed": 200},
-    "probate": {"fee_pct": 4.0, "of": "estate_value", "max_fee": null}
+    "declaration": {
+      "fixed": 200
+    },
+    "injunction": {
+      "fixed": 200
+    },
+    "partition": {
+      "fixed": 200
+    },
+    "probate": {
+      "fee_pct": 4.0,
+      "of": "estate_value",
+      "max_fee": null
+    },
+    "source_ref": "Court Fees Act, 1870 (as applicable to Delhi) / Delhi Court Fees Amendment Act"
   },
   "KA": {
     "state_name": "Karnataka",
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
     "money_suit": [
-      {"up_to": 10000, "fee_pct": 5.0},
-      {"up_to": 100000, "fee_pct": 4.0, "base_fee": 500},
-      {"above": 100000, "fee_pct": 3.0, "base_fee": 4100}
+      {
+        "up_to": 10000,
+        "fee_pct": 5.0
+      },
+      {
+        "up_to": 100000,
+        "fee_pct": 4.0,
+        "base_fee": 500
+      },
+      {
+        "above": 100000,
+        "fee_pct": 3.0,
+        "base_fee": 4100
+      }
     ],
-    "declaration": {"fixed": 100},
-    "injunction": {"fixed": 50},
-    "partition": {"fixed": 200},
-    "probate": {"fee_pct": 5.0, "of": "estate_value"}
+    "declaration": {
+      "fixed": 100
+    },
+    "injunction": {
+      "fixed": 50
+    },
+    "partition": {
+      "fixed": 200
+    },
+    "probate": {
+      "fee_pct": 5.0,
+      "of": "estate_value"
+    },
+    "source_ref": "Karnataka Court Fees and Suits Valuation Act, 1958 (Karnataka Act No. 16 of 1958)"
   },
   "TN": {
     "state_name": "Tamil Nadu",
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
     "money_suit": [
-      {"up_to": 100000, "fee_pct": 7.5},
-      {"above": 100000, "fee_pct": 3.0, "base_fee": 7500}
+      {
+        "up_to": 100000,
+        "fee_pct": 7.5
+      },
+      {
+        "above": 100000,
+        "fee_pct": 3.0,
+        "base_fee": 7500
+      }
     ],
-    "declaration": {"fixed": 300},
-    "injunction": {"fixed": 150},
-    "partition": {"fixed": 300},
-    "probate": {"fee_pct": 3.0, "of": "estate_value", "max_fee": 25000}
+    "declaration": {
+      "fixed": 300
+    },
+    "injunction": {
+      "fixed": 150
+    },
+    "partition": {
+      "fixed": 300
+    },
+    "probate": {
+      "fee_pct": 3.0,
+      "of": "estate_value",
+      "max_fee": 25000
+    },
+    "source_ref": "Tamil Nadu Court Fees and Suits Valuation Act, 1955 (TN Act XIV of 1955)"
   },
   "GJ": {
     "state_name": "Gujarat",
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
     "money_suit": [
-      {"up_to": 100000, "fee_pct": 5.0},
-      {"above": 100000, "fee_pct": 2.5, "base_fee": 5000, "max_fee": 75000}
+      {
+        "up_to": 100000,
+        "fee_pct": 5.0
+      },
+      {
+        "above": 100000,
+        "fee_pct": 2.5,
+        "base_fee": 5000,
+        "max_fee": 75000
+      }
     ],
-    "declaration": {"fixed": 200},
-    "injunction": {"fixed": 100},
-    "partition": {"fixed": 200},
-    "probate": {"fee_pct": 4.0, "of": "estate_value"}
+    "declaration": {
+      "fixed": 200
+    },
+    "injunction": {
+      "fixed": 100
+    },
+    "partition": {
+      "fixed": 200
+    },
+    "probate": {
+      "fee_pct": 4.0,
+      "of": "estate_value"
+    },
+    "source_ref": "Gujarat Court Fees Act, 2004 (Gujarat Act No. 4 of 2004)"
   },
   "RJ": {
     "state_name": "Rajasthan",
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
     "money_suit": [
-      {"up_to": 50000, "fee_pct": 5.0},
-      {"above": 50000, "fee_pct": 3.0, "base_fee": 2500, "max_fee": 300000}
+      {
+        "up_to": 50000,
+        "fee_pct": 5.0
+      },
+      {
+        "above": 50000,
+        "fee_pct": 3.0,
+        "base_fee": 2500,
+        "max_fee": 300000
+      }
     ],
-    "declaration": {"fixed": 250},
-    "injunction": {"fixed": 100},
-    "partition": {"fixed": 200},
-    "probate": {"fee_pct": 4.0, "of": "estate_value"}
+    "declaration": {
+      "fixed": 250
+    },
+    "injunction": {
+      "fixed": 100
+    },
+    "partition": {
+      "fixed": 200
+    },
+    "probate": {
+      "fee_pct": 4.0,
+      "of": "estate_value"
+    },
+    "source_ref": "Rajasthan Court Fees and Suits Valuation Act, 1961 (Act No. 23 of 1961)"
   },
   "WB": {
     "state_name": "West Bengal",
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
     "money_suit": [
-      {"up_to": 150000, "fee_pct": 10.0},
-      {"above": 150000, "fee_pct": 5.0, "base_fee": 15000, "max_fee": 50000}
+      {
+        "up_to": 150000,
+        "fee_pct": 10.0
+      },
+      {
+        "above": 150000,
+        "fee_pct": 5.0,
+        "base_fee": 15000,
+        "max_fee": 50000
+      }
     ],
-    "declaration": {"fixed": 150},
-    "injunction": {"fixed": 100},
-    "partition": {"fixed": 200},
-    "probate": {"fee_pct": 5.5, "of": "estate_value"}
+    "declaration": {
+      "fixed": 150
+    },
+    "injunction": {
+      "fixed": 100
+    },
+    "partition": {
+      "fixed": 200
+    },
+    "probate": {
+      "fee_pct": 5.5,
+      "of": "estate_value"
+    },
+    "source_ref": "West Bengal Court Fees Act, 1970 (West Bengal Act X of 1970)"
   },
   "MP": {
     "state_name": "Madhya Pradesh",
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
     "money_suit": [
-      {"up_to": 50000, "fee_pct": 10.0},
-      {"above": 50000, "fee_pct": 5.0, "base_fee": 5000, "max_fee": 150000}
+      {
+        "up_to": 50000,
+        "fee_pct": 10.0
+      },
+      {
+        "above": 50000,
+        "fee_pct": 5.0,
+        "base_fee": 5000,
+        "max_fee": 150000
+      }
     ],
-    "declaration": {"fixed": 200},
-    "injunction": {"fixed": 100},
-    "partition": {"fixed": 250},
-    "probate": {"fee_pct": 4.0, "of": "estate_value"}
+    "declaration": {
+      "fixed": 200
+    },
+    "injunction": {
+      "fixed": 100
+    },
+    "partition": {
+      "fixed": 250
+    },
+    "probate": {
+      "fee_pct": 4.0,
+      "of": "estate_value"
+    },
+    "source_ref": "Court Fees Act, 1870 (Madhya Pradesh Amendment Acts)"
   },
   "KL": {
     "state_name": "Kerala",
     "as_of": "2025-01-01",
     "last_verified": "2025-01-01",
     "money_suit": [
-      {"up_to": 100000, "fee_pct": 10.0},
-      {"above": 100000, "fee_pct": 5.0, "base_fee": 10000, "max_fee": null}
+      {
+        "up_to": 100000,
+        "fee_pct": 10.0
+      },
+      {
+        "above": 100000,
+        "fee_pct": 5.0,
+        "base_fee": 10000,
+        "max_fee": null
+      }
     ],
-    "declaration": {"fixed": 500},
-    "injunction": {"fixed": 250},
-    "partition": {"fixed": 500},
-    "probate": {"fee_pct": 5.0, "of": "estate_value"}
+    "declaration": {
+      "fixed": 500
+    },
+    "injunction": {
+      "fixed": 250
+    },
+    "partition": {
+      "fixed": 500
+    },
+    "probate": {
+      "fee_pct": 5.0,
+      "of": "estate_value"
+    },
+    "source_ref": "Kerala Court Fees and Suits Valuation Act, 1959 (Act 10 of 1960)"
   }
 }
