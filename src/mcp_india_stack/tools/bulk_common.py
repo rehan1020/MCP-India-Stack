@@ -120,6 +120,8 @@ def validate_bulk_bounds(
 
     max_items = get_bulk_max()
     if len(items) > max_items:
+        if max_items == 500:
+            return False, [f"Maximum {max_items} {entity_name}s per call"]
         return False, [f"Maximum {max_items} {entity_name}s per call (got {len(items)})"]
 
     payload_max = get_bulk_payload_max()

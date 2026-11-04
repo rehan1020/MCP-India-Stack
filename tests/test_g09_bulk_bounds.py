@@ -16,6 +16,15 @@ from mcp_india_stack.tools.bulk_gstin import bulk_validate_gstin
 from mcp_india_stack.tools.bulk_pan import bulk_validate_pan
 
 
+def _is_valid(r: dict[str, Any]) -> bool:
+    """Check validity supporting both flattened and unflattened item envelopes."""
+    if r.get("valid") is True:
+        return True
+    if isinstance(r.get("data"), dict) and r["data"].get("valid") is True:
+        return True
+    return False
+
+
 class TestBulkBoundsEnforcement:
     """Acceptance: 0, 1, max, max+1, duplicates, mixed, non-string, huge strings, homoglyphs."""
 
@@ -34,7 +43,7 @@ class TestBulkBoundsEnforcement:
         data = res.get("data", {})
         assert data.get("total") == 1
         assert len(data.get("results", [])) == 1
-        assert data["results"][0]["valid"] is True
+        assert _is_valid(data["results"][0])
 
     def test_max_items_succeeds(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setenv("MCP_INDIA_STACK_BULK_MAX", "25")
@@ -62,10 +71,10 @@ class TestBulkBoundsEnforcement:
         assert res.get("success") is True
         results = res["data"]["results"]
         assert len(results) == 4
-        assert results[0]["valid"] is True
-        assert results[1]["valid"] is False
-        assert results[2]["valid"] is True
-        assert results[3]["valid"] is False
+        assert _is_valid(results[0])
+        assert not _is_valid(results[1])
+        assert _is_valid(results[2])
+        assert not _is_valid(results[3])
 
     def test_mixed_valid_invalid_isolation(self) -> None:
         items = [
@@ -78,9 +87,9 @@ class TestBulkBoundsEnforcement:
         assert res.get("success") is True
         data = res["data"]
         assert data["total"] == 4
-        assert data["valid_count"] >= 1
-        assert data["invalid_count"] >= 1
         assert len(data["results"]) == 4
+        assert _is_valid(data["results"][0])
+        assert not _is_valid(data["results"][1])
 
     def test_non_string_items_isolated(self) -> None:
         items = ["27AAPFU0939F1ZV", None, 12345, "27AAPFU0939F1ZV"]  # type: ignore[list-item]
@@ -88,12 +97,12 @@ class TestBulkBoundsEnforcement:
         assert res.get("success") is True
         results = res["data"]["results"]
         assert len(results) == 4
-        assert results[0]["valid"] is True
-        assert results[1]["valid"] is False
+        assert _is_valid(results[0])
+        assert not _is_valid(results[1])
         assert "Invalid GSTIN format" in results[1]["errors"][0]
-        assert results[2]["valid"] is False
+        assert not _is_valid(results[2])
         assert "Invalid GSTIN format" in results[2]["errors"][0]
-        assert results[3]["valid"] is True
+        assert _is_valid(results[3])
 
     def test_huge_strings_isolated_or_capped(self) -> None:
         # Single item exceeding item max len (e.g. 1000 chars) is isolated with error
@@ -101,8 +110,8 @@ class TestBulkBoundsEnforcement:
         res = bulk_validate_gstin(["27AAPFU0939F1ZV", huge_item])
         assert res.get("success") is True
         results = res["data"]["results"]
-        assert results[0]["valid"] is True
-        assert results[1]["valid"] is False
+        assert _is_valid(results[0])
+        assert not _is_valid(results[1])
         assert "Item exceeds maximum length" in results[1]["errors"][0]
 
     def test_total_payload_cap_rejected(self, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -121,8 +130,8 @@ class TestBulkBoundsEnforcement:
         res = bulk_validate_gstin(["27AAPFU0939F1ZV", cyrillic_homoglyph])
         assert res.get("success") is True
         results = res["data"]["results"]
-        assert results[0]["valid"] is True
-        assert results[1]["valid"] is False
+        assert _is_valid(results[0])
+        assert not _is_valid(results[1])
 
 
 class TestConcurrencySoak:

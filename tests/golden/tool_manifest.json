@@ -2148,7 +2148,7 @@
       "openWorldHint": true,
       "readOnlyHint": true
     },
-    "description": "Fetch historical end-of-day data for a given Indian stock ticker.",
+    "description": "[Experimental] Fetch historical end-of-day data for a given Indian stock ticker.",
     "name": "get_stock_history",
     "parameters": {
       "properties": {
@@ -2180,7 +2180,7 @@
       "openWorldHint": true,
       "readOnlyHint": true
     },
-    "description": "Fetch current (delayed) price and summary for a given Indian stock ticker.",
+    "description": "[Experimental] Fetch current (delayed) price and summary for a given Indian stock ticker.",
     "name": "get_stock_quote",
     "parameters": {
       "properties": {

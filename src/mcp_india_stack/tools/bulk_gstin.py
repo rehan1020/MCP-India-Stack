@@ -15,12 +15,7 @@ from mcp_india_stack.utils.responses import build_response
 def _validate_single_gstin(gstin: str) -> dict[str, Any]:
     """Validate a single GSTIN with error isolation."""
     try:
-        res = core_validate_gstin(gstin)
-        if isinstance(res, dict) and "data" in res and isinstance(res["data"], dict):
-            flattened = {**res["data"], **res}
-            flattened["valid"] = res["data"].get("valid", False)
-            return flattened
-        return res
+        return core_validate_gstin(gstin)
     except Exception as exc:
         return _gstin_fallback(gstin, f"Validation error: {exc}")
 
