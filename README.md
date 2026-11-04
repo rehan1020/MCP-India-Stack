@@ -292,12 +292,12 @@ See [`LEGAL_NOTICE.md`](LEGAL_NOTICE.md) for important legal disclaimers includi
 ## 🚀 Launch Notes
 
 This repository is release-ready for GitHub launch with:
-- `0.7.0` package metadata and changelog coverage.
+- `0.7.1` package metadata and changelog coverage.
 - A complete MCP server-card under `docs/.well-known/mcp/server-card.json`.
 - Local setup and publishing steps in [`SETUP.md`](SETUP.md).
 - Contribution guidance and versioning policy in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-### What's New in v0.7.0 — Security Hardening, Full Parity & Offline Invariants
+### What's New in v0.7.1 — Security Hardening, Full Parity & Offline Invariants
 - **Offline Architecture & Tool Network Tiers**: Canonical network classification (none/optional/required) across all 78 tools.
 - **Hardened Supply Chain**: CDN refresh pipeline with strict HTTPS, host allowlists, size/decompression bomb caps, monotonic version checks, and atomic staging.
 - **100% Modular Tool Parity**: Full core module extraction and parity across all 78 registered tools.

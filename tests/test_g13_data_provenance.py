@@ -24,7 +24,8 @@ def test_every_data_file_is_listed_in_provenance_doc() -> None:
     doc_content = PROVENANCE_DOC.read_text(encoding="utf-8")
 
     data_files = [
-        f for f in DATA_DIR.rglob("*")
+        f
+        for f in DATA_DIR.rglob("*")
         if f.is_file() and not f.name.startswith(".") and "__pycache__" not in f.parts
     ]
     assert len(data_files) >= 13, f"Expected at least 13 data files, found {len(data_files)}"

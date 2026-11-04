@@ -88,7 +88,7 @@ mcp-india-stack --transport sse --port 8080
 Verify the service is running:
 ```bash
 curl http://127.0.0.1:8080/health
-# {"status":"ok","version":"0.7.0"}
+# {"status":"ok","version":"0.7.1"}
 ```
 
 ---

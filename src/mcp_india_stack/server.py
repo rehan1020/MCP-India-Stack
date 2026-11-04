@@ -65,6 +65,26 @@ def changelog() -> dict[str, Any]:
         "current_version": __version__,
         "entries": [
             {
+                "version": "0.7.1",
+                "date": "2026-11-04",
+                "changes": [
+                    "Close architectural and hardening gaps G1-G13",
+                    "Offline-first network classification and guarantees (G1)",
+                    "Hardened CDN dataset refresh pipeline (G2)",
+                    "Tool registry and catalog reconciliation (G3)",
+                    "Legal notice and relative link validation (G4)",
+                    "Repository root hygiene and documentation migration (G5)",
+                    "Tax rules audit, provenance metadata, and automated staleness monitoring (G6)",
+                    "Legal dataset provenance and court fee/stamp duty validation (G7)",
+                    "Aadhaar PII masking and redaction logging filter (G8)",
+                    "Bulk request bounds and isolated executor (G9)",
+                    "SSE transport docs, /health probe, and rate limiting (G10)",
+                    "Experimental yfinance market data hardening (G11)",
+                    "Least-privilege CI workflow governance (G12)",
+                    "Dataset provenance documentation and inventory coverage (G13)",
+                ],
+            },
+            {
                 "version": "0.7.0",
                 "date": "2026-10-29",
                 "changes": [
@@ -299,9 +319,7 @@ def create_sse_app(  # noqa: C901
         is_loopback = effective_host == "localhost"
 
     if not is_loopback and not _api_key:
-        _allow_unauth = os.environ.get(
-            "MCP_INDIA_STACK_ALLOW_UNAUTHENTICATED_NETWORK", ""
-        ).strip()
+        _allow_unauth = os.environ.get("MCP_INDIA_STACK_ALLOW_UNAUTHENTICATED_NETWORK", "").strip()
         if _allow_unauth != "1":
             sys.stderr.write(
                 "Refusing to bind to non-loopback host without authentication. "
@@ -579,9 +597,7 @@ def create_sse_app(  # noqa: C901
         return JSONResponse({"status": "ok", "version": __version__})
 
     async def _root_check(request: Request) -> JSONResponse:
-        return JSONResponse(
-            {"status": "ok", "service": "mcp-india-stack", "version": __version__}
-        )
+        return JSONResponse({"status": "ok", "service": "mcp-india-stack", "version": __version__})
 
     sse_app_instance.add_route("/health", _health_check, methods=["GET"])
     sse_app_instance.add_route("/health/", _health_check, methods=["GET"])

@@ -54,9 +54,9 @@ def test_workflow_permissions_blocks_least_privilege() -> None:
             for job_name, job_def in jobs.items():
                 if "uses" in job_def:
                     continue  # Reusable workflow caller inherits or delegates
-                assert (
-                    "permissions" in job_def
-                ), f"Job {job_name} in {wf.name} lacks permissions block"
+                assert "permissions" in job_def, (
+                    f"Job {job_name} in {wf.name} lacks permissions block"
+                )
 
 
 def test_workflow_actions_sha_pinning() -> None:

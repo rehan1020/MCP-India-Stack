@@ -26,10 +26,12 @@ def _validate_single_aadhaar(aadhaar: str) -> dict[str, Any]:
     """Validate a single Aadhaar with error isolation."""
     try:
         result = core_validate_aadhaar(aadhaar)
+        raw_errors = result.get("errors")
+        err_list: list[Any] = raw_errors if isinstance(raw_errors, list) else []
         return {
             "masked": result.get("masked", ""),
             "valid": result.get("valid", False),
-            "errors": [mask_aadhaar_text(str(e)) for e in result.get("errors", [])],
+            "errors": [mask_aadhaar_text(str(e)) for e in err_list],
         }
     except Exception as exc:
         masked_input = _mask_aadhaar(str(aadhaar)) if aadhaar else ""

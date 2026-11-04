@@ -198,3 +198,15 @@ id = "CVE-2026-113718"
 package = "virtualenv"
 justification = "Dev dependency in pre-commit environment"
 review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-116672"
+package = "authlib"
+justification = "Pinned dependency for FastMCP auth; to be addressed in dependency lock refresh"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-119284"
+package = "joserfc"
+justification = "Pinned dependency for FastMCP auth; to be addressed in dependency lock refresh"
+review_by = "2026-12-31"

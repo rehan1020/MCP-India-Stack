@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.7.1] - 2026-11-04
+
+### Architectural Hardening & Gap Remediation (G1-G13)
+
+- **Offline-First Guarantees & Network Tiers (G1)**: Added canonical `network` tier attribute (`none`, `optional`, `required`) to all 78 registered tools and surfaced it additively in `india://status` (`tools_network`). Verified full offline execution when sockets are blocked.
+- **Hardened CDN Dataset Refresh (G2)**: Implemented HTTPS-only transport, strict host allowlists, no cross-host redirects, connect/read timeouts, size/decompression bomb caps, schema validation, monotonic version checking, atomic replace via staging tmpfiles, lockfile synchronization, and `last_refresh_error` tracking in `india://status`.
+- **Registry-Driven Catalog & README Parity (G3)**: Automated README tool count, catalog parity, and version verification tests against the runtime registry. Moved legacy v0.4.x bugfix history into CHANGELOG.
+- **Legal Notice & DPDP Compliance (G4)**: Added `LEGAL_NOTICE.md` covering government disclaimers, no legal advice, DPDP compliance, and statutory accuracy notes. Fixed broken asset links and added relative link validation in CI.
+- **Root Hygiene (G5)**: Cleaned repository root by migrating release notes and tier classifications into `docs/`.
+- **Tax Rules Audit & Automated Staleness Monitoring (G6)**: Added additive provenance fields (`rules_version`, `effective_from`, `effective_to`, `source_ref`) to calculators, enforced strict `financial_year` parameter validation, updated FY 2026-27 tax slabs, standard deduction (₹75,000), Section 87A rebate (₹25,000), and introduced scheduled GitHub Actions staleness checks.
+- **Legal Data Provenance & State Coverage (G7)**: Added `source_ref` and `last_verified` to legal datasets, returned structured `unsupported_state` envelopes with `coverage: partial` for unsupported jurisdictions, verified full IPC↔BNS bidirectional crosswalk, and handled limitation deadline edge cases.
+- **Aadhaar PII Redaction (G8)**: Masked Aadhaar numbers to the last 4 digits everywhere (`XXXXXXXX1234`), added a redacting logging filter for 12-digit patterns across stdout/stderr/files, and updated tool descriptions with DPDP notices.
+- **Bulk Request Bounds & Concurrency Isolation (G9)**: Added payload caps, item length limits, shared bounded thread pool executor, and order-preserving error isolation for bulk validation tools (`MCP_INDIA_STACK_BULK_MAX`).
+- **Remote SSE Transport Hardening (G10)**: Documented SSE transport with Bearer token authentication, loopback defaults, unauthenticated `/health` endpoint, and in-process token-bucket rate limiting.
+- **Experimental Market Data Protections (G11)**: Designated yfinance stock tools as `[Experimental]`, added symbol allowlist validation regex, backoff retries, short-TTL in-memory caching, error mapping, and metadata indicators (`data_source`, `delayed`, `as_of`).
+- **Repository Governance Audit (G12)**: Completed governance audit, applied least-privilege `permissions:` blocks across all GitHub Actions workflows, and pinned GitHub Actions to immutable SHAs.
+- **Data Provenance & Dataset Inventory (G13)**: Added `docs/data_provenance.md` cataloging upstream authorities, licenses, retrieval cadences, and verified 100% data file coverage.
+
 ## [0.7.0] - 2026-10-29
 
 ### Refactoring & Core Parity (Update 5b)
