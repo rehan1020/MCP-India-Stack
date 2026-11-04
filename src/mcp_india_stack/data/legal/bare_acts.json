@@ -6,7 +6,9 @@
     "summary": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
     "punishment": "Death or life imprisonment + fine",
     "cognizable": true,
-    "bailable": false
+    "bailable": false,
+    "source_ref": "Indian Penal Code, 1860 (Act No. 45 of 1860), India Code (indiacode.nic.in)",
+    "last_verified": "2025-01-01"
   },
   {
     "act": "IPC",
@@ -15,7 +17,9 @@
     "summary": "Whoever commits culpable homicide not amounting to murder shall be punished with imprisonment for life, or imprisonment of either description for a term which may extend to ten years, and fine.",
     "punishment": "Life imprisonment or 10 years + fine",
     "cognizable": true,
-    "bailable": false
+    "bailable": false,
+    "source_ref": "Indian Penal Code, 1860 (Act No. 45 of 1860), India Code (indiacode.nic.in)",
+    "last_verified": "2025-01-01"
   },
   {
     "act": "IPC",
@@ -24,7 +28,9 @@
     "summary": "Whoever does any act with such intention or knowledge, and under such circumstances that, if he by that act caused death, he would be guilty of murder, shall be punished with imprisonment of either description for a term which may extend to ten years, and shall also be liable to fine.",
     "punishment": "10 years + fine, or life imprisonment if hurt is caused",
     "cognizable": true,
-    "bailable": false
+    "bailable": false,
+    "source_ref": "Indian Penal Code, 1860 (Act No. 45 of 1860), India Code (indiacode.nic.in)",
+    "last_verified": "2025-01-01"
   },
   {
     "act": "IPC",
@@ -33,7 +39,9 @@
     "summary": "Whoever commits rape shall be punished with rigorous imprisonment of either description for a term which shall not be less than ten years, but which may extend to imprisonment for life, and shall also be liable to fine.",
     "punishment": "Rigorous imprisonment not less than 10 years, up to life + fine",
     "cognizable": true,
-    "bailable": false
+    "bailable": false,
+    "source_ref": "Indian Penal Code, 1860 (Act No. 45 of 1860), India Code (indiacode.nic.in)",
+    "last_verified": "2025-01-01"
   },
   {
     "act": "IPC",
@@ -42,7 +50,9 @@
     "summary": "Whoever cheats and thereby dishonestly induces the person deceived to deliver any property to any person, or to make, alter or destroy the whole or any part of a valuable security, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine.",
     "punishment": "7 years + fine",
     "cognizable": true,
-    "bailable": true
+    "bailable": true,
+    "source_ref": "Indian Penal Code, 1860 (Act No. 45 of 1860), India Code (indiacode.nic.in)",
+    "last_verified": "2025-01-01"
   },
   {
     "act": "IPC",
@@ -51,7 +61,9 @@
     "summary": "Whoever, being the husband or the relative of the husband of a woman, subjects such woman to cruelty shall be punished with imprisonment for a term which may extend to three years and shall also be liable to fine.",
     "punishment": "3 years + fine",
     "cognizable": true,
-    "bailable": false
+    "bailable": false,
+    "source_ref": "Indian Penal Code, 1860 (Act No. 45 of 1860), India Code (indiacode.nic.in)",
+    "last_verified": "2025-01-01"
   },
   {
     "act": "BNS",
@@ -60,7 +72,9 @@
     "summary": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
     "punishment": "Death or life imprisonment + fine",
     "cognizable": true,
-    "bailable": false
+    "bailable": false,
+    "source_ref": "Bharatiya Nyaya Sanhita, 2023 (Act No. 45 of 2023), Gazette of India",
+    "last_verified": "2025-01-01"
   },
   {
     "act": "BNS",
@@ -69,7 +83,9 @@
     "summary": "Whoever cheats and thereby dishonestly induces the person deceived to deliver any property to any person, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine.",
     "punishment": "7 years + fine",
     "cognizable": true,
-    "bailable": true
+    "bailable": true,
+    "source_ref": "Bharatiya Nyaya Sanhita, 2023 (Act No. 45 of 2023), Gazette of India",
+    "last_verified": "2025-01-01"
   },
   {
     "act": "CrPC",
@@ -78,7 +94,9 @@
     "summary": "Every information relating to the commission of a cognizable offence, if given orally to an officer in charge of a police station, shall be reduced to writing by him or under his direction, and be read over to the informant.",
     "punishment": "N/A",
     "cognizable": false,
-    "bailable": false
+    "bailable": false,
+    "source_ref": "Code of Criminal Procedure, 1973 (Act No. 2 of 1974), India Code",
+    "last_verified": "2025-01-01"
   },
   {
     "act": "CrPC",
@@ -87,7 +105,9 @@
     "summary": "Where any person has reason to believe that he may be arrested on an accusation of having committed a non-bailable offence, he may apply to the High Court or the Court of Session for a direction under this section.",
     "punishment": "N/A",
     "cognizable": false,
-    "bailable": false
+    "bailable": false,
+    "source_ref": "Code of Criminal Procedure, 1973 (Act No. 2 of 1974), India Code",
+    "last_verified": "2025-01-01"
   },
   {
     "act": "IEA",
@@ -96,6 +116,85 @@
     "summary": "Any information contained in an electronic record which is printed on a paper, stored, recorded or copied in optical or magnetic media produced by a computer shall be deemed to be also a document.",
     "punishment": "N/A",
     "cognizable": false,
-    "bailable": false
+    "bailable": false,
+    "source_ref": "Indian Evidence Act, 1872 (Act No. 1 of 1872), India Code",
+    "last_verified": "2025-01-01"
+  },
+  {
+    "act": "BNS",
+    "section": "105",
+    "title": "Culpable homicide not amounting to murder",
+    "summary": "Whoever commits culpable homicide not amounting to murder shall be punished with imprisonment for life, or imprisonment of either description for a term which may extend to ten years, and fine.",
+    "punishment": "Life imprisonment or 10 years + fine",
+    "cognizable": true,
+    "bailable": false,
+    "source_ref": "Bharatiya Nyaya Sanhita, 2023 (Act No. 45 of 2023), Gazette of India",
+    "last_verified": "2025-01-01"
+  },
+  {
+    "act": "BNS",
+    "section": "109",
+    "title": "Attempt to murder",
+    "summary": "Whoever does any act with such intention or knowledge, and under such circumstances that, if he by that act caused death, he would be guilty of murder, shall be punished with imprisonment of either description up to 10 years and fine.",
+    "punishment": "10 years + fine, or life imprisonment if hurt caused",
+    "cognizable": true,
+    "bailable": false,
+    "source_ref": "Bharatiya Nyaya Sanhita, 2023 (Act No. 45 of 2023), Gazette of India",
+    "last_verified": "2025-01-01"
+  },
+  {
+    "act": "BNS",
+    "section": "64",
+    "title": "Punishment for rape",
+    "summary": "Whoever commits rape shall be punished with rigorous imprisonment for a term which shall not be less than ten years, but which may extend to imprisonment for life, and shall also be liable to fine.",
+    "punishment": "Rigorous imprisonment not less than 10 years up to life + fine",
+    "cognizable": true,
+    "bailable": false,
+    "source_ref": "Bharatiya Nyaya Sanhita, 2023 (Act No. 45 of 2023), Gazette of India",
+    "last_verified": "2025-01-01"
+  },
+  {
+    "act": "BNS",
+    "section": "85",
+    "title": "Husband or relative of husband of a woman subjecting her to cruelty",
+    "summary": "Whoever, being the husband or the relative of the husband of a woman, subjects such woman to cruelty shall be punished with imprisonment for a term which may extend to three years and shall also be liable to fine.",
+    "punishment": "3 years + fine",
+    "cognizable": true,
+    "bailable": false,
+    "source_ref": "Bharatiya Nyaya Sanhita, 2023 (Act No. 45 of 2023), Gazette of India",
+    "last_verified": "2025-01-01"
+  },
+  {
+    "act": "BNSS",
+    "section": "173",
+    "title": "Information in cognizable cases",
+    "summary": "Every information relating to the commission of a cognizable offence, if given orally to an officer in charge of a police station, shall be reduced to writing by him or under his direction (FIR).",
+    "punishment": "N/A",
+    "cognizable": false,
+    "bailable": false,
+    "source_ref": "Bharatiya Nagarik Suraksha Sanhita, 2023 (Act No. 46 of 2023), Gazette of India",
+    "last_verified": "2025-01-01"
+  },
+  {
+    "act": "BNSS",
+    "section": "482",
+    "title": "Direction for grant of bail to person apprehending arrest",
+    "summary": "Where any person has reason to believe that he may be arrested on an accusation of having committed a non-bailable offence, he may apply to High Court or Court of Session for anticipatory bail.",
+    "punishment": "N/A",
+    "cognizable": false,
+    "bailable": false,
+    "source_ref": "Bharatiya Nagarik Suraksha Sanhita, 2023 (Act No. 46 of 2023), Gazette of India",
+    "last_verified": "2025-01-01"
+  },
+  {
+    "act": "BSA",
+    "section": "63",
+    "title": "Admissibility of electronic records",
+    "summary": "Any information contained in an electronic record which is printed on paper, stored, recorded or copied in optical or magnetic media shall be deemed to be also a document and admissible in evidence.",
+    "punishment": "N/A",
+    "cognizable": false,
+    "bailable": false,
+    "source_ref": "Bharatiya Sakshya Adhiniyam, 2023 (Act No. 47 of 2023), Gazette of India",
+    "last_verified": "2025-01-01"
   }
 ]

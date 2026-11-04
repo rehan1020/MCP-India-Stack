@@ -129,6 +129,9 @@ def calculate_epf_esic(
     include_employer_share: Annotated[
         bool, Field(description="If True, return employer costs")
     ] = True,
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate EPF and ESIC contributions for employer and employee.
 
@@ -152,6 +155,7 @@ def calculate_epf_esic(
             basic_wages=basic_wages,
             gross_wages=gross_wages,
             include_employer_share=include_employer_share,
+            financial_year=financial_year,
         )
         return build_response(
             success=len(result.get("errors", [])) == 0,
@@ -173,6 +177,9 @@ def calculate_neft_rtgs_imps_charges(
     amount: Annotated[float, Field(description="Transfer amount in INR")],
     account_type: Annotated[str, Field(description="'savings' or 'current'")] = "savings",
     is_online: Annotated[bool, Field(description="True if done via online banking")] = True,
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate NEFT/RTGS/IMPS/UPI transaction charges.
 
@@ -193,6 +200,7 @@ def calculate_neft_rtgs_imps_charges(
             amount=amount,
             account_type=account_type,
             is_online=is_online,
+            financial_year=financial_year,
         )
         return build_response(
             success="errors" not in result,

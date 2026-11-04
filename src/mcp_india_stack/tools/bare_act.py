@@ -243,7 +243,8 @@ def decode_ipc_bns_crosswalk(section: str, from_act: str = "IPC") -> dict[str, A
     - section (str): Section number.
     - from_act (str): Source act ("IPC", "BNS", "CrPC", "BNSS", "IEA", "BSA").
 
-    Output: original_act, original_section, target_act, target_section, success, errors
+    Output: original_act, original_section, target_act, target_section,
+    target_sections, is_one_to_many, source_ref, last_verified, success, errors
 
     Example prompt: "What is the BNS equivalent of IPC 420?"
 
@@ -251,6 +252,19 @@ def decode_ipc_bns_crosswalk(section: str, from_act: str = "IPC") -> dict[str, A
     """
     crosswalk = _load_crosswalk()
     errors = []
+
+    act_canonical = {
+        "IPC": "IPC",
+        "BNS": "BNS",
+        "CRPC": "CrPC",
+        "BNSS": "BNSS",
+        "IEA": "IEA",
+        "BSA": "BSA",
+    }
+    clean_act = act_canonical.get(from_act.strip().upper())
+    if not clean_act:
+        errors.append(f"Invalid from_act: {from_act}")
+        return _flatten(build_response(success=False, data={}, errors=errors))
 
     mapping = {
         "IPC": ("ipc_section", "bns_section", "BNS"),
@@ -261,27 +275,57 @@ def decode_ipc_bns_crosswalk(section: str, from_act: str = "IPC") -> dict[str, A
         "BSA": ("bsa_section", "iea_section", "IEA"),
     }
 
-    if from_act not in mapping:
-        errors.append(f"Invalid from_act: {from_act}")
-        return _flatten(build_response(success=False, data={}, errors=errors))
+    source_key, target_key, target_act = mapping[clean_act]
+    sec_clean = str(section).strip().upper()
 
-    source_key, target_key, target_act = mapping[from_act]
-
+    matches = []
     for item in crosswalk:
-        if str(item.get(source_key)) == str(section):
-            return _flatten(
-                build_response(
-                    success=True,
-                    data={
-                        "original_act": from_act,
-                        "original_section": section,
-                        "target_act": target_act,
-                        "target_section": item.get(target_key),
-                        "source": "offline_static",
-                    },
-                    errors=[],
-                )
+        val = item.get(source_key)
+        if val is not None and str(val).strip().upper() == sec_clean:
+            matches.append(item)
+
+    if matches:
+        primary = matches[0]
+        all_targets: list[str] = []
+        for m in matches:
+            if clean_act == "IPC":
+                t_list = m.get("target_sections")
+                if t_list and isinstance(t_list, list):
+                    for t in t_list:
+                        ts = str(t).strip()
+                        if ts and ts not in all_targets:
+                            all_targets.append(ts)
+            t_val = m.get(target_key)
+            if t_val is not None:
+                ts = str(t_val).strip()
+                if ts and ts not in all_targets:
+                    all_targets.append(ts)
+
+        is_one_to_many = bool(
+            (clean_act == "IPC" and primary.get("is_one_to_many")) or len(all_targets) > 1
+        )
+        primary_target = primary.get(target_key) or (all_targets[0] if all_targets else None)
+
+        return _flatten(
+            build_response(
+                success=True,
+                data={
+                    "original_act": clean_act,
+                    "original_section": section,
+                    "target_act": target_act,
+                    "target_section": primary_target,
+                    "target_sections": all_targets,
+                    "is_one_to_many": is_one_to_many,
+                    "notes": primary.get("notes", ""),
+                    "source_ref": primary.get(
+                        "source_ref", "Gazette of India / Legislative Department"
+                    ),
+                    "last_verified": primary.get("last_verified", "2025-01-01"),
+                    "source": "offline_static",
+                },
+                errors=[],
             )
+        )
 
     errors.append(f"Crosswalk not found for {from_act} section {section}")
     return _flatten(build_response(success=False, data={}, errors=errors))

@@ -4,6 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.tools.rules_metadata import (
+    attach_rule_metadata,
+    validate_financial_year,
+)
+
 DISCLAIMER = "Returns estimated at constant CAGR. Actual returns vary."
 
 
@@ -12,6 +17,7 @@ def calculate_step_up_sip(
     annual_step_up_percent: float,
     expected_annual_return: float,
     tenure_years: int,
+    financial_year: str = "2025-26",
 ) -> dict[str, Any]:
     """Calculate SIP with annual step-up increment.
 
@@ -20,19 +26,28 @@ def calculate_step_up_sip(
         annual_step_up_percent: % increase each year
         expected_annual_return: Expected CAGR %
         tenure_years: Investment tenure
+        financial_year: Financial year (defaults to "2025-26")
 
     Returns:
         Dict comparing step-up vs flat SIP.
     """
+    is_valid_fy, err_resp = validate_financial_year("step_up_sip", financial_year)
+    if not is_valid_fy:
+        assert err_resp is not None
+        return err_resp
+
     if initial_monthly_investment <= 0:
-        return {"errors": ["Initial monthly investment must be > 0"], "disclaimer": DISCLAIMER}
+        err_res = {"errors": ["Initial monthly investment must be > 0"], "disclaimer": DISCLAIMER}
+        return attach_rule_metadata(err_res, "step_up_sip", financial_year)
     if tenure_years <= 0 or tenure_years > 50:
-        return {"errors": ["Tenure must be between 1 and 50 years"], "disclaimer": DISCLAIMER}
+        err_res = {"errors": ["Tenure must be between 1 and 50 years"], "disclaimer": DISCLAIMER}
+        return attach_rule_metadata(err_res, "step_up_sip", financial_year)
     if expected_annual_return < 0 or expected_annual_return > 100:
-        return {
+        err_res = {
             "errors": ["Expected annual return must be between 0 and 100"],
             "disclaimer": DISCLAIMER,
         }
+        return attach_rule_metadata(err_res, "step_up_sip", financial_year)
 
     monthly_rate = expected_annual_return / 100 / 12
     # Uses simple monthly rate (annual_rate / 12), consistent with standard
@@ -71,7 +86,7 @@ def calculate_step_up_sip(
         else:
             flat_corpus += initial_monthly_investment
 
-    return {
+    res = {
         "initial_monthly_investment": initial_monthly_investment,
         "annual_step_up_percent": annual_step_up_percent,
         "expected_annual_return": expected_annual_return,
@@ -84,3 +99,4 @@ def calculate_step_up_sip(
         "step_up_advantage": round(corpus - flat_corpus, 2),
         "disclaimer": DISCLAIMER,
     }
+    return attach_rule_metadata(res, "step_up_sip", financial_year)

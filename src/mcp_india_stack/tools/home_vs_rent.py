@@ -4,6 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.tools.rules_metadata import (
+    attach_rule_metadata,
+    validate_financial_year,
+)
+
 DISCLAIMER = "Financial model only. Consult a financial advisor before making property decisions."
 
 
@@ -20,6 +25,7 @@ def calculate_home_vs_rent(
     registration_percent: float = 1.0,
     annual_maintenance_percent: float = 0.5,
     analysis_years: int = 20,
+    financial_year: str = "2025-26",
 ) -> dict[str, Any]:
     """Compare buying vs renting financial outcome.
 
@@ -36,15 +42,22 @@ def calculate_home_vs_rent(
         registration_percent: Registration fee %
         annual_maintenance_percent: Maintenance cost % of property
         analysis_years: Years to compare
+        financial_year: Financial year (defaults to "2025-26")
 
     Returns:
         Dict with buy/rent comparison and break-even analysis.
     """
+    is_valid_fy, err_resp = validate_financial_year("home_vs_rent", financial_year)
+    if not is_valid_fy:
+        assert err_resp is not None
+        return err_resp
+
     if down_payment_percent < 10:
-        return {
+        err_res = {
             "errors": ["Down payment must be at least 10% (RBI LTV mandate)"],
             "disclaimer": DISCLAIMER,
         }
+        return attach_rule_metadata(err_res, "home_vs_rent", financial_year)
 
     if analysis_years > 30:
         analysis_years = 30
@@ -92,7 +105,7 @@ def calculate_home_vs_rent(
         else "Renting remains financially better"
     )
 
-    return {
+    res = {
         "home_price": home_price,
         "buy_scenario": {
             "upfront_cost": round(upfront_cost, 2),
@@ -111,3 +124,4 @@ def calculate_home_vs_rent(
         "yearly_comparison": yearly_comparison,
         "disclaimer": DISCLAIMER,
     }
+    return attach_rule_metadata(res, "home_vs_rent", financial_year)

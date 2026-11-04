@@ -3,98 +3,130 @@
     "application_fee": 10,
     "additional_page_fee": 2,
     "bpl_exempt": true,
-    "notes": "RTI Act 2005, Section 6"
+    "notes": "RTI Act 2005, Section 6",
+    "source_ref": "Right to Information Rules, 2012 (DoPT, Government of India)",
+    "last_verified": "2025-01-01"
   },
   "states": {
     "MH": {
       "state_name": "Maharashtra",
       "application_fee": 10,
       "additional_page_fee": 2,
-      "bpl_exempt": true
+      "bpl_exempt": true,
+      "source_ref": "State Right to Information Rules (MH)",
+      "last_verified": "2025-01-01"
     },
     "UP": {
       "state_name": "Uttar Pradesh",
       "application_fee": 10,
       "additional_page_fee": 2,
-      "bpl_exempt": true
+      "bpl_exempt": true,
+      "source_ref": "State Right to Information Rules (UP)",
+      "last_verified": "2025-01-01"
     },
     "DL": {
       "state_name": "Delhi",
       "application_fee": 10,
       "additional_page_fee": 2,
-      "bpl_exempt": true
+      "bpl_exempt": true,
+      "source_ref": "State Right to Information Rules (DL)",
+      "last_verified": "2025-01-01"
     },
     "KA": {
       "state_name": "Karnataka",
       "application_fee": 10,
       "additional_page_fee": 2,
-      "bpl_exempt": true
+      "bpl_exempt": true,
+      "source_ref": "State Right to Information Rules (KA)",
+      "last_verified": "2025-01-01"
     },
     "TN": {
       "state_name": "Tamil Nadu",
       "application_fee": 10,
       "additional_page_fee": 2,
-      "bpl_exempt": true
+      "bpl_exempt": true,
+      "source_ref": "State Right to Information Rules (TN)",
+      "last_verified": "2025-01-01"
     },
     "GJ": {
       "state_name": "Gujarat",
       "application_fee": 20,
       "additional_page_fee": 2,
-      "bpl_exempt": true
+      "bpl_exempt": true,
+      "source_ref": "State Right to Information Rules (GJ)",
+      "last_verified": "2025-01-01"
     },
     "RJ": {
       "state_name": "Rajasthan",
       "application_fee": 10,
       "additional_page_fee": 2,
-      "bpl_exempt": true
+      "bpl_exempt": true,
+      "source_ref": "State Right to Information Rules (RJ)",
+      "last_verified": "2025-01-01"
     },
     "WB": {
       "state_name": "West Bengal",
       "application_fee": 10,
       "additional_page_fee": 2,
-      "bpl_exempt": true
+      "bpl_exempt": true,
+      "source_ref": "State Right to Information Rules (WB)",
+      "last_verified": "2025-01-01"
     },
     "MP": {
       "state_name": "Madhya Pradesh",
       "application_fee": 10,
       "additional_page_fee": 2,
-      "bpl_exempt": true
+      "bpl_exempt": true,
+      "source_ref": "State Right to Information Rules (MP)",
+      "last_verified": "2025-01-01"
     },
     "KL": {
       "state_name": "Kerala",
       "application_fee": 10,
       "additional_page_fee": 2,
-      "bpl_exempt": true
+      "bpl_exempt": true,
+      "source_ref": "State Right to Information Rules (KL)",
+      "last_verified": "2025-01-01"
     },
     "AP": {
       "state_name": "Andhra Pradesh",
       "application_fee": 10,
       "additional_page_fee": 2,
-      "bpl_exempt": true
+      "bpl_exempt": true,
+      "source_ref": "State Right to Information Rules (AP)",
+      "last_verified": "2025-01-01"
     },
     "TS": {
       "state_name": "Telangana",
       "application_fee": 10,
       "additional_page_fee": 2,
-      "bpl_exempt": true
+      "bpl_exempt": true,
+      "source_ref": "State Right to Information Rules (TS)",
+      "last_verified": "2025-01-01"
     },
     "BR": {
       "state_name": "Bihar",
       "application_fee": 10,
       "additional_page_fee": 2,
-      "bpl_exempt": true
+      "bpl_exempt": true,
+      "source_ref": "State Right to Information Rules (BR)",
+      "last_verified": "2025-01-01"
     },
     "PB": {
       "state_name": "Punjab",
       "application_fee": 10,
       "additional_page_fee": 2,
-      "bpl_exempt": true
+      "bpl_exempt": true,
+      "source_ref": "State Right to Information Rules (PB)",
+      "last_verified": "2025-01-01"
     },
     "HR": {
       "state_name": "Haryana",
       "application_fee": 50,
       "additional_page_fee": 2,
-      "bpl_exempt": true
+      "bpl_exempt": true,
+      "source_ref": "State Right to Information Rules (HR)",
+      "last_verified": "2025-01-01"
     }
   }
 }

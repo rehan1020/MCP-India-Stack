@@ -4,6 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.tools.rules_metadata import (
+    attach_rule_metadata,
+    validate_financial_year,
+)
+
 DISCLAIMER = "Computed using standard reducing balance formula. Actual EMI may vary by lender."
 
 
@@ -12,6 +17,7 @@ def calculate_emi(  # noqa: C901
     annual_interest_rate: float,
     tenure_months: int,
     loan_type: str = "other",
+    financial_year: str = "2025-26",
 ) -> dict[str, Any]:  # noqa: C901
     """Calculate EMI for a loan with year-by-year amortization schedule.
 
@@ -20,11 +26,16 @@ def calculate_emi(  # noqa: C901
         annual_interest_rate: Annual rate as percentage (e.g., 8.5 means 8.5%).
         tenure_months: Loan tenure in months.
         loan_type: "home", "personal", "car", "education", "other" - label only.
+        financial_year: Financial year (defaults to "2025-26").
 
     Returns:
         Dict with EMI, total payment, total interest, and amortization schedule.
     """
     try:
+        is_valid_fy, err_resp = validate_financial_year("emi", financial_year)
+        if not is_valid_fy:
+            assert err_resp is not None
+            return err_resp
         errors: list[str] = []
 
         if principal <= 0:
@@ -40,10 +51,11 @@ def calculate_emi(  # noqa: C901
             errors.append("loan_type must be one of: home, personal, car, education, other")
 
         if errors:
-            return {
+            err_dict = {
                 "errors": errors,
                 "disclaimer": DISCLAIMER,
             }
+            return attach_rule_metadata(err_dict, "emi", financial_year)
 
         if annual_interest_rate == 0:
             emi = round(principal / tenure_months, 2)
@@ -100,10 +112,10 @@ def calculate_emi(  # noqa: C901
             "disclaimer": DISCLAIMER,
         }
 
-        return result
+        return attach_rule_metadata(result, "emi", financial_year)
 
     except Exception as exc:
-        return {
+        exc_dict = {
             "principal": principal if isinstance(principal, (int, float)) else 0,
             "annual_interest_rate": annual_interest_rate
             if isinstance(annual_interest_rate, (int, float))
@@ -113,3 +125,4 @@ def calculate_emi(  # noqa: C901
             "errors": [f"EMI calculation failed: {exc}"],
             "disclaimer": DISCLAIMER,
         }
+        return attach_rule_metadata(exc_dict, "emi", financial_year)

@@ -31,6 +31,9 @@ def calculate_emi(
     loan_type: Annotated[
         str, Field(description="Loan type: home, personal, car, education, other")
     ] = "other",
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate EMI for a loan with year-by-year amortization schedule.
 
@@ -55,6 +58,7 @@ def calculate_emi(
             annual_interest_rate=annual_interest_rate,
             tenure_months=tenure_months,
             loan_type=loan_type,
+            financial_year=financial_year,
         )
         return build_response(
             success=len(result.get("errors", [])) == 0,
@@ -79,6 +83,9 @@ def calculate_gratuity(
     is_covered_under_act: Annotated[
         bool, Field(description="True if establishment has 10+ employees")
     ] = True,
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate gratuity under the Payment of Gratuity Act, 1972.
 
@@ -102,6 +109,7 @@ def calculate_gratuity(
             last_drawn_salary=last_drawn_salary,
             years_of_service=years_of_service,
             is_covered_under_act=is_covered_under_act,
+            financial_year=financial_year,
         )
         return build_response(
             success=len(result.get("errors", [])) == 0,
@@ -124,6 +132,9 @@ def calculate_ppf_maturity(
     annual_interest_rate: Annotated[
         float, Field(description="Annual interest rate percentage (default 7.1 for FY2025-26)")
     ] = 7.1,
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate PPF maturity amount with year-by-year breakdown.
 
@@ -147,6 +158,7 @@ def calculate_ppf_maturity(
             annual_investment=annual_investment,
             tenure_years=tenure_years,
             annual_interest_rate=annual_interest_rate,
+            financial_year=financial_year,
         )
         return build_response(
             success=len(result.get("errors", [])) == 0,
@@ -174,6 +186,9 @@ def calculate_fd_maturity(
     tds_applicable: Annotated[
         bool, Field(description="Apply 10% TDS if interest exceeds threshold")
     ] = True,
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate Fixed Deposit maturity amount.
 
@@ -198,6 +213,7 @@ def calculate_fd_maturity(
             compounding=compounding,
             is_senior_citizen=is_senior_citizen,
             tds_applicable=tds_applicable,
+            financial_year=financial_year,
         )
         return build_response(
             success="errors" not in result,
@@ -218,6 +234,9 @@ def calculate_rd_maturity(
     monthly_installment: Annotated[float, Field(description="Monthly deposit amount in INR")],
     annual_interest_rate: Annotated[float, Field(description="Annual interest rate as percentage")],
     tenure_months: Annotated[int, Field(description="Deposit tenure in months")],
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate Recurring Deposit maturity amount.
 
@@ -236,6 +255,7 @@ def calculate_rd_maturity(
             monthly_installment=monthly_installment,
             annual_interest_rate=annual_interest_rate,
             tenure_months=tenure_months,
+            financial_year=financial_year,
         )
         return build_response(
             success="errors" not in result,
@@ -257,6 +277,9 @@ def calculate_sip_returns(
     expected_annual_return: Annotated[float, Field(description="Expected CAGR as percentage")],
     tenure_years: Annotated[int, Field(description="Investment tenure in years")],
     inflation_rate: Annotated[float, Field(description="Expected inflation rate percentage")] = 6.0,
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate SIP maturity with inflation-adjusted returns.
 
@@ -277,6 +300,7 @@ def calculate_sip_returns(
             expected_annual_return=expected_annual_return,
             tenure_years=tenure_years,
             inflation_rate=inflation_rate,
+            financial_year=financial_year,
         )
         return build_response(
             success="errors" not in result,
@@ -298,6 +322,9 @@ def calculate_step_up_sip(
     annual_step_up_percent: Annotated[float, Field(description="Annual step-up percentage")],
     expected_annual_return: Annotated[float, Field(description="Expected CAGR as percentage")],
     tenure_years: Annotated[int, Field(description="Investment tenure in years")],
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate SIP with annual step-up increment.
 
@@ -318,6 +345,7 @@ def calculate_step_up_sip(
             annual_step_up_percent=annual_step_up_percent,
             expected_annual_return=expected_annual_return,
             tenure_years=tenure_years,
+            financial_year=financial_year,
         )
         return build_response(
             success="errors" not in result,
@@ -343,6 +371,9 @@ def calculate_nps_projection(
     ] = 10.0,
     annuity_rate: Annotated[float, Field(description="Annuity rate percentage")] = 6.0,
     annuity_percent: Annotated[float, Field(description="Corpus for annuity (min 40%)")] = 40.0,
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate NPS corpus and monthly pension at retirement.
 
@@ -367,6 +398,7 @@ def calculate_nps_projection(
             expected_annual_return=expected_annual_return,
             annuity_rate=annuity_rate,
             annuity_percent=annuity_percent,
+            financial_year=financial_year,
         )
         return build_response(
             success="errors" not in result,
@@ -390,6 +422,9 @@ def calculate_sukanya_samriddhi(
     ],
     annual_investment: Annotated[float, Field(description="Annual deposit amount in INR")],
     annual_interest_rate: Annotated[float, Field(description="Interest rate as percentage")] = 8.2,
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate SSY or SCSS maturity amount.
 
@@ -408,6 +443,7 @@ def calculate_sukanya_samriddhi(
             scheme=scheme,
             annual_investment=annual_investment,
             annual_interest_rate=annual_interest_rate,
+            financial_year=financial_year,
         )
         return build_response(
             success="errors" not in result,
@@ -442,6 +478,9 @@ def calculate_home_vs_rent(
         float, Field(description="Return on invested down payment percentage")
     ] = 12.0,
     analysis_years: Annotated[int, Field(description="Years to compare")] = 20,
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Compare buying vs renting financial outcome.
 
@@ -472,6 +511,7 @@ def calculate_home_vs_rent(
             expected_property_appreciation=expected_property_appreciation,
             investment_return=investment_return,
             analysis_years=analysis_years,
+            financial_year=financial_year,
         )
         return build_response(
             success="errors" not in result,

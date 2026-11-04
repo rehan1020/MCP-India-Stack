@@ -39,11 +39,20 @@ def calculate_court_fee(  # noqa: C901
 
     code = state_code.upper()
     data = _load_court_fees()
+    supported = sorted([k for k in data.keys() if len(k) == 2 and k.isupper()])
 
     state_data = data.get(code)
     if not state_data:
+        errors.append("unsupported_state")
         errors.append(f"Court fee data not available for state {code}.")
-        return {"errors": errors, "warnings": warnings}
+        return {
+            "error": "unsupported_state",
+            "state_code": code,
+            "supported_states": supported,
+            "coverage": "partial",
+            "errors": errors,
+            "warnings": warnings,
+        }
 
     state_name = state_data.get("state_name", code)
     as_of = state_data.get("as_of", "unknown")
@@ -103,6 +112,10 @@ def calculate_court_fee(  # noqa: C901
         "fee_amount": round(fee_amount, 2),
         "calculation_basis": calculation_basis,
         "as_of": as_of,
+        "source_ref": state_data.get("source_ref", "Court Fees Act, 1870 & State Amendments"),
+        "last_verified": state_data.get("last_verified", "2025-01-01"),
+        "coverage": "partial",
+        "supported_states": supported,
         "errors": errors,
         "warnings": warnings,
     }

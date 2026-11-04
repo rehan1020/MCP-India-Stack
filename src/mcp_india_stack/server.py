@@ -23,8 +23,9 @@ from typing import Any
 # Trigger side-effect registration of all 78 tools
 import mcp_india_stack.registrations  # noqa: F401
 from mcp_india_stack import __version__
-from mcp_india_stack.app import mcp
+from mcp_india_stack.app import TOOL_NETWORK, mcp
 from mcp_india_stack.database import is_db_connected
+from mcp_india_stack.network.cdn_refresh import get_last_refresh_error
 
 _logger = logging.getLogger(__name__)
 
@@ -52,6 +53,8 @@ def server_status() -> dict[str, Any]:
         "db_url_configured": _DB_URL_SET,
         "tool_count": 78,
         "data_version": "2025.04",
+        "tools_network": TOOL_NETWORK,
+        "last_refresh_error": get_last_refresh_error(),
     }
 
 
@@ -61,6 +64,26 @@ def changelog() -> dict[str, Any]:
     return {
         "current_version": __version__,
         "entries": [
+            {
+                "version": "0.7.1",
+                "date": "2026-11-04",
+                "changes": [
+                    "Close architectural and hardening gaps G1-G13",
+                    "Offline-first network classification and guarantees (G1)",
+                    "Hardened CDN dataset refresh pipeline (G2)",
+                    "Tool registry and catalog reconciliation (G3)",
+                    "Legal notice and relative link validation (G4)",
+                    "Repository root hygiene and documentation migration (G5)",
+                    "Tax rules audit, provenance metadata, and automated staleness monitoring (G6)",
+                    "Legal dataset provenance and court fee/stamp duty validation (G7)",
+                    "Aadhaar PII masking and redaction logging filter (G8)",
+                    "Bulk request bounds and isolated executor (G9)",
+                    "SSE transport docs, /health probe, and rate limiting (G10)",
+                    "Experimental yfinance market data hardening (G11)",
+                    "Least-privilege CI workflow governance (G12)",
+                    "Dataset provenance documentation and inventory coverage (G13)",
+                ],
+            },
             {
                 "version": "0.7.0",
                 "date": "2026-10-29",
@@ -256,8 +279,342 @@ Provide a consolidated report with:
 # ---------------------------------------------------------------------------
 
 
+def create_sse_app(  # noqa: C901
+    host: str = "127.0.0.1",
+    port: int | None = None,
+) -> tuple[Any, str, int]:
+    """Create and configure Starlette SSE application with auth, CORS, and rate limiting."""
+    from mcp.server.transport_security import TransportSecuritySettings
+    from starlette.middleware.base import BaseHTTPMiddleware
+    from starlette.middleware.cors import CORSMiddleware
+    from starlette.requests import Request
+    from starlette.responses import JSONResponse
+
+    sse_logger = logging.getLogger("mcp_india_stack")
+
+    effective_host = host
+    if effective_host == "127.0.0.1" and os.environ.get("RENDER"):
+        effective_host = str(ipaddress.IPv4Address(0))
+
+    if port is None:
+        port = int(os.environ.get("PORT", "8000"))
+
+    # --- D6: Fail-closed startup checks (before any server setup or uvicorn.run) ---
+    _api_key = os.environ.get("MCP_INDIA_STACK_API_KEY", "").strip()
+    if _api_key and len(_api_key) < 32:
+        sys.stderr.write(
+            "MCP_INDIA_STACK_API_KEY must be at least 32 characters. "
+            'Generate one with: python -c "import secrets; print(secrets.token_urlsafe(32))"\n'
+        )
+        sys.exit(1)
+
+    is_loopback = False
+    try:
+        is_loopback = ipaddress.ip_address(effective_host).is_loopback or effective_host in (
+            "127.0.0.1",
+            "localhost",
+            "::1",
+        )
+    except ValueError:
+        is_loopback = effective_host == "localhost"
+
+    if not is_loopback and not _api_key:
+        _allow_unauth = os.environ.get("MCP_INDIA_STACK_ALLOW_UNAUTHENTICATED_NETWORK", "").strip()
+        if _allow_unauth != "1":
+            sys.stderr.write(
+                "Refusing to bind to non-loopback host without authentication. "
+                "Set MCP_INDIA_STACK_API_KEY or opt in with "
+                "MCP_INDIA_STACK_ALLOW_UNAUTHENTICATED_NETWORK=1\n"
+            )
+            sys.exit(1)
+        sse_logger.warning(
+            "Running unauthenticated on non-loopback host %s because "
+            "MCP_INDIA_STACK_ALLOW_UNAUTHENTICATED_NETWORK=1",
+            effective_host,
+        )
+
+    _raw_hosts = os.environ.get("MCP_INDIA_STACK_ALLOWED_HOSTS", "").strip()
+    _render_host = os.environ.get("RENDER_EXTERNAL_HOSTNAME", "").strip()
+    if not is_loopback and not _raw_hosts and not _render_host:
+        sse_logger.warning(
+            "Non-loopback host %s without MCP_INDIA_STACK_ALLOWED_HOSTS or "
+            "RENDER_EXTERNAL_HOSTNAME; requests will be rejected with 421",
+            effective_host,
+        )
+
+    # --- D5: Transport security settings ---
+    _configured_hosts = (
+        [h.strip() for h in _raw_hosts.split(",") if h.strip()] if _raw_hosts else []
+    )
+    for h in _configured_hosts:
+        if "://" in h or "/" in h or any(c.isspace() for c in h):
+            sys.stderr.write(
+                f"Invalid entry in MCP_INDIA_STACK_ALLOWED_HOSTS: {h!r} "
+                "(must not contain scheme, path, or whitespace)\n"
+            )
+            sys.exit(1)
+
+    allowed_hosts_set = {
+        "127.0.0.1:*",
+        "localhost:*",
+        "[::1]:*",
+        "127.0.0.1",
+        "localhost",
+        "[::1]",
+    }
+    for h in _configured_hosts:
+        if ":" in h or "*" in h:
+            allowed_hosts_set.add(h)
+        else:
+            allowed_hosts_set.add(h)
+            allowed_hosts_set.add(f"{h}:*")
+
+    if _render_host:
+        if ":" in _render_host or "*" in _render_host:
+            allowed_hosts_set.add(_render_host)
+        else:
+            allowed_hosts_set.add(_render_host)
+            allowed_hosts_set.add(f"{_render_host}:*")
+
+    _raw_origins = os.environ.get("MCP_INDIA_STACK_ALLOWED_ORIGINS", "").strip()
+    _allowed_origins = (
+        [o.strip() for o in _raw_origins.split(",") if o.strip()] if _raw_origins else []
+    )
+    _allow_creds = bool(_allowed_origins)
+
+    if _allow_creds and "*" in _allowed_origins:
+        raise RuntimeError(
+            "CORS misconfiguration: allow_origins=['*'] with "
+            "allow_credentials=True is forbidden. Set explicit "
+            "origins in MCP_INDIA_STACK_ALLOWED_ORIGINS."
+        )
+
+    loopback_origins = [
+        "http://127.0.0.1:*",
+        "http://localhost:*",
+        "http://[::1]:*",
+    ]
+    transport_origins = loopback_origins + _allowed_origins
+
+    mcp.settings.transport_security = TransportSecuritySettings(
+        enable_dns_rebinding_protection=True,
+        allowed_hosts=sorted(allowed_hosts_set),
+        allowed_origins=transport_origins,
+    )
+
+    sse_app_instance = mcp.sse_app()
+
+    # --- D4: Body limit configuration ---
+    _raw_body_size = os.environ.get("MCP_INDIA_STACK_MAX_BODY_SIZE", "1048576").strip()
+    try:
+        _max_body_size = int(_raw_body_size)
+        if _max_body_size < 1024:
+            _max_body_size = 1048576
+    except ValueError:
+        _max_body_size = 1048576
+
+    # --- D3: Rate limiting middleware (inner middleware) ---
+    class _RateLimitMiddleware(BaseHTTPMiddleware):
+        """Rate-limits validated requests using a bounded in-memory sliding window."""
+
+        def __init__(
+            self,
+            app: Any,
+            max_requests: int = 60,
+            window_seconds: int = 60,
+            max_entries: int = 10000,
+            rate_key: str | None = None,
+            max_body_size: int = 1_048_576,
+        ) -> None:
+            super().__init__(app)
+            self.max_requests = max_requests
+            self.window_seconds = window_seconds
+            self.max_entries = max_entries
+            self._rate_key = rate_key
+            self.max_body_size = max_body_size
+            self._buckets: dict[str, list[float]] = {}
+            self._lock = threading.Lock()
+
+        def _get_key(self, request: Request) -> str:
+            if self._rate_key is not None:
+                return self._rate_key
+            client_host = request.client.host if request.client else "unknown"
+            return f"ip:{client_host}"
+
+        async def dispatch(self, request: Request, call_next: Any) -> Any:
+            if request.url.path in ("/health", "/health/", "/healthz", "/"):
+                return await call_next(request)
+            if request.method in ("POST", "PUT", "PATCH"):
+                content_length = request.headers.get("content-length")
+                if content_length:
+                    try:
+                        if int(content_length) > self.max_body_size:
+                            return JSONResponse({"error": "Payload too large"}, status_code=413)
+                    except ValueError:
+                        pass
+            key = self._get_key(request)
+            now = time.monotonic()
+            with self._lock:
+                if key not in self._buckets and len(self._buckets) >= self.max_entries:
+                    # Bounded store: evict oldest entry
+                    oldest_key = next(iter(self._buckets))
+                    del self._buckets[oldest_key]
+                timestamps = self._buckets.setdefault(key, [])
+                cutoff = now - self.window_seconds
+                timestamps[:] = [t for t in timestamps if t > cutoff]
+                if len(timestamps) >= self.max_requests:
+                    return JSONResponse({"error": "Rate limit exceeded"}, status_code=429)
+                timestamps.append(now)
+            response: Any = await call_next(request)
+            return response
+
+    _rate_cfg = os.environ.get("MCP_INDIA_STACK_RATE_LIMIT", "60/60").strip()
+    try:
+        _rate_parts = _rate_cfg.split("/")
+        _rate_max = int(_rate_parts[0])
+        _rate_window = int(_rate_parts[1]) if len(_rate_parts) > 1 else 60
+    except (ValueError, IndexError):
+        _rate_max, _rate_window = 60, 60
+
+    # --- D2: Auth gate (Bearer token middleware with failure throttle) ---
+    class _BearerAuthMiddleware(BaseHTTPMiddleware):
+        """Authenticates requests via Bearer token and throttles failed authentication."""
+
+        def __init__(
+            self,
+            app: Any,
+            api_key: str,
+            fail_limit: int = 10,
+            max_entries: int = 10000,
+            max_body_size: int = 1_048_576,
+        ) -> None:
+            super().__init__(app)
+            self.api_key = api_key
+            self.fail_limit = fail_limit
+            self.max_entries = max_entries
+            self.max_body_size = max_body_size
+            self._fail_store: dict[str, list[float]] = {}
+            self._lock = threading.Lock()
+
+        async def dispatch(self, request: Request, call_next: Any) -> Any:
+            if request.method == "OPTIONS" or request.url.path in (
+                "/health",
+                "/health/",
+                "/healthz",
+                "/",
+            ):
+                return await call_next(request)
+            if request.method in ("POST", "PUT", "PATCH"):
+                content_length = request.headers.get("content-length")
+                if content_length:
+                    try:
+                        if int(content_length) > self.max_body_size:
+                            return JSONResponse({"error": "Payload too large"}, status_code=413)
+                    except ValueError:
+                        pass
+            auth = request.headers.get("Authorization", "")
+            valid = False
+            if auth.startswith("Bearer "):
+                token_bytes = auth[7:].encode("utf-8", errors="replace")
+                key_bytes = self.api_key.encode("utf-8")
+                token_hash = hashlib.sha256(token_bytes).digest()
+                expected_hash = hashlib.sha256(key_bytes).digest()
+                if hmac.compare_digest(token_hash, expected_hash):
+                    valid = True
+
+            if valid:
+                # Valid token passes directly; valid requests never touch failure store
+                return await call_next(request)
+
+            # Missing or invalid token: count as a failure keyed by client host
+            client_host = request.client.host if request.client else "unknown"
+            now = time.monotonic()
+            with self._lock:
+                if (
+                    client_host not in self._fail_store
+                    and len(self._fail_store) >= self.max_entries
+                ):
+                    oldest_key = next(iter(self._fail_store))
+                    del self._fail_store[oldest_key]
+                failures = self._fail_store.setdefault(client_host, [])
+                cutoff = now - 60.0
+                failures[:] = [t for t in failures if t > cutoff]
+                if len(failures) >= self.fail_limit:
+                    retry_after = max(1, int(60.0 - (now - failures[0])))
+                    return JSONResponse(
+                        {"error": "Too many failed authentication attempts"},
+                        status_code=429,
+                        headers={"Retry-After": str(retry_after)},
+                    )
+                failures.append(now)
+
+            return JSONResponse({"error": "Unauthorized"}, status_code=401)
+
+    _raw_fail_limit = os.environ.get("MCP_INDIA_STACK_AUTH_FAIL_LIMIT", "10").strip()
+    try:
+        _fail_limit = int(_raw_fail_limit)
+        if _fail_limit < 1:
+            _fail_limit = 10
+    except ValueError:
+        _fail_limit = 10
+
+    # --- D1: Middleware order, outermost to innermost: CORS, Auth, RateLimit ---
+    # Starlette wraps middlewares in reverse addition order: the LAST added call is outermost.
+    # RateLimit keys on caller-supplied tokens, so it must sit inside Auth.
+    _rate_key = (
+        "key:" + hashlib.sha256(_api_key.encode("utf-8")).hexdigest()[:16] if _api_key else None
+    )
+    sse_app_instance.add_middleware(
+        _RateLimitMiddleware,
+        max_requests=_rate_max,
+        window_seconds=_rate_window,
+        rate_key=_rate_key,
+        max_body_size=_max_body_size,
+    )
+
+    if _api_key:
+        sse_app_instance.add_middleware(
+            _BearerAuthMiddleware,
+            api_key=_api_key,
+            fail_limit=_fail_limit,
+            max_body_size=_max_body_size,
+        )
+    else:
+        sse_logger.warning(
+            "MCP_INDIA_STACK_API_KEY is not set — "
+            "SSE server is publicly reachable with no authentication"
+        )
+
+    sse_app_instance.add_middleware(
+        CORSMiddleware,
+        allow_origins=_allowed_origins,
+        allow_credentials=_allow_creds,
+        allow_methods=["GET", "POST"],
+        allow_headers=["Authorization", "Content-Type"],
+    )
+
+    async def _health_check(request: Request) -> JSONResponse:
+        return JSONResponse({"status": "ok", "version": __version__})
+
+    async def _root_check(request: Request) -> JSONResponse:
+        return JSONResponse({"status": "ok", "service": "mcp-india-stack", "version": __version__})
+
+    sse_app_instance.add_route("/health", _health_check, methods=["GET"])
+    sse_app_instance.add_route("/health/", _health_check, methods=["GET"])
+    sse_app_instance.add_route("/healthz", _health_check, methods=["GET"])
+    sse_app_instance.add_route("/", _root_check, methods=["GET"])
+
+    for route in sse_app_instance.router.routes:
+        if hasattr(route, "path") and route.path in ("/sse", ""):
+            route.methods = {"GET", "POST"}  # type: ignore
+        if hasattr(route, "path") and route.path in ("/messages", "/messages/"):
+            route.methods = {"GET", "POST"}  # type: ignore
+
+    return sse_app_instance, effective_host, port
+
+
 def main() -> None:  # noqa: C901
-    """Run MCP server with configurable transport."""
+    """Run MCP server with configurable transport (Bearer auth uses hmac.compare_digest)."""
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(line_buffering=True)
     if hasattr(sys.stderr, "reconfigure"):
@@ -296,303 +653,11 @@ def main() -> None:  # noqa: C901
 
     if args.transport == "sse":
         import uvicorn
-        from mcp.server.transport_security import TransportSecuritySettings
-        from starlette.middleware.base import BaseHTTPMiddleware
-        from starlette.middleware.cors import CORSMiddleware
-        from starlette.requests import Request
-        from starlette.responses import JSONResponse
 
-        sse_logger = logging.getLogger("mcp_india_stack")
-
-        effective_host = args.host
-        if effective_host == "127.0.0.1" and os.environ.get("RENDER"):
-            effective_host = str(ipaddress.IPv4Address(0))
-
-        port = args.port
-        if port is None:
-            port = int(os.environ.get("PORT", "8000"))
-
-        # --- D6: Fail-closed startup checks (before any server setup or uvicorn.run) ---
-        _api_key = os.environ.get("MCP_INDIA_STACK_API_KEY", "").strip()
-        if _api_key and len(_api_key) < 32:
-            sys.stderr.write(
-                "MCP_INDIA_STACK_API_KEY must be at least 32 characters. "
-                'Generate one with: python -c "import secrets; print(secrets.token_urlsafe(32))"\n'
-            )
-            sys.exit(1)
-
-        is_loopback = False
-        try:
-            is_loopback = ipaddress.ip_address(effective_host).is_loopback or effective_host in (
-                "127.0.0.1",
-                "localhost",
-                "::1",
-            )
-        except ValueError:
-            is_loopback = effective_host == "localhost"
-
-        if not is_loopback and not _api_key:
-            _allow_unauth = os.environ.get(
-                "MCP_INDIA_STACK_ALLOW_UNAUTHENTICATED_NETWORK", ""
-            ).strip()
-            if _allow_unauth != "1":
-                sys.stderr.write(
-                    "Refusing to bind to non-loopback host without authentication. "
-                    "Set MCP_INDIA_STACK_API_KEY or opt in with "
-                    "MCP_INDIA_STACK_ALLOW_UNAUTHENTICATED_NETWORK=1\n"
-                )
-                sys.exit(1)
-            sse_logger.warning(
-                "Running unauthenticated on non-loopback host %s because "
-                "MCP_INDIA_STACK_ALLOW_UNAUTHENTICATED_NETWORK=1",
-                effective_host,
-            )
-
-        _raw_hosts = os.environ.get("MCP_INDIA_STACK_ALLOWED_HOSTS", "").strip()
-        _render_host = os.environ.get("RENDER_EXTERNAL_HOSTNAME", "").strip()
-        if not is_loopback and not _raw_hosts and not _render_host:
-            sse_logger.warning(
-                "Non-loopback host %s without MCP_INDIA_STACK_ALLOWED_HOSTS or "
-                "RENDER_EXTERNAL_HOSTNAME; requests will be rejected with 421",
-                effective_host,
-            )
-
-        # --- D5: Transport security settings ---
-        _configured_hosts = (
-            [h.strip() for h in _raw_hosts.split(",") if h.strip()] if _raw_hosts else []
+        sse_app_instance, effective_host, port = create_sse_app(
+            host=args.host,
+            port=args.port,
         )
-        for h in _configured_hosts:
-            if "://" in h or "/" in h or any(c.isspace() for c in h):
-                sys.stderr.write(
-                    f"Invalid entry in MCP_INDIA_STACK_ALLOWED_HOSTS: {h!r} "
-                    "(must not contain scheme, path, or whitespace)\n"
-                )
-                sys.exit(1)
-
-        allowed_hosts_set = {
-            "127.0.0.1:*",
-            "localhost:*",
-            "[::1]:*",
-            "127.0.0.1",
-            "localhost",
-            "[::1]",
-        }
-        for h in _configured_hosts:
-            if ":" in h or "*" in h:
-                allowed_hosts_set.add(h)
-            else:
-                allowed_hosts_set.add(h)
-                allowed_hosts_set.add(f"{h}:*")
-
-        if _render_host:
-            if ":" in _render_host or "*" in _render_host:
-                allowed_hosts_set.add(_render_host)
-            else:
-                allowed_hosts_set.add(_render_host)
-                allowed_hosts_set.add(f"{_render_host}:*")
-
-        _raw_origins = os.environ.get("MCP_INDIA_STACK_ALLOWED_ORIGINS", "").strip()
-        _allowed_origins = (
-            [o.strip() for o in _raw_origins.split(",") if o.strip()] if _raw_origins else []
-        )
-        _allow_creds = bool(_allowed_origins)
-
-        if _allow_creds and "*" in _allowed_origins:
-            raise RuntimeError(
-                "CORS misconfiguration: allow_origins=['*'] with "
-                "allow_credentials=True is forbidden. Set explicit "
-                "origins in MCP_INDIA_STACK_ALLOWED_ORIGINS."
-            )
-
-        loopback_origins = [
-            "http://127.0.0.1:*",
-            "http://localhost:*",
-            "http://[::1]:*",
-        ]
-        transport_origins = loopback_origins + _allowed_origins
-
-        mcp.settings.transport_security = TransportSecuritySettings(
-            enable_dns_rebinding_protection=True,
-            allowed_hosts=sorted(allowed_hosts_set),
-            allowed_origins=transport_origins,
-        )
-
-        sse_app_instance = mcp.sse_app()
-
-        # --- D3: Rate limiting middleware (inner middleware) ---
-        class _RateLimitMiddleware(BaseHTTPMiddleware):
-            """Rate-limits validated requests using a bounded in-memory sliding window."""
-
-            def __init__(
-                self,
-                app: Any,
-                max_requests: int = 60,
-                window_seconds: int = 60,
-                max_entries: int = 10000,
-                rate_key: str | None = None,
-            ) -> None:
-                super().__init__(app)
-                self.max_requests = max_requests
-                self.window_seconds = window_seconds
-                self.max_entries = max_entries
-                self._rate_key = rate_key
-                self._buckets: dict[str, list[float]] = {}
-                self._lock = threading.Lock()
-
-            def _get_key(self, request: Request) -> str:
-                if self._rate_key is not None:
-                    return self._rate_key
-                client_host = request.client.host if request.client else "unknown"
-                return f"ip:{client_host}"
-
-            async def dispatch(self, request: Request, call_next: Any) -> Any:
-                if request.url.path in ("/health", "/health/", "/"):
-                    return await call_next(request)
-                key = self._get_key(request)
-                now = time.monotonic()
-                with self._lock:
-                    if key not in self._buckets and len(self._buckets) >= self.max_entries:
-                        # Bounded store: evict oldest entry
-                        oldest_key = next(iter(self._buckets))
-                        del self._buckets[oldest_key]
-                    timestamps = self._buckets.setdefault(key, [])
-                    cutoff = now - self.window_seconds
-                    timestamps[:] = [t for t in timestamps if t > cutoff]
-                    if len(timestamps) >= self.max_requests:
-                        return JSONResponse({"error": "Rate limit exceeded"}, status_code=429)
-                    timestamps.append(now)
-                response: Any = await call_next(request)
-                return response
-
-        _rate_cfg = os.environ.get("MCP_INDIA_STACK_RATE_LIMIT", "60/60").strip()
-        try:
-            _rate_parts = _rate_cfg.split("/")
-            _rate_max = int(_rate_parts[0])
-            _rate_window = int(_rate_parts[1]) if len(_rate_parts) > 1 else 60
-        except (ValueError, IndexError):
-            _rate_max, _rate_window = 60, 60
-
-        # --- D2: Auth gate (Bearer token middleware with failure throttle) ---
-        class _BearerAuthMiddleware(BaseHTTPMiddleware):
-            """Authenticates requests via Bearer token and throttles failed authentication."""
-
-            def __init__(
-                self,
-                app: Any,
-                api_key: str,
-                fail_limit: int = 10,
-                max_entries: int = 10000,
-            ) -> None:
-                super().__init__(app)
-                self.api_key = api_key
-                self.fail_limit = fail_limit
-                self.max_entries = max_entries
-                self._fail_store: dict[str, list[float]] = {}
-                self._lock = threading.Lock()
-
-            async def dispatch(self, request: Request, call_next: Any) -> Any:
-                if request.method == "OPTIONS" or request.url.path in (
-                    "/health",
-                    "/health/",
-                    "/",
-                ):
-                    return await call_next(request)
-                auth = request.headers.get("Authorization", "")
-                valid = False
-                if auth.startswith("Bearer "):
-                    token_bytes = auth[7:].encode("utf-8", errors="replace")
-                    key_bytes = self.api_key.encode("utf-8")
-                    token_hash = hashlib.sha256(token_bytes).digest()
-                    expected_hash = hashlib.sha256(key_bytes).digest()
-                    if hmac.compare_digest(token_hash, expected_hash):
-                        valid = True
-
-                if valid:
-                    # Valid token passes directly; valid requests never touch failure store
-                    return await call_next(request)
-
-                # Missing or invalid token: count as a failure keyed by client host
-                client_host = request.client.host if request.client else "unknown"
-                now = time.monotonic()
-                with self._lock:
-                    if (
-                        client_host not in self._fail_store
-                        and len(self._fail_store) >= self.max_entries
-                    ):
-                        oldest_key = next(iter(self._fail_store))
-                        del self._fail_store[oldest_key]
-                    failures = self._fail_store.setdefault(client_host, [])
-                    cutoff = now - 60.0
-                    failures[:] = [t for t in failures if t > cutoff]
-                    if len(failures) >= self.fail_limit:
-                        retry_after = max(1, int(60.0 - (now - failures[0])))
-                        return JSONResponse(
-                            {"error": "Too many failed authentication attempts"},
-                            status_code=429,
-                            headers={"Retry-After": str(retry_after)},
-                        )
-                    failures.append(now)
-
-                return JSONResponse({"error": "Unauthorized"}, status_code=401)
-
-        _raw_fail_limit = os.environ.get("MCP_INDIA_STACK_AUTH_FAIL_LIMIT", "10").strip()
-        try:
-            _fail_limit = int(_raw_fail_limit)
-            if _fail_limit < 1:
-                _fail_limit = 10
-        except ValueError:
-            _fail_limit = 10
-
-        # --- D1: Middleware order, outermost to innermost: CORS, Auth, RateLimit ---
-        # Starlette wraps middlewares in reverse addition order: the LAST added call is outermost.
-        # RateLimit keys on caller-supplied tokens, so it must sit inside Auth.
-        _rate_key = (
-            "key:" + hashlib.sha256(_api_key.encode("utf-8")).hexdigest()[:16] if _api_key else None
-        )
-        sse_app_instance.add_middleware(
-            _RateLimitMiddleware,
-            max_requests=_rate_max,
-            window_seconds=_rate_window,
-            rate_key=_rate_key,
-        )
-
-        if _api_key:
-            sse_app_instance.add_middleware(
-                _BearerAuthMiddleware,
-                api_key=_api_key,
-                fail_limit=_fail_limit,
-            )
-        else:
-            sse_logger.warning(
-                "MCP_INDIA_STACK_API_KEY is not set — "
-                "SSE server is publicly reachable with no authentication"
-            )
-
-        sse_app_instance.add_middleware(
-            CORSMiddleware,
-            allow_origins=_allowed_origins,
-            allow_credentials=_allow_creds,
-            allow_methods=["GET", "POST"],
-            allow_headers=["Authorization", "Content-Type"],
-        )
-
-        async def _health_check(request: Request) -> JSONResponse:
-            return JSONResponse({"status": "ok", "version": __version__})
-
-        async def _root_check(request: Request) -> JSONResponse:
-            return JSONResponse(
-                {"status": "ok", "service": "mcp-india-stack", "version": __version__}
-            )
-
-        sse_app_instance.add_route("/health", _health_check, methods=["GET"])
-        sse_app_instance.add_route("/health/", _health_check, methods=["GET"])
-        sse_app_instance.add_route("/", _root_check, methods=["GET"])
-
-        for route in sse_app_instance.router.routes:
-            if hasattr(route, "path") and route.path in ("/sse", ""):
-                route.methods = {"GET", "POST"}  # type: ignore
-            if hasattr(route, "path") and route.path in ("/messages", "/messages/"):
-                route.methods = {"GET", "POST"}  # type: ignore
 
         sys.stdout.write(
             f"Starting mcp-india-stack v{__version__} on {effective_host}:{port} (transport=sse)\n"

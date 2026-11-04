@@ -19,7 +19,7 @@ def get_stock_quote(
         ),
     ],
 ) -> dict[str, Any]:
-    """Fetch current (delayed) price and summary for a given Indian stock ticker."""
+    """[Experimental] Fetch current (delayed) price and summary for a given Indian stock ticker."""
     return core_get_stock_quote(symbol=symbol)
 
 
@@ -41,5 +41,5 @@ def get_stock_history(
         ),
     ] = "1mo",
 ) -> dict[str, Any]:
-    """Fetch historical end-of-day data for a given Indian stock ticker."""
+    """[Experimental] Fetch historical end-of-day data for a given Indian stock ticker."""
     return core_get_stock_history(symbol=symbol, period=period)

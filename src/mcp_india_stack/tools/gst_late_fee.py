@@ -4,6 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.tools.rules_metadata import (
+    attach_rule_metadata,
+    validate_financial_year,
+)
+
 DISCLAIMER = "As per GST Council notifications up to 2024. Verify for any waivers."
 
 
@@ -12,6 +17,7 @@ def calculate_gst_late_fee(
     days_delayed: int,
     annual_turnover: float,
     has_nil_liability: bool = False,
+    financial_year: str = "2025-26",
 ) -> dict[str, Any]:
     """Calculate GST late filing penalty.
 
@@ -20,10 +26,16 @@ def calculate_gst_late_fee(
         days_delayed: Number of days delayed
         annual_turnover: Annual turnover for cap calculation
         has_nil_liability: True if nil return
+        financial_year: Financial year (defaults to "2025-26")
 
     Returns:
         Dict with late fee breakdown.
     """
+    is_valid_fy, err_resp = validate_financial_year("gst_late_fee", financial_year)
+    if not is_valid_fy:
+        assert err_resp is not None
+        return err_resp
+
     errors = []
     if return_type not in ("GSTR1", "GSTR3B", "GSTR9"):
         errors.append("Invalid return_type")
@@ -31,7 +43,8 @@ def calculate_gst_late_fee(
         errors.append("days_delayed cannot be negative")
 
     if errors:
-        return {"errors": errors, "disclaimer": DISCLAIMER}
+        err_res = {"errors": errors, "disclaimer": DISCLAIMER}
+        return attach_rule_metadata(err_res, "gst_late_fee", financial_year)
 
     cap: float = 0.0
 
@@ -61,7 +74,7 @@ def calculate_gst_late_fee(
     cgst_fee = computed_fee / 2
     sgst_fee = computed_fee / 2
 
-    return {
+    res = {
         "return_type": return_type,
         "days_delayed": days_delayed,
         "daily_fee": daily_fee,
@@ -73,3 +86,4 @@ def calculate_gst_late_fee(
         "note": "Interest on tax liability is separate.",
         "disclaimer": DISCLAIMER,
     }
+    return attach_rule_metadata(res, "gst_late_fee", financial_year)

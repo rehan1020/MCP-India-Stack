@@ -4,6 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.tools.rules_metadata import (
+    attach_rule_metadata,
+    validate_financial_year,
+)
+
 # Section 10(13A): only these 4 are metros for HRA purposes
 METRO_CITIES_HRA = frozenset(
     {
@@ -43,8 +48,14 @@ def calculate_hra_exemption(
     rent_paid: float,
     city_type: str = "non_metro",
     is_government_employee: bool = False,
+    financial_year: str = "2025-26",
 ) -> dict[str, Any]:
     """Calculate HRA exemption under Section 10(13A)."""
+    is_valid_fy, err_resp = validate_financial_year("hra", financial_year)
+    if not is_valid_fy:
+        assert err_resp is not None
+        return err_resp
+
     errors: list[str] = []
     warnings: list[str] = []
 
@@ -90,7 +101,7 @@ def calculate_hra_exemption(
     elif rent_paid <= annual_basic * 0.1:
         warnings.append("Rent paid is less than 10% of salary - check if HRA is correctly claimed")
 
-    return {
+    res = {
         "exemption": round(exemption, 2),
         "exempt_hra": round(exemption, 2),
         "taxable_hra": round(taxable_hra, 2),
@@ -108,6 +119,7 @@ def calculate_hra_exemption(
         "errors": errors,
         "warnings": warnings,
     }
+    return attach_rule_metadata(res, "hra", financial_year)
 
 
 def calculate_hra_for_salary_structure(
@@ -116,6 +128,7 @@ def calculate_hra_for_salary_structure(
     monthly_rent: float,
     city: str,
     is_government: bool = False,
+    financial_year: str = "2025-26",
 ) -> dict[str, Any]:
     """Calculate HRA using monthly figures with auto city detection."""
     city_type, city_warning = _classify_city(city)
@@ -126,12 +139,14 @@ def calculate_hra_for_salary_structure(
         rent_paid=monthly_rent * 12,
         city_type=city_type,
         is_government_employee=is_government,
+        financial_year=financial_year,
     )
 
     if city_warning:
         result.setdefault("warnings", []).append(city_warning)
 
-    result["monthly_exemption"] = round(result["exemption"] / 12, 2)
-    result["monthly_taxable_hra"] = round(result["taxable_hra"] / 12, 2)
+    if "exemption" in result:
+        result["monthly_exemption"] = round(result["exemption"] / 12, 2)
+        result["monthly_taxable_hra"] = round(result["taxable_hra"] / 12, 2)
 
     return result

@@ -294,6 +294,18 @@ def calculate_limitation_deadline(
     cause_of_action_date: Annotated[
         str, Field(description="Date when the cause of action arose (YYYY-MM-DD)")
     ],
+    exclusion_days: Annotated[
+        int,
+        Field(description="Days excluded under Section 12 (e.g. for obtaining copies)"),
+    ] = 0,
+    court_closed_on_deadline: Annotated[
+        bool,
+        Field(description="Whether court is closed on deadline day under Section 4"),
+    ] = False,
+    court_reopen_date: Annotated[
+        str | None,
+        Field(description="Next reopening date if court is closed on deadline (Section 4)"),
+    ] = None,
 ) -> dict[str, Any]:
     """Calculate the deadline under the Limitation Act.
 
@@ -303,6 +315,9 @@ def calculate_limitation_deadline(
     Args:
         suit_type: Type of suit/appeal/application.
         cause_of_action_date: Date the cause of action arose (YYYY-MM-DD).
+        exclusion_days: Days excluded under Section 12.
+        court_closed_on_deadline: Whether court is closed on deadline date.
+        court_reopen_date: Date court reopens if closed on deadline.
 
     Returns:
         Standard envelope with deadline date and limitation period.
@@ -312,7 +327,11 @@ def calculate_limitation_deadline(
     """
     try:
         result = core_calculate_limitation_deadline(
-            suit_type=suit_type, cause_of_action_date=cause_of_action_date
+            suit_type=suit_type,
+            cause_of_action_date=cause_of_action_date,
+            exclusion_days=exclusion_days,
+            court_closed_on_deadline=court_closed_on_deadline,
+            court_reopen_date=court_reopen_date,
         )
         return build_response(
             success=len(result.get("errors", [])) == 0,
