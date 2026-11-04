@@ -76,7 +76,7 @@
 
 ## 🔗 Links
 
-- **Deployment:** [https://pypi.org/project/mcp-india-stack/](https://pypi.org/project/mcp-india-stack/)
+- **Deployment:** [docs/deployment.md](docs/deployment.md)
 - **PPT:** [https://gamma.app/docs/Problem-India-lacks-native-fintech-primitives-for-AI-agents-d1izzfemlvfvkf0?mode=doc](https://gamma.app/docs/Problem-India-lacks-native-fintech-primitives-for-AI-agents-d1izzfemlvfvkf0?mode=doc)
 - **GitHub:** [https://github.com/rehan1020/MCP-India-Stack](https://github.com/rehan1020/MCP-India-Stack)
 - **PyPI:** [https://pypi.org/project/mcp-india-stack/](https://pypi.org/project/mcp-india-stack/)
