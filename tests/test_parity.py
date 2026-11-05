@@ -63,12 +63,12 @@ class TestToolParity:
             f"core module counterpart: {sorted(missing)}"
         )
 
-    def test_tool_count_is_78(self) -> None:
-        """Smoke test: exactly 78 tools should be registered."""
+    def test_tool_count_is_80(self) -> None:
+        """Smoke test: exactly 80 tools should be registered."""
         registered = _get_registered_tool_names()
         # When elevated tools are disabled, INITIATE tools won't register
-        # So we check >= 74 (78 - 4 INITIATE tools)
-        assert len(registered) >= 74, f"Expected >= 74 tools, got {len(registered)}"
+        # So we check >= 76 (80 - 4 INITIATE tools)
+        assert len(registered) >= 76, f"Expected >= 76 tools, got {len(registered)}"
 
     def test_no_tool_registrations_in_server_py(self) -> None:
         """Grep-equivalent: server.py must not contain @mcp.tool decorators."""
@@ -149,6 +149,10 @@ VERIFYING_TOOLS_SAMPLE_INPUTS: dict[str, dict[str, Any]] = {
     "decode_isin": {"isin": "INE002A01018"},
     "lookup_bbps_biller": {"biller_id": "MSED00001"},
     "lookup_hsn_code": {"code": "0101"},
+    "verify_einvoice_qr": {"qr_text": "sample.jwt.string"},
+    "verify_aadhaar_offline_artifact": {
+        "xml_or_zip_bytes_base64": "<OfflinePaperlessKyc referenceId='1234' />"
+    },
 }
 
 

@@ -33,6 +33,12 @@ from mcp_india_stack.tools.pan_type import decode_pan_type as core_decode_pan_ty
 from mcp_india_stack.tools.pran import validate_pran as core_validate_pran
 from mcp_india_stack.tools.tan import validate_tan as core_validate_tan
 from mcp_india_stack.tools.upi import validate_upi_vpa as core_validate_upi_vpa
+from mcp_india_stack.tools.verify_aadhaar_artifact import (
+    verify_aadhaar_offline_artifact as core_verify_aadhaar_offline_artifact,
+)
+from mcp_india_stack.tools.verify_einvoice import (
+    verify_einvoice_qr as core_verify_einvoice_qr,
+)
 from mcp_india_stack.utils.responses import build_response
 
 
@@ -654,6 +660,71 @@ def decode_digilocker_uri(
         )
 
 
+@mcp.tool(annotations=ToolAnnotations(readOnlyHint=True, idempotentHint=True, openWorldHint=False))
+def verify_einvoice_qr(
+    qr_text: Annotated[
+        str,
+        Field(description="Signed JWT string extracted from GST B2B e-invoice QR code"),
+    ],
+    expected_gstin: Annotated[
+        str | None,
+        Field(default=None, description="Optional expected supplier GSTIN"),
+    ] = None,
+    expected_irn: Annotated[
+        str | None,
+        Field(default=None, description="Optional expected 64-character hex IRN"),
+    ] = None,
+) -> dict[str, Any]:
+    """Verify cryptographically signed QR code from Indian GST B2B e-invoices (A3 Authenticity).
+
+    Validates the NIC RSA digital signature against bundled public trust anchors,
+    verifies internal claims, and cross-checks the 64-char Invoice Reference Number (IRN)
+    against SHA-256(SupplierGSTIN + DocTyp + DocNo + FinYr).
+    """
+    try:
+        return core_verify_einvoice_qr(
+            qr_text=qr_text, expected_gstin=expected_gstin, expected_irn=expected_irn
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"e-Invoice QR verification failed: {exc}"],
+            source="offline_signature",
+        )
+
+
+@mcp.tool(annotations=ToolAnnotations(readOnlyHint=True, idempotentHint=True, openWorldHint=False))
+def verify_aadhaar_offline_artifact(
+    xml_or_zip_bytes_base64: Annotated[
+        str,
+        Field(description="Base64-encoded or raw XML/ZIP of UIDAI Paperless Offline e-KYC"),
+    ],
+    share_code: Annotated[
+        str | None,
+        Field(
+            default=None,
+            description="4-character share code if artifact is password-protected ZIP",
+        ),
+    ] = None,
+) -> dict[str, Any]:
+    """Verify UIDAI Paperless Offline e-KYC XML/ZIP artifact (A3 Authenticity).
+
+    Defends against XXE and expansion bombs via defusedxml. Verifies UIDAI RSA digital
+    signature against bundled trust anchor. DPDP Act compliant: extracts only masked Aadhaar
+    (last 4 digits) and demographic attributes; never outputs raw identifiers.
+    """
+    try:
+        return core_verify_aadhaar_offline_artifact(
+            xml_or_zip_bytes_base64=xml_or_zip_bytes_base64, share_code=share_code
+        )
+    except Exception as exc:
+        return build_response(
+            success=False,
+            errors=[f"Aadhaar offline artifact verification failed: {exc}"],
+            source="offline_signature",
+        )
+
+
 @mcp.resource("india://schema/validate_gstin")
 def schema_validate_gstin() -> dict[str, Any]:
     """JSON schema for validate_gstin output."""
@@ -843,5 +914,49 @@ def schema_bulk_validate_gstin() -> dict[str, Any]:
             "invalid_count": {"type": "integer"},
             "authenticity_summary": {"type": "object"},
             "authenticity": AUTHENTICITY_SUMMARY_SCHEMA,
+        },
+    }
+
+
+@mcp.resource("india://schema/verify_einvoice_qr")
+def schema_verify_einvoice_qr() -> dict[str, Any]:
+    """JSON schema for verify_einvoice_qr output."""
+    return {
+        "type": "object",
+        "properties": {
+            "valid": {"type": "boolean"},
+            "irn": {"type": "string"},
+            "seller_gstin": {"type": "string"},
+            "buyer_gstin": {"type": "string"},
+            "doc_no": {"type": "string"},
+            "doc_typ": {"type": "string"},
+            "doc_date": {"type": "string"},
+            "total_value": {"type": "number"},
+            "item_count": {"type": "integer"},
+            "main_hsn": {"type": "string"},
+            "fin_year": {"type": "string"},
+            "errors": {"type": "array", "items": {"type": "string"}},
+            "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
+        },
+    }
+
+
+@mcp.resource("india://schema/verify_aadhaar_offline_artifact")
+def schema_verify_aadhaar_offline_artifact() -> dict[str, Any]:
+    """JSON schema for verify_aadhaar_offline_artifact output."""
+    return {
+        "type": "object",
+        "properties": {
+            "valid": {"type": "boolean"},
+            "reference_id": {"type": "string"},
+            "masked_aadhaar": {"type": "string"},
+            "name": {"type": "string"},
+            "dob": {"type": "string"},
+            "gender": {"type": "string"},
+            "address": {"type": "object"},
+            "errors": {"type": "array", "items": {"type": "string"}},
+            "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }

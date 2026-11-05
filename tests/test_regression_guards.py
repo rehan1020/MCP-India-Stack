@@ -621,7 +621,7 @@ def test_g19_schema_parity_tools_match() -> None:
 
     registered = set(mcp._tool_manager._tools.keys())
     assert SCHEMA_TOOLS <= registered
-    assert len(SCHEMA_TOOLS) == 21
+    assert len(SCHEMA_TOOLS) == 23
 
 
 def test_g20_no_unjustified_nosec_and_no_skip_markers() -> None:

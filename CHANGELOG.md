@@ -17,6 +17,7 @@
 - **Experimental Market Data Protections (G11)**: Designated yfinance stock tools as `[Experimental]`, added symbol allowlist validation regex, backoff retries, short-TTL in-memory caching, error mapping, and metadata indicators (`data_source`, `delayed`, `as_of`).
 - **Repository Governance Audit (G12)**: Completed governance audit, applied least-privilege `permissions:` blocks across all GitHub Actions workflows, and pinned GitHub Actions to immutable SHAs.
 - **Data Provenance & Dataset Inventory (G13)**: Added `docs/data_provenance.md` cataloging upstream authorities, licenses, retrieval cadences, and verified 100% data file coverage.
+- **A3 Signed-Artifact Verification (8c)**: Added `verify_einvoice_qr` and `verify_aadhaar_offline_artifact` verifying digital signatures on NIC B2B e-invoices (JWT) and UIDAI Paperless Offline e-KYC (XML/ZIP) against bundled trust anchors. DPDP Act compliance masks Aadhaar to last 4 digits; `defusedxml` protects against XXE and expansion bombs. Optional extra `pip install mcp-india-stack[verify]` provides graceful fallback if cryptography/defusedxml is absent.
 
 ## [0.7.0] - 2026-10-29
 

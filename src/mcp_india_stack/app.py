@@ -116,6 +116,8 @@ TOOL_TIERS: dict[str, PermissionTier] = {
     "draft_rti_application": PermissionTier.INITIATE,
     "draft_first_appeal": PermissionTier.INITIATE,
     "draft_second_appeal": PermissionTier.INITIATE,
+    "verify_einvoice_qr": PermissionTier.READ_ONLY,
+    "verify_aadhaar_offline_artifact": PermissionTier.READ_ONLY,
 }
 
 TOOL_NETWORK: dict[str, str] = {
@@ -200,6 +202,8 @@ TOOL_NETWORK: dict[str, str] = {
     "draft_rti_application": "none",
     "draft_first_appeal": "none",
     "draft_second_appeal": "none",
+    "verify_einvoice_qr": "none",
+    "verify_aadhaar_offline_artifact": "none",
 }
 
 _original_mcp_tool = mcp.tool

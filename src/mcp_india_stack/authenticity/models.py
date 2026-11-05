@@ -162,8 +162,9 @@ def evaluate_level(checks: list[AuthenticityCheck], valid: bool) -> str | None:
     for lvl in ("A1", "A2", "A3", "A4"):
         lvl_checks = checks_by_level[lvl]
         if not lvl_checks:
-            # No checks for this level; cannot advance beyond current level
-            break
+            # If no checks are defined for this level (e.g. A2 dataset lookup is not
+            # applicable for artifact signature verification A3), continue evaluating.
+            continue
         if all(c.passed for c in lvl_checks):
             current_level = lvl
         else:
@@ -182,6 +183,7 @@ def build_authenticity_envelope(
     as_of: str | None = None,
     evidence_record: dict[str, Any] | None = None,
     custom_limitations: list[str] | None = None,
+    limitations: list[str] | None = None,
     is_dataset_miss: bool = False,
     registry_status: str | None = None,
 ) -> dict[str, Any]:
@@ -189,24 +191,25 @@ def build_authenticity_envelope(
     level = evaluate_level(checks, valid)
 
     # Build limitations list (Rule R6: apply PII redaction)
-    limitations: list[str] = []
+    collected_limitations: list[str] = []
 
     # Rule R3: dataset miss is NOT evidence of forgery
     if is_dataset_miss:
         miss_ver = dataset_version or "2025.04"
-        limitations.append(f"not_found_in_dataset@{miss_ver}")
+        collected_limitations.append(f"not_found_in_dataset@{miss_ver}")
 
-    if custom_limitations:
-        for lim in custom_limitations:
-            limitations.append(mask_aadhaar_text(str(lim)))
+    all_custom = (custom_limitations or []) + (limitations or [])
+    if all_custom:
+        for lim in all_custom:
+            collected_limitations.append(mask_aadhaar_text(str(lim)))
 
     # Ensure limitations is always non-empty below A4
     if level != "A4":
-        if not limitations:
-            limitations.append("active registration status not verified")
-        elif "active registration status not verified" not in limitations:
+        if not collected_limitations:
+            collected_limitations.append("active registration status not verified")
+        elif "active registration status not verified" not in collected_limitations:
             # Standard baseline caveat
-            limitations.append("active registration status not verified")
+            collected_limitations.append("active registration status not verified")
 
     # Evidence hash (Rule R4: only for public dataset records at A2 or above)
     evidence_hash: str | None = None
@@ -223,7 +226,7 @@ def build_authenticity_envelope(
         "dataset_version": dataset_version,
         "as_of": as_of_date,
         "evidence_hash": evidence_hash,
-        "limitations": limitations,
+        "limitations": collected_limitations,
     }
 
     # registry_status is absent unless A4 (or explicitly provided)
