@@ -1,0 +1,11 @@
+{
+  "name": "pincode",
+  "version": 20250401,
+  "sha256": "dc649f86f7ac915b47cdd00b5eb2d138b3eff994a103d259f014e515d48b00a2",
+  "size": 1243770,
+  "source": "Department of Posts (India Post) / Open Government Data Platform",
+  "generated_at": "2026-11-04T00:00:00Z",
+  "expires_at": "2027-12-31T23:59:59Z",
+  "key_id": "mcp-india-stack-ed25519-primary",
+  "signature": "80034c8e6e46ca6d9f2d03972b45ebd9298c157ee499e11d01f65a4d0452f72a5c276b03ed1ba582a38a4259c378dbfd3899c5237c3d72de4d0b670826485d09"
+}

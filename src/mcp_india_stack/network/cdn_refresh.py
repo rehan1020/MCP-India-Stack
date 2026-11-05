@@ -17,16 +17,26 @@ Enforces:
 from __future__ import annotations
 
 import csv
+import datetime
 import gzip
+import hashlib
 import io
+import json
 import logging
 import os
 import threading
 import time
+from typing import Any
 from urllib.parse import urlparse
 
 import httpx
 
+from mcp_india_stack.authenticity.manifest import (
+    _parse_iso,
+    get_bundled_manifest,
+    get_cached_manifest,
+    verify_manifest_signature,
+)
 from mcp_india_stack.utils.cache import get_cache_dir
 from mcp_india_stack.utils.datasets import DATASET_CONFIG
 
@@ -216,18 +226,80 @@ def _atomic_cache_write(
             tmp_path.unlink(missing_ok=True)
 
 
+def _check_version_anti_rollback(
+    dataset_name: str,
+    mock_version: int | None,
+    current_version: int | None,
+    mock_manifest: dict[str, Any] | None,
+) -> None:
+    """Ensure incoming dataset or manifest version is strictly greater than current version."""
+    if mock_version is not None and current_version is not None and mock_version < current_version:
+        raise CdnRefreshError(
+            f"Rejecting older version rollback for '{dataset_name}': "
+            f"incoming version {mock_version} < current version {current_version}"
+        )
+
+    if mock_manifest is not None:
+        incoming_ver = int(mock_manifest.get("version", 0))
+        active_ver = current_version
+        if active_ver is None:
+            cached_m = get_cached_manifest(dataset_name)
+            bundled_m = get_bundled_manifest(dataset_name)
+            curr_m = cached_m or bundled_m
+            if curr_m:
+                active_ver = int(curr_m.get("version", 0))
+        if active_ver is not None and incoming_ver <= active_ver:
+            raise CdnRefreshError(
+                f"Rejecting older version rollback for '{dataset_name}': "
+                f"incoming version {incoming_ver} <= current version {active_ver}"
+            )
+
+
+def _verify_incoming_manifest(
+    dataset_name: str,
+    raw_data: bytes,
+    mock_manifest: dict[str, Any],
+) -> None:
+    """Verify Ed25519 signature, SHA-256 digest, byte size, and expiration of incoming manifest."""
+    sig_ok, sig_msg = verify_manifest_signature(mock_manifest)
+    if not sig_ok:
+        raise CdnRefreshError(f"Manifest signature verification failed: {sig_msg}")
+
+    expected_hash = str(mock_manifest.get("sha256", "")).lower()
+    actual_hash = hashlib.sha256(raw_data).hexdigest().lower()
+    if actual_hash != expected_hash:
+        raise CdnRefreshError(
+            f"Payload SHA-256 mismatch: expected {expected_hash}, got {actual_hash}"
+        )
+
+    expected_size = int(mock_manifest.get("size", 0))
+    if len(raw_data) != expected_size:
+        raise CdnRefreshError(
+            f"Payload size mismatch: expected {expected_size}, got {len(raw_data)}"
+        )
+
+    if mock_manifest.get("expires_at"):
+        exp_dt = _parse_iso(str(mock_manifest["expires_at"]))
+        now = datetime.datetime.now(datetime.timezone.utc)
+        if now > exp_dt:
+            raise CdnRefreshError(
+                f"Manifest for '{dataset_name}' expired at {mock_manifest['expires_at']}"
+            )
+
+
 def refresh_dataset(
     dataset_name: str,
     *,
     url_override: str | None = None,
     mock_payload: bytes | None = None,
+    mock_manifest: dict[str, Any] | None = None,
     mock_redirect_chain: list[str] | None = None,
     mock_version: int | None = None,
     current_version: int | None = None,
     mock_crash_before_replace: bool = False,
     simulate_lock_contention: bool = False,
 ) -> bool:
-    """Execute a hardened refresh of a dataset from CDN."""
+    """Execute a hardened refresh of a dataset from CDN with signed manifest verification."""
     if os.environ.get("MCP_INDIA_STACK_NO_AUTO_UPDATE"):
         logger.info("Auto-update disabled via MCP_INDIA_STACK_NO_AUTO_UPDATE")
         return False
@@ -243,16 +315,7 @@ def refresh_dataset(
     url = url_override or config["cdn_url"]
 
     try:
-        if (
-            mock_version is not None
-            and current_version is not None
-            and mock_version < current_version
-        ):
-            raise CdnRefreshError(
-                f"Rejecting older version rollback for '{dataset_name}': "
-                f"incoming version {mock_version} < current version {current_version}"
-            )
-
+        _check_version_anti_rollback(dataset_name, mock_version, current_version, mock_manifest)
         _validate_url_and_redirects(url, mock_redirect_chain)
 
         if mock_payload is not None:
@@ -264,6 +327,9 @@ def refresh_dataset(
         else:
             raw_data = _fetch_from_cdn(url)
 
+        if mock_manifest is not None:
+            _verify_incoming_manifest(dataset_name, raw_data, mock_manifest)
+
         _validate_schema(dataset_name, raw_data)
         _atomic_cache_write(
             dataset_name,
@@ -271,6 +337,13 @@ def refresh_dataset(
             raw_data,
             mock_crash_before_replace,
         )
+        if mock_manifest is not None:
+            _atomic_cache_write(
+                dataset_name,
+                f"{config['cache_filename']}.manifest.json",
+                json.dumps(mock_manifest, indent=2).encode("utf-8"),
+                False,
+            )
 
         set_last_refresh_error(None)
         logger.info("Successfully refreshed dataset '%s'", dataset_name)

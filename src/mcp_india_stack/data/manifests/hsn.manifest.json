@@ -1,0 +1,11 @@
+{
+  "name": "hsn",
+  "version": 20250401,
+  "sha256": "b725c30c1491d18cf43d5d744641a7e5bfec232d669645125ee6bc375e92f833",
+  "size": 1752637,
+  "source": "Central Board of Indirect Taxes and Customs (CBIC) / GST Portal",
+  "generated_at": "2026-11-04T00:00:00Z",
+  "expires_at": "2027-12-31T23:59:59Z",
+  "key_id": "mcp-india-stack-ed25519-primary",
+  "signature": "2995e7cf2ad669262777af9de1aceb860024714869dd963be1e15a4e86435c52cd00965d6f3adb3587e142a9b9dbc2b728f542d83cb81c287bca4cd349c3ca0f"
+}

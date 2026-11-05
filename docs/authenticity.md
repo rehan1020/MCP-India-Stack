@@ -120,3 +120,31 @@ Always review `authenticity.limitations` for the exact operational boundaries of
 The evaluation of A0–A2 rules is entirely zero-auth and executed in-memory:
 * **Per-call overhead**: Adds under 1.0 ms p95 latency relative to raw validation.
 * **Bulk validation**: Batch operations of up to 500 items execute within bounded CPU limits without external network latency.
+
+---
+
+## 7. Signed Dataset Manifests & Supply Chain Security
+
+To protect offline-first datasets against tampering, rollbacks, and supply chain corruption:
+
+1. **Cryptographic Manifests**: Every bundled and refreshed dataset includes a signed JSON manifest containing:
+   * `name`: Dataset identifier (`ifsc`, `pincode`, `hsn`)
+   * `version`: Monotonically increasing version integer (anti-rollback)
+   * `sha256`: Cryptographic SHA-256 hash of the dataset bytes
+   * `size`: Exact byte length
+   * `source`: Upstream authoritative origin
+   * `generated_at` & `expires_at`: Validity window timestamps
+   * `key_id`: ID of the signing key
+   * `signature`: Detached Ed25519 signature over canonical manifest JSON
+2. **Bundled Verifying Keys & Revocation**:
+   * Keys ship in `src/mcp_india_stack/keys/keys.json` with validity windows and statuses (`active`, `rotated`, `revoked`).
+   * Compromised keys are cataloged in `src/mcp_india_stack/keys/revocations.json`. Any manifest signed by a revoked key is rejected immediately.
+3. **CLI Verification**:
+   Verify installed bundled datasets and cache files from the terminal:
+   ```bash
+   mcp-india-stack --verify-data
+   ```
+4. **Enforcement Policy**:
+   * **Default Mode**: Soft-warns on signature or checksum mismatches in cache, logging warnings and falling back to clean bundled datasets.
+   * **Strict Mode (`MCP_INDIA_STACK_REQUIRE_SIGNED_DATA=1`)**: Fails hard (raises `RuntimeError` / `DataLoadError`) if any dataset fails cryptographic signature or checksum verification.
+

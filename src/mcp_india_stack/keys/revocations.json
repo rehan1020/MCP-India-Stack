@@ -1,0 +1,9 @@
+{
+  "revoked_keys": [
+    {
+      "key_id": "mcp-india-stack-ed25519-revoked-sample",
+      "revoked_at": "2025-01-01T00:00:00Z",
+      "reason": "Revoked for supply chain audit test suite"
+    }
+  ]
+}

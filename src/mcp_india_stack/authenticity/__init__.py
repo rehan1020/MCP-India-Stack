@@ -6,6 +6,18 @@ is verified rather than merely well-formed.
 
 from __future__ import annotations
 
+from mcp_india_stack.authenticity.manifest import (
+    canonical_manifest_bytes,
+    get_bundled_manifest,
+    get_cached_manifest,
+    get_dataset_security_status,
+    load_revocation_list,
+    load_verifying_keys,
+    verify_dataset_file,
+    verify_dataset_integrity,
+    verify_installed_data,
+    verify_manifest_signature,
+)
 from mcp_india_stack.authenticity.models import (
     AUTHENTICITY_SCHEMA,
     AUTHENTICITY_SUMMARY_SCHEMA,
@@ -48,6 +60,21 @@ __all__ = [
     "AUTHENTICITY_SCHEMA",
     "AUTHENTICITY_SUMMARY_SCHEMA",
     "AuthenticityCheck",
+    "build_authenticity_envelope",
+    "canonical_manifest_bytes",
+    "compute_evidence_hash",
+    "evaluate_level",
+    "get_bundled_manifest",
+    "get_cached_manifest",
+    "get_dataset_security_status",
+    "load_revocation_list",
+    "load_verifying_keys",
+    "summarize_authenticity_levels",
+    "verify_dataset_file",
+    "verify_dataset_integrity",
+    "verify_installed_data",
+    "verify_manifest_signature",
+    "create_aa_consent_authenticity",
     "build_authenticity_envelope",
     "compute_evidence_hash",
     "evaluate_level",
