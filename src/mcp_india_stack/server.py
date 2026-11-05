@@ -20,10 +20,10 @@ import threading
 import time
 from typing import Any
 
-# Trigger side-effect registration of all 78 tools
+# Trigger side-effect registration of all tools
 import mcp_india_stack.registrations  # noqa: F401
 from mcp_india_stack import __version__
-from mcp_india_stack.app import TOOL_NETWORK, mcp
+from mcp_india_stack.app import TOOL_NETWORK, TOOL_TIERS, mcp
 from mcp_india_stack.database import is_db_connected
 from mcp_india_stack.network.cdn_refresh import get_last_refresh_error
 
@@ -54,7 +54,7 @@ def server_status() -> dict[str, Any]:
         "live_lookup_enabled": _LIVE_LOOKUP_ENABLED,
         "dry_run_mode": _DRY_RUN,
         "db_url_configured": _DB_URL_SET,
-        "tool_count": 78,
+        "tool_count": len(TOOL_TIERS),
         "data_version": "2025.04",
         "tools_network": TOOL_NETWORK,
         "last_refresh_error": get_last_refresh_error(),

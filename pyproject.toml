@@ -59,6 +59,10 @@ dev = [
 	"types-requests>=2.32.0.20241016",
 	"openpyxl>=3.1.0",
 ]
+verify = [
+	"cryptography>=42.0.0",
+	"defusedxml>=0.7.1",
+]
 
 [project.urls]
 Homepage = "https://github.com/rehan1020/mcp-india-stack"
@@ -79,6 +83,7 @@ mcp_india_stack = [
     "data/**/*.csv.gz",
     "data/**/*.json",
     "keys/**/*.json",
+    "certs/**/*.pem",
 ]
 
 [tool.ruff]

@@ -9,7 +9,7 @@ def test_all_tools_classified():
     import mcp_india_stack.app as app
 
     assert hasattr(app, "TOOL_TIERS")
-    assert len(app.TOOL_TIERS) == 78
+    assert len(app.TOOL_TIERS) == 80
     elevated = [
         k
         for k, v in app.TOOL_TIERS.items()
@@ -51,3 +51,15 @@ def test_elevated_gating(monkeypatch):
     registered_tools = [t for t in app.mcp._tool_manager._tools]
     for t in elevated:
         assert t in registered_tools
+
+    # Teardown / restore full registrations for other tests
+    monkeypatch.delenv("MCP_INDIA_STACK_ENABLE_ELEVATED_TOOLS", raising=False)
+    importlib.reload(app)
+    import mcp_india_stack.registrations.finance as finance
+    import mcp_india_stack.registrations.kyc as kyc
+    import mcp_india_stack.registrations.lookup as lookup
+    import mcp_india_stack.registrations.markets as markets
+    import mcp_india_stack.registrations.tax as tax
+
+    for mod in [banking, legal, finance, kyc, lookup, markets, tax]:
+        importlib.reload(mod)

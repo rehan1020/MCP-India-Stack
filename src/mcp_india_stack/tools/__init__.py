@@ -77,6 +77,8 @@ from mcp_india_stack.tools.stock_market import get_stock_history, get_stock_quot
 from mcp_india_stack.tools.surcharge import calculate_surcharge
 from mcp_india_stack.tools.tds import calculate_tds
 from mcp_india_stack.tools.upi import validate_upi_vpa
+from mcp_india_stack.tools.verify_aadhaar_artifact import verify_aadhaar_offline_artifact
+from mcp_india_stack.tools.verify_einvoice import verify_einvoice_qr
 from mcp_india_stack.tools.voter_id import validate_voter_id
 
 __all__ = [
@@ -143,4 +145,6 @@ __all__ = [
     "validate_passport",
     "validate_upi_vpa",
     "validate_voter_id",
+    "verify_aadhaar_offline_artifact",
+    "verify_einvoice_qr",
 ]
