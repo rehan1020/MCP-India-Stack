@@ -309,16 +309,16 @@ See [`LEGAL_NOTICE.md`](LEGAL_NOTICE.md) for important legal disclaimers includi
 ## 🚀 Launch Notes
 
 This repository is release-ready for GitHub launch with:
-- `0.7.1` package metadata and changelog coverage.
+- `0.8.0` package metadata and changelog coverage.
 - A complete MCP server-card under `docs/.well-known/mcp/server-card.json`.
 - Local setup and publishing steps in [`SETUP.md`](SETUP.md).
 - Contribution guidance and versioning policy in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-### What's New in v0.7.1 — Security Hardening, Full Parity & Offline Invariants
-- **Offline Architecture & Tool Network Tiers**: Canonical network classification (none/optional/required) across all 80 tools.
-- **Hardened Supply Chain**: CDN refresh pipeline with strict HTTPS, host allowlists, size/decompression bomb caps, monotonic version checks, and atomic staging.
-- **100% Modular Tool Parity**: Full core module extraction and parity across all 80 registered tools.
-- **Architectural Regression Guards**: G01-G20 invariants enforcing zero unhandled exceptions, constant-time auth, and fail-closed network safeguards.
+### What's New in v0.8.0 — Authenticity System (A0-A4), Signed Datasets & Cryptographic Verification
+- **Multi-Tier Authenticity System (8a)**: Every verifying tool outputs an additive `authenticity` envelope (`A0` to `A4`) enforcing rules R1–R6.
+- **Signed Dataset Manifests (8b)**: Detached Ed25519 dataset verification, key ring with rotation/revocation, monotonic anti-rollback checks, and `--verify-data` CLI command.
+- **Cryptographic Artifact Verification (8c)**: Signed NIC B2B e-invoice QR code verification and UIDAI secure offline XML/ZIP e-KYC attestation with XXE/bomb defense.
+- **Opt-In Registry Provider Interface (8d)**: Pluggable `BaseRegistryProvider(ABC)` with entry points discovery, `FixtureProvider`, circuit breaker, rate limiting, and SSRF defense.
 
 ### Previous Releases
 - **v0.6.0**: Legal Reference (CNR decoder, court establishment lookup, bare-act section lookups for IPC/BNS/CrPC/BNSS/IEA/BSA, IPC↔BNS crosswalk, limitation period calculator, court fee, stamp duty) and RTI Toolkit (fee calculator, deadline tracker, penalty estimator, templates). Added yfinance-based market data tools.

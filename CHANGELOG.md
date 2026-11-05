@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.8.0] - 2026-11-05
+
+### Authenticity System (PRs 8a – 8d)
+
+- **Authenticity Envelope & A0/A1/A2 Attestation (8a)**: Introduced standard multi-tier attestation envelope (`level`, `checks`, `source`, `as_of`, `evidence_hash`, `limitations`, `registry_status`) across all verifying tools. Enforced rules R1–R6, domain cross-field consistency, schema parity, and comprehensive backwards compatibility.
+- **Signed Dataset Manifests & Supply Chain Security (8b)**: Added detached Ed25519 cryptographic signatures for bundled and cached datasets (`ifsc`, `pincode`, `hsn`), key rotation/revocation ring in `src/mcp_india_stack/keys/`, `--verify-data` CLI command, monotonic anti-rollback version checks, and `MCP_INDIA_STACK_REQUIRE_SIGNED_DATA=1` enforcement.
+- **A3 Signed-Artifact Verification (8c)**: Added `verify_einvoice_qr` and `verify_aadhaar_offline_artifact` tools verifying digital signatures on NIC B2B e-invoices (JWT) and UIDAI Paperless Offline e-KYC (XML/ZIP) against bundled trust anchors. Implemented DPDP Act last-4-digit masking, XML bomb and XXE defenses, and `mcp-india-stack[verify]` optional extra.
+- **A4 Opt-in Registry Provider Interface (8d)**: Introduced `BaseRegistryProvider(ABC)` pluggable interface with entry point (`mcp_india_stack.providers`) and environment variable (`MCP_INDIA_STACK_PROVIDERS`) discovery. Added opt-in `verify_online: bool = False` to verifying tools (`validate_gstin`, `validate_pan`, `validate_cin`), promoting active registrations to Level A4 with `registry_status`. Shipped zero-network `FixtureProvider`, 3-state circuit breaker (tripping on 5 failures with 60s cooldown), token-bucket rate limiter, connect/read timeouts, and strict SSRF defenses blocking private RFC 1918, loopback, link-local, and multicast IP destinations unless bypassed with `MCP_INDIA_STACK_ALLOW_PRIVATE_PROVIDERS=1`. Documented in `docs/writing_a_provider.md`.
+
 ## [0.7.1] - 2026-11-04
 
 ### Architectural Hardening & Gap Remediation (G1-G13)
@@ -17,8 +26,6 @@
 - **Experimental Market Data Protections (G11)**: Designated yfinance stock tools as `[Experimental]`, added symbol allowlist validation regex, backoff retries, short-TTL in-memory caching, error mapping, and metadata indicators (`data_source`, `delayed`, `as_of`).
 - **Repository Governance Audit (G12)**: Completed governance audit, applied least-privilege `permissions:` blocks across all GitHub Actions workflows, and pinned GitHub Actions to immutable SHAs.
 - **Data Provenance & Dataset Inventory (G13)**: Added `docs/data_provenance.md` cataloging upstream authorities, licenses, retrieval cadences, and verified 100% data file coverage.
-- **A3 Signed-Artifact Verification (8c)**: Added `verify_einvoice_qr` and `verify_aadhaar_offline_artifact` verifying digital signatures on NIC B2B e-invoices (JWT) and UIDAI Paperless Offline e-KYC (XML/ZIP) against bundled trust anchors. DPDP Act compliance masks Aadhaar to last 4 digits; `defusedxml` protects against XXE and expansion bombs. Optional extra `pip install mcp-india-stack[verify]` provides graceful fallback if cryptography/defusedxml is absent.
-- **A4 Opt-in Registry Provider Interface (8d)**: Introduced `BaseRegistryProvider(ABC)` pluggable interface with entry point (`mcp_india_stack.providers`) and environment variable (`MCP_INDIA_STACK_PROVIDERS`) discovery. Added opt-in `verify_online: bool = False` to verifying tools (`validate_gstin`, `validate_pan`, `validate_cin`), promoting active registrations to Level A4 with `registry_status`. Ships with zero-network `FixtureProvider`, 3-state circuit breaker (tripping on 5 failures with 60s cooldown), token-bucket rate limiter, connect/read timeouts, and strict SSRF defenses blocking private RFC 1918, loopback, link-local, and multicast IP destinations unless bypassed with `MCP_INDIA_STACK_ALLOW_PRIVATE_PROVIDERS=1`. Documented in `docs/writing_a_provider.md`.
 
 ## [0.7.0] - 2026-10-29
 
