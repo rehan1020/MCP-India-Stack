@@ -4,6 +4,7 @@ from mcp.types import ToolAnnotations
 from pydantic import Field
 
 from mcp_india_stack.app import mcp
+from mcp_india_stack.authenticity import AUTHENTICITY_SCHEMA
 from mcp_india_stack.tools.hsn import lookup_hsn_code as core_lookup_hsn_code
 from mcp_india_stack.tools.isin import decode_isin as core_decode_isin
 from mcp_india_stack.tools.pincode import lookup_pincode as core_lookup_pincode
@@ -36,6 +37,7 @@ def lookup_pincode(
             errors=result.get("errors", []),
             warnings=result.get("warnings", []),
             source="bundled_dataset",
+            authenticity=result.get("authenticity"),
         )
     except Exception as exc:
         return build_response(
@@ -75,6 +77,7 @@ def lookup_hsn_code(
             errors=result.get("errors", []),
             warnings=result.get("warnings", []),
             source="bundled_dataset",
+            authenticity=result.get("authenticity"),
         )
     except Exception as exc:
         return build_response(
@@ -101,10 +104,11 @@ def decode_state_code(
     try:
         result = core_decode_state_code(value)
         return build_response(
-            success=bool(result.get("found")),
-            data=result,
-            errors=[str(result["error"])] if result.get("error") else [],
+            success=bool(result.get("data", {}).get("found") or result.get("found")),
+            data=result.get("data", result),
+            errors=result.get("errors", []),
             source="offline_algorithm",
+            authenticity=result.get("authenticity"),
         )
     except Exception as exc:
         return build_response(
@@ -133,6 +137,7 @@ def decode_isin(
             data=result,
             errors=[str(result.get("error"))] if result.get("error") else [],
             source="offline_algorithm",
+            authenticity=result.get("authenticity"),
         )
     except Exception as exc:
         return build_response(
@@ -153,6 +158,7 @@ def schema_lookup_pincode() -> dict[str, Any]:
             "post_offices": {"type": "array"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -169,6 +175,7 @@ def schema_lookup_hsn_code() -> dict[str, Any]:
             "chapter": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -186,5 +193,6 @@ def schema_decode_state_code() -> dict[str, Any]:
             "capital": {"type": "string"},
             "zone": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }

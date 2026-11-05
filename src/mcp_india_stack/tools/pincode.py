@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from mcp_india_stack.authenticity.rules import create_pincode_authenticity
 from mcp_india_stack.normalization import normalize_pincode
 from mcp_india_stack.tools.state_code import decode_state_code
 from mcp_india_stack.utils.loader import load_pincode_index, load_state_codes
@@ -21,7 +22,13 @@ def _state_to_code(state_name: str) -> str | None:
 def lookup_pincode(pincode: str | int) -> dict[str, Any]:
     """Lookup Indian pincode and return all mapped post offices."""
     if pincode is None:
-        return {"found": False, "errors": ["Pincode is required"], "valid": False}
+        auth = create_pincode_authenticity(pincode="", found=False, record=None)
+        return {
+            "found": False,
+            "errors": ["Pincode is required"],
+            "valid": False,
+            "authenticity": auth,
+        }
 
     norm_result = normalize_pincode(str(pincode))
     value = norm_result["normalized_input"]
@@ -31,6 +38,7 @@ def lookup_pincode(pincode: str | int) -> dict[str, Any]:
 
     # Format validation BEFORE any lookup - reject invalid lengths immediately
     if not value.isdigit():
+        auth = create_pincode_authenticity(pincode=value, found=False, record=None)
         return {
             "found": False,
             "pincode": value,
@@ -40,9 +48,11 @@ def lookup_pincode(pincode: str | int) -> dict[str, Any]:
             "error_reason": "Pincode must be exactly 6 digits (numeric only)",
             "errors": ["Pincode must be exactly 6 digits"],
             "warnings": warnings,
+            "authenticity": auth,
         }
 
     if len(value) != 6:
+        auth = create_pincode_authenticity(pincode=value, found=False, record=None)
         return {
             "found": False,
             "pincode": value,
@@ -52,10 +62,12 @@ def lookup_pincode(pincode: str | int) -> dict[str, Any]:
             "error_reason": "Pincode must be exactly 6 digits (numeric only)",
             "errors": [f"Pincode must be exactly 6 digits, got {len(value)}"],
             "warnings": warnings,
+            "authenticity": auth,
         }
 
     records = load_pincode_index().get(value, [])
     if not records:
+        auth = create_pincode_authenticity(pincode=value, found=False, record=None)
         return {
             "found": False,
             "pincode": value,
@@ -65,6 +77,7 @@ def lookup_pincode(pincode: str | int) -> dict[str, Any]:
             "error_reason": "Pincode not found in bundled dataset",
             "errors": ["Pincode not found in bundled dataset"],
             "warnings": warnings,
+            "authenticity": auth,
         }
 
     state = records[0].get("StateName", "")
@@ -90,6 +103,10 @@ def lookup_pincode(pincode: str | int) -> dict[str, Any]:
         for r in records
     ]
 
+    auth = create_pincode_authenticity(
+        pincode=value, found=True, record=records[0] if records else None
+    )
+
     return {
         "found": True,
         "pincode": value,
@@ -105,4 +122,5 @@ def lookup_pincode(pincode: str | int) -> dict[str, Any]:
         "post_offices": offices,
         "errors": errors,
         "warnings": warnings,
+        "authenticity": auth,
     }

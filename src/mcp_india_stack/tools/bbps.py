@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.authenticity.rules import create_bbps_authenticity
+
 _BILLERS: dict[str, list[dict[str, Any]]] = {
     "electricity": [
         {
@@ -325,7 +327,14 @@ def lookup_bbps_biller(  # noqa: C901
     valid_categories = list(_BILLERS.keys())
     if category and category.lower() not in valid_categories:
         errors.append(f"Invalid category. Valid: {valid_categories}")
-        return {"found": False, "billers": [], "errors": errors, "warnings": warnings}
+        auth = create_bbps_authenticity(biller_id=category, found=False, record=None)
+        return {
+            "found": False,
+            "billers": [],
+            "errors": errors,
+            "warnings": warnings,
+            "authenticity": auth,
+        }
 
     results = []
 
@@ -354,11 +363,19 @@ def lookup_bbps_biller(  # noqa: C901
         for cat_billers in _BILLERS.values():
             results.extend(cat_billers)
 
+    found = len(results) > 0
+    auth = create_bbps_authenticity(
+        biller_id=biller_id or (category or "all"),
+        found=found,
+        record=results[0] if results else None,
+    )
+
     return {
-        "found": len(results) > 0,
+        "found": found,
         "billers": results,
         "count": len(results),
         "categories": list(_BILLERS.keys()),
         "errors": errors,
         "warnings": warnings,
+        "authenticity": auth,
     }

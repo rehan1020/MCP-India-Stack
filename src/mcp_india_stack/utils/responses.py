@@ -25,6 +25,7 @@ def build_response(  # noqa: C901
     data_version: str | None = None,
     rate_limit_remaining: int | None = None,
     rate_limit_warning: str | None = None,
+    authenticity: dict[str, Any] | None = None,
 ) -> dict[str, Any]:  # noqa: C901
     """Build a normalized tool response envelope with confidence scoring."""
 
@@ -74,6 +75,8 @@ def build_response(  # noqa: C901
         response["rate_limit_remaining"] = rate_limit_remaining
         if rate_limit_warning:
             response["rate_limit_warning"] = rate_limit_warning
+    if authenticity is not None:
+        response["authenticity"] = authenticity
 
     return response
 

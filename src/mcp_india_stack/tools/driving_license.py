@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import re
+from datetime import date
 from typing import Any
 
+from mcp_india_stack.authenticity.rules import create_driving_license_authenticity
 from mcp_india_stack.utils.responses import build_response
 
 # Standard format: SS RR YYYY NNNNNNN (state=2, RTO=2, year=4, serial=7 = 15 chars)
@@ -111,18 +113,38 @@ def validate_driving_license(dl_number: str) -> dict[str, Any]:
             serial = cleaned[8:15]
 
             state_name = DL_STATE_CODES.get(state_code, "Unknown")
-            if state_name == "Unknown":
+            state_valid = state_name != "Unknown"
+            if not state_valid:
                 errors.append(f"Unrecognised state code: {state_code}")
 
-            # Basic year sanity check
-            year_int = int(year_of_issue)
-            if year_int < 1900 or year_int > 2100:
-                errors.append(f"Year of issue {year_of_issue} is out of plausible range")
+            rto_valid = rto_code.isdigit() and len(rto_code) == 2
+
+            # Year sanity check
+            try:
+                year_int = int(year_of_issue)
+                year_valid = 1900 <= year_int <= date.today().year
+            except ValueError:
+                year_valid = False
+
+            if not year_valid:
+                errors.append(
+                    f"Year of issue {year_of_issue} is out of "
+                    f"plausible range [1900, {date.today().year}]"
+                )
+
+            valid = len(errors) == 0
+            auth = create_driving_license_authenticity(
+                dl=cleaned,
+                valid=valid,
+                state_valid=state_valid,
+                rto_valid=rto_valid,
+                year_valid=year_valid,
+            )
 
             return build_response(
-                success=len(errors) == 0,
+                success=valid,
                 data={
-                    "valid": len(errors) == 0,
+                    "valid": valid,
                     "dl_number": cleaned,
                     "state_code": state_code,
                     "state_name": state_name,
@@ -133,9 +155,17 @@ def validate_driving_license(dl_number: str) -> dict[str, Any]:
                 errors=errors,
                 source="offline_static",
                 validated_by=["format_check"],
+                authenticity=auth,
             )
 
         # Non-standard but plausible length (13-16 chars, alphanumeric)
+        auth_invalid = create_driving_license_authenticity(
+            dl=cleaned,
+            valid=False,
+            state_valid=False,
+            rto_valid=False,
+            year_valid=False,
+        )
         if 13 <= len(cleaned) <= 16 and cleaned.isalnum():
             return build_response(
                 success=False,
@@ -153,6 +183,7 @@ def validate_driving_license(dl_number: str) -> dict[str, Any]:
                     "May be a pre-Sarathi or state-specific format."
                 ],
                 source="offline_static",
+                authenticity=auth_invalid,
             )
 
         # Clearly invalid
@@ -174,9 +205,17 @@ def validate_driving_license(dl_number: str) -> dict[str, Any]:
             },
             errors=errors,
             source="offline_static",
+            authenticity=auth_invalid,
         )
 
     except Exception as exc:
+        auth_exc = create_driving_license_authenticity(
+            dl=str(dl_number) if dl_number else "",
+            valid=False,
+            state_valid=False,
+            rto_valid=False,
+            year_valid=False,
+        )
         return build_response(
             success=False,
             data={
@@ -190,4 +229,5 @@ def validate_driving_license(dl_number: str) -> dict[str, Any]:
             },
             errors=[f"Driving license validation failed: {exc}"],
             source="offline_static",
+            authenticity=auth_exc,
         )

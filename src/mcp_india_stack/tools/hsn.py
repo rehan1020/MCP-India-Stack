@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from mcp_india_stack.authenticity.rules import create_hsn_authenticity
 from mcp_india_stack.utils.loader import load_hsn_index, load_hsn_rows
 from mcp_india_stack.utils.responses import build_response
 
@@ -25,23 +26,28 @@ def lookup_hsn_code(code: str | None = None, keyword: str | None = None) -> dict
     if code:
         normalized = str(code).strip()
         if not CODE_RE.match(normalized):
+            auth = create_hsn_authenticity(hsn_code=normalized, found=False)
             return build_response(
                 success=False,
                 data={"found": False},
                 errors=["HSN/SAC code must be 2-8 digits"],
                 source="offline_static",
+                authenticity=auth,
             )
 
         rows = load_hsn_index().get(normalized)
         if not rows:
+            auth = create_hsn_authenticity(hsn_code=normalized, found=False)
             return build_response(
                 success=False,
                 data={"found": False, "hsn_code": normalized},
                 errors=["HSN/SAC code not found in bundled dataset"],
                 source="offline_static",
+                authenticity=auth,
             )
 
         row = rows[0]
+        auth = create_hsn_authenticity(hsn_code=normalized, found=True, record=row)
         return build_response(
             success=True,
             data={
@@ -58,6 +64,7 @@ def lookup_hsn_code(code: str | None = None, keyword: str | None = None) -> dict
             },
             source="offline_static",
             validated_by=["db_lookup"],
+            authenticity=auth,
         )
 
     if keyword:

@@ -15,6 +15,7 @@
 - [Architecture Diagram](#architecture-diagram)
 - [Demo & Links](#demo--links)
 - [Key Features](#key-features)
+- [Authenticity System](#-authenticity-system)
 - [Quick Start](#quick-start)
 - [Tool Catalog](#tool-catalog)
 - [Agent Workflows & Resources](#agent-workflows--resources)
@@ -88,6 +89,20 @@
 - **Background Auto-Updates**: Non-blocking CDN fetching ensures your datasets never go stale without impacting request latency.
 - **Comprehensive Coverage**: 78 dedicated tools for identity validation (PAN, Aadhaar, GSTIN, TAN, PRAN), tax calculation (Income Tax, TDS, GST), savings calculators (EPF, PPF, SIP), and master data lookups.
 - **Enterprise-Ready**: Thread-pool accelerated bulk validation tools for processing large batches of vendor or customer data.
+
+---
+
+## 🛡️ Authenticity System
+
+Every verifying tool states **how strongly** an identifier is attested through standard levels (`A0` to `A4`) instead of a simplistic binary flag:
+
+* **`A0` (Format & Checksum)**: Structural syntax and checksum algorithms pass offline (e.g. Luhn mod-36 for GSTIN, Verhoeff for Aadhaar).
+* **`A1` (Cross-Field Consistency)**: Cross-field rules pass offline (e.g. embedded PAN in GSTIN, ROC jurisdiction in CIN, RTO code in DL).
+* **`A2` (Authoritative Dataset Match)**: Record matched in a bundled authoritative dataset (e.g. RBI IFSC directory, India Post pincode list, NSDL ISIN list).
+* **`A3` (Cryptographic Artifact Verification)**: Digital signature on a supplied artifact verified offline (e.g. NIC e-invoice QR code, UIDAI offline XML).
+* **`A4` (Live Registry Attestation)**: Confirmed via an opt-in live registry provider.
+
+Every response includes an additive `authenticity` object with verified checks, authority source, evaluation date, and explicit limitations (e.g. *"active registration status not verified"*). See [docs/authenticity.md](docs/authenticity.md) for complete details.
 
 ---
 

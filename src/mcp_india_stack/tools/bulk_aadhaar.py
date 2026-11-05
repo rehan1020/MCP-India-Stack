@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.authenticity.models import summarize_authenticity_levels
+from mcp_india_stack.authenticity.rules import create_aadhaar_authenticity
 from mcp_india_stack.logging_filter import mask_aadhaar_text
 from mcp_india_stack.tools.aadhaar import (
     _mask_aadhaar,
@@ -32,23 +34,38 @@ def _validate_single_aadhaar(aadhaar: str) -> dict[str, Any]:
             "masked": result.get("masked", ""),
             "valid": result.get("valid", False),
             "errors": [mask_aadhaar_text(str(e)) for e in err_list],
+            "authenticity": result.get("authenticity"),
         }
     except Exception as exc:
         masked_input = _mask_aadhaar(str(aadhaar)) if aadhaar else ""
+        auth = create_aadhaar_authenticity(
+            aadhaar=str(aadhaar) if aadhaar else "",
+            valid=False,
+            checksum_valid=False,
+            first_digit_valid=False,
+        )
         return {
             "masked": masked_input,
             "valid": False,
             "errors": [f"Validation error: {mask_aadhaar_text(str(exc))}"],
+            "authenticity": auth,
         }
 
 
 def _aadhaar_fallback(val: Any, err: str) -> dict[str, Any]:
     """Fallback representation for failed or malformed Aadhaar item."""
     masked = _mask_aadhaar(str(val)) if val is not None else ""
+    auth = create_aadhaar_authenticity(
+        aadhaar=str(val) if val is not None else "",
+        valid=False,
+        checksum_valid=False,
+        first_digit_valid=False,
+    )
     return {
         "masked": masked,
         "valid": False,
         "errors": [mask_aadhaar_text(err)],
+        "authenticity": auth,
     }
 
 
@@ -87,11 +104,14 @@ def bulk_validate_aadhaar(numbers: list[str]) -> dict[str, Any]:
     indexed_results = [{"index": idx, **r} for idx, r in enumerate(ordered_results)]
     valid_count = sum(1 for r in ordered_results if r.get("valid"))
     invalid_count = len(ordered_results) - valid_count
+    summary = summarize_authenticity_levels(ordered_results)
 
     return {
         "total": len(numbers),
         "valid_count": valid_count,
         "invalid_count": invalid_count,
         "results": indexed_results,
+        "authenticity_summary": summary,
+        "authenticity": {"summary": summary},
         "disclaimer": DISCLAIMER,
     }

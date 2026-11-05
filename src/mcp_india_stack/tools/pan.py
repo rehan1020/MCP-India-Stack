@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from mcp_india_stack.authenticity.rules import create_pan_authenticity
 from mcp_india_stack.tools import PAN_ENTITY_TYPE_LABELS
 from mcp_india_stack.utils.responses import build_response
 
@@ -24,12 +25,14 @@ def validate_pan(pan: str) -> dict[str, Any]:
     validation is performed.
     """
     if pan is None:
+        auth = create_pan_authenticity(pan="", valid=False)
         return _flatten(
             build_response(
                 success=False,
                 data={"valid": False},
                 errors=["PAN is required"],
                 source="offline_static",
+                authenticity=auth,
             )
         )
 
@@ -45,6 +48,7 @@ def validate_pan(pan: str) -> dict[str, Any]:
         errors.append("PAN must match format AAAAA9999A")
 
     if errors:
+        auth = create_pan_authenticity(pan=value, valid=False)
         return _flatten(
             build_response(
                 success=False,
@@ -52,6 +56,7 @@ def validate_pan(pan: str) -> dict[str, Any]:
                 errors=errors,
                 warnings=warnings,
                 source="offline_static",
+                authenticity=auth,
             )
         )
 
@@ -62,6 +67,13 @@ def validate_pan(pan: str) -> dict[str, Any]:
 
     if value == "AAAAA9999A":
         warnings.append("This PAN is a known dummy placeholder pattern")
+
+    auth = create_pan_authenticity(
+        pan=value,
+        valid=True,
+        entity_code=entity_code,
+        entity_type=entity_type,
+    )
 
     return _flatten(
         build_response(
@@ -81,5 +93,6 @@ def validate_pan(pan: str) -> dict[str, Any]:
             warnings=warnings,
             source="offline_static",
             validated_by=["format_check"],
+            authenticity=auth,
         )
     )

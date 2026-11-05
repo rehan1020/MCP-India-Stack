@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import re
+from datetime import date
 from typing import Any
+
+from mcp_india_stack.authenticity.rules import create_fssai_authenticity
 
 FSSAI_RE = re.compile(r"^\d{14}$")
 
@@ -28,11 +31,19 @@ def validate_fssai(license_number: str) -> dict[str, Any]:
 
     if not license_number:
         errors.append("FSSAI license number is required")
+        auth = create_fssai_authenticity(
+            fssai="",
+            valid=False,
+            state_valid=False,
+            year_valid=False,
+            license_type_valid=False,
+        )
         return {
             "valid": False,
             "license_number": "",
             "errors": errors,
             "warnings": warnings,
+            "authenticity": auth,
         }
 
     # Normalize: remove any spaces/dashes, keep only digits
@@ -40,22 +51,38 @@ def validate_fssai(license_number: str) -> dict[str, Any]:
 
     if len(normalized) != 14:
         errors.append(f"FSSAI license must be 14 digits, got {len(normalized)}")
+        auth = create_fssai_authenticity(
+            fssai=normalized,
+            valid=False,
+            state_valid=False,
+            year_valid=False,
+            license_type_valid=False,
+        )
         return {
             "valid": False,
             "license_number": license_number,
             "normalized_input": normalized,
             "errors": errors,
             "warnings": warnings,
+            "authenticity": auth,
         }
 
     if not FSSAI_RE.match(normalized):
         errors.append("FSSAI license must be exactly 14 digits")
+        auth = create_fssai_authenticity(
+            fssai=normalized,
+            valid=False,
+            state_valid=False,
+            year_valid=False,
+            license_type_valid=False,
+        )
         return {
             "valid": False,
             "license_number": license_number,
             "normalized_input": normalized,
             "errors": errors,
             "warnings": warnings,
+            "authenticity": auth,
         }
 
     # Decode the license
@@ -122,14 +149,29 @@ def validate_fssai(license_number: str) -> dict[str, Any]:
     # Calculate year assuming 2000-based
     try:
         year = int(year_str) + 2000
-        if year > 2030:
+        current_year = date.today().year
+        year_valid = 2006 <= year <= current_year + 1  # FSSAI established in 2006
+        if year > 2030 or not year_valid:
             warnings.append(f"Unusual license year: {year}")
     except ValueError:
         warnings.append("Could not decode license year")
         year = None
+        year_valid = False
+
+    state_valid = state_code in state_codes
+    license_type_valid = license_type_code in ("1", "2", "3", "4", "5")
+    valid = len(errors) == 0
+
+    auth = create_fssai_authenticity(
+        fssai=normalized,
+        valid=valid,
+        state_valid=state_valid,
+        year_valid=year_valid,
+        license_type_valid=license_type_valid,
+    )
 
     return {
-        "valid": True,
+        "valid": valid,
         "license_number": license_number,
         "normalized_input": normalized,
         "state_code": state_code,
@@ -140,4 +182,5 @@ def validate_fssai(license_number: str) -> dict[str, Any]:
         "sequence_number": sequence,
         "errors": errors,
         "warnings": warnings,
+        "authenticity": auth,
     }
