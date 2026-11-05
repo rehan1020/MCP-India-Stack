@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from mcp_india_stack.authenticity.rules import create_upi_authenticity
 from mcp_india_stack.normalization import normalize_upi
 from mcp_india_stack.utils.loader import load_upi_handles
 
@@ -15,7 +16,8 @@ INVALID_DOT_RE = re.compile(r"(^\.|\.$|\.\.)")
 def validate_upi_vpa(vpa: str) -> dict[str, Any]:
     """Validate a UPI VPA and detect known provider handles."""
     if vpa is None:
-        return {"valid": False, "errors": ["UPI VPA is required"]}
+        auth = create_upi_authenticity(vpa="", valid=False)
+        return {"valid": False, "errors": ["UPI VPA is required"], "authenticity": auth}
 
     norm_result = normalize_upi(str(vpa))
     value = norm_result["normalized_input"]
@@ -29,7 +31,14 @@ def validate_upi_vpa(vpa: str) -> dict[str, Any]:
         errors.append("UPI VPA must match username@handle format")
 
     if errors:
-        return {"valid": False, "vpa": value, "errors": errors, "warnings": warnings}
+        auth = create_upi_authenticity(vpa=value, valid=False)
+        return {
+            "valid": False,
+            "vpa": value,
+            "errors": errors,
+            "warnings": warnings,
+            "authenticity": auth,
+        }
 
     username, handle = value.split("@", 1)
     username_norm = username.lower()
@@ -39,7 +48,14 @@ def validate_upi_vpa(vpa: str) -> dict[str, Any]:
         errors.append("UPI username cannot start/end with '.' or contain consecutive dots")
 
     if errors:
-        return {"valid": False, "vpa": value, "errors": errors, "warnings": warnings}
+        auth = create_upi_authenticity(vpa=value, valid=False, handle=handle_norm)
+        return {
+            "valid": False,
+            "vpa": value,
+            "errors": errors,
+            "warnings": warnings,
+            "authenticity": auth,
+        }
 
     mapping = load_upi_handles()
     provider = mapping.get(handle_norm)
@@ -49,14 +65,24 @@ def validate_upi_vpa(vpa: str) -> dict[str, Any]:
             "UPI handle is not in curated list; it may still be valid if recently onboarded"
         )
 
+    provider_name = provider["provider_name"] if provider else None
+    auth = create_upi_authenticity(
+        vpa=f"{username_norm}@{handle_norm}",
+        valid=True,
+        known_provider=known_provider,
+        provider=provider_name,
+        handle=handle_norm,
+    )
+
     return {
         "valid": True,
         "vpa": f"{username_norm}@{handle_norm}",
         "username": username_norm,
         "handle": handle_norm,
         "known_provider": known_provider,
-        "provider_name": provider["provider_name"] if provider else None,
+        "provider_name": provider_name,
         "provider_type": provider["provider_type"] if provider else None,
         "errors": errors,
         "warnings": warnings,
+        "authenticity": auth,
     }

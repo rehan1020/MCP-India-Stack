@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from mcp_india_stack.authenticity.rules import create_state_code_authenticity
 from mcp_india_stack.utils.loader import load_state_codes
 from mcp_india_stack.utils.responses import build_response
 
@@ -21,20 +22,24 @@ def decode_state_code(value: str) -> dict[str, Any]:
             Decoded state metadata with found flag and optional error.
     """
     if value is None:
+        auth = create_state_code_authenticity(code="", found=False, record=None)
         return build_response(
             success=False,
             data={"found": False},
             errors=["state code input is required"],
             source="offline_static",
+            authenticity=auth,
         )
 
     raw = str(value).strip().upper()
     if not raw:
+        auth = create_state_code_authenticity(code="", found=False, record=None)
         return build_response(
             success=False,
             data={"found": False},
             errors=["state code input cannot be empty"],
             source="offline_static",
+            authenticity=auth,
         )
 
     code = raw
@@ -44,13 +49,16 @@ def decode_state_code(value: str) -> dict[str, Any]:
     table = load_state_codes()
     item = table.get(code)
     if not item:
+        auth = create_state_code_authenticity(code=code, found=False, record=None)
         return build_response(
             success=False,
             data={"found": False, "state_code": code},
             errors=["unknown GST state code"],
             source="offline_static",
+            authenticity=auth,
         )
 
+    auth = create_state_code_authenticity(code=code, found=True, record=item)
     return build_response(
         success=True,
         data={
@@ -63,4 +71,5 @@ def decode_state_code(value: str) -> dict[str, Any]:
         },
         source="offline_static",
         validated_by=["db_lookup"],
+        authenticity=auth,
     )

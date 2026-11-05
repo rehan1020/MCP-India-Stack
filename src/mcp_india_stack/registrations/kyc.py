@@ -4,6 +4,7 @@ from mcp.types import ToolAnnotations
 from pydantic import Field
 
 from mcp_india_stack.app import mcp
+from mcp_india_stack.authenticity import AUTHENTICITY_SCHEMA, AUTHENTICITY_SUMMARY_SCHEMA
 from mcp_india_stack.logging_filter import mask_aadhaar_text
 from mcp_india_stack.normalization import (
     normalize_aadhaar,
@@ -43,6 +44,13 @@ def validate_gstin(
             min_length=1, max_length=30, description="15-character GSTIN (spaces/hyphens allowed)"
         ),
     ],
+    expected_entity_type: Annotated[
+        str | None,
+        Field(
+            default=None,
+            description="Optional expected entity type character to verify against PAN 4th char",
+        ),
+    ] = None,
 ) -> dict[str, Any]:
     """Validate and decode an Indian GSTIN with checksum verification.
 
@@ -51,6 +59,7 @@ def validate_gstin(
 
     Args:
             gstin: 15-character GSTIN (e.g., 27AAPFU0939F1ZV). Spaces/hyphens stripped.
+            expected_entity_type: Optional expected entity char to match PAN 4th char.
 
     Returns:
             Standard envelope containing validity, state decode, embedded PAN,
@@ -61,7 +70,7 @@ def validate_gstin(
     """
     normalized = normalize_gstin(gstin)["normalized_input"]
     try:
-        result = core_validate_gstin(normalized)
+        result = core_validate_gstin(normalized, expected_entity_type=expected_entity_type)
         return result
     except Exception as exc:
         return build_response(
@@ -178,6 +187,7 @@ def validate_upi_vpa(
             errors=result.get("errors", []),
             warnings=result.get("warnings", []),
             source="offline_algorithm",
+            authenticity=cast(dict[str, Any] | None, result.get("authenticity")),
         )
     except Exception as exc:
         return build_response(
@@ -221,6 +231,7 @@ def validate_aadhaar(
             data=result,
             errors=cast(list[str], result.get("errors", [])),
             source="offline_algorithm",
+            authenticity=cast(dict[str, Any] | None, result.get("authenticity")),
         )
     except Exception as exc:
         masked_exc = mask_aadhaar_text(str(exc))
@@ -260,6 +271,7 @@ def bulk_validate_aadhaar(
             data=result,
             errors=result.get("errors", []),
             source="offline_algorithm",
+            authenticity=cast(dict[str, Any] | None, result.get("authenticity")),
         )
     except Exception as exc:
         masked_exc = mask_aadhaar_text(str(exc))
@@ -298,13 +310,7 @@ def validate_voter_id(
 
     cleaned = str(voter_id).strip().upper().replace(" ", "").replace("-", "")
     try:
-        result = core_validate_voter_id(cleaned)
-        return build_response(
-            success=bool(result.get("valid")),
-            data=result,
-            errors=cast(list[str], result.get("errors", [])),
-            source="offline_algorithm",
-        )
+        return core_validate_voter_id(cleaned)
     except Exception as exc:
         return build_response(
             success=False, errors=[f"Voter ID validation failed: {exc}"], source="offline_algorithm"
@@ -337,13 +343,7 @@ def validate_driving_license(
             Format validation only. Handles non-standard pre-Sarathi formats gracefully.
     """
     try:
-        result = core_validate_driving_license(dl_number)
-        return build_response(
-            success=bool(result.get("valid")),
-            data=result,
-            errors=cast(list[str], result.get("errors", [])),
-            source="offline_algorithm",
-        )
+        return core_validate_driving_license(dl_number)
     except Exception as exc:
         return build_response(
             success=False, errors=[f"DL validation failed: {exc}"], source="offline_algorithm"
@@ -378,13 +378,7 @@ def validate_passport(
 
     cleaned = str(passport_number).strip().upper().replace(" ", "").replace("-", "")
     try:
-        result = core_validate_passport(cleaned)
-        return build_response(
-            success=bool(result.get("valid")),
-            data=result,
-            errors=cast(list[str], result.get("errors", [])),
-            source="offline_algorithm",
-        )
+        return core_validate_passport(cleaned)
     except Exception as exc:
         return build_response(
             success=False, errors=[f"Passport validation failed: {exc}"], source="offline_algorithm"
@@ -419,13 +413,7 @@ def validate_cin(
     """
     normalized = normalize_cin(cin)["normalized_input"]
     try:
-        result = core_validate_cin(normalized)
-        return build_response(
-            success=bool(result.get("valid")),
-            data=result,
-            errors=cast(list[str], result.get("errors", [])),
-            source="offline_algorithm",
-        )
+        return core_validate_cin(normalized)
     except Exception as exc:
         return build_response(
             success=False, errors=[f"CIN validation failed: {exc}"], source="offline_algorithm"
@@ -460,13 +448,7 @@ def validate_din(
 
     cleaned = str(din).strip().replace(" ", "")
     try:
-        result = core_validate_din(cleaned)
-        return build_response(
-            success=bool(result.get("valid")),
-            data=result,
-            errors=cast(list[str], result.get("errors", [])),
-            source="offline_algorithm",
-        )
+        return core_validate_din(cleaned)
     except Exception as exc:
         return build_response(
             success=False, errors=[f"DIN validation failed: {exc}"], source="offline_algorithm"
@@ -509,6 +491,7 @@ def validate_fssai(
             normalized_input=result.get("normalized_input"),
             validated_by=["format"] if result.get("valid") else [],
             source="offline_algorithm",
+            authenticity=cast(dict[str, Any] | None, result.get("authenticity")),
         )
     except Exception as exc:
         return build_response(
@@ -537,6 +520,7 @@ def validate_tan(
             data=result,
             errors=[str(result.get("error"))] if result.get("error") else [],
             source="offline_algorithm",
+            authenticity=cast(dict[str, Any] | None, result.get("authenticity")),
         )
     except Exception as exc:
         return build_response(
@@ -565,6 +549,7 @@ def validate_mobile_number(
             data=result,
             errors=[str(result.get("error"))] if result.get("error") else [],
             source="offline_algorithm",
+            authenticity=cast(dict[str, Any] | None, result.get("authenticity")),
         )
     except Exception as exc:
         return build_response(
@@ -591,6 +576,7 @@ def validate_pran(pran: Annotated[str, Field(description="12-digit PRAN")]) -> d
             data=result,
             errors=[str(result.get("error"))] if result.get("error") else [],
             source="offline_algorithm",
+            authenticity=cast(dict[str, Any] | None, result.get("authenticity")),
         )
     except Exception as exc:
         return build_response(
@@ -619,6 +605,7 @@ def validate_llpin(
             data=result,
             errors=[str(result.get("error"))] if result.get("error") else [],
             source="offline_algorithm",
+            authenticity=cast(dict[str, Any] | None, result.get("authenticity")),
         )
     except Exception as exc:
         return build_response(
@@ -687,6 +674,7 @@ def schema_validate_gstin() -> dict[str, Any]:
             "verification_source": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -703,6 +691,7 @@ def schema_validate_pan() -> dict[str, Any]:
             "first_char": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -720,6 +709,7 @@ def schema_validate_upi_vpa() -> dict[str, Any]:
             "handle": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -736,6 +726,7 @@ def schema_validate_aadhaar() -> dict[str, Any]:
             "formatted": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -753,6 +744,7 @@ def schema_validate_voter_id() -> dict[str, Any]:
             "format_type": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -772,6 +764,7 @@ def schema_validate_driving_license() -> dict[str, Any]:
             "serial": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -788,6 +781,7 @@ def schema_validate_passport() -> dict[str, Any]:
             "serial": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -808,6 +802,7 @@ def schema_validate_cin() -> dict[str, Any]:
             "serial_number": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -823,6 +818,7 @@ def schema_validate_din() -> dict[str, Any]:
             "normalized_din": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -833,9 +829,19 @@ def schema_bulk_validate_gstin() -> dict[str, Any]:
     return {
         "type": "object",
         "properties": {
-            "results": {"type": "array"},
+            "results": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "authenticity": AUTHENTICITY_SCHEMA,
+                    },
+                },
+            },
             "total": {"type": "integer"},
             "valid_count": {"type": "integer"},
             "invalid_count": {"type": "integer"},
+            "authenticity_summary": {"type": "object"},
+            "authenticity": AUTHENTICITY_SUMMARY_SCHEMA,
         },
     }

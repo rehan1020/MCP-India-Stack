@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.authenticity.models import summarize_authenticity_levels
+from mcp_india_stack.authenticity.rules import create_pan_authenticity
 from mcp_india_stack.tools.bulk_common import (
     execute_bulk_items,
     validate_bulk_bounds,
@@ -14,11 +16,14 @@ from mcp_india_stack.utils.responses import build_response
 
 def _pan_fallback(val: Any, err: str) -> dict[str, Any]:
     """Fallback representation for failed or malformed PAN item."""
+    pan_str = str(val) if val is not None else ""
+    auth = create_pan_authenticity(pan=pan_str, valid=False)
     return {
         "valid": False,
-        "pan": str(val) if val is not None else "",
+        "pan": pan_str,
         "errors": [err],
         "warnings": [],
+        "authenticity": auth,
     }
 
 
@@ -57,9 +62,16 @@ def bulk_validate_pan(pans: list[str]) -> dict[str, Any]:
         entity_name="PAN",
     )
     valid_count = sum(1 for r in ordered_results if r.get("valid"))
+    summary = summarize_authenticity_levels(ordered_results)
 
     return build_response(
         success=True,
-        data={"results": ordered_results, "total": len(pans), "valid_count": valid_count},
+        data={
+            "results": ordered_results,
+            "total": len(pans),
+            "valid_count": valid_count,
+            "authenticity_summary": summary,
+        },
         source="offline_algorithm",
+        authenticity={"summary": summary},
     )

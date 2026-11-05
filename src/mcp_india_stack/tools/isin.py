@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.authenticity.rules import create_isin_authenticity
+
 SECURITY_TYPES = {
     "E": "Equity Share",
     "B": "Bond/Debenture",
@@ -52,7 +54,13 @@ def decode_isin(isin: str) -> dict[str, Any]:
     isin_clean = isin.strip().upper().replace(" ", "")
 
     if len(isin_clean) != 12:
-        return {"valid": False, "error": "ISIN must be 12 characters", "disclaimer": DISCLAIMER}
+        auth = create_isin_authenticity(isin=isin_clean, valid=False, found=False)
+        return {
+            "valid": False,
+            "error": "ISIN must be 12 characters",
+            "disclaimer": DISCLAIMER,
+            "authenticity": auth,
+        }
 
     country_code = isin_clean[:2]
     nsin = isin_clean[2:]
@@ -60,10 +68,14 @@ def decode_isin(isin: str) -> dict[str, Any]:
     luhn_valid = _isin_luhn_valid(isin_clean)
 
     security_type = "Unknown"
-    if country_code == "IN" and nsin[0] in SECURITY_TYPES:
+    has_security_type = country_code == "IN" and nsin[0] in SECURITY_TYPES
+    if has_security_type:
         security_type = SECURITY_TYPES[nsin[0]]
 
     country = "India" if country_code == "IN" else f"Country code: {country_code}"
+    auth = create_isin_authenticity(
+        isin=isin_clean, valid=luhn_valid, found=luhn_valid and has_security_type
+    )
 
     return {
         "valid": luhn_valid,
@@ -75,4 +87,5 @@ def decode_isin(isin: str) -> dict[str, Any]:
         "security_type": security_type,
         "note": "Company name requires securities master database.",
         "disclaimer": DISCLAIMER,
+        "authenticity": auth,
     }

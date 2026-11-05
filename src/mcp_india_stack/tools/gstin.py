@@ -6,6 +6,7 @@ import os
 import re
 from typing import Any
 
+from mcp_india_stack.authenticity.rules import create_gstin_authenticity
 from mcp_india_stack.normalization import normalize_gstin
 from mcp_india_stack.tools.pan import validate_pan
 from mcp_india_stack.tools.state_code import decode_state_code
@@ -50,22 +51,34 @@ def _classify_category(gstin: str) -> str:
     return "standard"
 
 
-def validate_gstin(gstin: str) -> dict[str, Any]:
+def validate_gstin(gstin: str, expected_entity_type: str | None = None) -> dict[str, Any]:
     """Validate GSTIN, decode structure, and verify checksum.
 
     Args:
         gstin: 15-character GSTIN to validate.
+        expected_entity_type: Optional expected entity type (e.g. 'P', 'C') to match against PAN.
 
     Returns:
         Dict with validity, state decode, embedded PAN, entity number,
         category, checksum info, live_verified flag, and verification_source.
     """
     if gstin is None:
+        auth = create_gstin_authenticity(
+            gstin="",
+            valid=False,
+            state_valid=False,
+            pan_valid=False,
+            entity_num_valid=False,
+            char14_valid=False,
+            checksum_valid=False,
+            expected_entity_type=expected_entity_type,
+        )
         return build_response(
             success=False,
             data={"valid": False, "live_verified": False},
             errors=["GSTIN is required"],
             source="offline_static",
+            authenticity=auth,
         )
 
     normalized = normalize_gstin(gstin)
@@ -81,34 +94,56 @@ def validate_gstin(gstin: str) -> dict[str, Any]:
         errors.append("GSTIN must contain only uppercase letters and digits")
 
     if errors:
+        auth = create_gstin_authenticity(
+            gstin=value or "",
+            valid=False,
+            state_valid=False,
+            pan_valid=False,
+            entity_num_valid=False,
+            char14_valid=False,
+            checksum_valid=False,
+            expected_entity_type=expected_entity_type,
+        )
         return build_response(
             success=False,
             data={"valid": False, "gstin": value, "live_verified": False},
             errors=errors,
             warnings=warnings,
             source="offline_static",
+            authenticity=auth,
         )
 
     state_decode = decode_state_code(value[:2])
-    if not state_decode.get("data", {}).get("found"):
+    state_valid = bool(state_decode.get("data", {}).get("found"))
+    if not state_valid:
         errors.append("GSTIN state code is invalid")
 
     pan_block = value[2:12]
     pan_check = validate_pan(pan_block)
-    if not pan_check.get("data", {}).get("valid"):
+    pan_valid = bool(pan_check.get("data", {}).get("valid"))
+    if not pan_valid:
         errors.append("Embedded PAN block is invalid")
 
     entity_number = value[12]
-    if entity_number not in BASE36[1:]:
+    entity_num_valid = entity_number in BASE36[1:]
+    if not entity_num_valid:
         errors.append("13th character (entity number) is invalid")
 
-    if value[13] != "Z":
+    char14_valid = value[13] == "Z"
+    if not char14_valid:
         errors.append("14th character must be Z for standard GSTIN structure")
 
     expected_checksum = compute_gstin_checksum(value[:14])
     checksum_valid = expected_checksum == value[14]
     if not checksum_valid:
         errors.append("Checksum character is invalid")
+
+    if expected_entity_type and pan_block and len(pan_block) >= 4:
+        if pan_block[3].upper() != expected_entity_type.strip().upper():
+            errors.append(
+                f"PAN 4th character '{pan_block[3]}' does not match "
+                f"expected entity type '{expected_entity_type}'"
+            )
 
     category = _classify_category(value)
     format_validity = "full" if category == "standard" else "limited"
@@ -117,10 +152,23 @@ def validate_gstin(gstin: str) -> dict[str, Any]:
             "Detected special GSTIN category; v1 applies limited validation beyond core checks"
         )
 
+    valid = len(errors) == 0
+    auth = create_gstin_authenticity(
+        gstin=value,
+        valid=valid,
+        state_valid=state_valid,
+        pan_valid=pan_valid,
+        entity_num_valid=entity_num_valid,
+        char14_valid=char14_valid,
+        checksum_valid=checksum_valid,
+        pan_block=pan_block,
+        expected_entity_type=expected_entity_type,
+    )
+
     return build_response(
-        success=len(errors) == 0,
+        success=valid,
         data={
-            "valid": len(errors) == 0,
+            "valid": valid,
             "gstin": value,
             "state_code": value[:2],
             "state_name": state_decode.get("data", {}).get("state_name"),
@@ -137,4 +185,5 @@ def validate_gstin(gstin: str) -> dict[str, Any]:
         warnings=warnings,
         source="live" if _LIVE_LOOKUP_ENABLED else "offline_static",
         validated_by=["format_check", "checksum"],
+        authenticity=auth,
     )

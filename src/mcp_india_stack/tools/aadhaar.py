@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 
+from mcp_india_stack.authenticity.rules import create_aadhaar_authenticity
 from mcp_india_stack.logging_filter import mask_aadhaar_text
 
 # --- Verhoeff lookup tables ---
@@ -99,6 +100,12 @@ def validate_aadhaar(aadhaar: str) -> dict[str, object]:
                 "first_digit_valid": False,
                 "errors": ["Aadhaar number is required"],
                 "disclaimer": DISCLAIMER,
+                "authenticity": create_aadhaar_authenticity(
+                    aadhaar="",
+                    valid=False,
+                    checksum_valid=False,
+                    first_digit_valid=False,
+                ),
             }
 
         # Strip whitespace, spaces, and hyphens
@@ -115,6 +122,12 @@ def validate_aadhaar(aadhaar: str) -> dict[str, object]:
                 "first_digit_valid": False,
                 "errors": ["Aadhaar number must contain only digits"],
                 "disclaimer": DISCLAIMER,
+                "authenticity": create_aadhaar_authenticity(
+                    aadhaar=cleaned,
+                    valid=False,
+                    checksum_valid=False,
+                    first_digit_valid=False,
+                ),
             }
 
         # Check length
@@ -126,6 +139,12 @@ def validate_aadhaar(aadhaar: str) -> dict[str, object]:
                 "first_digit_valid": False,
                 "errors": [f"Aadhaar number must be exactly 12 digits, got {len(cleaned)}"],
                 "disclaimer": DISCLAIMER,
+                "authenticity": create_aadhaar_authenticity(
+                    aadhaar=cleaned,
+                    valid=False,
+                    checksum_valid=False,
+                    first_digit_valid=False,
+                ),
             }
 
         # Check first digit
@@ -148,6 +167,12 @@ def validate_aadhaar(aadhaar: str) -> dict[str, object]:
 
         masked = _mask_aadhaar(cleaned)
         valid = first_digit_valid and checksum_valid
+        auth = create_aadhaar_authenticity(
+            aadhaar=cleaned,
+            valid=valid,
+            checksum_valid=checksum_valid,
+            first_digit_valid=first_digit_valid,
+        )
 
         result: dict[str, object] = {
             "valid": valid,
@@ -156,6 +181,7 @@ def validate_aadhaar(aadhaar: str) -> dict[str, object]:
             "first_digit_valid": first_digit_valid,
             "errors": errors,
             "disclaimer": DISCLAIMER,
+            "authenticity": auth,
         }
         if warnings:
             result["warnings"] = warnings
@@ -171,4 +197,10 @@ def validate_aadhaar(aadhaar: str) -> dict[str, object]:
             "first_digit_valid": False,
             "errors": [f"Aadhaar validation failed: {masked_exc}"],
             "disclaimer": DISCLAIMER,
+            "authenticity": create_aadhaar_authenticity(
+                aadhaar=cleaned,
+                valid=False,
+                checksum_valid=False,
+                first_digit_valid=False,
+            ),
         }

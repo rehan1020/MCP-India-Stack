@@ -2750,7 +2750,7 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Validate and decode an Indian GSTIN with checksum verification.\n\nUse when checking supplier/customer GSTINs before invoicing, reconciliation,\nor compliance workflows.\n\nArgs:\n        gstin: 15-character GSTIN (e.g., 27AAPFU0939F1ZV). Spaces/hyphens stripped.\n\nReturns:\n        Standard envelope containing validity, state decode, embedded PAN,\n        entity number, category, and checksum information.\n\nNotes:\n        Validates structure and checksum only; does not verify active GSTN registration status.\n",
+    "description": "Validate and decode an Indian GSTIN with checksum verification.\n\nUse when checking supplier/customer GSTINs before invoicing, reconciliation,\nor compliance workflows.\n\nArgs:\n        gstin: 15-character GSTIN (e.g., 27AAPFU0939F1ZV). Spaces/hyphens stripped.\n        expected_entity_type: Optional expected entity char to match PAN 4th char.\n\nReturns:\n        Standard envelope containing validity, state decode, embedded PAN,\n        entity number, category, and checksum information.\n\nNotes:\n        Validates structure and checksum only; does not verify active GSTN registration status.\n",
     "name": "validate_gstin",
     "parameters": {
       "properties": {
@@ -2760,6 +2760,19 @@
           "minLength": 1,
           "title": "Gstin",
           "type": "string"
+        },
+        "expected_entity_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional expected entity type character to verify against PAN 4th char",
+          "title": "Expected Entity Type"
         }
       },
       "required": [

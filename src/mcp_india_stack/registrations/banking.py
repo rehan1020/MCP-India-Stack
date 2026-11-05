@@ -4,6 +4,7 @@ from mcp.types import ToolAnnotations
 from pydantic import Field
 
 from mcp_india_stack.app import mcp
+from mcp_india_stack.authenticity import AUTHENTICITY_SCHEMA
 from mcp_india_stack.tools.aa_consent import (
     build_aa_consent_request as core_build_aa_consent_request,
 )
@@ -55,6 +56,7 @@ def lookup_ifsc(
             errors=result.get("errors", []),
             warnings=result.get("warnings", []),
             source=result.get("source", "bundled_dataset"),
+            authenticity=result.get("authenticity"),
         )
     except Exception as exc:
         return build_response(
@@ -115,6 +117,7 @@ def lookup_bbps_biller(
             errors=result.get("errors", []),
             warnings=result.get("warnings", []),
             source="bundled_dataset",
+            authenticity=result.get("authenticity"),
         )
     except Exception as exc:
         return build_response(
@@ -369,5 +372,6 @@ def schema_lookup_ifsc() -> dict[str, Any]:
             "verification_source": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }

@@ -10,6 +10,7 @@ from typing import Any
 
 import httpx
 
+from mcp_india_stack.authenticity.rules import create_ifsc_authenticity
 from mcp_india_stack.normalization import normalize_ifsc
 from mcp_india_stack.utils.loader import load_ifsc_index
 
@@ -86,6 +87,7 @@ def lookup_ifsc(code: str) -> dict[str, Any]:
         errors.append("IFSC must match format: 4 letters, 0, 6 alphanumeric")
 
     if errors:
+        auth = create_ifsc_authenticity(ifsc=value or "", found=False, record=None)
         return {
             "found": False,
             "ifsc": value,
@@ -93,10 +95,12 @@ def lookup_ifsc(code: str) -> dict[str, Any]:
             "warnings": warnings,
             "live_verified": False,
             "verification_source": "offline",
+            "authenticity": auth,
         }
 
     row = load_ifsc_index().get(value)
     if row:
+        auth = create_ifsc_authenticity(ifsc=value, found=True, record=row)
         return {
             "found": True,
             "ifsc": value,
@@ -117,6 +121,7 @@ def lookup_ifsc(code: str) -> dict[str, Any]:
             "verification_source": "offline",
             "errors": errors,
             "warnings": warnings,
+            "authenticity": auth,
         }
 
     if _LIVE_LOOKUP_ENABLED:
@@ -149,6 +154,9 @@ def lookup_ifsc(code: str) -> dict[str, Any]:
                         "verification_source": "live",
                         "errors": errors,
                         "warnings": warnings,
+                        "authenticity": create_ifsc_authenticity(
+                            ifsc=value, found=True, record=payload
+                        ),
                     }
                 else:
                     _ifsc_breaker.record_failure()
@@ -157,6 +165,7 @@ def lookup_ifsc(code: str) -> dict[str, Any]:
                 _ifsc_breaker.record_failure()
                 warnings.append("Live IFSC fallback failed or timed out")
 
+    auth_miss = create_ifsc_authenticity(ifsc=value, found=False, record=None)
     return {
         "found": False,
         "ifsc": value,
@@ -165,4 +174,5 @@ def lookup_ifsc(code: str) -> dict[str, Any]:
         "verification_source": "offline" if not _LIVE_LOOKUP_ENABLED else "live",
         "errors": ["IFSC not found in local dataset"],
         "warnings": warnings,
+        "authenticity": auth_miss,
     }
