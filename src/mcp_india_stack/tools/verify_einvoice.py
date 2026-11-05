@@ -188,11 +188,20 @@ def verify_einvoice_qr(
     main_hsn = str(claims.get("MainHsnCode", "")).strip()
 
     # 3. GSTIN Validation & Cross-Check
-    seller_val = validate_gstin(seller_gstin)
-    buyer_val = validate_gstin(buyer_gstin) if len(buyer_gstin) == 15 else {"valid": True}
+    seller_val: dict[str, Any] = validate_gstin(seller_gstin)
+    buyer_val: dict[str, Any] = (
+        validate_gstin(buyer_gstin) if len(buyer_gstin) == 15 else {"valid": True}
+    )
 
-    seller_ok = bool(seller_val.get("valid") or seller_val.get("data", {}).get("valid"))
-    buyer_ok = bool(buyer_val.get("valid") or buyer_val.get("data", {}).get("valid"))
+    seller_data = seller_val.get("data")
+    seller_ok = bool(
+        seller_val.get("valid") or (isinstance(seller_data, dict) and seller_data.get("valid"))
+    )
+
+    buyer_data = buyer_val.get("data")
+    buyer_ok = bool(
+        buyer_val.get("valid") or (isinstance(buyer_data, dict) and buyer_data.get("valid"))
+    )
 
     if not seller_ok:
         errors.append("Seller GSTIN invalid")
