@@ -24,10 +24,6 @@ def _check_verify_extras() -> tuple[bool, str | None]:
         import cryptography  # noqa: F401
     except ImportError:
         return False, "cryptography"
-    try:
-        import defusedxml  # noqa: F401
-    except ImportError:
-        return False, "defusedxml"
     return True, None
 
 
@@ -89,6 +85,20 @@ def verify_einvoice_qr(
     input_text = qr_text or qr_content
     has_extras, missing = _check_verify_extras()
     if not has_extras:
+        dep_checks = [
+            AuthenticityCheck(
+                name="dependency_check",
+                passed=False,
+                level="A0",
+                detail=f"Optional extra 'verify' ({missing}) is missing",
+            )
+        ]
+        auth = build_authenticity_envelope(
+            valid=False,
+            checks=dep_checks,
+            source="National Informatics Centre (NIC) / GSTN e-Invoice System",
+            limitations=["optional extra verify missing"],
+        )
         return {
             "success": False,
             "valid": False,
@@ -98,7 +108,7 @@ def verify_einvoice_qr(
                 "Install with: pip install 'mcp-india-stack[verify]'"
             ],
             "required_extra": "verify",
-            "authenticity": None,
+            "authenticity": auth,
         }
 
     from cryptography import x509

@@ -22,10 +22,6 @@ def _check_verify_extras() -> tuple[bool, str | None]:
         import cryptography  # noqa: F401
     except ImportError:
         return False, "cryptography"
-    try:
-        import defusedxml  # noqa: F401
-    except ImportError:
-        return False, "defusedxml"
     return True, None
 
 
@@ -258,6 +254,20 @@ def verify_aadhaar_offline_artifact(
     """
     has_extras, missing = _check_verify_extras()
     if not has_extras:
+        dep_checks = [
+            AuthenticityCheck(
+                name="dependency_check",
+                passed=False,
+                level="A0",
+                detail=f"Optional extra 'verify' ({missing}) is missing",
+            )
+        ]
+        auth = build_authenticity_envelope(
+            valid=False,
+            checks=dep_checks,
+            source="Unique Identification Authority of India (UIDAI) Offline Paperless e-KYC",
+            limitations=["optional extra verify missing"],
+        )
         return {
             "success": False,
             "valid": False,
@@ -267,20 +277,36 @@ def verify_aadhaar_offline_artifact(
                 "Install with: pip install 'mcp-india-stack[verify]'"
             ],
             "required_extra": "verify",
-            "authenticity": None,
+            "authenticity": auth,
         }
 
-    import defusedxml.ElementTree as DefusedET
-    from defusedxml.common import DefusedXmlException, EntitiesForbidden
-
     now = current_time or datetime.datetime.now(datetime.timezone.utc)
-    checks: list[AuthenticityCheck] = []
+    checks = []
     errors: list[str] = []
 
     raw_str = _unpack_raw_artifact(xml_or_zip_bytes_base64, artifact, share_code)
 
+    # 1. Parse safely with defusedxml or bounded parser blocking entities and bombs
+    root = None
+    has_defused = False
     try:
-        root = DefusedET.fromstring(raw_str)
+        import defusedxml.ElementTree as DefusedET
+
+        has_defused = True
+    except ImportError:
+        pass
+
+    try:
+        if has_defused:
+            root = DefusedET.fromstring(raw_str)
+        else:
+            upper_raw = raw_str.upper()
+            if "<!DOCTYPE" in upper_raw or "<!ENTITY" in upper_raw:
+                raise ValueError("Security violation rejected: XML entity expansion detected")
+            import xml.etree.ElementTree as StdET
+
+            root = StdET.fromstring(raw_str)
+
         checks.append(
             AuthenticityCheck(
                 name="xml_schema_and_entity_safety",
@@ -289,31 +315,39 @@ def verify_aadhaar_offline_artifact(
                 detail="XML parsed securely with entity expansion and XXE disabled",
             )
         )
-    except (EntitiesForbidden, DefusedXmlException) as exc:
-        checks.append(
-            AuthenticityCheck(
-                name="xml_schema_and_entity_safety",
-                passed=False,
-                level="A0",
-                detail=f"Security violation rejected: {exc}",
-            )
-        )
-        auth = build_authenticity_envelope(
-            valid=False,
-            checks=checks,
-            source="Unique Identification Authority of India (UIDAI) Offline Paperless e-KYC",
-            limitations=["XML bomb or entity expansion attempt rejected"],
-        )
-        resp = build_response(
-            success=False,
-            data={"valid": False},
-            errors=["XML entity expansion or bomb attack detected"],
-            source="offline_signature",
-            authenticity=auth,
-        )
-        resp["valid"] = False
-        return resp
     except Exception as exc:
+        is_attack = (
+            "EntitiesForbidden" in type(exc).__name__
+            or "DefusedXmlException" in type(exc).__name__
+            or "Security violation" in str(exc)
+            or "<!ENTITY" in raw_str.upper()
+            or "<!DOCTYPE" in raw_str.upper()
+        )
+        if is_attack:
+            checks.append(
+                AuthenticityCheck(
+                    name="xml_schema_and_entity_safety",
+                    passed=False,
+                    level="A0",
+                    detail=f"Security violation rejected: {exc}",
+                )
+            )
+            auth = build_authenticity_envelope(
+                valid=False,
+                checks=checks,
+                source="Unique Identification Authority of India (UIDAI) Offline Paperless e-KYC",
+                limitations=["XML bomb or entity expansion attempt rejected"],
+            )
+            resp = build_response(
+                success=False,
+                data={"valid": False},
+                errors=["XML entity expansion or bomb attack detected"],
+                source="offline_signature",
+                authenticity=auth,
+            )
+            resp["valid"] = False
+            return resp
+
         checks.append(
             AuthenticityCheck(
                 name="xml_schema_and_entity_safety",

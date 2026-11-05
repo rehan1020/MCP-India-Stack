@@ -353,19 +353,21 @@ def test_missing_verify_extra_graceful_error(monkeypatch: pytest.MonkeyPatch) ->
     import mcp_india_stack.tools.verify_einvoice as einvoice_mod
 
     monkeypatch.setattr(einvoice_mod, "_check_verify_extras", lambda: (False, "cryptography"))
-    monkeypatch.setattr(aadhaar_mod, "_check_verify_extras", lambda: (False, "defusedxml"))
+    monkeypatch.setattr(aadhaar_mod, "_check_verify_extras", lambda: (False, "cryptography"))
 
     res_einvoice = verify_einvoice_qr("sample.jwt.string")
     assert res_einvoice["success"] is False
     assert res_einvoice["error"] == "optional_dependency_missing"
     assert "pip install" in res_einvoice["errors"][0]
-    assert res_einvoice["authenticity"] is None
+    assert res_einvoice["authenticity"] is not None
+    assert res_einvoice["authenticity"]["level"] is None
 
     res_aadhaar = verify_aadhaar_offline_artifact("<xml />")
     assert res_aadhaar["success"] is False
     assert res_aadhaar["error"] == "optional_dependency_missing"
     assert "pip install" in res_aadhaar["errors"][0]
-    assert res_aadhaar["authenticity"] is None
+    assert res_aadhaar["authenticity"] is not None
+    assert res_aadhaar["authenticity"]["level"] is None
 
 
 def test_offline_guarantee_zero_sockets(monkeypatch: pytest.MonkeyPatch) -> None:
