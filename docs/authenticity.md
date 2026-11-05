@@ -148,3 +148,18 @@ To protect offline-first datasets against tampering, rollbacks, and supply chain
    * **Default Mode**: Soft-warns on signature or checksum mismatches in cache, logging warnings and falling back to clean bundled datasets.
    * **Strict Mode (`MCP_INDIA_STACK_REQUIRE_SIGNED_DATA=1`)**: Fails hard (raises `RuntimeError` / `DataLoadError`) if any dataset fails cryptographic signature or checksum verification.
 
+---
+
+## 8. Opt-in Registry Providers (Level A4)
+
+The MCP India Stack defaults to zero-auth, pure offline operation. Level `A4` represents opt-in verification against live registry providers.
+
+When `verify_online=True` is provided to verifying tools (e.g. `validate_gstin(..., verify_online=True)` or `validate_pan(..., verify_online=True)`), the stack queries configured providers protected by:
+* SSRF defense (blocking private/loopback/link-local/multicast destinations)
+* 3-state Circuit Breaker (fast fail after 5 consecutive errors with 60s cooldown)
+* Token-bucket rate limiter per provider
+* Strict connect and read timeouts
+
+To write or register custom live providers, refer to the [Writing a Provider Guide](writing_a_provider.md).
+
+

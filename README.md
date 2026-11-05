@@ -102,7 +102,7 @@ Every verifying tool states **how strongly** an identifier is attested through s
 * **`A3` (Cryptographic Artifact Verification)**: Digital signature on a supplied artifact verified offline (e.g. NIC e-invoice QR code, UIDAI offline XML).
 * **`A4` (Live Registry Attestation)**: Confirmed via an opt-in live registry provider.
 
-Every response includes an additive `authenticity` object with verified checks, authority source, evaluation date, and explicit limitations (e.g. *"active registration status not verified"*). See [docs/authenticity.md](docs/authenticity.md) for complete details.
+Every response includes an additive `authenticity` object with verified checks, authority source, evaluation date, and explicit limitations (e.g. *"active registration status not verified"*). See [docs/authenticity.md](docs/authenticity.md) and [docs/writing_a_provider.md](docs/writing_a_provider.md) for complete details.
 
 ---
 

@@ -89,8 +89,14 @@
     }
   },
   "bulk_validate_aadhaar": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate multiple Aadhaar numbers in parallel using ThreadPoolExecutor.\n\nUse when batch-validating Aadhaar numbers for KYC, onboarding, or\ncompliance workflows.\n\nArgs:\n    numbers: List of Aadhaar numbers (with or without spaces/hyphens).\n\nReturns:\n    Standard envelope with per-Aadhaar results and valid/invalid counts.\n\nNotes:\n    Max 500 Aadhaars per call. Uses same Verhoeff validation as single tool.\n    Not connected to UIDAI. In compliance with DPDP Act 2023, results are masked\n    and raw numbers are never stored or logged.\n",
     "name": "bulk_validate_aadhaar",
-    "description": "Validate multiple Aadhaar numbers in parallel using ThreadPoolExecutor.\n\n    Use when batch-validating Aadhaar numbers for KYC, onboarding, or\n    compliance workflows.\n\n    Args:\n        numbers: List of Aadhaar numbers (with or without spaces/hyphens).\n\n    Returns:\n        Standard envelope with per-Aadhaar results and valid/invalid counts.\n\n    Notes:\n        Max 500 Aadhaars per call. Uses same Verhoeff validation as single tool.\n        Not connected to UIDAI. In compliance with DPDP Act 2023, results are masked\n        and raw numbers are never stored or logged.\n    ",
     "parameters": {
       "properties": {
         "numbers": {
@@ -107,12 +113,6 @@
       ],
       "title": "bulk_validate_aadhaarArguments",
       "type": "object"
-    },
-    "annotations": {
-      "destructiveHint": null,
-      "idempotentHint": true,
-      "openWorldHint": false,
-      "readOnlyHint": true
     }
   },
   "bulk_validate_gstin": {
@@ -212,18 +212,6 @@
           "title": "Estimated Income",
           "type": "number"
         },
-        "regime": {
-          "default": "new",
-          "description": "'new' or 'old' tax regime",
-          "title": "Regime",
-          "type": "string"
-        },
-        "taxpayer_type": {
-          "default": "individual",
-          "description": "'individual', 'senior_citizen', or 'super_senior_citizen'",
-          "title": "Taxpayer Type",
-          "type": "string"
-        },
         "existing_tds": {
           "default": 0,
           "description": "TDS already deducted or to be deducted in rupees",
@@ -234,6 +222,18 @@
           "default": "2025-26",
           "description": "Financial year (e.g. '2025-26', '2026-27')",
           "title": "Financial Year",
+          "type": "string"
+        },
+        "regime": {
+          "default": "new",
+          "description": "'new' or 'old' tax regime",
+          "title": "Regime",
+          "type": "string"
+        },
+        "taxpayer_type": {
+          "default": "individual",
+          "description": "'individual', 'senior_citizen', or 'super_senior_citizen'",
+          "title": "Taxpayer Type",
           "type": "string"
         }
       },
@@ -255,20 +255,22 @@
     "name": "calculate_capital_gains",
     "parameters": {
       "properties": {
-        "sale_price": {
-          "description": "Sale proceeds in rupees",
-          "title": "Sale Price",
-          "type": "number"
-        },
-        "purchase_price": {
-          "description": "Original purchase price in rupees",
-          "title": "Purchase Price",
-          "type": "number"
-        },
         "asset_type": {
           "default": "equity",
           "description": "Asset type: equity, mutual_fund, real_estate, gold, debentures, crypto",
           "title": "Asset Type",
+          "type": "string"
+        },
+        "expenses_on_sale": {
+          "default": 0,
+          "description": "Brokerage, registration and other expenses on sale",
+          "title": "Expenses On Sale",
+          "type": "number"
+        },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
           "type": "string"
         },
         "holding_period_days": {
@@ -276,6 +278,12 @@
           "description": "Number of days held before sale",
           "title": "Holding Period Days",
           "type": "integer"
+        },
+        "improvements": {
+          "default": 0,
+          "description": "Cost of improvements (for real estate)",
+          "title": "Improvements",
+          "type": "number"
         },
         "inflation_index_purchase": {
           "anyOf": [
@@ -303,23 +311,15 @@
           "description": "CII for sale year (for indexation)",
           "title": "Inflation Index Sale"
         },
-        "expenses_on_sale": {
-          "default": 0,
-          "description": "Brokerage, registration and other expenses on sale",
-          "title": "Expenses On Sale",
+        "purchase_price": {
+          "description": "Original purchase price in rupees",
+          "title": "Purchase Price",
           "type": "number"
         },
-        "improvements": {
-          "default": 0,
-          "description": "Cost of improvements (for real estate)",
-          "title": "Improvements",
+        "sale_price": {
+          "description": "Sale proceeds in rupees",
+          "title": "Sale Price",
           "type": "number"
-        },
-        "financial_year": {
-          "default": "2025-26",
-          "description": "Financial year (e.g. '2025-26', '2026-27')",
-          "title": "Financial Year",
-          "type": "string"
         }
       },
       "required": [
@@ -346,16 +346,16 @@
           "title": "State Code",
           "type": "string"
         },
-        "suit_value": {
-          "description": "Value of the suit in INR",
-          "title": "Suit Value",
-          "type": "number"
-        },
         "suit_type": {
           "default": "money",
           "description": "Type of suit (default: 'money')",
           "title": "Suit Type",
           "type": "string"
+        },
+        "suit_value": {
+          "description": "Value of the suit in INR",
+          "title": "Suit Value",
+          "type": "number"
         }
       },
       "required": [
@@ -377,20 +377,16 @@
     "name": "calculate_emi",
     "parameters": {
       "properties": {
-        "principal": {
-          "description": "Loan amount in INR",
-          "title": "Principal",
-          "type": "number"
-        },
         "annual_interest_rate": {
           "description": "Annual interest rate as percentage (e.g., 8.5)",
           "title": "Annual Interest Rate",
           "type": "number"
         },
-        "tenure_months": {
-          "description": "Loan tenure in months",
-          "title": "Tenure Months",
-          "type": "integer"
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
         },
         "loan_type": {
           "default": "other",
@@ -398,11 +394,15 @@
           "title": "Loan Type",
           "type": "string"
         },
-        "financial_year": {
-          "default": "2025-26",
-          "description": "Financial year (e.g. '2025-26', '2026-27')",
-          "title": "Financial Year",
-          "type": "string"
+        "principal": {
+          "description": "Loan amount in INR",
+          "title": "Principal",
+          "type": "number"
+        },
+        "tenure_months": {
+          "description": "Loan tenure in months",
+          "title": "Tenure Months",
+          "type": "integer"
         }
       },
       "required": [
@@ -421,7 +421,7 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Calculate EPF and ESIC contributions for employer and employee.\n\nUse when computing payroll costs, employee deductions, or comparing\nCTC structures across different salary levels.\n\nArgs:\n    basic_wages: Basic salary + DA per month in INR.\n    gross_wages: Total gross monthly salary in INR.\n    include_employer_share: If True, return employer costs.\n\nReturns:\n    Standard envelope with EPF breakdown, ESIC applicability, and totals.\n\nNotes:\n    EPF ceiling is ₹15,000/month for statutory computation.\n    ESIC applicable when gross wages ≤ ₹21,000/month.\n",
+    "description": "Calculate EPF and ESIC contributions for employer and employee.\n\nUse when computing payroll costs, employee deductions, or comparing\nCTC structures across different salary levels.\n\nArgs:\n    basic_wages: Basic salary + DA per month in INR.\n    gross_wages: Total gross monthly salary in INR.\n    include_employer_share: If True, return employer costs.\n\nReturns:\n    Standard envelope with EPF breakdown, ESIC applicability, and totals.\n\nNotes:\n    EPF ceiling is \u20b915,000/month for statutory computation.\n    ESIC applicable when gross wages \u2264 \u20b921,000/month.\n",
     "name": "calculate_epf_esic",
     "parameters": {
       "properties": {
@@ -429,6 +429,12 @@
           "description": "Basic salary + DA per month in INR",
           "title": "Basic Wages",
           "type": "number"
+        },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
         },
         "gross_wages": {
           "description": "Total gross monthly salary in INR",
@@ -440,12 +446,6 @@
           "description": "If True, return employer costs",
           "title": "Include Employer Share",
           "type": "boolean"
-        },
-        "financial_year": {
-          "default": "2025-26",
-          "description": "Financial year (e.g. '2025-26', '2026-27')",
-          "title": "Financial Year",
-          "type": "string"
         }
       },
       "required": [
@@ -463,29 +463,25 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Calculate Fixed Deposit maturity amount.\n\nUse when projecting FD returns or comparing deposit options.\n\nArgs:\n    principal: Deposit amount in INR\n    annual_interest_rate: Rate as percentage\n    tenure_days: Deposit tenure in days\n    compounding: Compounding frequency\n    is_senior_citizen: Senior citizen flag (0.25% extra rate)\n    tds_applicable: Apply TDS if interest > ₹40,000/yr\n\nReturns:\n    Maturity amount with interest breakdown and TDS if applicable.\n",
+    "description": "Calculate Fixed Deposit maturity amount.\n\nUse when projecting FD returns or comparing deposit options.\n\nArgs:\n    principal: Deposit amount in INR\n    annual_interest_rate: Rate as percentage\n    tenure_days: Deposit tenure in days\n    compounding: Compounding frequency\n    is_senior_citizen: Senior citizen flag (0.25% extra rate)\n    tds_applicable: Apply TDS if interest > \u20b940,000/yr\n\nReturns:\n    Maturity amount with interest breakdown and TDS if applicable.\n",
     "name": "calculate_fd_maturity",
     "parameters": {
       "properties": {
-        "principal": {
-          "description": "Deposit amount in INR",
-          "title": "Principal",
-          "type": "number"
-        },
         "annual_interest_rate": {
           "description": "Interest rate as percentage (e.g., 6.5)",
           "title": "Annual Interest Rate",
           "type": "number"
         },
-        "tenure_days": {
-          "description": "Deposit tenure in days",
-          "title": "Tenure Days",
-          "type": "integer"
-        },
         "compounding": {
           "default": "quarterly",
           "description": "monthly, quarterly, half_yearly, yearly, simple",
           "title": "Compounding",
+          "type": "string"
+        },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
           "type": "string"
         },
         "is_senior_citizen": {
@@ -494,17 +490,21 @@
           "title": "Is Senior Citizen",
           "type": "boolean"
         },
+        "principal": {
+          "description": "Deposit amount in INR",
+          "title": "Principal",
+          "type": "number"
+        },
         "tds_applicable": {
           "default": true,
           "description": "Apply 10% TDS if interest exceeds threshold",
           "title": "Tds Applicable",
           "type": "boolean"
         },
-        "financial_year": {
-          "default": "2025-26",
-          "description": "Financial year (e.g. '2025-26', '2026-27')",
-          "title": "Financial Year",
-          "type": "string"
+        "tenure_days": {
+          "description": "Deposit tenure in days",
+          "title": "Tenure Days",
+          "type": "integer"
         }
       },
       "required": [
@@ -523,10 +523,22 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Calculate gratuity under the Payment of Gratuity Act, 1972.\n\nUse when computing terminal benefits, comparing CTC packages, or\nplanning retirement benefits.\n\nArgs:\n    last_drawn_salary: Basic + DA per month.\n    years_of_service: Total service duration.\n    is_covered_under_act: True for establishments with 10+ employees.\n\nReturns:\n    Standard envelope with gratuity amount, tax-exempt limit, and breakdown.\n\nNotes:\n    Minimum 5 years service required (except death/disablement).\n    Tax-exempt ceiling is ₹20,00,000.\n",
+    "description": "Calculate gratuity under the Payment of Gratuity Act, 1972.\n\nUse when computing terminal benefits, comparing CTC packages, or\nplanning retirement benefits.\n\nArgs:\n    last_drawn_salary: Basic + DA per month.\n    years_of_service: Total service duration.\n    is_covered_under_act: True for establishments with 10+ employees.\n\nReturns:\n    Standard envelope with gratuity amount, tax-exempt limit, and breakdown.\n\nNotes:\n    Minimum 5 years service required (except death/disablement).\n    Tax-exempt ceiling is \u20b920,00,000.\n",
     "name": "calculate_gratuity",
     "parameters": {
       "properties": {
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
+        "is_covered_under_act": {
+          "default": true,
+          "description": "True if establishment has 10+ employees",
+          "title": "Is Covered Under Act",
+          "type": "boolean"
+        },
         "last_drawn_salary": {
           "description": "Last basic salary + DA per month in INR",
           "title": "Last Drawn Salary",
@@ -536,18 +548,6 @@
           "description": "Total years served (e.g., 5.8 = 5 yrs 9 months)",
           "title": "Years Of Service",
           "type": "number"
-        },
-        "is_covered_under_act": {
-          "default": true,
-          "description": "True if establishment has 10+ employees",
-          "title": "Is Covered Under Act",
-          "type": "boolean"
-        },
-        "financial_year": {
-          "default": "2025-26",
-          "description": "Financial year (e.g. '2025-26', '2026-27')",
-          "title": "Financial Year",
-          "type": "string"
         }
       },
       "required": [
@@ -574,16 +574,6 @@
           "title": "Amount",
           "type": "number"
         },
-        "gst_rate": {
-          "description": "GST rate as percentage: 0, 0.1, 0.25, 1.5, 3, 5, 12, 18, 28",
-          "title": "Gst Rate",
-          "type": "number"
-        },
-        "transaction_type": {
-          "description": "'intra_state' (CGST+SGST) or 'inter_state' (IGST)",
-          "title": "Transaction Type",
-          "type": "string"
-        },
         "amount_includes_gst": {
           "default": false,
           "description": "If True, back-calculate base from GST-inclusive amount",
@@ -600,6 +590,16 @@
           "default": "2025-26",
           "description": "Financial year (e.g. '2025-26', '2026-27')",
           "title": "Financial Year",
+          "type": "string"
+        },
+        "gst_rate": {
+          "description": "GST rate as percentage: 0, 0.1, 0.25, 1.5, 3, 5, 12, 18, 28",
+          "title": "Gst Rate",
+          "type": "number"
+        },
+        "transaction_type": {
+          "description": "'intra_state' (CGST+SGST) or 'inter_state' (IGST)",
+          "title": "Transaction Type",
           "type": "string"
         }
       },
@@ -623,20 +623,21 @@
     "name": "calculate_gst_late_fee",
     "parameters": {
       "properties": {
-        "return_type": {
-          "description": "GSTR1, GSTR3B, or GSTR9",
-          "title": "Return Type",
-          "type": "string"
+        "annual_turnover": {
+          "description": "Annual turnover in INR",
+          "title": "Annual Turnover",
+          "type": "number"
         },
         "days_delayed": {
           "description": "Number of days delayed",
           "title": "Days Delayed",
           "type": "integer"
         },
-        "annual_turnover": {
-          "description": "Annual turnover in INR",
-          "title": "Annual Turnover",
-          "type": "number"
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
         },
         "has_nil_liability": {
           "default": false,
@@ -644,10 +645,9 @@
           "title": "Has Nil Liability",
           "type": "boolean"
         },
-        "financial_year": {
-          "default": "2025-26",
-          "description": "Financial year (e.g. '2025-26', '2026-27')",
-          "title": "Financial Year",
+        "return_type": {
+          "description": "GSTR1, GSTR3B, or GSTR9",
+          "title": "Return Type",
           "type": "string"
         }
       },
@@ -671,15 +671,45 @@
     "name": "calculate_home_vs_rent",
     "parameters": {
       "properties": {
-        "home_price": {
-          "description": "Property price in INR",
-          "title": "Home Price",
+        "analysis_years": {
+          "default": 20,
+          "description": "Years to compare",
+          "title": "Analysis Years",
+          "type": "integer"
+        },
+        "annual_rent_increase": {
+          "default": 5.0,
+          "description": "Expected rent increase percentage/year",
+          "title": "Annual Rent Increase",
           "type": "number"
         },
         "down_payment_percent": {
           "default": 20.0,
           "description": "Down payment as percentage",
           "title": "Down Payment Percent",
+          "type": "number"
+        },
+        "expected_property_appreciation": {
+          "default": 6.0,
+          "description": "Property appreciation percentage/year",
+          "title": "Expected Property Appreciation",
+          "type": "number"
+        },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
+        "home_price": {
+          "description": "Property price in INR",
+          "title": "Home Price",
+          "type": "number"
+        },
+        "investment_return": {
+          "default": 12.0,
+          "description": "Return on invested down payment percentage",
+          "title": "Investment Return",
           "type": "number"
         },
         "loan_interest_rate": {
@@ -699,36 +729,6 @@
           "description": "Current monthly rent in INR",
           "title": "Monthly Rent",
           "type": "number"
-        },
-        "annual_rent_increase": {
-          "default": 5.0,
-          "description": "Expected rent increase percentage/year",
-          "title": "Annual Rent Increase",
-          "type": "number"
-        },
-        "expected_property_appreciation": {
-          "default": 6.0,
-          "description": "Property appreciation percentage/year",
-          "title": "Expected Property Appreciation",
-          "type": "number"
-        },
-        "investment_return": {
-          "default": 12.0,
-          "description": "Return on invested down payment percentage",
-          "title": "Investment Return",
-          "type": "number"
-        },
-        "analysis_years": {
-          "default": 20,
-          "description": "Years to compare",
-          "title": "Analysis Years",
-          "type": "integer"
-        },
-        "financial_year": {
-          "default": "2025-26",
-          "description": "Financial year (e.g. '2025-26', '2026-27')",
-          "title": "Financial Year",
-          "type": "string"
         }
       },
       "required": [
@@ -754,21 +754,22 @@
           "title": "Basic Salary",
           "type": "number"
         },
-        "hra_received": {
-          "description": "Annual HRA received from employer in rupees",
-          "title": "Hra Received",
-          "type": "number"
-        },
-        "rent_paid": {
-          "description": "Annual rent paid in rupees",
-          "title": "Rent Paid",
-          "type": "number"
-        },
         "city_type": {
           "default": "non_metro",
           "description": "'metro' (Delhi/Mumbai/Chennai/Kolkata) or 'non_metro'",
           "title": "City Type",
           "type": "string"
+        },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
+        "hra_received": {
+          "description": "Annual HRA received from employer in rupees",
+          "title": "Hra Received",
+          "type": "number"
         },
         "is_government_employee": {
           "default": false,
@@ -776,11 +777,10 @@
           "title": "Is Government Employee",
           "type": "boolean"
         },
-        "financial_year": {
-          "default": "2025-26",
-          "description": "Financial year (e.g. '2025-26', '2026-27')",
-          "title": "Financial Year",
-          "type": "string"
+        "rent_paid": {
+          "description": "Annual rent paid in rupees",
+          "title": "Rent Paid",
+          "type": "number"
         }
       },
       "required": [
@@ -799,13 +799,61 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Calculate Indian income tax for FY2025-26 under old, new, or both regimes.\n\nUse when computing tax liability, comparing regimes, or planning deductions.\nIncludes slab computation, Section 87A rebate, surcharge with marginal relief,\nand health & education cess.\n\nArgs:\n        gross_income: Annual gross income in rupees.\n        regime: 'new', 'old', or 'both' for side-by-side comparison.\n        taxpayer_type: Category for slab selection.\n        deduction_80c: Old regime only — Section 80C amount.\n        deduction_80d_self: Old regime only — medical insurance self.\n        deduction_80d_parents: Old regime only — medical insurance parents.\n        deduction_80d_senior_parents: Old regime only — senior parent flag.\n        deduction_80ccd_nps: Old regime only — NPS additional.\n        deduction_24b: Old regime only — home loan interest.\n        other_deductions: Old regime only — other amounts.\n\nReturns:\n        Standard envelope with per-regime breakdown, effective rate, monthly tax,\n        take-home, and regime recommendation when both requested.\n\nNotes:\n        FY2025-26 rates. Estimate only — consult a CA for filing.\n",
+    "description": "Calculate Indian income tax for FY2025-26 under old, new, or both regimes.\n\nUse when computing tax liability, comparing regimes, or planning deductions.\nIncludes slab computation, Section 87A rebate, surcharge with marginal relief,\nand health & education cess.\n\nArgs:\n        gross_income: Annual gross income in rupees.\n        regime: 'new', 'old', or 'both' for side-by-side comparison.\n        taxpayer_type: Category for slab selection.\n        deduction_80c: Old regime only \u2014 Section 80C amount.\n        deduction_80d_self: Old regime only \u2014 medical insurance self.\n        deduction_80d_parents: Old regime only \u2014 medical insurance parents.\n        deduction_80d_senior_parents: Old regime only \u2014 senior parent flag.\n        deduction_80ccd_nps: Old regime only \u2014 NPS additional.\n        deduction_24b: Old regime only \u2014 home loan interest.\n        other_deductions: Old regime only \u2014 other amounts.\n\nReturns:\n        Standard envelope with per-regime breakdown, effective rate, monthly tax,\n        take-home, and regime recommendation when both requested.\n\nNotes:\n        FY2025-26 rates. Estimate only \u2014 consult a CA for filing.\n",
     "name": "calculate_income_tax",
     "parameters": {
       "properties": {
+        "deduction_24b": {
+          "default": 0,
+          "description": "Home loan interest under Section 24(b), capped at 2L",
+          "title": "Deduction 24B",
+          "type": "number"
+        },
+        "deduction_80c": {
+          "default": 0,
+          "description": "Section 80C deduction (PF, ELSS, LIC), capped at 1.5L",
+          "title": "Deduction 80C",
+          "type": "number"
+        },
+        "deduction_80ccd_nps": {
+          "default": 0,
+          "description": "Additional NPS deduction under 80CCD(1B), capped at 50K",
+          "title": "Deduction 80Ccd Nps",
+          "type": "number"
+        },
+        "deduction_80d_parents": {
+          "default": 0,
+          "description": "Section 80D medical insurance parents, capped at 25K/50K",
+          "title": "Deduction 80D Parents",
+          "type": "number"
+        },
+        "deduction_80d_self": {
+          "default": 0,
+          "description": "Section 80D medical insurance self, capped at 25K",
+          "title": "Deduction 80D Self",
+          "type": "number"
+        },
+        "deduction_80d_senior_parents": {
+          "default": false,
+          "description": "If True, parents 80D cap is 50K instead of 25K",
+          "title": "Deduction 80D Senior Parents",
+          "type": "boolean"
+        },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
         "gross_income": {
           "description": "Annual gross income in rupees. Example: 1500000",
           "title": "Gross Income",
+          "type": "number"
+        },
+        "other_deductions": {
+          "default": 0,
+          "description": "Other deductions (no cap)",
+          "title": "Other Deductions",
           "type": "number"
         },
         "regime": {
@@ -818,54 +866,6 @@
           "default": "individual",
           "description": "'individual', 'senior_citizen', or 'super_senior_citizen'",
           "title": "Taxpayer Type",
-          "type": "string"
-        },
-        "deduction_80c": {
-          "default": 0,
-          "description": "Section 80C deduction (PF, ELSS, LIC), capped at 1.5L",
-          "title": "Deduction 80C",
-          "type": "number"
-        },
-        "deduction_80d_self": {
-          "default": 0,
-          "description": "Section 80D medical insurance self, capped at 25K",
-          "title": "Deduction 80D Self",
-          "type": "number"
-        },
-        "deduction_80d_parents": {
-          "default": 0,
-          "description": "Section 80D medical insurance parents, capped at 25K/50K",
-          "title": "Deduction 80D Parents",
-          "type": "number"
-        },
-        "deduction_80d_senior_parents": {
-          "default": false,
-          "description": "If True, parents 80D cap is 50K instead of 25K",
-          "title": "Deduction 80D Senior Parents",
-          "type": "boolean"
-        },
-        "deduction_80ccd_nps": {
-          "default": 0,
-          "description": "Additional NPS deduction under 80CCD(1B), capped at 50K",
-          "title": "Deduction 80Ccd Nps",
-          "type": "number"
-        },
-        "deduction_24b": {
-          "default": 0,
-          "description": "Home loan interest under Section 24(b), capped at 2L",
-          "title": "Deduction 24B",
-          "type": "number"
-        },
-        "other_deductions": {
-          "default": 0,
-          "description": "Other deductions (no cap)",
-          "title": "Other Deductions",
-          "type": "number"
-        },
-        "financial_year": {
-          "default": "2025-26",
-          "description": "Financial year (e.g. '2025-26', '2026-27')",
-          "title": "Financial Year",
           "type": "string"
         }
       },
@@ -887,17 +887,6 @@
     "name": "calculate_income_tax_interest",
     "parameters": {
       "properties": {
-        "total_tax_liability": {
-          "description": "Total tax liability in INR",
-          "title": "Total Tax Liability",
-          "type": "number"
-        },
-        "tds_deducted": {
-          "default": 0.0,
-          "description": "TDS already deducted in INR",
-          "title": "Tds Deducted",
-          "type": "number"
-        },
         "advance_tax_paid": {
           "anyOf": [
             {
@@ -914,6 +903,12 @@
           "description": "Dict with q1,q2,q3,q4 quarterly payments",
           "title": "Advance Tax Paid"
         },
+        "due_date": {
+          "default": "2025-07-31",
+          "description": "Due date YYYY-MM-DD",
+          "title": "Due Date",
+          "type": "string"
+        },
         "filing_date": {
           "anyOf": [
             {
@@ -927,17 +922,22 @@
           "description": "Filing date YYYY-MM-DD or None if not filed",
           "title": "Filing Date"
         },
-        "due_date": {
-          "default": "2025-07-31",
-          "description": "Due date YYYY-MM-DD",
-          "title": "Due Date",
-          "type": "string"
-        },
         "financial_year": {
           "default": "2025-26",
           "description": "Financial year (e.g. '2025-26', '2026-27')",
           "title": "Financial Year",
           "type": "string"
+        },
+        "tds_deducted": {
+          "default": 0.0,
+          "description": "TDS already deducted in INR",
+          "title": "Tds Deducted",
+          "type": "number"
+        },
+        "total_tax_liability": {
+          "description": "Total tax liability in INR",
+          "title": "Total Tax Liability",
+          "type": "number"
         }
       },
       "required": [
@@ -958,11 +958,6 @@
     "name": "calculate_leave_encashment_tax",
     "parameters": {
       "properties": {
-        "leave_encashment_amount": {
-          "description": "Actual amount received in INR",
-          "title": "Leave Encashment Amount",
-          "type": "number"
-        },
         "average_monthly_salary": {
           "description": "Average of last 10 months basic + DA",
           "title": "Average Monthly Salary",
@@ -973,10 +968,11 @@
           "title": "Earned Leave Balance Days",
           "type": "integer"
         },
-        "years_of_service": {
-          "description": "Total years of service",
-          "title": "Years Of Service",
-          "type": "integer"
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
         },
         "is_government_employee": {
           "default": false,
@@ -984,11 +980,15 @@
           "title": "Is Government Employee",
           "type": "boolean"
         },
-        "financial_year": {
-          "default": "2025-26",
-          "description": "Financial year (e.g. '2025-26', '2026-27')",
-          "title": "Financial Year",
-          "type": "string"
+        "leave_encashment_amount": {
+          "description": "Actual amount received in INR",
+          "title": "Leave Encashment Amount",
+          "type": "number"
+        },
+        "years_of_service": {
+          "description": "Total years of service",
+          "title": "Years Of Service",
+          "type": "integer"
         }
       },
       "required": [
@@ -1002,25 +1002,20 @@
     }
   },
   "calculate_limitation_deadline": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Calculate the deadline under the Limitation Act.\n\nUse when computing the last date to file a suit, appeal, or application based on\ncause of action.\n\nArgs:\n    suit_type: Type of suit/appeal/application.\n    cause_of_action_date: Date the cause of action arose (YYYY-MM-DD).\n    exclusion_days: Days excluded under Section 12.\n    court_closed_on_deadline: Whether court is closed on deadline date.\n    court_reopen_date: Date court reopens if closed on deadline.\n\nReturns:\n    Standard envelope with deadline date and limitation period.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
     "name": "calculate_limitation_deadline",
-    "description": "Calculate the deadline under the Limitation Act.\n\n    Use when computing the last date to file a suit, appeal, or application based on\n    cause of action.\n\n    Args:\n        suit_type: Type of suit/appeal/application.\n        cause_of_action_date: Date the cause of action arose (YYYY-MM-DD).\n        exclusion_days: Days excluded under Section 12.\n        court_closed_on_deadline: Whether court is closed on deadline date.\n        court_reopen_date: Date court reopens if closed on deadline.\n\n    Returns:\n        Standard envelope with deadline date and limitation period.\n\n    Notes:\n        Not legal advice. Consult a qualified advocate.\n    ",
     "parameters": {
       "properties": {
-        "suit_type": {
-          "description": "Type of suit/appeal/application to calculate limitation for",
-          "title": "Suit Type",
-          "type": "string"
-        },
         "cause_of_action_date": {
           "description": "Date when the cause of action arose (YYYY-MM-DD)",
           "title": "Cause Of Action Date",
           "type": "string"
-        },
-        "exclusion_days": {
-          "default": 0,
-          "description": "Days excluded under Section 12 (e.g. for obtaining copies)",
-          "title": "Exclusion Days",
-          "type": "integer"
         },
         "court_closed_on_deadline": {
           "default": false,
@@ -1040,6 +1035,17 @@
           "default": null,
           "description": "Next reopening date if court is closed on deadline (Section 4)",
           "title": "Court Reopen Date"
+        },
+        "exclusion_days": {
+          "default": 0,
+          "description": "Days excluded under Section 12 (e.g. for obtaining copies)",
+          "title": "Exclusion Days",
+          "type": "integer"
+        },
+        "suit_type": {
+          "description": "Type of suit/appeal/application to calculate limitation for",
+          "title": "Suit Type",
+          "type": "string"
         }
       },
       "required": [
@@ -1048,12 +1054,6 @@
       ],
       "title": "calculate_limitation_deadlineArguments",
       "type": "object"
-    },
-    "annotations": {
-      "destructiveHint": null,
-      "idempotentHint": true,
-      "openWorldHint": false,
-      "readOnlyHint": true
     }
   },
   "calculate_neft_rtgs_imps_charges": {
@@ -1067,9 +1067,10 @@
     "name": "calculate_neft_rtgs_imps_charges",
     "parameters": {
       "properties": {
-        "transfer_mode": {
-          "description": "NEFT, RTGS, IMPS, or UPI",
-          "title": "Transfer Mode",
+        "account_type": {
+          "default": "savings",
+          "description": "'savings' or 'current'",
+          "title": "Account Type",
           "type": "string"
         },
         "amount": {
@@ -1077,10 +1078,10 @@
           "title": "Amount",
           "type": "number"
         },
-        "account_type": {
-          "default": "savings",
-          "description": "'savings' or 'current'",
-          "title": "Account Type",
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
           "type": "string"
         },
         "is_online": {
@@ -1089,10 +1090,9 @@
           "title": "Is Online",
           "type": "boolean"
         },
-        "financial_year": {
-          "default": "2025-26",
-          "description": "Financial year (e.g. '2025-26', '2026-27')",
-          "title": "Financial Year",
+        "transfer_mode": {
+          "description": "NEFT, RTGS, IMPS, or UPI",
+          "title": "Transfer Mode",
           "type": "string"
         }
       },
@@ -1115,26 +1115,10 @@
     "name": "calculate_nps_projection",
     "parameters": {
       "properties": {
-        "monthly_contribution": {
-          "description": "Monthly NPS contribution in INR",
-          "title": "Monthly Contribution",
-          "type": "number"
-        },
-        "current_age": {
-          "description": "Current age",
-          "title": "Current Age",
-          "type": "integer"
-        },
-        "retirement_age": {
-          "default": 60,
-          "description": "Retirement age",
-          "title": "Retirement Age",
-          "type": "integer"
-        },
-        "expected_annual_return": {
-          "default": 10.0,
-          "description": "Expected annual return percentage",
-          "title": "Expected Annual Return",
+        "annuity_percent": {
+          "default": 40.0,
+          "description": "Corpus for annuity (min 40%)",
+          "title": "Annuity Percent",
           "type": "number"
         },
         "annuity_rate": {
@@ -1143,10 +1127,15 @@
           "title": "Annuity Rate",
           "type": "number"
         },
-        "annuity_percent": {
-          "default": 40.0,
-          "description": "Corpus for annuity (min 40%)",
-          "title": "Annuity Percent",
+        "current_age": {
+          "description": "Current age",
+          "title": "Current Age",
+          "type": "integer"
+        },
+        "expected_annual_return": {
+          "default": 10.0,
+          "description": "Expected annual return percentage",
+          "title": "Expected Annual Return",
           "type": "number"
         },
         "financial_year": {
@@ -1154,6 +1143,17 @@
           "description": "Financial year (e.g. '2025-26', '2026-27')",
           "title": "Financial Year",
           "type": "string"
+        },
+        "monthly_contribution": {
+          "description": "Monthly NPS contribution in INR",
+          "title": "Monthly Contribution",
+          "type": "number"
+        },
+        "retirement_age": {
+          "default": 60,
+          "description": "Retirement age",
+          "title": "Retirement Age",
+          "type": "integer"
         }
       },
       "required": [
@@ -1171,25 +1171,19 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Calculate PPF maturity amount with year-by-year breakdown.\n\nUse when planning long-term savings, comparing investment options, or\ncalculating retirement corpus.\n\nArgs:\n    annual_investment: Amount invested per year (max ₹1,50,000).\n    tenure_years: PPF tenure (15, 20, 25, or 30 years).\n    annual_interest_rate: PPF rate (default 7.1% for FY2025-26).\n\nReturns:\n    Standard envelope with maturity amount, total invested, interest earned.\n\nNotes:\n    EEE tax status: exempt at investment, accumulation, and maturity.\n    Rate is government-administered and revised quarterly.\n",
+    "description": "Calculate PPF maturity amount with year-by-year breakdown.\n\nUse when planning long-term savings, comparing investment options, or\ncalculating retirement corpus.\n\nArgs:\n    annual_investment: Amount invested per year (max \u20b91,50,000).\n    tenure_years: PPF tenure (15, 20, 25, or 30 years).\n    annual_interest_rate: PPF rate (default 7.1% for FY2025-26).\n\nReturns:\n    Standard envelope with maturity amount, total invested, interest earned.\n\nNotes:\n    EEE tax status: exempt at investment, accumulation, and maturity.\n    Rate is government-administered and revised quarterly.\n",
     "name": "calculate_ppf_maturity",
     "parameters": {
       "properties": {
-        "annual_investment": {
-          "description": "Amount invested per year in INR",
-          "title": "Annual Investment",
-          "type": "number"
-        },
-        "tenure_years": {
-          "default": 15,
-          "description": "PPF tenure in years (15, 20, 25, or 30)",
-          "title": "Tenure Years",
-          "type": "integer"
-        },
         "annual_interest_rate": {
           "default": 7.1,
           "description": "Annual interest rate percentage (default 7.1 for FY2025-26)",
           "title": "Annual Interest Rate",
+          "type": "number"
+        },
+        "annual_investment": {
+          "description": "Amount invested per year in INR",
+          "title": "Annual Investment",
           "type": "number"
         },
         "financial_year": {
@@ -1197,6 +1191,12 @@
           "description": "Financial year (e.g. '2025-26', '2026-27')",
           "title": "Financial Year",
           "type": "string"
+        },
+        "tenure_years": {
+          "default": 15,
+          "description": "PPF tenure in years (15, 20, 25, or 30)",
+          "title": "Tenure Years",
+          "type": "integer"
         }
       },
       "required": [
@@ -1217,28 +1217,6 @@
     "name": "calculate_presumptive_tax",
     "parameters": {
       "properties": {
-        "scheme": {
-          "description": "'44AD' for business or '44ADA' for professionals",
-          "title": "Scheme",
-          "type": "string"
-        },
-        "gross_receipts": {
-          "description": "Total gross receipts in INR",
-          "title": "Gross Receipts",
-          "type": "number"
-        },
-        "digital_receipt_percent": {
-          "default": 100.0,
-          "description": "Percentage via digital mode",
-          "title": "Digital Receipt Percent",
-          "type": "number"
-        },
-        "regime": {
-          "default": "new",
-          "description": "'new' or 'old' tax regime",
-          "title": "Regime",
-          "type": "string"
-        },
         "age": {
           "default": 35,
           "description": "Assessee age",
@@ -1251,10 +1229,32 @@
           "title": "Deductions 80C",
           "type": "number"
         },
+        "digital_receipt_percent": {
+          "default": 100.0,
+          "description": "Percentage via digital mode",
+          "title": "Digital Receipt Percent",
+          "type": "number"
+        },
         "financial_year": {
           "default": "2025-26",
           "description": "Financial year (e.g. '2025-26', '2026-27')",
           "title": "Financial Year",
+          "type": "string"
+        },
+        "gross_receipts": {
+          "description": "Total gross receipts in INR",
+          "title": "Gross Receipts",
+          "type": "number"
+        },
+        "regime": {
+          "default": "new",
+          "description": "'new' or 'old' tax regime",
+          "title": "Regime",
+          "type": "string"
+        },
+        "scheme": {
+          "description": "'44AD' for business or '44ADA' for professionals",
+          "title": "Scheme",
           "type": "string"
         }
       },
@@ -1277,6 +1277,12 @@
     "name": "calculate_professional_tax",
     "parameters": {
       "properties": {
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
         "gross_salary_monthly": {
           "description": "Monthly gross salary in INR",
           "title": "Gross Salary Monthly",
@@ -1285,12 +1291,6 @@
         "state_code": {
           "description": "2-char state code (e.g., MH, KA, TN)",
           "title": "State Code",
-          "type": "string"
-        },
-        "financial_year": {
-          "default": "2025-26",
-          "description": "Financial year (e.g. '2025-26', '2026-27')",
-          "title": "Financial Year",
           "type": "string"
         }
       },
@@ -1313,26 +1313,26 @@
     "name": "calculate_rd_maturity",
     "parameters": {
       "properties": {
-        "monthly_installment": {
-          "description": "Monthly deposit amount in INR",
-          "title": "Monthly Installment",
-          "type": "number"
-        },
         "annual_interest_rate": {
           "description": "Annual interest rate as percentage",
           "title": "Annual Interest Rate",
           "type": "number"
-        },
-        "tenure_months": {
-          "description": "Deposit tenure in months",
-          "title": "Tenure Months",
-          "type": "integer"
         },
         "financial_year": {
           "default": "2025-26",
           "description": "Financial year (e.g. '2025-26', '2026-27')",
           "title": "Financial Year",
           "type": "string"
+        },
+        "monthly_installment": {
+          "description": "Monthly deposit amount in INR",
+          "title": "Monthly Installment",
+          "type": "number"
+        },
+        "tenure_months": {
+          "description": "Deposit tenure in months",
+          "title": "Tenure Months",
+          "type": "integer"
         }
       },
       "required": [
@@ -1355,16 +1355,16 @@
     "name": "calculate_rti_deadline",
     "parameters": {
       "properties": {
-        "filed_date": {
-          "description": "Date the RTI application was filed (YYYY-MM-DD)",
-          "title": "Filed Date",
-          "type": "string"
-        },
         "concerns_life_or_liberty": {
           "default": false,
           "description": "Whether the info sought concerns life or liberty of a person",
           "title": "Concerns Life Or Liberty",
           "type": "boolean"
+        },
+        "filed_date": {
+          "description": "Date the RTI application was filed (YYYY-MM-DD)",
+          "title": "Filed Date",
+          "type": "string"
         },
         "routed_through_apio": {
           "default": false,
@@ -1391,16 +1391,16 @@
     "name": "calculate_rti_fee",
     "parameters": {
       "properties": {
-        "state_code": {
-          "default": "central",
-          "description": "State code or 'central' (default: 'central')",
-          "title": "State Code",
-          "type": "string"
-        },
         "applicant_category": {
           "default": "general",
           "description": "Category of the applicant ('general' or 'bpl')",
           "title": "Applicant Category",
+          "type": "string"
+        },
+        "state_code": {
+          "default": "central",
+          "description": "State code or 'central' (default: 'central')",
+          "title": "State Code",
           "type": "string"
         }
       },
@@ -1456,22 +1456,34 @@
     "name": "calculate_salary_restructuring",
     "parameters": {
       "properties": {
-        "current_gross": {
-          "description": "Current gross annual salary in INR",
-          "title": "Current Gross",
-          "type": "number"
-        },
         "current_basic_ratio": {
           "default": 0.5,
           "description": "Current basic salary as ratio of gross (0.40-0.60)",
           "title": "Current Basic Ratio",
           "type": "number"
         },
-        "structure_type": {
-          "default": "standard",
-          "description": "Structure option: standard, optimized, or startup",
-          "title": "Structure Type",
+        "current_gross": {
+          "description": "Current gross annual salary in INR",
+          "title": "Current Gross",
+          "type": "number"
+        },
+        "family_medical": {
+          "default": false,
+          "description": "Include family medical insurance",
+          "title": "Family Medical",
+          "type": "boolean"
+        },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
           "type": "string"
+        },
+        "has_hra": {
+          "default": true,
+          "description": "Employee receives HRA",
+          "title": "Has Hra",
+          "type": "boolean"
         },
         "include_meal_card": {
           "default": false,
@@ -1485,10 +1497,10 @@
           "title": "Include Wallet Allowance",
           "type": "boolean"
         },
-        "has_hra": {
-          "default": true,
-          "description": "Employee receives HRA",
-          "title": "Has Hra",
+        "parents_medical": {
+          "default": false,
+          "description": "Include parents medical insurance (additional)",
+          "title": "Parents Medical",
           "type": "boolean"
         },
         "rent_in_metro": {
@@ -1497,22 +1509,10 @@
           "title": "Rent In Metro",
           "type": "boolean"
         },
-        "family_medical": {
-          "default": false,
-          "description": "Include family medical insurance",
-          "title": "Family Medical",
-          "type": "boolean"
-        },
-        "parents_medical": {
-          "default": false,
-          "description": "Include parents medical insurance (additional)",
-          "title": "Parents Medical",
-          "type": "boolean"
-        },
-        "financial_year": {
-          "default": "2025-26",
-          "description": "Financial year (e.g. '2025-26', '2026-27')",
-          "title": "Financial Year",
+        "structure_type": {
+          "default": "standard",
+          "description": "Structure option: standard, optimized, or startup",
+          "title": "Structure Type",
           "type": "string"
         }
       },
@@ -1534,25 +1534,9 @@
     "name": "calculate_sip_returns",
     "parameters": {
       "properties": {
-        "monthly_investment": {
-          "description": "Monthly SIP amount in INR",
-          "title": "Monthly Investment",
-          "type": "number"
-        },
         "expected_annual_return": {
           "description": "Expected CAGR as percentage",
           "title": "Expected Annual Return",
-          "type": "number"
-        },
-        "tenure_years": {
-          "description": "Investment tenure in years",
-          "title": "Tenure Years",
-          "type": "integer"
-        },
-        "inflation_rate": {
-          "default": 6.0,
-          "description": "Expected inflation rate percentage",
-          "title": "Inflation Rate",
           "type": "number"
         },
         "financial_year": {
@@ -1560,6 +1544,22 @@
           "description": "Financial year (e.g. '2025-26', '2026-27')",
           "title": "Financial Year",
           "type": "string"
+        },
+        "inflation_rate": {
+          "default": 6.0,
+          "description": "Expected inflation rate percentage",
+          "title": "Inflation Rate",
+          "type": "number"
+        },
+        "monthly_investment": {
+          "description": "Monthly SIP amount in INR",
+          "title": "Monthly Investment",
+          "type": "number"
+        },
+        "tenure_years": {
+          "description": "Investment tenure in years",
+          "title": "Tenure Years",
+          "type": "integer"
         }
       },
       "required": [
@@ -1582,14 +1582,14 @@
     "name": "calculate_stamp_duty",
     "parameters": {
       "properties": {
-        "state_code": {
-          "description": "State code where instrument is executed (e.g., MH, DL, KA)",
-          "title": "State Code",
-          "type": "string"
-        },
         "instrument_type": {
           "description": "Type of instrument (e.g., conveyance, lease, agreement)",
           "title": "Instrument Type",
+          "type": "string"
+        },
+        "state_code": {
+          "description": "State code where instrument is executed (e.g., MH, DL, KA)",
+          "title": "State Code",
           "type": "string"
         },
         "transaction_value": {
@@ -1618,11 +1618,6 @@
     "name": "calculate_step_up_sip",
     "parameters": {
       "properties": {
-        "initial_monthly_investment": {
-          "description": "Starting SIP amount in INR",
-          "title": "Initial Monthly Investment",
-          "type": "number"
-        },
         "annual_step_up_percent": {
           "description": "Annual step-up percentage",
           "title": "Annual Step Up Percent",
@@ -1633,16 +1628,21 @@
           "title": "Expected Annual Return",
           "type": "number"
         },
-        "tenure_years": {
-          "description": "Investment tenure in years",
-          "title": "Tenure Years",
-          "type": "integer"
-        },
         "financial_year": {
           "default": "2025-26",
           "description": "Financial year (e.g. '2025-26', '2026-27')",
           "title": "Financial Year",
           "type": "string"
+        },
+        "initial_monthly_investment": {
+          "description": "Starting SIP amount in INR",
+          "title": "Initial Monthly Investment",
+          "type": "number"
+        },
+        "tenure_years": {
+          "description": "Investment tenure in years",
+          "title": "Tenure Years",
+          "type": "integer"
         }
       },
       "required": [
@@ -1666,26 +1666,26 @@
     "name": "calculate_sukanya_samriddhi",
     "parameters": {
       "properties": {
-        "scheme": {
-          "description": "'ssy' for Sukanya Samriddhi or 'scss' for Senior Citizen Savings Scheme",
-          "title": "Scheme",
-          "type": "string"
-        },
-        "annual_investment": {
-          "description": "Annual deposit amount in INR",
-          "title": "Annual Investment",
-          "type": "number"
-        },
         "annual_interest_rate": {
           "default": 8.2,
           "description": "Interest rate as percentage",
           "title": "Annual Interest Rate",
           "type": "number"
         },
+        "annual_investment": {
+          "description": "Annual deposit amount in INR",
+          "title": "Annual Investment",
+          "type": "number"
+        },
         "financial_year": {
           "default": "2025-26",
           "description": "Financial year (e.g. '2025-26', '2026-27')",
           "title": "Financial Year",
+          "type": "string"
+        },
+        "scheme": {
+          "description": "'ssy' for Sukanya Samriddhi or 'scss' for Senior Citizen Savings Scheme",
+          "title": "Scheme",
           "type": "string"
         }
       },
@@ -1708,26 +1708,26 @@
     "name": "calculate_surcharge",
     "parameters": {
       "properties": {
-        "total_income": {
-          "description": "Total income in rupees",
-          "title": "Total Income",
-          "type": "number"
-        },
         "base_tax": {
           "description": "Base tax amount before surcharge",
           "title": "Base Tax",
           "type": "number"
-        },
-        "regime": {
-          "description": "'new' or 'old' tax regime",
-          "title": "Regime",
-          "type": "string"
         },
         "financial_year": {
           "default": "2025-26",
           "description": "Financial year (e.g. '2025-26', '2026-27')",
           "title": "Financial Year",
           "type": "string"
+        },
+        "regime": {
+          "description": "'new' or 'old' tax regime",
+          "title": "Regime",
+          "type": "string"
+        },
+        "total_income": {
+          "description": "Total income in rupees",
+          "title": "Total Income",
+          "type": "number"
         }
       },
       "required": [
@@ -1750,32 +1750,28 @@
     "name": "calculate_tds",
     "parameters": {
       "properties": {
-        "section": {
-          "description": "TDS section key, e.g. '194C_individual', '194J_professional'",
-          "title": "Section",
-          "type": "string"
-        },
-        "payment_amount": {
-          "description": "Gross payment amount in rupees",
-          "title": "Payment Amount",
-          "type": "number"
-        },
-        "pan_available": {
-          "description": "Whether payee has provided PAN",
-          "title": "Pan Available",
-          "type": "boolean"
-        },
-        "is_senior_citizen": {
-          "default": false,
-          "description": "For 194A bank interest — applies higher threshold for seniors",
-          "title": "Is Senior Citizen",
-          "type": "boolean"
-        },
         "aggregate_payments_ytd": {
           "default": 0.0,
           "description": "Prior payments to same payee under this section in current FY",
           "title": "Aggregate Payments Ytd",
           "type": "number"
+        },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
+        "is_senior_citizen": {
+          "default": false,
+          "description": "For 194A bank interest \u2014 applies higher threshold for seniors",
+          "title": "Is Senior Citizen",
+          "type": "boolean"
+        },
+        "pan_available": {
+          "description": "Whether payee has provided PAN",
+          "title": "Pan Available",
+          "type": "boolean"
         },
         "payee_type": {
           "default": "individual_huf",
@@ -1783,10 +1779,14 @@
           "title": "Payee Type",
           "type": "string"
         },
-        "financial_year": {
-          "default": "2025-26",
-          "description": "Financial year (e.g. '2025-26', '2026-27')",
-          "title": "Financial Year",
+        "payment_amount": {
+          "description": "Gross payment amount in rupees",
+          "title": "Payment Amount",
+          "type": "number"
+        },
+        "section": {
+          "description": "TDS section key, e.g. '194C_individual', '194J_professional'",
+          "title": "Section",
           "type": "string"
         }
       },
@@ -1882,15 +1882,15 @@
     "name": "decode_ipc_bns_crosswalk",
     "parameters": {
       "properties": {
-        "section": {
-          "description": "Section number to map across Acts",
-          "title": "Section",
-          "type": "string"
-        },
         "from_act": {
           "default": "IPC",
           "description": "The source Act (IPC or BNS). Default: IPC",
           "title": "From Act",
+          "type": "string"
+        },
+        "section": {
+          "description": "Section number to map across Acts",
+          "title": "Section",
           "type": "string"
         }
       },
@@ -2152,17 +2152,17 @@
     "name": "get_stock_history",
     "parameters": {
       "properties": {
+        "period": {
+          "default": "1mo",
+          "description": "Time period to fetch data for. Valid periods: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max",
+          "title": "Period",
+          "type": "string"
+        },
         "symbol": {
           "description": "Stock symbol/ticker to fetch. Examples: RELIANCE.NS, INFY.NS",
           "maxLength": 20,
           "minLength": 1,
           "title": "Symbol",
-          "type": "string"
-        },
-        "period": {
-          "default": "1mo",
-          "description": "Time period to fetch data for. Valid periods: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max",
-          "title": "Period",
           "type": "string"
         }
       },
@@ -2234,6 +2234,19 @@
     "name": "lookup_bbps_biller",
     "parameters": {
       "properties": {
+        "biller_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Direct biller ID lookup",
+          "title": "Biller Id"
+        },
         "category": {
           "anyOf": [
             {
@@ -2259,19 +2272,6 @@
           "default": null,
           "description": "State name (e.g., 'Maharashtra', 'Delhi') or 'all'",
           "title": "State"
-        },
-        "biller_id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "description": "Direct biller ID lookup",
-          "title": "Biller Id"
         }
       },
       "title": "lookup_bbps_billerArguments",
@@ -2566,8 +2566,14 @@
     }
   },
   "validate_aadhaar": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Validate an Indian Aadhaar number with Verhoeff checksum verification.\n\nUse when checking Aadhaar format and checksum in KYC, identity verification,\nor government benefit workflows.\n\nArgs:\n        aadhaar: 12-digit Aadhaar number. Spaces and hyphens are stripped.\n\nReturns:\n        Standard envelope containing validity, checksum result, formatted display,\n        and first-digit check.\n\nNotes:\n        Validates format and Verhoeff checksum only. Not connected to UIDAI.\n        In compliance with the Digital Personal Data Protection Act, 2023 (DPDP Act)\n        and UIDAI guidelines, raw Aadhaar numbers are never stored, logged, or exposed.\n",
     "name": "validate_aadhaar",
-    "description": "Validate an Indian Aadhaar number with Verhoeff checksum verification.\n\n    Use when checking Aadhaar format and checksum in KYC, identity verification,\n    or government benefit workflows.\n\n    Args:\n            aadhaar: 12-digit Aadhaar number. Spaces and hyphens are stripped.\n\n    Returns:\n            Standard envelope containing validity, checksum result, formatted display,\n            and first-digit check.\n\n    Notes:\n            Validates format and Verhoeff checksum only. Not connected to UIDAI.\n            In compliance with the Digital Personal Data Protection Act, 2023 (DPDP Act)\n            and UIDAI guidelines, raw Aadhaar numbers are never stored, logged, or exposed.\n    ",
     "parameters": {
       "properties": {
         "aadhaar": {
@@ -2583,12 +2589,6 @@
       ],
       "title": "validate_aadhaarArguments",
       "type": "object"
-    },
-    "annotations": {
-      "destructiveHint": null,
-      "idempotentHint": true,
-      "openWorldHint": false,
-      "readOnlyHint": true
     }
   },
   "validate_cin": {
@@ -2598,7 +2598,7 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Validate and decode an Indian CIN (Company Identification Number).\n\nUse when verifying company registration data, extracting listing status,\nNIC code, state, year, and company type from a CIN.\n\nArgs:\n        cin: 21-character CIN string. Spaces and hyphens stripped automatically.\n\nReturns:\n        Standard envelope containing decoded fields: listing status, NIC code,\n        state, year of incorporation, company type, and serial number.\n\nNotes:\n        Format validation with field decoding. No public checksum.\n",
+    "description": "Validate and decode an Indian CIN (Company Identification Number).\n\nUse when verifying company registration data, extracting listing status,\nNIC code, state, year, and company type from a CIN.\n\nArgs:\n        cin: 21-character CIN string. Spaces and hyphens stripped automatically.\n        verify_online: Optional opt-in online registry attestation (A4 level).\n\nReturns:\n        Standard envelope containing decoded fields: listing status, NIC code,\n        state, year of incorporation, company type, and serial number.\n\nNotes:\n        Format validation with field decoding. No public checksum.\n",
     "name": "validate_cin",
     "parameters": {
       "properties": {
@@ -2608,6 +2608,12 @@
           "minLength": 1,
           "title": "Cin",
           "type": "string"
+        },
+        "verify_online": {
+          "default": false,
+          "description": "Optional opt-in online registry attestation (A4 level)",
+          "title": "Verify Online",
+          "type": "boolean"
         }
       },
       "required": [
@@ -2750,17 +2756,10 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Validate and decode an Indian GSTIN with checksum verification.\n\nUse when checking supplier/customer GSTINs before invoicing, reconciliation,\nor compliance workflows.\n\nArgs:\n        gstin: 15-character GSTIN (e.g., 27AAPFU0939F1ZV). Spaces/hyphens stripped.\n        expected_entity_type: Optional expected entity char to match PAN 4th char.\n\nReturns:\n        Standard envelope containing validity, state decode, embedded PAN,\n        entity number, category, and checksum information.\n\nNotes:\n        Validates structure and checksum only; does not verify active GSTN registration status.\n",
+    "description": "Validate and decode an Indian GSTIN with checksum verification.\n\nUse when checking supplier/customer GSTINs before invoicing, reconciliation,\nor compliance workflows.\n\nArgs:\n        gstin: 15-character GSTIN (e.g., 27AAPFU0939F1ZV). Spaces/hyphens stripped.\n        expected_entity_type: Optional expected entity char to match PAN 4th char.\n        verify_online: Optional opt-in online registry attestation (A4 level).\n\nReturns:\n        Standard envelope containing validity, state decode, embedded PAN,\n        entity number, category, and checksum information.\n\nNotes:\n        Validates structure and checksum only; does not verify active GSTN registration status.\n",
     "name": "validate_gstin",
     "parameters": {
       "properties": {
-        "gstin": {
-          "description": "15-character GSTIN (spaces/hyphens allowed)",
-          "maxLength": 30,
-          "minLength": 1,
-          "title": "Gstin",
-          "type": "string"
-        },
         "expected_entity_type": {
           "anyOf": [
             {
@@ -2773,6 +2772,19 @@
           "default": null,
           "description": "Optional expected entity type character to verify against PAN 4th char",
           "title": "Expected Entity Type"
+        },
+        "gstin": {
+          "description": "15-character GSTIN (spaces/hyphens allowed)",
+          "maxLength": 30,
+          "minLength": 1,
+          "title": "Gstin",
+          "type": "string"
+        },
+        "verify_online": {
+          "default": false,
+          "description": "Optional opt-in online registry attestation (A4 level)",
+          "title": "Verify Online",
+          "type": "boolean"
         }
       },
       "required": [
@@ -2837,7 +2849,7 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Validate Indian PAN format and decode entity type from the 4th character.\n\nUse when normalizing tax identity records in KYC, invoicing, or vendor onboarding.\n\nArgs:\n        pan: PAN string, example: AAAPL1234C. Spaces and hyphens stripped automatically.\n\nReturns:\n        Standard envelope containing format validity, entity type, and decoded segments.\n\nNotes:\n        PAN check character is not publicly verifiable algorithmically.\n",
+    "description": "Validate Indian PAN format and decode entity type from the 4th character.\n\nUse when normalizing tax identity records in KYC, invoicing, or vendor onboarding.\n\nArgs:\n        pan: PAN string, example: AAAPL1234C. Spaces and hyphens stripped automatically.\n        verify_online: Optional opt-in online registry attestation (A4 level).\n\nReturns:\n        Standard envelope containing format validity, entity type, and decoded segments.\n\nNotes:\n        PAN check character is not publicly verifiable algorithmically.\n",
     "name": "validate_pan",
     "parameters": {
       "properties": {
@@ -2847,6 +2859,12 @@
           "minLength": 1,
           "title": "Pan",
           "type": "string"
+        },
+        "verify_online": {
+          "default": false,
+          "description": "Optional opt-in online registry attestation (A4 level)",
+          "title": "Verify Online",
+          "type": "boolean"
         }
       },
       "required": [
@@ -2993,11 +3011,6 @@
     "name": "verify_aadhaar_offline_artifact",
     "parameters": {
       "properties": {
-        "xml_or_zip_bytes_base64": {
-          "description": "Base64-encoded or raw XML/ZIP of UIDAI Paperless Offline e-KYC",
-          "title": "Xml Or Zip Bytes Base64",
-          "type": "string"
-        },
         "share_code": {
           "anyOf": [
             {
@@ -3010,6 +3023,11 @@
           "default": null,
           "description": "4-character share code if artifact is password-protected ZIP",
           "title": "Share Code"
+        },
+        "xml_or_zip_bytes_base64": {
+          "description": "Base64-encoded or raw XML/ZIP of UIDAI Paperless Offline e-KYC",
+          "title": "Xml Or Zip Bytes Base64",
+          "type": "string"
         }
       },
       "required": [
@@ -3030,11 +3048,6 @@
     "name": "verify_einvoice_qr",
     "parameters": {
       "properties": {
-        "qr_text": {
-          "description": "Signed JWT string extracted from GST B2B e-invoice QR code",
-          "title": "Qr Text",
-          "type": "string"
-        },
         "expected_gstin": {
           "anyOf": [
             {
@@ -3060,6 +3073,11 @@
           "default": null,
           "description": "Optional expected 64-character hex IRN",
           "title": "Expected Irn"
+        },
+        "qr_text": {
+          "description": "Signed JWT string extracted from GST B2B e-invoice QR code",
+          "title": "Qr Text",
+          "type": "string"
         }
       },
       "required": [

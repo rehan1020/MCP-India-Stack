@@ -1,0 +1,11 @@
+{
+  "status": "CANCELLED",
+  "source": "Mock GSTN Portal",
+  "as_of": "2026-11-05",
+  "details": {
+    "gstin": "27AAPFU0939F1ZX",
+    "trade_name": "DEFUNCT RETAIL LTD",
+    "status": "Cancelled",
+    "cancellation_date": "2025-10-01"
+  }
+}

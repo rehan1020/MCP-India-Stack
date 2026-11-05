@@ -51,12 +51,17 @@ def _classify_category(gstin: str) -> str:
     return "standard"
 
 
-def validate_gstin(gstin: str, expected_entity_type: str | None = None) -> dict[str, Any]:
+def validate_gstin(  # noqa: C901
+    gstin: str,
+    expected_entity_type: str | None = None,
+    verify_online: bool = False,
+) -> dict[str, Any]:
     """Validate GSTIN, decode structure, and verify checksum.
 
     Args:
         gstin: 15-character GSTIN to validate.
         expected_entity_type: Optional expected entity type (e.g. 'P', 'C') to match against PAN.
+        verify_online: Optional opt-in live registry attestation (A4 level).
 
     Returns:
         Dict with validity, state decode, embedded PAN, entity number,
@@ -153,6 +158,13 @@ def validate_gstin(gstin: str, expected_entity_type: str | None = None) -> dict[
         )
 
     valid = len(errors) == 0
+
+    provider_res = None
+    if verify_online and valid:
+        from mcp_india_stack.authenticity.providers.registry import execute_provider_verification
+
+        provider_res = execute_provider_verification("gstin", value)
+
     auth = create_gstin_authenticity(
         gstin=value,
         valid=valid,
@@ -163,27 +175,33 @@ def validate_gstin(gstin: str, expected_entity_type: str | None = None) -> dict[
         checksum_valid=checksum_valid,
         pan_block=pan_block,
         expected_entity_type=expected_entity_type,
+        verify_online=verify_online,
+        provider_result=provider_res,
     )
+
+    data_payload: dict[str, Any] = {
+        "valid": valid,
+        "gstin": value,
+        "state_code": value[:2],
+        "state_name": state_decode.get("data", {}).get("state_name"),
+        "pan": pan_block,
+        "entity_number": entity_number,
+        "checksum_valid": checksum_valid,
+        "expected_checksum": expected_checksum,
+        "category": category,
+        "format_validity": format_validity,
+        "live_verified": _LIVE_LOOKUP_ENABLED or (verify_online and provider_res is not None),
+        "normalized_input": value,
+    }
+    if provider_res is not None:
+        data_payload["registry_status"] = provider_res.registry_status or provider_res.status.value
 
     return build_response(
         success=valid,
-        data={
-            "valid": valid,
-            "gstin": value,
-            "state_code": value[:2],
-            "state_name": state_decode.get("data", {}).get("state_name"),
-            "pan": pan_block,
-            "entity_number": entity_number,
-            "checksum_valid": checksum_valid,
-            "expected_checksum": expected_checksum,
-            "category": category,
-            "format_validity": format_validity,
-            "live_verified": _LIVE_LOOKUP_ENABLED,
-            "normalized_input": value,
-        },
+        data=data_payload,
         errors=errors,
         warnings=warnings,
-        source="live" if _LIVE_LOOKUP_ENABLED else "offline_static",
+        source="live" if (_LIVE_LOOKUP_ENABLED or verify_online) else "offline_static",
         validated_by=["format_check", "checksum"],
         authenticity=auth,
     )

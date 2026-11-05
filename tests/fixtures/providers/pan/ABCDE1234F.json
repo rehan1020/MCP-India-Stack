@@ -1,0 +1,10 @@
+{
+  "status": "ACTIVE",
+  "source": "Mock Income Tax Portal",
+  "as_of": "2026-11-05",
+  "details": {
+    "pan": "ABCDE1234F",
+    "name": "TEST HOLDER",
+    "status": "OPERATIVE"
+  }
+}

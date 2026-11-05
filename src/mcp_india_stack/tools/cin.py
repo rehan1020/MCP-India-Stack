@@ -65,7 +65,7 @@ CIN_STATE_CODES: dict[str, str] = {
 }
 
 
-def validate_cin(cin: str) -> dict[str, Any]:
+def validate_cin(cin: str, verify_online: bool = False) -> dict[str, Any]:
     """Validate and decode an Indian CIN (Company Identification Number).
 
     CIN is 21 characters: [L/U][NIC 5-digit][State 2-letter][Year 4-digit]
@@ -73,6 +73,7 @@ def validate_cin(cin: str) -> dict[str, Any]:
 
     Args:
         cin: CIN string to validate.
+        verify_online: Optional opt-in online registry attestation (A4 level).
 
     Returns:
         Dict with decoded fields and validation status.
@@ -237,6 +238,15 @@ def validate_cin(cin: str) -> dict[str, Any]:
             errors.append("CIN sequence must be 6 decimal digits")
 
         valid = len(errors) == 0
+
+        provider_res = None
+        if verify_online and valid:
+            from mcp_india_stack.authenticity.providers.registry import (
+                execute_provider_verification,
+            )
+
+            provider_res = execute_provider_verification("cin", cleaned)
+
         auth = create_cin_authenticity(
             cin=cleaned,
             valid=valid,
@@ -245,24 +255,32 @@ def validate_cin(cin: str) -> dict[str, Any]:
             company_type_valid=company_type_valid,
             year_valid=year_valid,
             sequence_valid=sequence_valid,
+            verify_online=verify_online,
+            provider_result=provider_res,
         )
+
+        data_payload: dict[str, Any] = {
+            "valid": valid,
+            "cin": cleaned,
+            "listing_status": listing_status,
+            "nic_code": nic_code,
+            "state_code": state_code,
+            "state_name": state_name,
+            "year_of_incorporation": year_of_incorporation,
+            "company_type_code": company_type_code,
+            "company_type": company_type,
+            "sequential_number": sequential_number,
+        }
+        if provider_res is not None:
+            data_payload["registry_status"] = (
+                provider_res.registry_status or provider_res.status.value
+            )
 
         return build_response(
             success=valid,
-            data={
-                "valid": valid,
-                "cin": cleaned,
-                "listing_status": listing_status,
-                "nic_code": nic_code,
-                "state_code": state_code,
-                "state_name": state_name,
-                "year_of_incorporation": year_of_incorporation,
-                "company_type_code": company_type_code,
-                "company_type": company_type,
-                "sequential_number": sequential_number,
-            },
+            data=data_payload,
             errors=errors,
-            source="offline_static",
+            source="live" if verify_online else "offline_static",
             validated_by=["format_check"],
             authenticity=auth,
         )
