@@ -58,6 +58,13 @@ def validate_gstin(
             description="Optional expected entity type character to verify against PAN 4th char",
         ),
     ] = None,
+    verify_online: Annotated[
+        bool,
+        Field(
+            default=False,
+            description="Optional opt-in online registry attestation (A4 level)",
+        ),
+    ] = False,
 ) -> dict[str, Any]:
     """Validate and decode an Indian GSTIN with checksum verification.
 
@@ -67,6 +74,7 @@ def validate_gstin(
     Args:
             gstin: 15-character GSTIN (e.g., 27AAPFU0939F1ZV). Spaces/hyphens stripped.
             expected_entity_type: Optional expected entity char to match PAN 4th char.
+            verify_online: Optional opt-in online registry attestation (A4 level).
 
     Returns:
             Standard envelope containing validity, state decode, embedded PAN,
@@ -77,7 +85,11 @@ def validate_gstin(
     """
     normalized = normalize_gstin(gstin)["normalized_input"]
     try:
-        result = core_validate_gstin(normalized, expected_entity_type=expected_entity_type)
+        result = core_validate_gstin(
+            normalized,
+            expected_entity_type=expected_entity_type,
+            verify_online=verify_online,
+        )
         return result
     except Exception as exc:
         return build_response(
@@ -119,6 +131,13 @@ def validate_pan(
     pan: Annotated[
         str, Field(min_length=1, max_length=20, description="10-char PAN (spaces/hyphens allowed)")
     ],
+    verify_online: Annotated[
+        bool,
+        Field(
+            default=False,
+            description="Optional opt-in online registry attestation (A4 level)",
+        ),
+    ] = False,
 ) -> dict[str, Any]:
     """Validate Indian PAN format and decode entity type from the 4th character.
 
@@ -126,6 +145,7 @@ def validate_pan(
 
     Args:
             pan: PAN string, example: AAAPL1234C. Spaces and hyphens stripped automatically.
+            verify_online: Optional opt-in online registry attestation (A4 level).
 
     Returns:
             Standard envelope containing format validity, entity type, and decoded segments.
@@ -135,7 +155,7 @@ def validate_pan(
     """
     normalized = normalize_pan(pan)["normalized_input"]
     try:
-        result = core_validate_pan(normalized)
+        result = core_validate_pan(normalized, verify_online=verify_online)
         return result
     except Exception as exc:
         return build_response(
@@ -402,6 +422,13 @@ def validate_cin(
             description="21-character CIN (spaces/hyphens allowed). Example: L17110MH1973PLC019786",
         ),
     ],
+    verify_online: Annotated[
+        bool,
+        Field(
+            default=False,
+            description="Optional opt-in online registry attestation (A4 level)",
+        ),
+    ] = False,
 ) -> dict[str, Any]:
     """Validate and decode an Indian CIN (Company Identification Number).
 
@@ -410,6 +437,7 @@ def validate_cin(
 
     Args:
             cin: 21-character CIN string. Spaces and hyphens stripped automatically.
+            verify_online: Optional opt-in online registry attestation (A4 level).
 
     Returns:
             Standard envelope containing decoded fields: listing status, NIC code,
@@ -420,7 +448,7 @@ def validate_cin(
     """
     normalized = normalize_cin(cin)["normalized_input"]
     try:
-        return core_validate_cin(normalized)
+        return core_validate_cin(normalized, verify_online=verify_online)
     except Exception as exc:
         return build_response(
             success=False, errors=[f"CIN validation failed: {exc}"], source="offline_algorithm"

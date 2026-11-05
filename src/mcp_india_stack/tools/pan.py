@@ -18,7 +18,7 @@ def _flatten(r: dict[str, Any]) -> dict[str, Any]:
     return r
 
 
-def validate_pan(pan: str) -> dict[str, Any]:
+def validate_pan(pan: str, verify_online: bool = False) -> dict[str, Any]:
     """Validate PAN format and decode entity type.
 
     Note: PAN check character is not publicly algorithmic, so only structural
@@ -68,30 +68,42 @@ def validate_pan(pan: str) -> dict[str, Any]:
     if value == "AAAAA9999A":
         warnings.append("This PAN is a known dummy placeholder pattern")
 
+    provider_res = None
+    if verify_online:
+        from mcp_india_stack.authenticity.providers.registry import execute_provider_verification
+
+        provider_res = execute_provider_verification("pan", value)
+
     auth = create_pan_authenticity(
         pan=value,
         valid=True,
         entity_code=entity_code,
         entity_type=entity_type,
+        verify_online=verify_online,
+        provider_result=provider_res,
     )
+
+    data_payload: dict[str, Any] = {
+        "valid": True,
+        "pan": value,
+        "entity_code": entity_code,
+        "entity_type": entity_type,
+        "series": value[:3],
+        "name_initial": value[4],
+        "sequence": value[5:9],
+        "check_character": value[9],
+        "checksum_verifiable": False,
+        "normalized_input": value,
+    }
+    if provider_res is not None:
+        data_payload["registry_status"] = provider_res.registry_status or provider_res.status.value
 
     return _flatten(
         build_response(
             success=True,
-            data={
-                "valid": True,
-                "pan": value,
-                "entity_code": entity_code,
-                "entity_type": entity_type,
-                "series": value[:3],
-                "name_initial": value[4],
-                "sequence": value[5:9],
-                "check_character": value[9],
-                "checksum_verifiable": False,
-                "normalized_input": value,
-            },
+            data=data_payload,
             warnings=warnings,
-            source="offline_static",
+            source="live" if verify_online else "offline_static",
             validated_by=["format_check"],
             authenticity=auth,
         )

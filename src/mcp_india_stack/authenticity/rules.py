@@ -26,6 +26,8 @@ def create_gstin_authenticity(
     checksum_valid: bool,
     pan_block: str = "",
     expected_entity_type: str | None = None,
+    verify_online: bool = False,
+    provider_result: Any = None,
     as_of: str | None = None,
 ) -> dict[str, Any]:
     """Generate authenticity envelope for validate_gstin.
@@ -97,15 +99,57 @@ def create_gstin_authenticity(
             )
         )
 
+    custom_limitations = [
+        "active registration status not verified",
+        "taxpayer filing compliance not verified",
+    ]
+    registry_status = None
+
+    if verify_online:
+        if provider_result is not None:
+            status_val = getattr(provider_result, "status", None)
+            status_str = getattr(status_val, "value", str(status_val)).upper()
+            if status_str == "ACTIVE":
+                checks.append(
+                    AuthenticityCheck(
+                        name="registry_provider_attestation",
+                        passed=True,
+                        level="A4",
+                        detail=f"Confirmed active by {provider_result.source}",
+                    )
+                )
+                registry_status = getattr(provider_result, "registry_status", "ACTIVE") or "ACTIVE"
+                custom_limitations = [
+                    lim for lim in custom_limitations if "active registration" not in lim
+                ]
+            else:
+                checks.append(
+                    AuthenticityCheck(
+                        name="registry_provider_attestation",
+                        passed=False,
+                        level="A4",
+                        detail=f"Registry status: {status_str}",
+                    )
+                )
+                custom_limitations.append(f"registry_status:{status_str.lower()}")
+        else:
+            checks.append(
+                AuthenticityCheck(
+                    name="registry_provider_attestation",
+                    passed=False,
+                    level="A4",
+                    detail="No online registry provider available for GSTIN",
+                )
+            )
+            custom_limitations.append("no_provider_available")
+
     return build_authenticity_envelope(
         checks=checks,
         valid=valid,
         source="GST Council / CBIC",
         as_of=as_of,
-        custom_limitations=[
-            "active registration status not verified",
-            "taxpayer filing compliance not verified",
-        ],
+        custom_limitations=custom_limitations,
+        registry_status=registry_status,
     )
 
 
@@ -118,6 +162,8 @@ def create_cin_authenticity(
     company_type_valid: bool,
     year_valid: bool,
     sequence_valid: bool,
+    verify_online: bool = False,
+    provider_result: Any = None,
     as_of: str | None = None,
 ) -> dict[str, Any]:
     """Generate authenticity envelope for validate_cin.
@@ -171,15 +217,57 @@ def create_cin_authenticity(
         ),
     ]
 
+    custom_limitations = [
+        "active incorporation status not verified",
+        "MCA annual filing compliance not verified",
+    ]
+    registry_status = None
+
+    if verify_online:
+        if provider_result is not None:
+            status_val = getattr(provider_result, "status", None)
+            status_str = getattr(status_val, "value", str(status_val)).upper()
+            if status_str == "ACTIVE":
+                checks.append(
+                    AuthenticityCheck(
+                        name="registry_provider_attestation",
+                        passed=True,
+                        level="A4",
+                        detail=f"Confirmed active by {provider_result.source}",
+                    )
+                )
+                registry_status = getattr(provider_result, "registry_status", "ACTIVE") or "ACTIVE"
+                custom_limitations = [
+                    lim for lim in custom_limitations if "active incorporation" not in lim
+                ]
+            else:
+                checks.append(
+                    AuthenticityCheck(
+                        name="registry_provider_attestation",
+                        passed=False,
+                        level="A4",
+                        detail=f"Registry status: {status_str}",
+                    )
+                )
+                custom_limitations.append(f"registry_status:{status_str.lower()}")
+        else:
+            checks.append(
+                AuthenticityCheck(
+                    name="registry_provider_attestation",
+                    passed=False,
+                    level="A4",
+                    detail="No online registry provider available for CIN",
+                )
+            )
+            custom_limitations.append("no_provider_available")
+
     return build_authenticity_envelope(
         checks=checks,
         valid=valid,
         source="Ministry of Corporate Affairs (MCA)",
         as_of=as_of,
-        custom_limitations=[
-            "active incorporation status not verified",
-            "MCA annual filing compliance not verified",
-        ],
+        custom_limitations=custom_limitations,
+        registry_status=registry_status,
     )
 
 
@@ -645,6 +733,8 @@ def create_pan_authenticity(
     valid: bool,
     entity_code: str | None = None,
     entity_type: str | None = None,
+    verify_online: bool = False,
+    provider_result: Any = None,
     as_of: str | None = None,
 ) -> dict[str, Any]:
     """Generate authenticity envelope for validate_pan."""
@@ -675,15 +765,57 @@ def create_pan_authenticity(
             detail="5th character is an alphabetic taxpayer surname or entity name initial",
         ),
     ]
+    custom_limitations = [
+        "active PAN status not verified",
+        "PAN-Aadhaar linking status not verified",
+    ]
+    registry_status = None
+
+    if verify_online:
+        if provider_result is not None:
+            status_val = getattr(provider_result, "status", None)
+            status_str = getattr(status_val, "value", str(status_val)).upper()
+            if status_str == "ACTIVE":
+                checks.append(
+                    AuthenticityCheck(
+                        name="registry_provider_attestation",
+                        passed=True,
+                        level="A4",
+                        detail=f"Confirmed active by {provider_result.source}",
+                    )
+                )
+                registry_status = getattr(provider_result, "registry_status", "ACTIVE") or "ACTIVE"
+                custom_limitations = [
+                    lim for lim in custom_limitations if "active PAN status" not in lim
+                ]
+            else:
+                checks.append(
+                    AuthenticityCheck(
+                        name="registry_provider_attestation",
+                        passed=False,
+                        level="A4",
+                        detail=f"Registry status: {status_str}",
+                    )
+                )
+                custom_limitations.append(f"registry_status:{status_str.lower()}")
+        else:
+            checks.append(
+                AuthenticityCheck(
+                    name="registry_provider_attestation",
+                    passed=False,
+                    level="A4",
+                    detail="No online registry provider available for PAN",
+                )
+            )
+            custom_limitations.append("no_provider_available")
+
     return build_authenticity_envelope(
         checks=checks,
         valid=valid,
         source="Income Tax Department",
         as_of=as_of,
-        custom_limitations=[
-            "active PAN status not verified",
-            "PAN-Aadhaar linking status not verified",
-        ],
+        custom_limitations=custom_limitations,
+        registry_status=registry_status,
     )
 
 
