@@ -70,6 +70,18 @@ def changelog() -> dict[str, Any]:
         "current_version": __version__,
         "entries": [
             {
+                "version": "0.8.0",
+                "date": "2026-11-05",
+                "changes": [
+                    "Authenticity System (PRs 8a-8d)",
+                    "A0-A4 multi-tier attestation envelope on all verifying tools",
+                    "Signed dataset manifests and Ed25519 supply chain verification",
+                    "A3 cryptographic signed artifact verification for e-invoice and Aadhaar",
+                    "A4 opt-in provider interface with circuit breaker, "
+                    "rate limiting, and SSRF defense",
+                ],
+            },
+            {
                 "version": "0.7.1",
                 "date": "2026-11-04",
                 "changes": [
