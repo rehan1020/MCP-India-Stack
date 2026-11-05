@@ -5,6 +5,7 @@ from pydantic import Field
 
 from mcp_india_stack.app import mcp
 from mcp_india_stack.authenticity import AUTHENTICITY_SCHEMA, AUTHENTICITY_SUMMARY_SCHEMA
+from mcp_india_stack.authenticity.models import AuthenticityCheck, build_authenticity_envelope
 from mcp_india_stack.logging_filter import mask_aadhaar_text
 from mcp_india_stack.normalization import (
     normalize_aadhaar,
@@ -686,10 +687,25 @@ def verify_einvoice_qr(
             qr_text=qr_text, expected_gstin=expected_gstin, expected_irn=expected_irn
         )
     except Exception as exc:
+        auth = build_authenticity_envelope(
+            valid=False,
+            checks=[
+                AuthenticityCheck(
+                    name="einvoice_qr_processing",
+                    passed=False,
+                    level="A0",
+                    detail=str(exc),
+                )
+            ],
+            source="National Informatics Centre (NIC) Goods and Services Tax e-Invoice System",
+            limitations=[str(exc)],
+        )
         return build_response(
             success=False,
+            data={"valid": False},
             errors=[f"e-Invoice QR verification failed: {exc}"],
             source="offline_signature",
+            authenticity=auth,
         )
 
 
@@ -718,10 +734,25 @@ def verify_aadhaar_offline_artifact(
             xml_or_zip_bytes_base64=xml_or_zip_bytes_base64, share_code=share_code
         )
     except Exception as exc:
+        auth = build_authenticity_envelope(
+            valid=False,
+            checks=[
+                AuthenticityCheck(
+                    name="aadhaar_artifact_processing",
+                    passed=False,
+                    level="A0",
+                    detail=str(exc),
+                )
+            ],
+            source="Unique Identification Authority of India (UIDAI) Offline Paperless e-KYC",
+            limitations=[str(exc)],
+        )
         return build_response(
             success=False,
+            data={"valid": False},
             errors=[f"Aadhaar offline artifact verification failed: {exc}"],
             source="offline_signature",
+            authenticity=auth,
         )
 
 

@@ -5,6 +5,7 @@ from __future__ import annotations
 import base64
 import datetime
 import io
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
 
@@ -104,7 +105,6 @@ def _verify_uidai_signature(  # noqa: C901
     checks: list[AuthenticityCheck],
 ) -> tuple[bool, bool]:
     """Verify certificate validity and digital signature against trust anchor."""
-    import defusedxml.ElementTree as DefusedET
     from cryptography import x509
     from cryptography.exceptions import InvalidSignature
     from cryptography.hazmat.primitives import hashes
@@ -189,13 +189,11 @@ def _verify_uidai_signature(  # noqa: C901
 
             if sign_target is None:
                 if signed_info_elem is not None:
-                    sign_target = DefusedET.tostring(signed_info_elem, encoding="utf-8")
+                    sign_target = ET.tostring(signed_info_elem, encoding="utf-8")
                 else:
                     uid_data = root.find(".//UidData")
                     sign_target = (
-                        DefusedET.tostring(uid_data, encoding="utf-8")
-                        if uid_data is not None
-                        else b""
+                        ET.tostring(uid_data, encoding="utf-8") if uid_data is not None else b""
                     )
 
             pub_key.verify(
@@ -305,7 +303,8 @@ def verify_aadhaar_offline_artifact(
                 raise ValueError("Security violation rejected: XML entity expansion detected")
             import xml.etree.ElementTree as StdET
 
-            root = StdET.fromstring(raw_str)
+            # Validated: entity expansion and DTDs explicitly rejected above
+            root = StdET.fromstring(raw_str)  # nosec: B314 - entity expansion and DTDs checked above
 
         checks.append(
             AuthenticityCheck(
