@@ -10,6 +10,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, cast
 
+from mcp_india_stack.authenticity.manifest import verify_dataset_integrity
 from mcp_india_stack.utils.updater import get_dataset_path
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
@@ -62,6 +63,10 @@ def load_upi_handles() -> dict[str, dict[str, str]]:
 def load_ifsc_index() -> dict[str, dict[str, Any]]:
     """Load IFSC CSV once and build O(1) code lookup."""
     path = _must_exist(get_dataset_path("ifsc"), "IFSC")
+    try:
+        verify_dataset_integrity("ifsc", path)
+    except Exception as exc:
+        raise DataLoadError(str(exc)) from exc
     try:
         import polars as pl
 
@@ -117,6 +122,10 @@ def load_ifsc_index() -> dict[str, dict[str, Any]]:
 def load_pincode_index() -> dict[str, list[dict[str, str]]]:
     """Load gzipped pincode CSV and build one-to-many pincode index."""
     path = _must_exist(get_dataset_path("pincode"), "Pincode")
+    try:
+        verify_dataset_integrity("pincode", path)
+    except Exception as exc:
+        raise DataLoadError(str(exc)) from exc
     index: dict[str, list[dict[str, str]]] = {}
     try:
         with gzip.open(path, "rt", encoding="utf-8", newline="") as handle:
@@ -135,6 +144,10 @@ def load_pincode_index() -> dict[str, list[dict[str, str]]]:
 def load_hsn_index() -> dict[str, list[dict[str, Any]]]:
     """Load HSN/SAC master and index by code."""
     path = _must_exist(get_dataset_path("hsn"), "HSN/SAC")
+    try:
+        verify_dataset_integrity("hsn", path)
+    except Exception as exc:
+        raise DataLoadError(str(exc)) from exc
     out: dict[str, list[dict[str, Any]]] = {}
     try:
         with open(path, encoding="utf-8") as f:

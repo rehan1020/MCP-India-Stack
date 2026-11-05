@@ -22,6 +22,9 @@ Every dataset is audited for upstream statutory authority, licensing, retrieval 
 | `rti/rti_fees.json` | Department of Personnel and Training (DoPT) & State Information Commissions | Public Domain | RTI Rules 2012 and State RTI schedule compilation | Annual | 2026-10-29 | `scripts/build_legal_data.py` |
 | `state_codes/state_codes.json` | Goods and Services Tax Council (GST Council) | Public Domain | Statutory 2-digit GST state codes codified from GST Rules | Static / Per new territory | 2026-03-21 | None (JSON direct) |
 | `upi/upi_handles.json` | National Payments Corporation of India (NPCI) | Open Public Directory | Synthesis from NPCI UPI Live PSP Members registry | Quarterly | 2026-03-21 | None (JSON direct) |
+| `manifests/hsn.manifest.json` | Internal Package Integrity Gate / CBIC | Apache-2.0 | Cryptographic Ed25519 detached signature and SHA-256 metadata | Every dataset refresh | 2026-11-04 | `src/mcp_india_stack/authenticity/manifest.py` |
+| `manifests/ifsc.manifest.json` | Internal Package Integrity Gate / RBI | Apache-2.0 | Cryptographic Ed25519 detached signature and SHA-256 metadata | Every dataset refresh | 2026-11-04 | `src/mcp_india_stack/authenticity/manifest.py` |
+| `manifests/pincode.manifest.json` | Internal Package Integrity Gate / India Post | Apache-2.0 | Cryptographic Ed25519 detached signature and SHA-256 metadata | Every dataset refresh | 2026-11-04 | `src/mcp_india_stack/authenticity/manifest.py` |
 | `dataset_checksums.json` | Internal Package Integrity Gate | Apache-2.0 | Automated SHA-256 generation over bundled data files | Every build / release | 2026-10-29 | `scripts/build_manifest.py` |
 
 ---

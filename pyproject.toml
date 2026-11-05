@@ -74,7 +74,12 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [tool.setuptools.package-data]
-mcp_india_stack = ["data/**/*.csv", "data/**/*.csv.gz", "data/**/*.json"]
+mcp_india_stack = [
+    "data/**/*.csv",
+    "data/**/*.csv.gz",
+    "data/**/*.json",
+    "keys/**/*.json",
+]
 
 [tool.ruff]
 line-length = 100

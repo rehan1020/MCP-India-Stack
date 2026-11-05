@@ -45,6 +45,9 @@ _DB_URL_SET = os.environ.get("MCP_INDIA_STACK_DB_URL") is not None
 @mcp.resource("india://status")
 def server_status() -> dict[str, Any]:
     """Server status and configuration."""
+    from mcp_india_stack.authenticity.manifest import get_dataset_security_status
+
+    sec_status = get_dataset_security_status()
     return {
         "version": __version__,
         "db_connected": is_db_connected(),
@@ -55,6 +58,8 @@ def server_status() -> dict[str, Any]:
         "data_version": "2025.04",
         "tools_network": TOOL_NETWORK,
         "last_refresh_error": get_last_refresh_error(),
+        "dataset_signature_verified": sec_status["dataset_signature_verified"],
+        "datasets": sec_status["datasets"],
     }
 
 
@@ -627,6 +632,11 @@ def main() -> None:  # noqa: C901
         help=argparse.SUPPRESS,
     )
     parser.add_argument(
+        "--verify-data",
+        action="store_true",
+        help="Verify Ed25519 signatures and SHA-256 checksums of installed datasets and cache.",
+    )
+    parser.add_argument(
         "--transport",
         type=str,
         choices=["stdio", "sse"],
@@ -647,9 +657,14 @@ def main() -> None:  # noqa: C901
     )
     args = parser.parse_args()
 
-    if args.refresh_all:
+    if getattr(args, "refresh_all", False):
         sys.stderr.write("dataset refresh was removed; upgrade the package to receive new data\n")
         sys.exit(2)
+
+    if getattr(args, "verify_data", False):
+        from mcp_india_stack.authenticity.manifest import run_cli_verify_data
+
+        run_cli_verify_data()
 
     if args.transport == "sse":
         import uvicorn
