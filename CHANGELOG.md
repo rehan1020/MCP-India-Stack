@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- **FX Rates (INR)**: Three zero-auth live lookup tools (`LOOKUP_LIVE` tier, network tier `required`) in `tools/fx_rates.py`, registered in `registrations/markets.py`: `inr_reference_rate`, `sbi_tt_rate` and `cbic_customs_rate`. They call the keyless endpoints of allratestoday.com, a third-party aggregator; results are labelled `data_source`, `authority`, `verified: false` and are not fetched from or verified against RBI, SBI or CBIC. Latest value only, shared circuit breaker (a wrongly shaped 200 response counts as a failure), 5-second timeout, failures reported in `errors` rather than raised. Documented in `docs/fx_rates.md`. Tool count 80 → 83.
+
 ## [0.8.0] - 2026-11-05
 
 ### Authenticity System (PRs 8a – 8d)

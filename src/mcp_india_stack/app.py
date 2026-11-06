@@ -98,6 +98,9 @@ TOOL_TIERS: dict[str, PermissionTier] = {
     "calculate_neft_rtgs_imps_charges": PermissionTier.READ_ONLY,
     "get_stock_quote": PermissionTier.LOOKUP_LIVE,
     "get_stock_history": PermissionTier.LOOKUP_LIVE,
+    "inr_reference_rate": PermissionTier.LOOKUP_LIVE,
+    "sbi_tt_rate": PermissionTier.LOOKUP_LIVE,
+    "cbic_customs_rate": PermissionTier.LOOKUP_LIVE,
     "decode_cnr_number": PermissionTier.READ_ONLY,
     "lookup_court_establishment_code": PermissionTier.READ_ONLY,
     "lookup_ipc_section": PermissionTier.READ_ONLY,
@@ -124,6 +127,10 @@ TOOL_NETWORK: dict[str, str] = {
     # Stock market tools: required network connectivity
     "get_stock_quote": "required",
     "get_stock_history": "required",
+    # FX rate tools: required network connectivity (third-party aggregator)
+    "inr_reference_rate": "required",
+    "sbi_tt_rate": "required",
+    "cbic_customs_rate": "required",
     # Tools touching CDN refresh or live lookup fallback: optional network connectivity
     "lookup_ifsc": "optional",
     "bulk_validate_ifsc": "optional",

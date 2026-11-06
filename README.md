@@ -65,10 +65,10 @@
       +-----------------------+-----------------------+
       |                       |                       |
 +-----v-------------+  +------v------------+  +-------v-----+
-| Pure Offline (71) |  |   Offline + CDN   |  |   Market    |
-| Format Validators |  |   Refresh (5)     |  |  Data (2)   |
-| Tax Calculators   |  | IFSC, HSN, Pin    |  |  yfinance   |
-| Legal Reference   |  | Bundled Datasets  |  |  Delayed    |
+| Pure Offline (71) |  |   Offline + CDN   |  | Live Lookup |
+| Format Validators |  |   Refresh (5)     |  |  Only (5)   |
+| Tax Calculators   |  | IFSC, HSN, Pin    |  | Stocks, FX  |
+| Legal Reference   |  | Bundled Datasets  |  | Third-party |
 +-------------------+  +-------------------+  +-------------+
 ```
 *MCP Client ↔ FastMCP Server ↔ 78 modular tool endpoints*
@@ -85,9 +85,9 @@
 ## ✨ Key Features
 
 - **Offline-First Architecture**: Bundles compressed datasets for zero-latency lookups (IFSC, Pincodes, HSN/SAC). No API rate limits.
-- **Zero Authentication**: No API keys, secrets, or subscriptions required. All logic runs locally.
+- **Zero Authentication**: No API keys, secrets, or subscriptions required. All validation and calculation logic runs locally; only the stock and FX rate tools call an external service (see the network tiers below).
 - **Background Auto-Updates**: Non-blocking CDN fetching ensures your datasets never go stale without impacting request latency.
-- **Comprehensive Coverage**: 80 dedicated tools for identity validation (PAN, Aadhaar, GSTIN, TAN, PRAN), tax calculation (Income Tax, TDS, GST), savings calculators (EPF, PPF, SIP), and master data lookups.
+- **Comprehensive Coverage**: 83 dedicated tools for identity validation (PAN, Aadhaar, GSTIN, TAN, PRAN), tax calculation (Income Tax, TDS, GST), savings calculators (EPF, PPF, SIP), and master data lookups.
 - **Enterprise-Ready**: Thread-pool accelerated bulk validation tools for processing large batches of vendor or customer data.
 
 ---
@@ -227,6 +227,12 @@ Add the following to your `claude_desktop_config.json` file to enable the India 
 - `get_stock_quote` — Fetch live/delayed Indian stock quotes and summaries (NSE/BSE) using yfinance.
 - `get_stock_history` — Fetch historical end-of-day data for Indian stocks using yfinance.
 
+### 💱 FX Rates (INR)
+Live lookups served by a third-party aggregator (allratestoday.com). Not fetched from or verified against RBI, SBI or CBIC; network required.
+- [`inr_reference_rate`](docs/fx_rates.md) — Latest RBI reference rate for a currency against INR, as republished by the aggregator
+- [`sbi_tt_rate`](docs/fx_rates.md) — Latest SBI telegraphic-transfer buy/sell rate against INR, as republished by the aggregator
+- [`cbic_customs_rate`](docs/fx_rates.md) — Latest CBIC customs import/export exchange rate against INR, as republished by the aggregator
+
 ### ⚖️ Legal Reference
 - [`decode_cnr_number`](docs/legal_reference.md) — CNR (Case Number Record) decoder and validator
 - [`lookup_court_establishment_code`](docs/legal_reference.md) — Court establishment code directory lookup
@@ -334,4 +340,4 @@ The package classifies every tool under an authoritative network access attribut
 |---|---|---|---|
 | `none` (Network: None) | Pure offline execution. Zero network calls, zero external endpoints, no sockets opened. Computations, format checks, checksum algorithms, and tax rules execute entirely in-process using local logic. | 73 | `validate_gstin`, `bulk_validate_gstin`, `validate_pan`, `bulk_validate_pan`, `decode_pan_type`, `validate_upi_vpa`, `decode_state_code`, `validate_aadhaar`, `bulk_validate_aadhaar`, `validate_voter_id`, `validate_driving_license`, `validate_passport`, `validate_cin`, `validate_din`, `validate_fssai`, `validate_tan`, `validate_mobile_number`, `validate_pran`, `validate_llpin`, `decode_isin`, `lookup_bank`, `lookup_bbps_biller`, `validate_epf_code`, `validate_esic_code`, `decode_digilocker_uri`, `verify_einvoice_qr`, `verify_aadhaar_offline_artifact`, `build_aa_consent_request`, `validate_aa_consent_artifact`, `decode_aa_fi_type`, `calculate_income_tax`, `calculate_tds`, `calculate_surcharge`, `calculate_hra_exemption`, `calculate_capital_gains`, `calculate_advance_tax`, `calculate_epf_esic`, `calculate_emi`, `calculate_gratuity`, `calculate_ppf_maturity`, `calculate_fd_maturity`, `calculate_rd_maturity`, `calculate_sip_returns`, `calculate_step_up_sip`, `calculate_nps_projection`, `calculate_sukanya_samriddhi`, `calculate_home_vs_rent`, `calculate_gst_late_fee`, `calculate_income_tax_interest`, `calculate_presumptive_tax`, `calculate_professional_tax`, `calculate_leave_encashment_tax`, `calculate_salary_restructuring`, `calculate_neft_rtgs_imps_charges`, `get_regulatory_deadlines`, `decode_cnr_number`, `lookup_court_establishment_code`, `lookup_ipc_section`, `lookup_bns_section`, `lookup_crpc_section`, `lookup_bnss_section`, `lookup_evidence_act_section`, `lookup_bsa_section`, `decode_ipc_bns_crosswalk`, `calculate_limitation_deadline`, `calculate_court_fee`, `calculate_stamp_duty`, `calculate_rti_fee`, `calculate_rti_deadline`, `calculate_rti_penalty_estimate`, `draft_rti_application`, `draft_first_appeal`, `draft_second_appeal` |
 | `optional` (Network: Optional) | Datasets are bundled locally offline (IFSC master, postal pincodes, HSN/SAC master). When enabled, background non-blocking CDN refresh or optional live lookup enriches local data. If network is unavailable or blocked, falls back seamlessly to bundled local datasets without blocking or error. | 5 | `lookup_ifsc`, `bulk_validate_ifsc`, `lookup_pincode`, `lookup_hsn_code`, `calculate_gst` |
-| `required` (Network: Required) | Live financial market data feeds. Must reach market upstream endpoints (e.g. Yahoo Finance) to retrieve current quotes or historical prices. If network is blocked or unavailable, returns structured error envelopes without unhandled exceptions. | 2 | `get_stock_quote`, `get_stock_history` |
+| `required` (Network: Required) | Live third-party data feeds. Must reach an external endpoint to return a value: Yahoo Finance for stock quotes and history, and the allratestoday.com aggregator for INR FX rates. The values are not verified against the exchange, RBI, SBI or CBIC. If network is blocked or unavailable, returns structured error envelopes without unhandled exceptions. | 5 | `get_stock_quote`, `get_stock_history`, `inr_reference_rate`, `sbi_tt_rate`, `cbic_customs_rate` |

@@ -38,6 +38,9 @@
     {"name": "lookup_bank"},
     {"name": "validate_epf_code"},
     {"name": "validate_esic_code"},
-    {"name": "decode_digilocker_uri"}
+    {"name": "decode_digilocker_uri"},
+    {"name": "inr_reference_rate"},
+    {"name": "sbi_tt_rate"},
+    {"name": "cbic_customs_rate"}
   ]
 }

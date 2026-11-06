@@ -4,6 +4,9 @@ from mcp.types import ToolAnnotations
 from pydantic import Field
 
 from mcp_india_stack.app import mcp
+from mcp_india_stack.tools.fx_rates import cbic_customs_rate as core_cbic_customs_rate
+from mcp_india_stack.tools.fx_rates import inr_reference_rate as core_inr_reference_rate
+from mcp_india_stack.tools.fx_rates import sbi_tt_rate as core_sbi_tt_rate
 from mcp_india_stack.tools.stock_market import get_stock_history as core_get_stock_history
 from mcp_india_stack.tools.stock_market import get_stock_quote as core_get_stock_quote
 
@@ -43,3 +46,64 @@ def get_stock_history(
 ) -> dict[str, Any]:
     """[Experimental] Fetch historical end-of-day data for a given Indian stock ticker."""
     return core_get_stock_history(symbol=symbol, period=period)
+
+
+@mcp.tool(annotations=ToolAnnotations(readOnlyHint=True, idempotentHint=True, openWorldHint=True))
+def inr_reference_rate(
+    currency: Annotated[
+        str,
+        Field(
+            min_length=3,
+            max_length=3,
+            description="ISO 4217 currency code quoted against INR. Examples: USD, EUR, GBP, JPY",
+        ),
+    ],
+) -> dict[str, Any]:
+    """[Third-party source] Latest RBI reference rate for a currency against INR.
+
+    Live lookup served by allratestoday.com, an aggregator; not verified against RBI.
+    """
+    return core_inr_reference_rate(currency=currency)
+
+
+@mcp.tool(annotations=ToolAnnotations(readOnlyHint=True, idempotentHint=True, openWorldHint=True))
+def sbi_tt_rate(
+    currency: Annotated[
+        str,
+        Field(
+            min_length=3,
+            max_length=3,
+            description="ISO 4217 currency code quoted against INR. Examples: USD, EUR, AED",
+        ),
+    ],
+) -> dict[str, Any]:
+    """[Third-party source] Latest SBI telegraphic-transfer buy/sell rate against INR.
+
+    Live lookup served by allratestoday.com, an aggregator; not verified against SBI.
+    """
+    return core_sbi_tt_rate(currency=currency)
+
+
+@mcp.tool(annotations=ToolAnnotations(readOnlyHint=True, idempotentHint=True, openWorldHint=True))
+def cbic_customs_rate(
+    currency: Annotated[
+        str,
+        Field(
+            min_length=3,
+            max_length=3,
+            description="ISO 4217 currency code quoted against INR. Examples: USD, EUR, CNY",
+        ),
+    ],
+    type: Annotated[
+        str,
+        Field(
+            default="import",
+            description="Customs rate type: import or export",
+        ),
+    ] = "import",
+) -> dict[str, Any]:
+    """[Third-party source] Latest CBIC customs import or export rate against INR.
+
+    Live lookup served by allratestoday.com, an aggregator; not verified against CBIC.
+    """
+    return core_cbic_customs_rate(currency=currency, type=type)

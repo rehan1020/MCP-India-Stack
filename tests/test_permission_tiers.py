@@ -9,7 +9,7 @@ def test_all_tools_classified():
     import mcp_india_stack.app as app
 
     assert hasattr(app, "TOOL_TIERS")
-    assert len(app.TOOL_TIERS) == 80
+    assert len(app.TOOL_TIERS) == 83
     elevated = [
         k
         for k, v in app.TOOL_TIERS.items()

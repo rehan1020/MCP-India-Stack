@@ -12,17 +12,18 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_g3_readme_tool_count_matches_registry() -> None:
-    """Assert README mentions exact registered tool count (80)."""
+    """Assert README mentions exact registered tool count (83)."""
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     registered_count = len(TOOL_TIERS)
-    assert registered_count == 80
+    assert registered_count == 83
 
     # Assert old counts are gone
     assert "76 dedicated tools" not in readme
     assert "76 offline-first tool modules" not in readme
     assert "78 dedicated tools" not in readme
+    assert "80 dedicated tools" not in readme
 
-    # Assert new 80 count is present
+    # Assert new 83 count is present
     assert f"{registered_count} dedicated tools" in readme or f"{registered_count} tools" in readme
 
 
