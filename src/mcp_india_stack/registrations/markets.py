@@ -22,7 +22,7 @@ def get_stock_quote(
         ),
     ],
 ) -> dict[str, Any]:
-    """Fetch current (delayed) price and summary for a given Indian stock ticker."""
+    """[Experimental] Fetch current (delayed) price and summary for a given Indian stock ticker."""
     return core_get_stock_quote(symbol=symbol)
 
 
@@ -44,7 +44,7 @@ def get_stock_history(
         ),
     ] = "1mo",
 ) -> dict[str, Any]:
-    """Fetch historical end-of-day data for a given Indian stock ticker."""
+    """[Experimental] Fetch historical end-of-day data for a given Indian stock ticker."""
     return core_get_stock_history(symbol=symbol, period=period)
 
 
@@ -59,7 +59,10 @@ def inr_reference_rate(
         ),
     ],
 ) -> dict[str, Any]:
-    """Fetch the latest RBI reference rate for a currency against INR (zero-auth live lookup)."""
+    """[Third-party source] Latest RBI reference rate for a currency against INR.
+
+    Live lookup served by allratestoday.com, an aggregator; not verified against RBI.
+    """
     return core_inr_reference_rate(currency=currency)
 
 
@@ -74,7 +77,10 @@ def sbi_tt_rate(
         ),
     ],
 ) -> dict[str, Any]:
-    """Fetch the latest SBI telegraphic-transfer buy/sell rate for a currency against INR."""
+    """[Third-party source] Latest SBI telegraphic-transfer buy/sell rate against INR.
+
+    Live lookup served by allratestoday.com, an aggregator; not verified against SBI.
+    """
     return core_sbi_tt_rate(currency=currency)
 
 
@@ -96,5 +102,8 @@ def cbic_customs_rate(
         ),
     ] = "import",
 ) -> dict[str, Any]:
-    """Fetch the latest CBIC customs exchange rate (import or export) for a currency against INR."""
+    """[Third-party source] Latest CBIC customs import or export rate against INR.
+
+    Live lookup served by allratestoday.com, an aggregator; not verified against CBIC.
+    """
     return core_cbic_customs_rate(currency=currency, type=type)

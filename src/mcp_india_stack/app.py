@@ -119,6 +119,98 @@ TOOL_TIERS: dict[str, PermissionTier] = {
     "draft_rti_application": PermissionTier.INITIATE,
     "draft_first_appeal": PermissionTier.INITIATE,
     "draft_second_appeal": PermissionTier.INITIATE,
+    "verify_einvoice_qr": PermissionTier.READ_ONLY,
+    "verify_aadhaar_offline_artifact": PermissionTier.READ_ONLY,
+}
+
+TOOL_NETWORK: dict[str, str] = {
+    # Stock market tools: required network connectivity
+    "get_stock_quote": "required",
+    "get_stock_history": "required",
+    # FX rate tools: required network connectivity (third-party aggregator)
+    "inr_reference_rate": "required",
+    "sbi_tt_rate": "required",
+    "cbic_customs_rate": "required",
+    # Tools touching CDN refresh or live lookup fallback: optional network connectivity
+    "lookup_ifsc": "optional",
+    "bulk_validate_ifsc": "optional",
+    "lookup_pincode": "optional",
+    "lookup_hsn_code": "optional",
+    "calculate_gst": "optional",
+    # Pure offline tools: zero network access required
+    "validate_gstin": "none",
+    "bulk_validate_gstin": "none",
+    "validate_pan": "none",
+    "bulk_validate_pan": "none",
+    "decode_pan_type": "none",
+    "validate_upi_vpa": "none",
+    "decode_state_code": "none",
+    "validate_aadhaar": "none",
+    "bulk_validate_aadhaar": "none",
+    "validate_voter_id": "none",
+    "validate_driving_license": "none",
+    "validate_passport": "none",
+    "validate_cin": "none",
+    "validate_din": "none",
+    "validate_fssai": "none",
+    "validate_tan": "none",
+    "validate_mobile_number": "none",
+    "validate_pran": "none",
+    "validate_llpin": "none",
+    "decode_isin": "none",
+    "lookup_bank": "none",
+    "lookup_bbps_biller": "none",
+    "validate_epf_code": "none",
+    "validate_esic_code": "none",
+    "decode_digilocker_uri": "none",
+    "build_aa_consent_request": "none",
+    "validate_aa_consent_artifact": "none",
+    "decode_aa_fi_type": "none",
+    "calculate_income_tax": "none",
+    "calculate_tds": "none",
+    "calculate_surcharge": "none",
+    "calculate_hra_exemption": "none",
+    "calculate_capital_gains": "none",
+    "calculate_advance_tax": "none",
+    "calculate_epf_esic": "none",
+    "calculate_emi": "none",
+    "calculate_gratuity": "none",
+    "calculate_ppf_maturity": "none",
+    "calculate_fd_maturity": "none",
+    "calculate_rd_maturity": "none",
+    "calculate_sip_returns": "none",
+    "calculate_step_up_sip": "none",
+    "calculate_nps_projection": "none",
+    "calculate_sukanya_samriddhi": "none",
+    "calculate_home_vs_rent": "none",
+    "calculate_gst_late_fee": "none",
+    "calculate_income_tax_interest": "none",
+    "calculate_presumptive_tax": "none",
+    "calculate_professional_tax": "none",
+    "calculate_leave_encashment_tax": "none",
+    "calculate_salary_restructuring": "none",
+    "calculate_neft_rtgs_imps_charges": "none",
+    "get_regulatory_deadlines": "none",
+    "decode_cnr_number": "none",
+    "lookup_court_establishment_code": "none",
+    "lookup_ipc_section": "none",
+    "lookup_bns_section": "none",
+    "lookup_crpc_section": "none",
+    "lookup_bnss_section": "none",
+    "lookup_evidence_act_section": "none",
+    "lookup_bsa_section": "none",
+    "decode_ipc_bns_crosswalk": "none",
+    "calculate_limitation_deadline": "none",
+    "calculate_court_fee": "none",
+    "calculate_stamp_duty": "none",
+    "calculate_rti_fee": "none",
+    "calculate_rti_deadline": "none",
+    "calculate_rti_penalty_estimate": "none",
+    "draft_rti_application": "none",
+    "draft_first_appeal": "none",
+    "draft_second_appeal": "none",
+    "verify_einvoice_qr": "none",
+    "verify_aadhaar_offline_artifact": "none",
 }
 
 _original_mcp_tool = mcp.tool
@@ -137,6 +229,13 @@ def _wrapped_mcp_tool(
             msg = (
                 f"Server refused to start: Tool '{tool_name}' "
                 "lacks a PermissionTier classification."
+            )
+            raise RuntimeError(msg)
+
+        if tool_name not in TOOL_NETWORK:
+            msg = (
+                f"Server refused to start: Tool '{tool_name}' "
+                "lacks a Network attribute classification."
             )
             raise RuntimeError(msg)
 

@@ -15,6 +15,7 @@
 - [Architecture Diagram](#architecture-diagram)
 - [Demo & Links](#demo--links)
 - [Key Features](#key-features)
+- [Authenticity System](#-authenticity-system)
 - [Quick Start](#quick-start)
 - [Tool Catalog](#tool-catalog)
 - [Agent Workflows & Resources](#agent-workflows--resources)
@@ -48,14 +49,35 @@
 
 ## 🏗️ Architecture Diagram
 
-![Architecture](./assets/architecture.png)
-*MCP Client ↔ MCP Server ↔ 76 offline-first tool modules*
+```
++-----------------------------------------------------------+
+|                        MCP Clients                        |
+|       (Claude Desktop, Cursor, Custom Agent Frameworks)   |
++-----------------------------+-----------------------------+
+                              |
+                     STDIO / SSE Protocol
+                              |
++-----------------------------v-----------------------------+
+|                      MCP India Stack                      |
+|                     (FastMCP Server)                      |
++-----------------------------+-----------------------------+
+                              |
+      +-----------------------+-----------------------+
+      |                       |                       |
++-----v-------------+  +------v------------+  +-------v-----+
+| Pure Offline (71) |  |   Offline + CDN   |  | Live Lookup |
+| Format Validators |  |   Refresh (5)     |  |  Only (5)   |
+| Tax Calculators   |  | IFSC, HSN, Pin    |  | Stocks, FX  |
+| Legal Reference   |  | Bundled Datasets  |  | Third-party |
++-------------------+  +-------------------+  +-------------+
+```
+*MCP Client ↔ FastMCP Server ↔ 78 modular tool endpoints*
 
 ---
 
 ## 🔗 Links
 
-- **Deployment:** [https://pypi.org/project/mcp-india-stack/](https://pypi.org/project/mcp-india-stack/)
+- **Deployment:** [docs/deployment.md](docs/deployment.md)
 - **PPT:** [https://gamma.app/docs/Problem-India-lacks-native-fintech-primitives-for-AI-agents-d1izzfemlvfvkf0?mode=doc](https://gamma.app/docs/Problem-India-lacks-native-fintech-primitives-for-AI-agents-d1izzfemlvfvkf0?mode=doc)
 - **GitHub:** [https://github.com/rehan1020/MCP-India-Stack](https://github.com/rehan1020/MCP-India-Stack)
 - **PyPI:** [https://pypi.org/project/mcp-india-stack/](https://pypi.org/project/mcp-india-stack/)
@@ -63,10 +85,24 @@
 ## ✨ Key Features
 
 - **Offline-First Architecture**: Bundles compressed datasets for zero-latency lookups (IFSC, Pincodes, HSN/SAC). No API rate limits.
-- **Zero Authentication**: No API keys, secrets, or subscriptions required. All logic runs locally.
+- **Zero Authentication**: No API keys, secrets, or subscriptions required. All validation and calculation logic runs locally; only the stock and FX rate tools call an external service (see the network tiers below).
 - **Background Auto-Updates**: Non-blocking CDN fetching ensures your datasets never go stale without impacting request latency.
-- **Comprehensive Coverage**: 76 dedicated tools for identity validation (PAN, Aadhaar, GSTIN, TAN, PRAN), tax calculation (Income Tax, TDS, GST), savings calculators (EPF, PPF, SIP), and master data lookups.
+- **Comprehensive Coverage**: 83 dedicated tools for identity validation (PAN, Aadhaar, GSTIN, TAN, PRAN), tax calculation (Income Tax, TDS, GST), savings calculators (EPF, PPF, SIP), and master data lookups.
 - **Enterprise-Ready**: Thread-pool accelerated bulk validation tools for processing large batches of vendor or customer data.
+
+---
+
+## 🛡️ Authenticity System
+
+Every verifying tool states **how strongly** an identifier is attested through standard levels (`A0` to `A4`) instead of a simplistic binary flag:
+
+* **`A0` (Format & Checksum)**: Structural syntax and checksum algorithms pass offline (e.g. Luhn mod-36 for GSTIN, Verhoeff for Aadhaar).
+* **`A1` (Cross-Field Consistency)**: Cross-field rules pass offline (e.g. embedded PAN in GSTIN, ROC jurisdiction in CIN, RTO code in DL).
+* **`A2` (Authoritative Dataset Match)**: Record matched in a bundled authoritative dataset (e.g. RBI IFSC directory, India Post pincode list, NSDL ISIN list).
+* **`A3` (Cryptographic Artifact Verification)**: Digital signature on a supplied artifact verified offline (e.g. NIC e-invoice QR code, UIDAI offline XML).
+* **`A4` (Live Registry Attestation)**: Confirmed via an opt-in live registry provider.
+
+Every response includes an additive `authenticity` object with verified checks, authority source, evaluation date, and explicit limitations (e.g. *"active registration status not verified"*). See [docs/authenticity.md](docs/authenticity.md) and [docs/writing_a_provider.md](docs/writing_a_provider.md) for complete details.
 
 ---
 
@@ -138,6 +174,8 @@ Add the following to your `claude_desktop_config.json` file to enable the India 
 - [`decode_isin`](docs/lookup_and_validation.md) — ISIN decoder with Luhn validation
 - [`decode_digilocker_uri`](docs/lookup_and_validation.md) — DigiLocker URI decoder and validator mapper
 - [`decode_pan_type`](docs/lookup_and_validation.md) — Decode PAN entity type from the 4th character
+- [`verify_einvoice_qr`](docs/lookup_and_validation.md) — Cryptographically verify NIC B2B e-invoice signed QR codes (A3 Authenticity)
+- [`verify_aadhaar_offline_artifact`](docs/lookup_and_validation.md) — Cryptographically verify UIDAI Paperless Offline e-KYC XML/ZIP (A3 Authenticity)
 
 ### 📱 Identity & Contact
 - [`validate_mobile_number`](docs/lookup_and_validation.md) — Mobile number with operator/circle detection
@@ -190,9 +228,10 @@ Add the following to your `claude_desktop_config.json` file to enable the India 
 - `get_stock_history` — Fetch historical end-of-day data for Indian stocks using yfinance.
 
 ### 💱 FX Rates (INR)
-- [`inr_reference_rate`](docs/fx_rates.md) — Latest RBI reference rate for a currency against INR (zero-auth live lookup)
-- [`sbi_tt_rate`](docs/fx_rates.md) — Latest SBI telegraphic-transfer buy/sell rate against INR
-- [`cbic_customs_rate`](docs/fx_rates.md) — Latest CBIC customs import/export exchange rate against INR
+Live lookups served by a third-party aggregator (allratestoday.com). Not fetched from or verified against RBI, SBI or CBIC; network required.
+- [`inr_reference_rate`](docs/fx_rates.md) — Latest RBI reference rate for a currency against INR, as republished by the aggregator
+- [`sbi_tt_rate`](docs/fx_rates.md) — Latest SBI telegraphic-transfer buy/sell rate against INR, as republished by the aggregator
+- [`cbic_customs_rate`](docs/fx_rates.md) — Latest CBIC customs import/export exchange rate against INR, as republished by the aggregator
 
 ### ⚖️ Legal Reference
 - [`decode_cnr_number`](docs/legal_reference.md) — CNR (Case Number Record) decoder and validator
@@ -276,38 +315,29 @@ See [`LEGAL_NOTICE.md`](LEGAL_NOTICE.md) for important legal disclaimers includi
 ## 🚀 Launch Notes
 
 This repository is release-ready for GitHub launch with:
-- `0.6.0` package metadata and changelog coverage.
+- `0.8.0` package metadata and changelog coverage.
 - A complete MCP server-card under `docs/.well-known/mcp/server-card.json`.
 - Local setup and publishing steps in [`SETUP.md`](SETUP.md).
 - Contribution guidance and versioning policy in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-### New in v0.6.0 — Legal Reference & RTI Toolkit
-- **Legal Reference**: CNR decoder, court establishment lookup, bare-act section lookups (IPC/BNS/CrPC/BNSS/IEA/BSA), IPC↔BNS crosswalk, limitation period calculator, court fee calculator (10 states), stamp duty calculator (10 states).
-- **RTI Toolkit**: RTI fee calculator, deadline tracker, penalty estimator, application/appeal template drafters.
-- **Capital Gains**: Updated LTCG exemption from ₹1L to ₹1.25L (Budget 2024).
-- **Stock Market**: Added yfinance-based `get_stock_quote` and `get_stock_history` tools.
+### What's New in v0.8.0 — Authenticity System (A0-A4), Signed Datasets & Cryptographic Verification
+- **Multi-Tier Authenticity System (8a)**: Every verifying tool outputs an additive `authenticity` envelope (`A0` to `A4`) enforcing rules R1–R6.
+- **Signed Dataset Manifests (8b)**: Detached Ed25519 dataset verification, key ring with rotation/revocation, monotonic anti-rollback checks, and `--verify-data` CLI command.
+- **Cryptographic Artifact Verification (8c)**: Signed NIC B2B e-invoice QR code verification and UIDAI secure offline XML/ZIP e-KYC attestation with XXE/bomb defense.
+- **Opt-In Registry Provider Interface (8d)**: Pluggable `BaseRegistryProvider(ABC)` with entry points discovery, `FixtureProvider`, circuit breaker, rate limiting, and SSRF defense.
 
-### Bug fixes in v0.4.2 (Round 2 — Deep Code Audit)
-- **Capital Gains**: Asset-type-specific LTCG thresholds — real estate 24mo, gold/debentures 36mo, crypto always 30% flat.
-- **EPF/ESIC**: Employee EPF correctly capped at ₹15K wage ceiling. Added `voluntary_pf_on_actual` for VPF.
-- **HRA**: Removed Bangalore/Hyderabad/Pune from metro cities. Only Delhi/Mumbai/Chennai/Kolkata get 50%.
-- **Presumptive Tax**: Full 7-slab new regime coverage with 87A rebate (was truncated at 3 slabs).
-- **GST Late Fee**: GSTR9 cap enforced (0.25% of turnover). Nil return rate corrected to ₹20/day.
-- **Income Tax Interest**: Section 234C uses cumulative paid vs required (not single-quarter).
-- **Advance Tax**: Installments show incremental `installment_amount` (not confusing cumulative).
-- **Salary Restructuring**: Removed obsolete ₹19,200 conveyance exemption. Standard deduction (₹75K) shown.
-
-### Bug fixes in v0.4.1
-- **Security**: Masked Aadhaar number leakage in response fields.
-- **Validation**: Fixed mobile number over-counting digits issue.
-- **Tax Rules**: Corrected Presumptive Tax (44AD/44ADA) thresholds to FY25-26 rules.
-- **Financial**: Fixed Step-up SIP compounding return calculation.
-- **Data**: Added missing HSN codes (8517, 9401, 2523, 3004, 8708) with correct GST rates.
-- **Professional Tax**: Fixed annual total calculations based on correct monthly slabs.
-- **Income Tax**: Fixed 80D deduction cap for senior citizens.
-- **ISIN**: Fixed Luhn checksum multi-digit expansion logic.
-- **EMI Calculator**: Improved error responses to not leak fallback fields on invalid inputs.
-- **Advance Tax**: Added support for overriding internal computations with user-provided `tax_liability`.
+### Previous Releases
+- **v0.6.0**: Legal Reference (CNR decoder, court establishment lookup, bare-act section lookups for IPC/BNS/CrPC/BNSS/IEA/BSA, IPC↔BNS crosswalk, limitation period calculator, court fee, stamp duty) and RTI Toolkit (fee calculator, deadline tracker, penalty estimator, templates). Added yfinance-based market data tools.
+- **v0.4.x**: Deep statutory audit across capital gains thresholds, EPF wage ceilings, metro HRA rules, 7-slab presumptive tax, and GST late fee caps. See [CHANGELOG.md](CHANGELOG.md) for detailed history.
 
 ---
-**Offline-First Guarantee**: All tools in this package work without an internet connection. No API keys required. No data is sent to any external server. All datasets are bundled in the package at install time.
+
+### Offline-First Guarantee
+
+The package classifies every tool under an authoritative network access attribute (`none`, `optional`, or `required`), surfaced programmatically in the `india://status` MCP resource (`tools_network`):
+
+| Network Tier | Policy | Tool Count | Tools Included |
+|---|---|---|---|
+| `none` (Network: None) | Pure offline execution. Zero network calls, zero external endpoints, no sockets opened. Computations, format checks, checksum algorithms, and tax rules execute entirely in-process using local logic. | 73 | `validate_gstin`, `bulk_validate_gstin`, `validate_pan`, `bulk_validate_pan`, `decode_pan_type`, `validate_upi_vpa`, `decode_state_code`, `validate_aadhaar`, `bulk_validate_aadhaar`, `validate_voter_id`, `validate_driving_license`, `validate_passport`, `validate_cin`, `validate_din`, `validate_fssai`, `validate_tan`, `validate_mobile_number`, `validate_pran`, `validate_llpin`, `decode_isin`, `lookup_bank`, `lookup_bbps_biller`, `validate_epf_code`, `validate_esic_code`, `decode_digilocker_uri`, `verify_einvoice_qr`, `verify_aadhaar_offline_artifact`, `build_aa_consent_request`, `validate_aa_consent_artifact`, `decode_aa_fi_type`, `calculate_income_tax`, `calculate_tds`, `calculate_surcharge`, `calculate_hra_exemption`, `calculate_capital_gains`, `calculate_advance_tax`, `calculate_epf_esic`, `calculate_emi`, `calculate_gratuity`, `calculate_ppf_maturity`, `calculate_fd_maturity`, `calculate_rd_maturity`, `calculate_sip_returns`, `calculate_step_up_sip`, `calculate_nps_projection`, `calculate_sukanya_samriddhi`, `calculate_home_vs_rent`, `calculate_gst_late_fee`, `calculate_income_tax_interest`, `calculate_presumptive_tax`, `calculate_professional_tax`, `calculate_leave_encashment_tax`, `calculate_salary_restructuring`, `calculate_neft_rtgs_imps_charges`, `get_regulatory_deadlines`, `decode_cnr_number`, `lookup_court_establishment_code`, `lookup_ipc_section`, `lookup_bns_section`, `lookup_crpc_section`, `lookup_bnss_section`, `lookup_evidence_act_section`, `lookup_bsa_section`, `decode_ipc_bns_crosswalk`, `calculate_limitation_deadline`, `calculate_court_fee`, `calculate_stamp_duty`, `calculate_rti_fee`, `calculate_rti_deadline`, `calculate_rti_penalty_estimate`, `draft_rti_application`, `draft_first_appeal`, `draft_second_appeal` |
+| `optional` (Network: Optional) | Datasets are bundled locally offline (IFSC master, postal pincodes, HSN/SAC master). When enabled, background non-blocking CDN refresh or optional live lookup enriches local data. If network is unavailable or blocked, falls back seamlessly to bundled local datasets without blocking or error. | 5 | `lookup_ifsc`, `bulk_validate_ifsc`, `lookup_pincode`, `lookup_hsn_code`, `calculate_gst` |
+| `required` (Network: Required) | Live third-party data feeds. Must reach an external endpoint to return a value: Yahoo Finance for stock quotes and history, and the allratestoday.com aggregator for INR FX rates. The values are not verified against the exchange, RBI, SBI or CBIC. If network is blocked or unavailable, returns structured error envelopes without unhandled exceptions. | 5 | `get_stock_quote`, `get_stock_history`, `inr_reference_rate`, `sbi_tt_rate`, `cbic_customs_rate` |

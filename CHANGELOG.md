@@ -4,7 +4,34 @@
 
 ### Added
 
-- **FX Rates (INR)**: Three zero-auth live lookup tools (`LOOKUP_LIVE` tier) in `tools/fx_rates.py`, registered in `registrations/markets.py`: `inr_reference_rate` (RBI reference rate), `sbi_tt_rate` (SBI telegraphic-transfer buy/sell) and `cbic_customs_rate` (CBIC customs import/export rate). Latest value only, keyless endpoints at allratestoday.com, shared circuit breaker, 5-second timeout, failures reported in `errors` rather than raised. Documented in `docs/fx_rates.md`. Tool count 78 → 81.
+- **FX Rates (INR)**: Three zero-auth live lookup tools (`LOOKUP_LIVE` tier, network tier `required`) in `tools/fx_rates.py`, registered in `registrations/markets.py`: `inr_reference_rate`, `sbi_tt_rate` and `cbic_customs_rate`. They call the keyless endpoints of allratestoday.com, a third-party aggregator; results are labelled `data_source`, `authority`, `verified: false` and are not fetched from or verified against RBI, SBI or CBIC. Latest value only, shared circuit breaker (a wrongly shaped 200 response counts as a failure), 5-second timeout, failures reported in `errors` rather than raised. Documented in `docs/fx_rates.md`. Tool count 80 → 83.
+
+## [0.8.0] - 2026-11-05
+
+### Authenticity System (PRs 8a – 8d)
+
+- **Authenticity Envelope & A0/A1/A2 Attestation (8a)**: Introduced standard multi-tier attestation envelope (`level`, `checks`, `source`, `as_of`, `evidence_hash`, `limitations`, `registry_status`) across all verifying tools. Enforced rules R1–R6, domain cross-field consistency, schema parity, and comprehensive backwards compatibility.
+- **Signed Dataset Manifests & Supply Chain Security (8b)**: Added detached Ed25519 cryptographic signatures for bundled and cached datasets (`ifsc`, `pincode`, `hsn`), key rotation/revocation ring in `src/mcp_india_stack/keys/`, `--verify-data` CLI command, monotonic anti-rollback version checks, and `MCP_INDIA_STACK_REQUIRE_SIGNED_DATA=1` enforcement.
+- **A3 Signed-Artifact Verification (8c)**: Added `verify_einvoice_qr` and `verify_aadhaar_offline_artifact` tools verifying digital signatures on NIC B2B e-invoices (JWT) and UIDAI Paperless Offline e-KYC (XML/ZIP) against bundled trust anchors. Implemented DPDP Act last-4-digit masking, XML bomb and XXE defenses, and `mcp-india-stack[verify]` optional extra.
+- **A4 Opt-in Registry Provider Interface (8d)**: Introduced `BaseRegistryProvider(ABC)` pluggable interface with entry point (`mcp_india_stack.providers`) and environment variable (`MCP_INDIA_STACK_PROVIDERS`) discovery. Added opt-in `verify_online: bool = False` to verifying tools (`validate_gstin`, `validate_pan`, `validate_cin`), promoting active registrations to Level A4 with `registry_status`. Shipped zero-network `FixtureProvider`, 3-state circuit breaker (tripping on 5 failures with 60s cooldown), token-bucket rate limiter, connect/read timeouts, and strict SSRF defenses blocking private RFC 1918, loopback, link-local, and multicast IP destinations unless bypassed with `MCP_INDIA_STACK_ALLOW_PRIVATE_PROVIDERS=1`. Documented in `docs/writing_a_provider.md`.
+
+## [0.7.1] - 2026-11-04
+
+### Architectural Hardening & Gap Remediation (G1-G13)
+
+- **Offline-First Guarantees & Network Tiers (G1)**: Added canonical `network` tier attribute (`none`, `optional`, `required`) to all 78 registered tools and surfaced it additively in `india://status` (`tools_network`). Verified full offline execution when sockets are blocked.
+- **Hardened CDN Dataset Refresh (G2)**: Implemented HTTPS-only transport, strict host allowlists, no cross-host redirects, connect/read timeouts, size/decompression bomb caps, schema validation, monotonic version checking, atomic replace via staging tmpfiles, lockfile synchronization, and `last_refresh_error` tracking in `india://status`.
+- **Registry-Driven Catalog & README Parity (G3)**: Automated README tool count, catalog parity, and version verification tests against the runtime registry. Moved legacy v0.4.x bugfix history into CHANGELOG.
+- **Legal Notice & DPDP Compliance (G4)**: Added `LEGAL_NOTICE.md` covering government disclaimers, no legal advice, DPDP compliance, and statutory accuracy notes. Fixed broken asset links and added relative link validation in CI.
+- **Root Hygiene (G5)**: Cleaned repository root by migrating release notes and tier classifications into `docs/`.
+- **Tax Rules Audit & Automated Staleness Monitoring (G6)**: Added additive provenance fields (`rules_version`, `effective_from`, `effective_to`, `source_ref`) to calculators, enforced strict `financial_year` parameter validation, updated FY 2026-27 tax slabs, standard deduction (₹75,000), Section 87A rebate (₹25,000), and introduced scheduled GitHub Actions staleness checks.
+- **Legal Data Provenance & State Coverage (G7)**: Added `source_ref` and `last_verified` to legal datasets, returned structured `unsupported_state` envelopes with `coverage: partial` for unsupported jurisdictions, verified full IPC↔BNS bidirectional crosswalk, and handled limitation deadline edge cases.
+- **Aadhaar PII Redaction (G8)**: Masked Aadhaar numbers to the last 4 digits everywhere (`XXXXXXXX1234`), added a redacting logging filter for 12-digit patterns across stdout/stderr/files, and updated tool descriptions with DPDP notices.
+- **Bulk Request Bounds & Concurrency Isolation (G9)**: Added payload caps, item length limits, shared bounded thread pool executor, and order-preserving error isolation for bulk validation tools (`MCP_INDIA_STACK_BULK_MAX`).
+- **Remote SSE Transport Hardening (G10)**: Documented SSE transport with Bearer token authentication, loopback defaults, unauthenticated `/health` endpoint, and in-process token-bucket rate limiting.
+- **Experimental Market Data Protections (G11)**: Designated yfinance stock tools as `[Experimental]`, added symbol allowlist validation regex, backoff retries, short-TTL in-memory caching, error mapping, and metadata indicators (`data_source`, `delayed`, `as_of`).
+- **Repository Governance Audit (G12)**: Completed governance audit, applied least-privilege `permissions:` blocks across all GitHub Actions workflows, and pinned GitHub Actions to immutable SHAs.
+- **Data Provenance & Dataset Inventory (G13)**: Added `docs/data_provenance.md` cataloging upstream authorities, licenses, retrieval cadences, and verified 100% data file coverage.
 
 ## [0.7.0] - 2026-10-29
 
@@ -63,6 +90,22 @@
 ### Tests
 - Added 30+ regression tests covering all 8 fixed scenarios
 - Coverage maintained at 93%+
+
+
+
+## [0.4.1] - 2026-05-15
+
+### Bug Fixes
+- **Security**: Masked Aadhaar number leakage in response fields.
+- **Validation**: Fixed mobile number over-counting digits issue.
+- **Tax Rules**: Corrected Presumptive Tax (44AD/44ADA) thresholds to FY25-26 rules.
+- **Financial**: Fixed Step-up SIP compounding return calculation.
+- **Data**: Added missing HSN codes (8517, 9401, 2523, 3004, 8708) with correct GST rates.
+- **Professional Tax**: Fixed annual total calculations based on correct monthly slabs.
+- **Income Tax**: Fixed 80D deduction cap for senior citizens.
+- **ISIN**: Fixed Luhn checksum multi-digit expansion logic.
+- **EMI Calculator**: Improved error responses to not leak fallback fields on invalid inputs.
+- **Advance Tax**: Added support for overriding internal computations with user-provided `tax_liability`.
 
 
 

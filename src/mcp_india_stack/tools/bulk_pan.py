@@ -1,26 +1,49 @@
-"""Bulk PAN validation using thread pool."""
+"""Bulk PAN validation using shared bounded executor."""
 
 from __future__ import annotations
 
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 
-from mcp_india_stack.tools.bulk_common import BULK_WORKERS
+from mcp_india_stack.authenticity.models import summarize_authenticity_levels
+from mcp_india_stack.authenticity.rules import create_pan_authenticity
+from mcp_india_stack.tools.bulk_common import (
+    execute_bulk_items,
+    validate_bulk_bounds,
+)
+from mcp_india_stack.tools.pan import validate_pan as _validate_pan
 from mcp_india_stack.utils.responses import build_response
+
+
+def _pan_fallback(val: Any, err: str) -> dict[str, Any]:
+    """Fallback representation for failed or malformed PAN item."""
+    pan_str = str(val) if val is not None else ""
+    auth = create_pan_authenticity(pan=pan_str, valid=False)
+    return {
+        "valid": False,
+        "pan": pan_str,
+        "errors": [err],
+        "warnings": [],
+        "authenticity": auth,
+    }
 
 
 def _validate_single_pan(pan: str) -> dict[str, Any]:
     """Validate a single PAN with error isolation."""
-    from mcp_india_stack.tools import validate_pan as _validate_pan
+    from mcp_india_stack import tools
 
+    _fn = getattr(tools, "validate_pan", None) or _validate_pan
     try:
-        return _validate_pan(pan)
+        if pan is None or not isinstance(pan, str):
+            return _pan_fallback(
+                pan, f"Invalid PAN format: expected string, got {type(pan).__name__}"
+            )
+        return _fn(pan)
     except Exception as exc:
-        return {"valid": False, "pan": pan, "errors": [f"Validation error: {exc}"], "warnings": []}
+        return _pan_fallback(pan, f"Validation error: {exc}")
 
 
 def bulk_validate_pan(pans: list[str]) -> dict[str, Any]:
-    """Validate multiple PANs in parallel using ThreadPoolExecutor.
+    """Validate multiple PANs in parallel using shared ThreadPoolExecutor.
 
     Args:
         pans: List of 10-character PAN strings.
@@ -28,24 +51,27 @@ def bulk_validate_pan(pans: list[str]) -> dict[str, Any]:
     Returns:
         Standard envelope with per-PAN results and valid count.
     """
-    if not pans:
-        return build_response(success=False, data=None, errors=["Empty PAN list"])
-    if len(pans) > 500:
-        return build_response(success=False, data=None, errors=["Maximum 500 PANs per call"])
+    is_valid, errors = validate_bulk_bounds(pans, entity_name="PAN")
+    if not is_valid:
+        return build_response(success=False, data=None, errors=errors)
 
-    results: list[tuple[int, dict[str, Any]]] = []
-    valid_count = 0
-    with ThreadPoolExecutor(max_workers=BULK_WORKERS) as executor:
-        futures = {executor.submit(_validate_single_pan, pan): idx for idx, pan in enumerate(pans)}
-        for future in as_completed(futures):
-            result = future.result()
-            results.append((futures[future], result))
-            if result.get("valid"):
-                valid_count += 1
-    results.sort(key=lambda x: x[0])
-    ordered_results = [r for _, r in results]
+    ordered_results = execute_bulk_items(
+        items=pans,
+        validate_fn=_validate_pan,
+        fallback_fn=_pan_fallback,
+        entity_name="PAN",
+    )
+    valid_count = sum(1 for r in ordered_results if r.get("valid"))
+    summary = summarize_authenticity_levels(ordered_results)
+
     return build_response(
         success=True,
-        data={"results": ordered_results, "total": len(pans), "valid_count": valid_count},
+        data={
+            "results": ordered_results,
+            "total": len(pans),
+            "valid_count": valid_count,
+            "authenticity_summary": summary,
+        },
         source="offline_algorithm",
+        authenticity={"summary": summary},
     )

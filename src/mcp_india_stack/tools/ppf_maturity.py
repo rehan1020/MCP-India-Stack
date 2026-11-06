@@ -4,6 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.tools.rules_metadata import (
+    attach_rule_metadata,
+    validate_financial_year,
+)
+
 MIN_ANNUAL_INVESTMENT = 500
 MAX_ANNUAL_INVESTMENT = 150000
 
@@ -17,6 +22,7 @@ def calculate_ppf_maturity(
     annual_investment: float,
     tenure_years: int = 15,
     annual_interest_rate: float = 7.1,
+    financial_year: str = "2025-26",
     **kwargs: Any,
 ) -> dict[str, Any]:
     """Calculate PPF maturity amount with year-by-year breakdown.
@@ -25,11 +31,17 @@ def calculate_ppf_maturity(
         annual_investment: Amount invested per year in INR.
         tenure_years: PPF tenure in years (min 15, extendable in blocks of 5).
         annual_interest_rate: Current PPF rate (default 7.1% for FY2025-26).
+        financial_year: Financial year (defaults to "2025-26").
 
     Returns:
         Dict with maturity amount, total invested, interest earned, and breakdown.
     """
     try:
+        is_valid_fy, err_resp = validate_financial_year("ppf_maturity", financial_year)
+        if not is_valid_fy:
+            assert err_resp is not None
+            return err_resp
+
         annual_interest_rate = kwargs.get("annual_rate", annual_interest_rate)
         errors: list[str] = []
 
@@ -46,13 +58,14 @@ def calculate_ppf_maturity(
             )
 
         if errors:
-            return {
+            err_dict = {
                 "annual_investment": annual_investment,
                 "tenure_years": tenure_years,
                 "annual_interest_rate": annual_interest_rate,
                 "errors": errors,
                 "disclaimer": DISCLAIMER,
             }
+            return attach_rule_metadata(err_dict, "ppf_maturity", financial_year)
 
         r = annual_interest_rate / 100
 
@@ -102,10 +115,10 @@ def calculate_ppf_maturity(
             "disclaimer": DISCLAIMER,
         }
 
-        return result
+        return attach_rule_metadata(result, "ppf_maturity", financial_year)
 
     except Exception as exc:
-        return {
+        exc_dict = {
             "annual_investment": annual_investment
             if isinstance(annual_investment, (int, float))
             else 0,
@@ -116,3 +129,4 @@ def calculate_ppf_maturity(
             "errors": [f"PPF calculation failed: {exc}"],
             "disclaimer": DISCLAIMER,
         }
+        return attach_rule_metadata(exc_dict, "ppf_maturity", financial_year)

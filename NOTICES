@@ -1,23 +1,89 @@
 # Dataset Notices
 
-## Razorpay IFSC Dataset
+This file lists the third-party datasets bundled with `mcp-india-stack`, their upstream sources, licenses, and attributions.
 
-- Source: https://github.com/razorpay/ifsc/releases
-- License: MIT (code repository), dataset marked public domain by source repository
-- Attribution: Razorpay IFSC dataset maintained from RBI/NPCI sources
-- Last updated in repo: 2026-03-21
+---
 
-## India Pincode Dataset
+## 1. Razorpay IFSC Dataset (`ifsc/IFSC.csv`)
 
-- Source: https://download.geonames.org/export/zip/IN.zip
-- License: CC-BY (GeoNames postal dataset)
-- Attribution: GeoNames postal code data, includes India postal geocoding fields
-- Last updated in repo: 2026-03-21
+- **Source:** https://github.com/razorpay/ifsc/releases (derived from RBI and NPCI master directories)
+- **License:** MIT / Public Domain
+- **Attribution:** Maintained by Razorpay; derived from Reserve Bank of India (RBI) and National Payments Corporation of India (NPCI) official bank branch circulars.
+- **Last updated in repo:** 2026-03-21
 
-## HSN/SAC Master Dataset
+---
 
-- Source: https://tutorial.gst.gov.in/downloads/HSN_SAC.xlsx (GST portal tutorial resource)
-- License: NDSAP / Government Open Data reuse with attribution
-- Attribution: HSN/SAC data sourced from GST Council/GSTN resources
-- Last updated in repo: 2026-03-21
+## 2. India Pincode Dataset (`pincode/pincode.csv.gz`)
 
+- **Source:** https://download.geonames.org/export/zip/IN.zip and Department of Posts, Government of India (data.gov.in)
+- **License:** Creative Commons Attribution 4.0 International (CC-BY 4.0)
+- **Attribution:** GeoNames postal dataset integrated with Department of Posts All-India PIN Code directory.
+- **Last updated in repo:** 2026-03-21
+
+---
+
+## 3. HSN / SAC Code & GST Rates Master (`hsn/hsn_master.csv`)
+
+- **Source:** https://tutorial.gst.gov.in/downloads/HSN_SAC.xlsx and Central Board of Indirect Taxes and Customs (CBIC)
+- **License:** National Data Sharing and Accessibility Policy (NDSAP) / Government Open Data Reuse
+- **Attribution:** Sourced from Goods and Services Tax Network (GSTN) and CBIC notifications.
+- **Last updated in repo:** 2026-03-21
+
+---
+
+## 4. Legal Reference & Crosswalk Datasets (`legal/`)
+
+- **Bare Acts Directory (`legal/bare_acts.json`):**
+  - **Source:** India Code Legislative Department (https://www.indiacode.nic.in)
+  - **License:** Public Domain / Government Works (Section 52(1)(q) Copyright Act 1957)
+- **Court Establishments (`legal/court_establishments.json`):**
+  - **Source:** e-Courts Mission Mode Project / Supreme Court of India (https://ecourts.gov.in)
+  - **License:** Open Access Public Domain
+- **Court Fees Schedules (`legal/court_fees.json`):**
+  - **Source:** Respective State Court Fees and Suits Valuation Acts via India Code and State Legislative Gazettes
+  - **License:** Public Domain
+- **IPC to BNS / CrPC to BNSS / IEA to BSA Crosswalk (`legal/ipc_bns_crosswalk.json`):**
+  - **Source:** Ministry of Home Affairs / India Code (Acts 45 of 2023, 46 of 2023, 47 of 2023)
+  - **License:** Public Domain
+- **Limitation Periods Schedule (`legal/limitation_periods.json`):**
+  - **Source:** Limitation Act, 1963 (Act No. 36 of 1963) Schedule via India Code
+  - **License:** Public Domain
+- **Stamp Duty Rates (`legal/stamp_duty.json`):**
+  - **Source:** Indian Stamp Act, 1899 (Act No. 2 of 1899) and State Stamp Acts via State Revenue Portals
+  - **License:** Public Domain
+- **Last updated in repo:** 2026-10-29
+
+---
+
+## 5. RTI Fee Schedules (`rti/rti_fees.json`)
+
+- **Source:** Department of Personnel and Training (DoPT), Right to Information Rules 2012, and respective State RTI Rules (https://dopt.gov.in)
+- **License:** Public Domain / Government Works
+- **Attribution:** Central Right to Information Rules, 2012 and State Information Commissions.
+- **Last updated in repo:** 2026-10-29
+
+---
+
+## 6. GST State Codes Directory (`state_codes/state_codes.json`)
+
+- **Source:** Goods and Services Tax Council (https://gstcouncil.gov.in)
+- **License:** Public Domain / Government Open Data
+- **Attribution:** Standard 2-digit Indian State and Union Territory codes defined under Indian GST law.
+- **Last updated in repo:** 2026-03-21
+
+---
+
+## 7. NPCI UPI Handle Registry (`upi/upi_handles.json`)
+
+- **Source:** National Payments Corporation of India (NPCI) UPI Certified PSP List (https://www.npci.org.in/what-we-do/upi/live-members)
+- **License:** Open Public Directory
+- **Attribution:** National Payments Corporation of India (NPCI).
+- **Last updated in repo:** 2026-03-21
+
+---
+
+## 8. Dataset Checksum Manifest (`dataset_checksums.json`)
+
+- **Source:** Internally generated cryptographic SHA-256 integrity manifest for bundled datasets.
+- **License:** Apache-2.0 (same as repository)
+- **Last updated in repo:** 2026-10-29

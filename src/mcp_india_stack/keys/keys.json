@@ -1,0 +1,31 @@
+{
+  "keys": [
+    {
+      "key_id": "mcp-india-stack-ed25519-primary",
+      "algorithm": "Ed25519",
+      "status": "active",
+      "public_key": "e67f7ed318e3ed162c127074d765d68972f99579bddeec98b2e70da8b9e9b90f",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "expires_at": "2030-12-31T23:59:59Z",
+      "description": "Primary release key for MCP India Stack dataset supply chain"
+    },
+    {
+      "key_id": "mcp-india-stack-ed25519-legacy-rotated",
+      "algorithm": "Ed25519",
+      "status": "rotated",
+      "public_key": "a2e6c599600fedc01f164b532ee746d00d20ed6bb1530d0bf79009df5744bdc2",
+      "valid_from": "2024-01-01T00:00:00Z",
+      "expires_at": "2025-12-31T23:59:59Z",
+      "description": "Previous generation signing key, rotated in 2026"
+    },
+    {
+      "key_id": "mcp-india-stack-ed25519-revoked-sample",
+      "algorithm": "Ed25519",
+      "status": "revoked",
+      "public_key": "066d332170d927e950d06ba2cd173d0251007b5feed6af2cfe9954b898409b76",
+      "valid_from": "2024-01-01T00:00:00Z",
+      "expires_at": "2025-01-01T00:00:00Z",
+      "description": "Sample revoked key retained for test and audit validation"
+    }
+  ]
+}

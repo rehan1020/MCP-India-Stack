@@ -4,6 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.tools.rules_metadata import (
+    attach_rule_metadata,
+    validate_financial_year,
+)
+
 
 def calculate_advance_tax(
     estimated_income: float | None = None,
@@ -11,6 +16,7 @@ def calculate_advance_tax(
     taxpayer_type: str = "individual",
     existing_tds: float = 0,
     tax_liability: float | None = None,
+    financial_year: str = "2025-26",
 ) -> dict[str, Any]:
     """Calculate quarterly advance tax installment schedule.
 
@@ -24,10 +30,16 @@ def calculate_advance_tax(
         existing_tds: TDS already deducted or to be deducted.
         tax_liability: If provided, use this as the total tax liability directly
                        (instead of computing from estimated_income).
+        financial_year: Financial year (defaults to "2025-26").
 
     Returns:
         Dict with quarterly breakdown and interest calculations.
     """
+    is_valid_fy, err_resp = validate_financial_year("advance_tax", financial_year)
+    if not is_valid_fy:
+        assert err_resp is not None
+        return err_resp
+
     errors: list[str] = []
     warnings: list[str] = []
 
@@ -42,13 +54,14 @@ def calculate_advance_tax(
         errors.append("Existing TDS cannot be negative")
 
     if errors:
-        return {
+        err_res = {
             "total_tax_liability": 0.0,
             "advance_tax_due": 0.0,
             "installments": [],
             "errors": errors,
             "warnings": warnings,
         }
+        return attach_rule_metadata(err_res, "advance_tax", financial_year)
 
     # Determine total tax: use provided liability or compute from income
     if tax_liability is not None:
@@ -111,7 +124,7 @@ def calculate_advance_tax(
         # Keep "percentage" key for backward compat (cumulative)
         inst["percentage"] = inst["cumulative_pct"]
 
-    return {
+    res_dict = {
         "total_tax_liability": round(total_tax, 2),
         "existing_tds": existing_tds,
         "net_tax_liability": round(net_tax_liability, 2),
@@ -129,6 +142,7 @@ def calculate_advance_tax(
         "errors": errors,
         "warnings": warnings,
     }
+    return attach_rule_metadata(res_dict, "advance_tax", financial_year)
 
 
 def calculate_interest_penalty(

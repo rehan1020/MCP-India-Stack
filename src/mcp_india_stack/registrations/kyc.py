@@ -4,6 +4,9 @@ from mcp.types import ToolAnnotations
 from pydantic import Field
 
 from mcp_india_stack.app import mcp
+from mcp_india_stack.authenticity import AUTHENTICITY_SCHEMA, AUTHENTICITY_SUMMARY_SCHEMA
+from mcp_india_stack.authenticity.models import AuthenticityCheck, build_authenticity_envelope
+from mcp_india_stack.logging_filter import mask_aadhaar_text
 from mcp_india_stack.normalization import (
     normalize_aadhaar,
     normalize_cin,
@@ -31,6 +34,12 @@ from mcp_india_stack.tools.pan_type import decode_pan_type as core_decode_pan_ty
 from mcp_india_stack.tools.pran import validate_pran as core_validate_pran
 from mcp_india_stack.tools.tan import validate_tan as core_validate_tan
 from mcp_india_stack.tools.upi import validate_upi_vpa as core_validate_upi_vpa
+from mcp_india_stack.tools.verify_aadhaar_artifact import (
+    verify_aadhaar_offline_artifact as core_verify_aadhaar_offline_artifact,
+)
+from mcp_india_stack.tools.verify_einvoice import (
+    verify_einvoice_qr as core_verify_einvoice_qr,
+)
 from mcp_india_stack.utils.responses import build_response
 
 
@@ -42,6 +51,20 @@ def validate_gstin(
             min_length=1, max_length=30, description="15-character GSTIN (spaces/hyphens allowed)"
         ),
     ],
+    expected_entity_type: Annotated[
+        str | None,
+        Field(
+            default=None,
+            description="Optional expected entity type character to verify against PAN 4th char",
+        ),
+    ] = None,
+    verify_online: Annotated[
+        bool,
+        Field(
+            default=False,
+            description="Optional opt-in online registry attestation (A4 level)",
+        ),
+    ] = False,
 ) -> dict[str, Any]:
     """Validate and decode an Indian GSTIN with checksum verification.
 
@@ -50,6 +73,8 @@ def validate_gstin(
 
     Args:
             gstin: 15-character GSTIN (e.g., 27AAPFU0939F1ZV). Spaces/hyphens stripped.
+            expected_entity_type: Optional expected entity char to match PAN 4th char.
+            verify_online: Optional opt-in online registry attestation (A4 level).
 
     Returns:
             Standard envelope containing validity, state decode, embedded PAN,
@@ -60,7 +85,11 @@ def validate_gstin(
     """
     normalized = normalize_gstin(gstin)["normalized_input"]
     try:
-        result = core_validate_gstin(normalized)
+        result = core_validate_gstin(
+            normalized,
+            expected_entity_type=expected_entity_type,
+            verify_online=verify_online,
+        )
         return result
     except Exception as exc:
         return build_response(
@@ -102,6 +131,13 @@ def validate_pan(
     pan: Annotated[
         str, Field(min_length=1, max_length=20, description="10-char PAN (spaces/hyphens allowed)")
     ],
+    verify_online: Annotated[
+        bool,
+        Field(
+            default=False,
+            description="Optional opt-in online registry attestation (A4 level)",
+        ),
+    ] = False,
 ) -> dict[str, Any]:
     """Validate Indian PAN format and decode entity type from the 4th character.
 
@@ -109,6 +145,7 @@ def validate_pan(
 
     Args:
             pan: PAN string, example: AAAPL1234C. Spaces and hyphens stripped automatically.
+            verify_online: Optional opt-in online registry attestation (A4 level).
 
     Returns:
             Standard envelope containing format validity, entity type, and decoded segments.
@@ -118,7 +155,7 @@ def validate_pan(
     """
     normalized = normalize_pan(pan)["normalized_input"]
     try:
-        result = core_validate_pan(normalized)
+        result = core_validate_pan(normalized, verify_online=verify_online)
         return result
     except Exception as exc:
         return build_response(
@@ -177,6 +214,7 @@ def validate_upi_vpa(
             errors=result.get("errors", []),
             warnings=result.get("warnings", []),
             source="offline_algorithm",
+            authenticity=cast(dict[str, Any] | None, result.get("authenticity")),
         )
     except Exception as exc:
         return build_response(
@@ -209,6 +247,8 @@ def validate_aadhaar(
 
     Notes:
             Validates format and Verhoeff checksum only. Not connected to UIDAI.
+            In compliance with the Digital Personal Data Protection Act, 2023 (DPDP Act)
+            and UIDAI guidelines, raw Aadhaar numbers are never stored, logged, or exposed.
     """
     normalized = normalize_aadhaar(aadhaar)["normalized_input"]
     try:
@@ -218,10 +258,14 @@ def validate_aadhaar(
             data=result,
             errors=cast(list[str], result.get("errors", [])),
             source="offline_algorithm",
+            authenticity=cast(dict[str, Any] | None, result.get("authenticity")),
         )
     except Exception as exc:
+        masked_exc = mask_aadhaar_text(str(exc))
         return build_response(
-            success=False, errors=[f"Aadhaar validation failed: {exc}"], source="offline_algorithm"
+            success=False,
+            errors=[f"Aadhaar validation failed: {masked_exc}"],
+            source="offline_algorithm",
         )
 
 
@@ -244,6 +288,8 @@ def bulk_validate_aadhaar(
 
     Notes:
         Max 500 Aadhaars per call. Uses same Verhoeff validation as single tool.
+        Not connected to UIDAI. In compliance with DPDP Act 2023, results are masked
+        and raw numbers are never stored or logged.
     """
     try:
         result = core_bulk_validate_aadhaar(numbers=numbers)
@@ -252,11 +298,13 @@ def bulk_validate_aadhaar(
             data=result,
             errors=result.get("errors", []),
             source="offline_algorithm",
+            authenticity=cast(dict[str, Any] | None, result.get("authenticity")),
         )
     except Exception as exc:
+        masked_exc = mask_aadhaar_text(str(exc))
         return build_response(
             success=False,
-            errors=[f"Bulk Aadhaar validation failed: {exc}"],
+            errors=[f"Bulk Aadhaar validation failed: {masked_exc}"],
             source="offline_algorithm",
         )
 
@@ -289,13 +337,7 @@ def validate_voter_id(
 
     cleaned = str(voter_id).strip().upper().replace(" ", "").replace("-", "")
     try:
-        result = core_validate_voter_id(cleaned)
-        return build_response(
-            success=bool(result.get("valid")),
-            data=result,
-            errors=cast(list[str], result.get("errors", [])),
-            source="offline_algorithm",
-        )
+        return core_validate_voter_id(cleaned)
     except Exception as exc:
         return build_response(
             success=False, errors=[f"Voter ID validation failed: {exc}"], source="offline_algorithm"
@@ -328,13 +370,7 @@ def validate_driving_license(
             Format validation only. Handles non-standard pre-Sarathi formats gracefully.
     """
     try:
-        result = core_validate_driving_license(dl_number)
-        return build_response(
-            success=bool(result.get("valid")),
-            data=result,
-            errors=cast(list[str], result.get("errors", [])),
-            source="offline_algorithm",
-        )
+        return core_validate_driving_license(dl_number)
     except Exception as exc:
         return build_response(
             success=False, errors=[f"DL validation failed: {exc}"], source="offline_algorithm"
@@ -369,13 +405,7 @@ def validate_passport(
 
     cleaned = str(passport_number).strip().upper().replace(" ", "").replace("-", "")
     try:
-        result = core_validate_passport(cleaned)
-        return build_response(
-            success=bool(result.get("valid")),
-            data=result,
-            errors=cast(list[str], result.get("errors", [])),
-            source="offline_algorithm",
-        )
+        return core_validate_passport(cleaned)
     except Exception as exc:
         return build_response(
             success=False, errors=[f"Passport validation failed: {exc}"], source="offline_algorithm"
@@ -392,6 +422,13 @@ def validate_cin(
             description="21-character CIN (spaces/hyphens allowed). Example: L17110MH1973PLC019786",
         ),
     ],
+    verify_online: Annotated[
+        bool,
+        Field(
+            default=False,
+            description="Optional opt-in online registry attestation (A4 level)",
+        ),
+    ] = False,
 ) -> dict[str, Any]:
     """Validate and decode an Indian CIN (Company Identification Number).
 
@@ -400,6 +437,7 @@ def validate_cin(
 
     Args:
             cin: 21-character CIN string. Spaces and hyphens stripped automatically.
+            verify_online: Optional opt-in online registry attestation (A4 level).
 
     Returns:
             Standard envelope containing decoded fields: listing status, NIC code,
@@ -410,13 +448,7 @@ def validate_cin(
     """
     normalized = normalize_cin(cin)["normalized_input"]
     try:
-        result = core_validate_cin(normalized)
-        return build_response(
-            success=bool(result.get("valid")),
-            data=result,
-            errors=cast(list[str], result.get("errors", [])),
-            source="offline_algorithm",
-        )
+        return core_validate_cin(normalized, verify_online=verify_online)
     except Exception as exc:
         return build_response(
             success=False, errors=[f"CIN validation failed: {exc}"], source="offline_algorithm"
@@ -451,13 +483,7 @@ def validate_din(
 
     cleaned = str(din).strip().replace(" ", "")
     try:
-        result = core_validate_din(cleaned)
-        return build_response(
-            success=bool(result.get("valid")),
-            data=result,
-            errors=cast(list[str], result.get("errors", [])),
-            source="offline_algorithm",
-        )
+        return core_validate_din(cleaned)
     except Exception as exc:
         return build_response(
             success=False, errors=[f"DIN validation failed: {exc}"], source="offline_algorithm"
@@ -500,6 +526,7 @@ def validate_fssai(
             normalized_input=result.get("normalized_input"),
             validated_by=["format"] if result.get("valid") else [],
             source="offline_algorithm",
+            authenticity=cast(dict[str, Any] | None, result.get("authenticity")),
         )
     except Exception as exc:
         return build_response(
@@ -528,6 +555,7 @@ def validate_tan(
             data=result,
             errors=[str(result.get("error"))] if result.get("error") else [],
             source="offline_algorithm",
+            authenticity=cast(dict[str, Any] | None, result.get("authenticity")),
         )
     except Exception as exc:
         return build_response(
@@ -556,6 +584,7 @@ def validate_mobile_number(
             data=result,
             errors=[str(result.get("error"))] if result.get("error") else [],
             source="offline_algorithm",
+            authenticity=cast(dict[str, Any] | None, result.get("authenticity")),
         )
     except Exception as exc:
         return build_response(
@@ -582,6 +611,7 @@ def validate_pran(pran: Annotated[str, Field(description="12-digit PRAN")]) -> d
             data=result,
             errors=[str(result.get("error"))] if result.get("error") else [],
             source="offline_algorithm",
+            authenticity=cast(dict[str, Any] | None, result.get("authenticity")),
         )
     except Exception as exc:
         return build_response(
@@ -610,6 +640,7 @@ def validate_llpin(
             data=result,
             errors=[str(result.get("error"))] if result.get("error") else [],
             source="offline_algorithm",
+            authenticity=cast(dict[str, Any] | None, result.get("authenticity")),
         )
     except Exception as exc:
         return build_response(
@@ -658,6 +689,101 @@ def decode_digilocker_uri(
         )
 
 
+@mcp.tool(annotations=ToolAnnotations(readOnlyHint=True, idempotentHint=True, openWorldHint=False))
+def verify_einvoice_qr(
+    qr_text: Annotated[
+        str,
+        Field(description="Signed JWT string extracted from GST B2B e-invoice QR code"),
+    ],
+    expected_gstin: Annotated[
+        str | None,
+        Field(default=None, description="Optional expected supplier GSTIN"),
+    ] = None,
+    expected_irn: Annotated[
+        str | None,
+        Field(default=None, description="Optional expected 64-character hex IRN"),
+    ] = None,
+) -> dict[str, Any]:
+    """Verify cryptographically signed QR code from Indian GST B2B e-invoices (A3 Authenticity).
+
+    Validates the NIC RSA digital signature against bundled public trust anchors,
+    verifies internal claims, and cross-checks the 64-char Invoice Reference Number (IRN)
+    against SHA-256(SupplierGSTIN + DocTyp + DocNo + FinYr).
+    """
+    try:
+        return core_verify_einvoice_qr(
+            qr_text=qr_text, expected_gstin=expected_gstin, expected_irn=expected_irn
+        )
+    except Exception as exc:
+        auth = build_authenticity_envelope(
+            valid=False,
+            checks=[
+                AuthenticityCheck(
+                    name="einvoice_qr_processing",
+                    passed=False,
+                    level="A0",
+                    detail=str(exc),
+                )
+            ],
+            source="National Informatics Centre (NIC) Goods and Services Tax e-Invoice System",
+            limitations=[str(exc)],
+        )
+        return build_response(
+            success=False,
+            data={"valid": False},
+            errors=[f"e-Invoice QR verification failed: {exc}"],
+            source="offline_signature",
+            authenticity=auth,
+        )
+
+
+@mcp.tool(annotations=ToolAnnotations(readOnlyHint=True, idempotentHint=True, openWorldHint=False))
+def verify_aadhaar_offline_artifact(
+    xml_or_zip_bytes_base64: Annotated[
+        str,
+        Field(description="Base64-encoded or raw XML/ZIP of UIDAI Paperless Offline e-KYC"),
+    ],
+    share_code: Annotated[
+        str | None,
+        Field(
+            default=None,
+            description="4-character share code if artifact is password-protected ZIP",
+        ),
+    ] = None,
+) -> dict[str, Any]:
+    """Verify UIDAI Paperless Offline e-KYC XML/ZIP artifact (A3 Authenticity).
+
+    Defends against XXE and expansion bombs via defusedxml. Verifies UIDAI RSA digital
+    signature against bundled trust anchor. DPDP Act compliant: extracts only masked Aadhaar
+    (last 4 digits) and demographic attributes; never outputs raw identifiers.
+    """
+    try:
+        return core_verify_aadhaar_offline_artifact(
+            xml_or_zip_bytes_base64=xml_or_zip_bytes_base64, share_code=share_code
+        )
+    except Exception as exc:
+        auth = build_authenticity_envelope(
+            valid=False,
+            checks=[
+                AuthenticityCheck(
+                    name="aadhaar_artifact_processing",
+                    passed=False,
+                    level="A0",
+                    detail=str(exc),
+                )
+            ],
+            source="Unique Identification Authority of India (UIDAI) Offline Paperless e-KYC",
+            limitations=[str(exc)],
+        )
+        return build_response(
+            success=False,
+            data={"valid": False},
+            errors=[f"Aadhaar offline artifact verification failed: {exc}"],
+            source="offline_signature",
+            authenticity=auth,
+        )
+
+
 @mcp.resource("india://schema/validate_gstin")
 def schema_validate_gstin() -> dict[str, Any]:
     """JSON schema for validate_gstin output."""
@@ -678,6 +804,7 @@ def schema_validate_gstin() -> dict[str, Any]:
             "verification_source": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -694,6 +821,7 @@ def schema_validate_pan() -> dict[str, Any]:
             "first_char": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -711,6 +839,7 @@ def schema_validate_upi_vpa() -> dict[str, Any]:
             "handle": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -727,6 +856,7 @@ def schema_validate_aadhaar() -> dict[str, Any]:
             "formatted": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -744,6 +874,7 @@ def schema_validate_voter_id() -> dict[str, Any]:
             "format_type": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -763,6 +894,7 @@ def schema_validate_driving_license() -> dict[str, Any]:
             "serial": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -779,6 +911,7 @@ def schema_validate_passport() -> dict[str, Any]:
             "serial": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -799,6 +932,7 @@ def schema_validate_cin() -> dict[str, Any]:
             "serial_number": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -814,6 +948,7 @@ def schema_validate_din() -> dict[str, Any]:
             "normalized_din": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }
 
@@ -824,9 +959,63 @@ def schema_bulk_validate_gstin() -> dict[str, Any]:
     return {
         "type": "object",
         "properties": {
-            "results": {"type": "array"},
+            "results": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "authenticity": AUTHENTICITY_SCHEMA,
+                    },
+                },
+            },
             "total": {"type": "integer"},
             "valid_count": {"type": "integer"},
             "invalid_count": {"type": "integer"},
+            "authenticity_summary": {"type": "object"},
+            "authenticity": AUTHENTICITY_SUMMARY_SCHEMA,
+        },
+    }
+
+
+@mcp.resource("india://schema/verify_einvoice_qr")
+def schema_verify_einvoice_qr() -> dict[str, Any]:
+    """JSON schema for verify_einvoice_qr output."""
+    return {
+        "type": "object",
+        "properties": {
+            "valid": {"type": "boolean"},
+            "irn": {"type": "string"},
+            "seller_gstin": {"type": "string"},
+            "buyer_gstin": {"type": "string"},
+            "doc_no": {"type": "string"},
+            "doc_typ": {"type": "string"},
+            "doc_date": {"type": "string"},
+            "total_value": {"type": "number"},
+            "item_count": {"type": "integer"},
+            "main_hsn": {"type": "string"},
+            "fin_year": {"type": "string"},
+            "errors": {"type": "array", "items": {"type": "string"}},
+            "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
+        },
+    }
+
+
+@mcp.resource("india://schema/verify_aadhaar_offline_artifact")
+def schema_verify_aadhaar_offline_artifact() -> dict[str, Any]:
+    """JSON schema for verify_aadhaar_offline_artifact output."""
+    return {
+        "type": "object",
+        "properties": {
+            "valid": {"type": "boolean"},
+            "reference_id": {"type": "string"},
+            "masked_aadhaar": {"type": "string"},
+            "name": {"type": "string"},
+            "dob": {"type": "string"},
+            "gender": {"type": "string"},
+            "address": {"type": "object"},
+            "errors": {"type": "array", "items": {"type": "string"}},
+            "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }

@@ -4,6 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.tools.rules_metadata import (
+    attach_rule_metadata,
+    validate_financial_year,
+)
+
 STRUCTURE_OPTIONS = {
     "standard": {
         "description": "Standard salary with basic at 50%",
@@ -58,6 +63,7 @@ def calculate_salary_restructuring(
     rent_in_metro: bool = False,
     family_medical: bool = False,
     parents_medical: bool = False,
+    financial_year: str = "2025-26",
 ) -> dict[str, Any]:
     """Calculate salary restructuring options for tax optimization.
 
@@ -71,10 +77,15 @@ def calculate_salary_restructuring(
         rent_in_metro: Rent paid in metro city (higher HRA)
         family_medical: Include family medical insurance
         parents_medical: Include parents medical insurance (additional)
+        financial_year: Financial year (defaults to "2025-26")
 
     Returns:
         Tax-optimized salary structure with breakdown
     """
+    is_valid_fy, err_resp = validate_financial_year("salary_restructuring", financial_year)
+    if not is_valid_fy:
+        assert err_resp is not None
+        return err_resp
     basic_ratio = current_basic_ratio
     hra_ratio = 0.20 if has_hra else 0
 
@@ -122,7 +133,7 @@ def calculate_salary_restructuring(
 
     estimated_tax = _quick_tax_estimate(taxable_income)
 
-    return {
+    res = {
         "input": {
             "current_gross": current_gross,
             "current_basic_ratio": current_basic_ratio,
@@ -143,6 +154,7 @@ def calculate_salary_restructuring(
         else 0,
         "structure_options": list(STRUCTURE_OPTIONS.keys()),
     }
+    return attach_rule_metadata(res, "salary_restructuring", financial_year)
 
 
 def _quick_tax_estimate(taxable_income: float) -> float:

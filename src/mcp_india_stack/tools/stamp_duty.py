@@ -41,11 +41,20 @@ def calculate_stamp_duty(
 
     code = state_code.upper()
     data = _load_stamp_duty()
+    supported = sorted([k for k in data.keys() if len(k) == 2 and k.isupper()])
 
     state_data = data.get(code)
     if not state_data:
+        errors.append("unsupported_state")
         errors.append(f"Stamp duty data not available for state {code}.")
-        return {"errors": errors, "warnings": warnings}
+        return {
+            "error": "unsupported_state",
+            "state_code": code,
+            "supported_states": supported,
+            "coverage": "partial",
+            "errors": errors,
+            "warnings": warnings,
+        }
 
     state_name = state_data.get("state_name", code)
     as_of = state_data.get("as_of", "unknown")
@@ -81,6 +90,10 @@ def calculate_stamp_duty(
         "surcharge": round(surcharge, 2),
         "total_payable": round(total_payable, 2),
         "as_of": as_of,
+        "source_ref": state_data.get("source_ref", "Indian Stamp Act, 1899 & State Stamp Acts"),
+        "last_verified": state_data.get("last_verified", "2025-01-01"),
+        "coverage": "partial",
+        "supported_states": supported,
         "notes": notes,
         "errors": errors,
         "warnings": warnings,

@@ -4,6 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.tools.rules_metadata import (
+    attach_rule_metadata,
+    validate_financial_year,
+)
+
 TDS_SECTIONS: dict[str, dict[str, Any]] = {
     "194C_individual": {
         "description": "Payment to contractor - Individual/HUF",
@@ -113,6 +118,7 @@ def calculate_tds(  # noqa: C901
     is_senior_citizen: bool = False,
     aggregate_payments_ytd: float = 0.0,
     payee_type: str = "individual_huf",
+    financial_year: str = "2025-26",
 ) -> dict[str, Any]:  # noqa: C901
     """Calculate TDS for a given section and payment amount.
 
@@ -123,11 +129,17 @@ def calculate_tds(  # noqa: C901
         is_senior_citizen: For 194A bank interest, applies ₹50K threshold.
         aggregate_payments_ytd: Prior payments to same payee under this section in current FY.
         payee_type: "individual_huf" or "other" - affects 194C rate.
+        financial_year: Financial year (defaults to "2025-26").
 
     Returns:
         Dict with TDS calculation results.
     """
     try:
+        is_valid_fy, err_resp = validate_financial_year("tds", financial_year)
+        if not is_valid_fy:
+            assert err_resp is not None
+            return err_resp
+
         errors: list[str] = []
 
         if section == "194C":
@@ -154,8 +166,8 @@ def calculate_tds(  # noqa: C901
             errors.append("payee_type must be 'individual_huf', 'company', or 'other'")
 
         if errors:
-            return {
-                "financial_year": "2025-26",
+            err_dict = {
+                "financial_year": financial_year,
                 "section": section,
                 "description": "",
                 "payment_amount": payment_amount if isinstance(payment_amount, (int, float)) else 0,
@@ -173,6 +185,7 @@ def calculate_tds(  # noqa: C901
                 "errors": errors,
                 "disclaimer": DISCLAIMER,
             }
+            return attach_rule_metadata(err_dict, "tds", financial_year)
 
         section_info = TDS_SECTIONS[section]
         description = section_info["description"]
@@ -239,8 +252,8 @@ def calculate_tds(  # noqa: C901
 
         net_payment = round(payment_amount - tds_amount, 2)
 
-        return {
-            "financial_year": "2025-26",
+        res_dict = {
+            "financial_year": financial_year,
             "section": section,
             "description": description,
             "payment_amount": payment_amount,
@@ -258,10 +271,11 @@ def calculate_tds(  # noqa: C901
             "errors": [],
             "disclaimer": DISCLAIMER,
         }
+        return attach_rule_metadata(res_dict, "tds", financial_year)
 
     except Exception as exc:
-        return {
-            "financial_year": "2025-26",
+        exc_dict = {
+            "financial_year": financial_year,
             "section": section if isinstance(section, str) else "",
             "description": "",
             "payment_amount": payment_amount if isinstance(payment_amount, (int, float)) else 0,
@@ -279,3 +293,4 @@ def calculate_tds(  # noqa: C901
             "errors": [f"TDS calculation failed: {exc}"],
             "disclaimer": DISCLAIMER,
         }
+        return attach_rule_metadata(exc_dict, "tds", financial_year)

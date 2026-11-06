@@ -95,7 +95,7 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Validate multiple Aadhaar numbers in parallel using ThreadPoolExecutor.\n\nUse when batch-validating Aadhaar numbers for KYC, onboarding, or\ncompliance workflows.\n\nArgs:\n    numbers: List of Aadhaar numbers (with or without spaces/hyphens).\n\nReturns:\n    Standard envelope with per-Aadhaar results and valid/invalid counts.\n\nNotes:\n    Max 500 Aadhaars per call. Uses same Verhoeff validation as single tool.\n",
+    "description": "Validate multiple Aadhaar numbers in parallel using ThreadPoolExecutor.\n\nUse when batch-validating Aadhaar numbers for KYC, onboarding, or\ncompliance workflows.\n\nArgs:\n    numbers: List of Aadhaar numbers (with or without spaces/hyphens).\n\nReturns:\n    Standard envelope with per-Aadhaar results and valid/invalid counts.\n\nNotes:\n    Max 500 Aadhaars per call. Uses same Verhoeff validation as single tool.\n    Not connected to UIDAI. In compliance with DPDP Act 2023, results are masked\n    and raw numbers are never stored or logged.\n",
     "name": "bulk_validate_aadhaar",
     "parameters": {
       "properties": {
@@ -218,6 +218,12 @@
           "title": "Existing Tds",
           "type": "number"
         },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
         "regime": {
           "default": "new",
           "description": "'new' or 'old' tax regime",
@@ -260,6 +266,12 @@
           "description": "Brokerage, registration and other expenses on sale",
           "title": "Expenses On Sale",
           "type": "number"
+        },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
         },
         "holding_period_days": {
           "default": 365,
@@ -370,6 +382,12 @@
           "title": "Annual Interest Rate",
           "type": "number"
         },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
         "loan_type": {
           "default": "other",
           "description": "Loan type: home, personal, car, education, other",
@@ -412,6 +430,12 @@
           "title": "Basic Wages",
           "type": "number"
         },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
         "gross_wages": {
           "description": "Total gross monthly salary in INR",
           "title": "Gross Wages",
@@ -452,6 +476,12 @@
           "default": "quarterly",
           "description": "monthly, quarterly, half_yearly, yearly, simple",
           "title": "Compounding",
+          "type": "string"
+        },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
           "type": "string"
         },
         "is_senior_citizen": {
@@ -497,6 +527,12 @@
     "name": "calculate_gratuity",
     "parameters": {
       "properties": {
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
         "is_covered_under_act": {
           "default": true,
           "description": "True if establishment has 10+ employees",
@@ -550,6 +586,12 @@
           "title": "Cess Category",
           "type": "string"
         },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
         "gst_rate": {
           "description": "GST rate as percentage: 0, 0.1, 0.25, 1.5, 3, 5, 12, 18, 28",
           "title": "Gst Rate",
@@ -590,6 +632,12 @@
           "description": "Number of days delayed",
           "title": "Days Delayed",
           "type": "integer"
+        },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
         },
         "has_nil_liability": {
           "default": false,
@@ -646,6 +694,12 @@
           "description": "Property appreciation percentage/year",
           "title": "Expected Property Appreciation",
           "type": "number"
+        },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
         },
         "home_price": {
           "description": "Property price in INR",
@@ -704,6 +758,12 @@
           "default": "non_metro",
           "description": "'metro' (Delhi/Mumbai/Chennai/Kolkata) or 'non_metro'",
           "title": "City Type",
+          "type": "string"
+        },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
           "type": "string"
         },
         "hra_received": {
@@ -778,6 +838,12 @@
           "description": "If True, parents 80D cap is 50K instead of 25K",
           "title": "Deduction 80D Senior Parents",
           "type": "boolean"
+        },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
         },
         "gross_income": {
           "description": "Annual gross income in rupees. Example: 1500000",
@@ -856,6 +922,12 @@
           "description": "Filing date YYYY-MM-DD or None if not filed",
           "title": "Filing Date"
         },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
         "tds_deducted": {
           "default": 0.0,
           "description": "TDS already deducted in INR",
@@ -896,6 +968,12 @@
           "title": "Earned Leave Balance Days",
           "type": "integer"
         },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
         "is_government_employee": {
           "default": false,
           "description": "Government employee flag",
@@ -930,7 +1008,7 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Calculate the deadline under the Limitation Act.\n\nUse when computing the last date to file a suit, appeal, or application based on\ncause of action.\n\nArgs:\n    suit_type: Type of suit/appeal/application.\n    cause_of_action_date: Date the cause of action arose (YYYY-MM-DD).\n\nReturns:\n    Standard envelope with deadline date and limitation period.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
+    "description": "Calculate the deadline under the Limitation Act.\n\nUse when computing the last date to file a suit, appeal, or application based on\ncause of action.\n\nArgs:\n    suit_type: Type of suit/appeal/application.\n    cause_of_action_date: Date the cause of action arose (YYYY-MM-DD).\n    exclusion_days: Days excluded under Section 12.\n    court_closed_on_deadline: Whether court is closed on deadline date.\n    court_reopen_date: Date court reopens if closed on deadline.\n\nReturns:\n    Standard envelope with deadline date and limitation period.\n\nNotes:\n    Not legal advice. Consult a qualified advocate.\n",
     "name": "calculate_limitation_deadline",
     "parameters": {
       "properties": {
@@ -938,6 +1016,31 @@
           "description": "Date when the cause of action arose (YYYY-MM-DD)",
           "title": "Cause Of Action Date",
           "type": "string"
+        },
+        "court_closed_on_deadline": {
+          "default": false,
+          "description": "Whether court is closed on deadline day under Section 4",
+          "title": "Court Closed On Deadline",
+          "type": "boolean"
+        },
+        "court_reopen_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Next reopening date if court is closed on deadline (Section 4)",
+          "title": "Court Reopen Date"
+        },
+        "exclusion_days": {
+          "default": 0,
+          "description": "Days excluded under Section 12 (e.g. for obtaining copies)",
+          "title": "Exclusion Days",
+          "type": "integer"
         },
         "suit_type": {
           "description": "Type of suit/appeal/application to calculate limitation for",
@@ -974,6 +1077,12 @@
           "description": "Transfer amount in INR",
           "title": "Amount",
           "type": "number"
+        },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
         },
         "is_online": {
           "default": true,
@@ -1029,6 +1138,12 @@
           "title": "Expected Annual Return",
           "type": "number"
         },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
         "monthly_contribution": {
           "description": "Monthly NPS contribution in INR",
           "title": "Monthly Contribution",
@@ -1070,6 +1185,12 @@
           "description": "Amount invested per year in INR",
           "title": "Annual Investment",
           "type": "number"
+        },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
         },
         "tenure_years": {
           "default": 15,
@@ -1114,6 +1235,12 @@
           "title": "Digital Receipt Percent",
           "type": "number"
         },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
         "gross_receipts": {
           "description": "Total gross receipts in INR",
           "title": "Gross Receipts",
@@ -1150,6 +1277,12 @@
     "name": "calculate_professional_tax",
     "parameters": {
       "properties": {
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
         "gross_salary_monthly": {
           "description": "Monthly gross salary in INR",
           "title": "Gross Salary Monthly",
@@ -1184,6 +1317,12 @@
           "description": "Annual interest rate as percentage",
           "title": "Annual Interest Rate",
           "type": "number"
+        },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
         },
         "monthly_installment": {
           "description": "Monthly deposit amount in INR",
@@ -1334,6 +1473,12 @@
           "title": "Family Medical",
           "type": "boolean"
         },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
         "has_hra": {
           "default": true,
           "description": "Employee receives HRA",
@@ -1393,6 +1538,12 @@
           "description": "Expected CAGR as percentage",
           "title": "Expected Annual Return",
           "type": "number"
+        },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
         },
         "inflation_rate": {
           "default": 6.0,
@@ -1477,6 +1628,12 @@
           "title": "Expected Annual Return",
           "type": "number"
         },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
         "initial_monthly_investment": {
           "description": "Starting SIP amount in INR",
           "title": "Initial Monthly Investment",
@@ -1520,6 +1677,12 @@
           "title": "Annual Investment",
           "type": "number"
         },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
         "scheme": {
           "description": "'ssy' for Sukanya Samriddhi or 'scss' for Senior Citizen Savings Scheme",
           "title": "Scheme",
@@ -1549,6 +1712,12 @@
           "description": "Base tax amount before surcharge",
           "title": "Base Tax",
           "type": "number"
+        },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
         },
         "regime": {
           "description": "'new' or 'old' tax regime",
@@ -1587,6 +1756,12 @@
           "title": "Aggregate Payments Ytd",
           "type": "number"
         },
+        "financial_year": {
+          "default": "2025-26",
+          "description": "Financial year (e.g. '2025-26', '2026-27')",
+          "title": "Financial Year",
+          "type": "string"
+        },
         "is_senior_citizen": {
           "default": false,
           "description": "For 194A bank interest \u2014 applies higher threshold for seniors",
@@ -1621,38 +1796,6 @@
         "pan_available"
       ],
       "title": "calculate_tdsArguments",
-      "type": "object"
-    }
-  },
-  "cbic_customs_rate": {
-    "annotations": {
-      "destructiveHint": null,
-      "idempotentHint": true,
-      "openWorldHint": true,
-      "readOnlyHint": true
-    },
-    "description": "Fetch the latest CBIC customs exchange rate (import or export) for a currency against INR.",
-    "name": "cbic_customs_rate",
-    "parameters": {
-      "properties": {
-        "currency": {
-          "description": "ISO 4217 currency code quoted against INR. Examples: USD, EUR, CNY",
-          "maxLength": 3,
-          "minLength": 3,
-          "title": "Currency",
-          "type": "string"
-        },
-        "type": {
-          "default": "import",
-          "description": "Customs rate type: import or export",
-          "title": "Type",
-          "type": "string"
-        }
-      },
-      "required": [
-        "currency"
-      ],
-      "title": "cbic_customs_rateArguments",
       "type": "object"
     }
   },
@@ -2005,7 +2148,7 @@
       "openWorldHint": true,
       "readOnlyHint": true
     },
-    "description": "Fetch historical end-of-day data for a given Indian stock ticker.",
+    "description": "[Experimental] Fetch historical end-of-day data for a given Indian stock ticker.",
     "name": "get_stock_history",
     "parameters": {
       "properties": {
@@ -2037,7 +2180,7 @@
       "openWorldHint": true,
       "readOnlyHint": true
     },
-    "description": "Fetch current (delayed) price and summary for a given Indian stock ticker.",
+    "description": "[Experimental] Fetch current (delayed) price and summary for a given Indian stock ticker.",
     "name": "get_stock_quote",
     "parameters": {
       "properties": {
@@ -2053,32 +2196,6 @@
         "symbol"
       ],
       "title": "get_stock_quoteArguments",
-      "type": "object"
-    }
-  },
-  "inr_reference_rate": {
-    "annotations": {
-      "destructiveHint": null,
-      "idempotentHint": true,
-      "openWorldHint": true,
-      "readOnlyHint": true
-    },
-    "description": "Fetch the latest RBI reference rate for a currency against INR (zero-auth live lookup).",
-    "name": "inr_reference_rate",
-    "parameters": {
-      "properties": {
-        "currency": {
-          "description": "ISO 4217 currency code quoted against INR. Examples: USD, EUR, GBP, JPY",
-          "maxLength": 3,
-          "minLength": 3,
-          "title": "Currency",
-          "type": "string"
-        }
-      },
-      "required": [
-        "currency"
-      ],
-      "title": "inr_reference_rateArguments",
       "type": "object"
     }
   },
@@ -2423,32 +2540,6 @@
       "type": "object"
     }
   },
-  "sbi_tt_rate": {
-    "annotations": {
-      "destructiveHint": null,
-      "idempotentHint": true,
-      "openWorldHint": true,
-      "readOnlyHint": true
-    },
-    "description": "Fetch the latest SBI telegraphic-transfer buy/sell rate for a currency against INR.",
-    "name": "sbi_tt_rate",
-    "parameters": {
-      "properties": {
-        "currency": {
-          "description": "ISO 4217 currency code quoted against INR. Examples: USD, EUR, AED",
-          "maxLength": 3,
-          "minLength": 3,
-          "title": "Currency",
-          "type": "string"
-        }
-      },
-      "required": [
-        "currency"
-      ],
-      "title": "sbi_tt_rateArguments",
-      "type": "object"
-    }
-  },
   "validate_aa_consent_artifact": {
     "annotations": {
       "destructiveHint": null,
@@ -2481,7 +2572,7 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Validate an Indian Aadhaar number with Verhoeff checksum verification.\n\nUse when checking Aadhaar format and checksum in KYC, identity verification,\nor government benefit workflows.\n\nArgs:\n        aadhaar: 12-digit Aadhaar number. Spaces and hyphens are stripped.\n\nReturns:\n        Standard envelope containing validity, checksum result, formatted display,\n        and first-digit check.\n\nNotes:\n        Validates format and Verhoeff checksum only. Not connected to UIDAI.\n",
+    "description": "Validate an Indian Aadhaar number with Verhoeff checksum verification.\n\nUse when checking Aadhaar format and checksum in KYC, identity verification,\nor government benefit workflows.\n\nArgs:\n        aadhaar: 12-digit Aadhaar number. Spaces and hyphens are stripped.\n\nReturns:\n        Standard envelope containing validity, checksum result, formatted display,\n        and first-digit check.\n\nNotes:\n        Validates format and Verhoeff checksum only. Not connected to UIDAI.\n        In compliance with the Digital Personal Data Protection Act, 2023 (DPDP Act)\n        and UIDAI guidelines, raw Aadhaar numbers are never stored, logged, or exposed.\n",
     "name": "validate_aadhaar",
     "parameters": {
       "properties": {
@@ -2507,7 +2598,7 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Validate and decode an Indian CIN (Company Identification Number).\n\nUse when verifying company registration data, extracting listing status,\nNIC code, state, year, and company type from a CIN.\n\nArgs:\n        cin: 21-character CIN string. Spaces and hyphens stripped automatically.\n\nReturns:\n        Standard envelope containing decoded fields: listing status, NIC code,\n        state, year of incorporation, company type, and serial number.\n\nNotes:\n        Format validation with field decoding. No public checksum.\n",
+    "description": "Validate and decode an Indian CIN (Company Identification Number).\n\nUse when verifying company registration data, extracting listing status,\nNIC code, state, year, and company type from a CIN.\n\nArgs:\n        cin: 21-character CIN string. Spaces and hyphens stripped automatically.\n        verify_online: Optional opt-in online registry attestation (A4 level).\n\nReturns:\n        Standard envelope containing decoded fields: listing status, NIC code,\n        state, year of incorporation, company type, and serial number.\n\nNotes:\n        Format validation with field decoding. No public checksum.\n",
     "name": "validate_cin",
     "parameters": {
       "properties": {
@@ -2517,6 +2608,12 @@
           "minLength": 1,
           "title": "Cin",
           "type": "string"
+        },
+        "verify_online": {
+          "default": false,
+          "description": "Optional opt-in online registry attestation (A4 level)",
+          "title": "Verify Online",
+          "type": "boolean"
         }
       },
       "required": [
@@ -2659,16 +2756,35 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Validate and decode an Indian GSTIN with checksum verification.\n\nUse when checking supplier/customer GSTINs before invoicing, reconciliation,\nor compliance workflows.\n\nArgs:\n        gstin: 15-character GSTIN (e.g., 27AAPFU0939F1ZV). Spaces/hyphens stripped.\n\nReturns:\n        Standard envelope containing validity, state decode, embedded PAN,\n        entity number, category, and checksum information.\n\nNotes:\n        Validates structure and checksum only; does not verify active GSTN registration status.\n",
+    "description": "Validate and decode an Indian GSTIN with checksum verification.\n\nUse when checking supplier/customer GSTINs before invoicing, reconciliation,\nor compliance workflows.\n\nArgs:\n        gstin: 15-character GSTIN (e.g., 27AAPFU0939F1ZV). Spaces/hyphens stripped.\n        expected_entity_type: Optional expected entity char to match PAN 4th char.\n        verify_online: Optional opt-in online registry attestation (A4 level).\n\nReturns:\n        Standard envelope containing validity, state decode, embedded PAN,\n        entity number, category, and checksum information.\n\nNotes:\n        Validates structure and checksum only; does not verify active GSTN registration status.\n",
     "name": "validate_gstin",
     "parameters": {
       "properties": {
+        "expected_entity_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional expected entity type character to verify against PAN 4th char",
+          "title": "Expected Entity Type"
+        },
         "gstin": {
           "description": "15-character GSTIN (spaces/hyphens allowed)",
           "maxLength": 30,
           "minLength": 1,
           "title": "Gstin",
           "type": "string"
+        },
+        "verify_online": {
+          "default": false,
+          "description": "Optional opt-in online registry attestation (A4 level)",
+          "title": "Verify Online",
+          "type": "boolean"
         }
       },
       "required": [
@@ -2733,7 +2849,7 @@
       "openWorldHint": false,
       "readOnlyHint": true
     },
-    "description": "Validate Indian PAN format and decode entity type from the 4th character.\n\nUse when normalizing tax identity records in KYC, invoicing, or vendor onboarding.\n\nArgs:\n        pan: PAN string, example: AAAPL1234C. Spaces and hyphens stripped automatically.\n\nReturns:\n        Standard envelope containing format validity, entity type, and decoded segments.\n\nNotes:\n        PAN check character is not publicly verifiable algorithmically.\n",
+    "description": "Validate Indian PAN format and decode entity type from the 4th character.\n\nUse when normalizing tax identity records in KYC, invoicing, or vendor onboarding.\n\nArgs:\n        pan: PAN string, example: AAAPL1234C. Spaces and hyphens stripped automatically.\n        verify_online: Optional opt-in online registry attestation (A4 level).\n\nReturns:\n        Standard envelope containing format validity, entity type, and decoded segments.\n\nNotes:\n        PAN check character is not publicly verifiable algorithmically.\n",
     "name": "validate_pan",
     "parameters": {
       "properties": {
@@ -2743,6 +2859,12 @@
           "minLength": 1,
           "title": "Pan",
           "type": "string"
+        },
+        "verify_online": {
+          "default": false,
+          "description": "Optional opt-in online registry attestation (A4 level)",
+          "title": "Verify Online",
+          "type": "boolean"
         }
       },
       "required": [
@@ -2875,6 +2997,177 @@
         "voter_id"
       ],
       "title": "validate_voter_idArguments",
+      "type": "object"
+    }
+  },
+  "verify_aadhaar_offline_artifact": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Verify UIDAI Paperless Offline e-KYC XML/ZIP artifact (A3 Authenticity).\n\nDefends against XXE and expansion bombs via defusedxml. Verifies UIDAI RSA digital\nsignature against bundled trust anchor. DPDP Act compliant: extracts only masked Aadhaar\n(last 4 digits) and demographic attributes; never outputs raw identifiers.\n",
+    "name": "verify_aadhaar_offline_artifact",
+    "parameters": {
+      "properties": {
+        "share_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "4-character share code if artifact is password-protected ZIP",
+          "title": "Share Code"
+        },
+        "xml_or_zip_bytes_base64": {
+          "description": "Base64-encoded or raw XML/ZIP of UIDAI Paperless Offline e-KYC",
+          "title": "Xml Or Zip Bytes Base64",
+          "type": "string"
+        }
+      },
+      "required": [
+        "xml_or_zip_bytes_base64"
+      ],
+      "title": "verify_aadhaar_offline_artifactArguments",
+      "type": "object"
+    }
+  },
+  "verify_einvoice_qr": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": false,
+      "readOnlyHint": true
+    },
+    "description": "Verify cryptographically signed QR code from Indian GST B2B e-invoices (A3 Authenticity).\n\nValidates the NIC RSA digital signature against bundled public trust anchors,\nverifies internal claims, and cross-checks the 64-char Invoice Reference Number (IRN)\nagainst SHA-256(SupplierGSTIN + DocTyp + DocNo + FinYr).\n",
+    "name": "verify_einvoice_qr",
+    "parameters": {
+      "properties": {
+        "expected_gstin": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional expected supplier GSTIN",
+          "title": "Expected Gstin"
+        },
+        "expected_irn": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional expected 64-character hex IRN",
+          "title": "Expected Irn"
+        },
+        "qr_text": {
+          "description": "Signed JWT string extracted from GST B2B e-invoice QR code",
+          "title": "Qr Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "qr_text"
+      ],
+      "title": "verify_einvoice_qrArguments",
+      "type": "object"
+    }
+  },
+  "inr_reference_rate": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": true
+    },
+    "description": "[Third-party source] Latest RBI reference rate for a currency against INR.\n\n    Live lookup served by allratestoday.com, an aggregator; not verified against RBI.\n    ",
+    "name": "inr_reference_rate",
+    "parameters": {
+      "properties": {
+        "currency": {
+          "description": "ISO 4217 currency code quoted against INR. Examples: USD, EUR, GBP, JPY",
+          "maxLength": 3,
+          "minLength": 3,
+          "title": "Currency",
+          "type": "string"
+        }
+      },
+      "required": [
+        "currency"
+      ],
+      "title": "inr_reference_rateArguments",
+      "type": "object"
+    }
+  },
+  "sbi_tt_rate": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": true
+    },
+    "description": "[Third-party source] Latest SBI telegraphic-transfer buy/sell rate against INR.\n\n    Live lookup served by allratestoday.com, an aggregator; not verified against SBI.\n    ",
+    "name": "sbi_tt_rate",
+    "parameters": {
+      "properties": {
+        "currency": {
+          "description": "ISO 4217 currency code quoted against INR. Examples: USD, EUR, AED",
+          "maxLength": 3,
+          "minLength": 3,
+          "title": "Currency",
+          "type": "string"
+        }
+      },
+      "required": [
+        "currency"
+      ],
+      "title": "sbi_tt_rateArguments",
+      "type": "object"
+    }
+  },
+  "cbic_customs_rate": {
+    "annotations": {
+      "destructiveHint": null,
+      "idempotentHint": true,
+      "openWorldHint": true,
+      "readOnlyHint": true
+    },
+    "description": "[Third-party source] Latest CBIC customs import or export rate against INR.\n\n    Live lookup served by allratestoday.com, an aggregator; not verified against CBIC.\n    ",
+    "name": "cbic_customs_rate",
+    "parameters": {
+      "properties": {
+        "currency": {
+          "description": "ISO 4217 currency code quoted against INR. Examples: USD, EUR, CNY",
+          "maxLength": 3,
+          "minLength": 3,
+          "title": "Currency",
+          "type": "string"
+        },
+        "type": {
+          "default": "import",
+          "description": "Customs rate type: import or export",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "currency"
+      ],
+      "title": "cbic_customs_rateArguments",
       "type": "object"
     }
   }

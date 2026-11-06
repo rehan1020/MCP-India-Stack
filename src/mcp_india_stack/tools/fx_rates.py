@@ -1,15 +1,23 @@
 """Zero-auth INR FX rate tools: RBI reference, SBI TT and CBIC customs rates.
 
-All three tools are live lookups (PermissionTier.LOOKUP_LIVE) against the open,
-keyless endpoints at allratestoday.com. They return the latest published value
-only, share one process-global circuit breaker, and never raise: any failure
-(timeout, non-200, malformed body, breaker open) is reported through the
-``errors``/``warnings`` lists with ``success`` set to ``False``.
+All three tools are live lookups (PermissionTier.LOOKUP_LIVE, network tier
+``required``) against the open, keyless endpoints at allratestoday.com, a
+third-party aggregator that republishes figures collected from RBI, CBIC and
+SBI. This package does not fetch from, or verify against, the authority or
+bank itself: every result carries ``data_source``, ``authority`` and
+``verified: False``, and ``source_url`` is the aggregator URL that was called.
+
+They return the latest value only, share one process-global circuit breaker,
+and never raise: any failure (timeout, non-200, non-JSON or wrongly shaped
+body, breaker open) is reported through ``errors`` with ``success`` set to
+``False``. A wrongly shaped 200 response counts as a breaker failure.
 """
 
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
+from datetime import datetime, timezone
 from typing import Any
 
 import httpx
@@ -18,6 +26,17 @@ from mcp_india_stack.tools.ifsc import _CB_COOLDOWN_SECONDS, _CB_FAILURE_THRESHO
 
 _FX_BASE_URL = "https://allratestoday.com/api/open"
 _FX_TIMEOUT_SECONDS = 5.0
+
+_DATA_SOURCE = "allratestoday.com (third-party aggregator, unverified)"
+_THIRD_PARTY_WARNING = (
+    "served by a third-party aggregator (allratestoday.com), not fetched from or "
+    "verified against the authority; confirm with the authority before statutory use"
+)
+_AUTHORITIES = {
+    "rbi_reference_rate": "Reserve Bank of India",
+    "cbic_customs_rate": "Central Board of Indirect Taxes and Customs",
+    "sbi_tt_rate": "State Bank of India",
+}
 
 _CURRENCY_RE = re.compile(r"^[A-Z]{3}$")
 _CUSTOMS_TYPES = ("import", "export")
@@ -50,6 +69,7 @@ def _error(
         "value": None,
         "rate_date": None,
         "source": source,
+        **_provenance(source),
         "errors": errors,
         "warnings": warnings or [],
     }
@@ -57,12 +77,46 @@ def _error(
     return result
 
 
-def _fetch_json(path: str, params: dict[str, str] | None = None) -> tuple[Any, int, list[str]]:
+def _provenance(source: str) -> dict[str, Any]:
+    """Fields that label a result as third-party, unverified data."""
+    return {
+        "data_source": _DATA_SOURCE,
+        "authority": _AUTHORITIES[source],
+        "verified": False,
+        "as_of": datetime.now(timezone.utc).isoformat(),
+    }
+
+
+def _is_rate(value: Any) -> bool:
+    """A usable rate: a positive number (``bool`` is not a number here)."""
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and value > 0
+
+
+def _is_table(payload: Any) -> bool:
+    """A central-bank table: a mapping with a ``rates`` list."""
+    return isinstance(payload, dict) and isinstance(payload.get("rates"), list)
+
+
+def _is_bank_quote(payload: Any) -> bool:
+    """A bank board quote: a mapping with positive ``buy`` and ``sell``."""
+    return (
+        isinstance(payload, dict) and _is_rate(payload.get("buy")) and _is_rate(payload.get("sell"))
+    )
+
+
+def _fetch_json(
+    path: str,
+    is_valid: Callable[[Any], bool],
+    params: dict[str, str] | None = None,
+) -> tuple[Any, int, list[str]]:
     """GET ``_FX_BASE_URL + path`` and return ``(payload, status_code, errors)``.
 
     Returns ``(None, 0, [...])`` when the breaker is open or the request fails.
-    A 404 is not counted against the breaker: the upstream uses it for
-    "no rate for this currency", which is a valid answer, not an outage.
+    A 200 body is returned only if ``is_valid(payload)`` holds, so callers can
+    rely on its shape; a 200 with any other shape is a breaker failure, the
+    same as a non-JSON body. A 404 is not counted against the breaker: the
+    upstream uses it for "no rate for this currency", which is a valid answer,
+    not an outage. Its body is returned only when it is a mapping.
     """
     if _fx_breaker.is_open:
         return None, 0, ["fx source unavailable: circuit_open"]
@@ -76,9 +130,10 @@ def _fetch_json(path: str, params: dict[str, str] | None = None) -> tuple[Any, i
     if response.status_code == 404:
         _fx_breaker.record_success()
         try:
-            return response.json(), 404, []
+            body = response.json()
         except ValueError:
-            return None, 404, ["fx source returned 404"]
+            body = None
+        return (body if isinstance(body, dict) else None), 404, []
 
     if response.status_code != 200:
         _fx_breaker.record_failure()
@@ -90,16 +145,18 @@ def _fetch_json(path: str, params: dict[str, str] | None = None) -> tuple[Any, i
         _fx_breaker.record_failure()
         return None, 200, ["fx source returned a non-JSON body"]
 
+    if not is_valid(payload):
+        _fx_breaker.record_failure()
+        return None, 200, ["fx source returned an unexpected shape"]
+
     _fx_breaker.record_success()
     return payload, 200, []
 
 
 def _pick_rate(
-    payload: Any, currency: str, rate_type: str
+    payload: dict[str, Any], currency: str, rate_type: str
 ) -> tuple[dict[str, Any] | None, list[str]]:
     """Find the ``rates[]`` entry for ``currency``/``rate_type`` in a central-bank table."""
-    if not isinstance(payload, dict) or not isinstance(payload.get("rates"), list):
-        return None, ["fx source returned an unexpected shape"]
     available: set[str] = set()
     for row in payload["rates"]:
         if not isinstance(row, dict) or row.get("type") != rate_type:
@@ -108,6 +165,8 @@ def _pick_rate(
         if isinstance(base, str):
             available.add(base)
         if base == currency and row.get("quote") == "INR":
+            if not _is_rate(row.get("value")):
+                return None, [f"fx source returned a non-positive or non-numeric {rate_type} rate"]
             return row, []
     return None, [
         f"no {rate_type} rate published for {currency}",
@@ -130,11 +189,11 @@ def _central_bank_rate(*, bank: str, source: str, currency: str, rate_type: str)
         return _error(currency=code, source=source, errors=errors)
 
     path = f"/central-bank/{bank}"
-    payload, status, errors = _fetch_json(path)
+    payload, status, errors = _fetch_json(path, _is_table)
     if errors:
         return _error(currency=code, source=source, errors=errors)
     if status == 404:
-        msg = payload.get("error") if isinstance(payload, dict) else None
+        msg = payload.get("error") if payload else None
         return _error(
             currency=code, source=source, errors=[str(msg or "no published table available")]
         )
@@ -154,13 +213,14 @@ def _central_bank_rate(*, bank: str, source: str, currency: str, rate_type: str)
         "rate_type": rate_type,
         "source": source,
         "source_url": f"{_FX_BASE_URL}{path}",
+        **_provenance(source),
         "errors": [],
-        "warnings": _table_warnings(payload),
+        "warnings": [_THIRD_PARTY_WARNING, *_table_warnings(payload)],
     }
 
 
 def inr_reference_rate(currency: str) -> dict[str, Any]:
-    """Latest RBI reference rate for ``currency`` against INR.
+    """Latest RBI reference rate for ``currency`` against INR, via a third-party aggregator.
 
     Args:
         currency: ISO 4217 code (USD, EUR, GBP, JPY, AED, IDR are published by RBI).
@@ -174,7 +234,7 @@ def inr_reference_rate(currency: str) -> dict[str, Any]:
 
 
 def cbic_customs_rate(currency: str, type: str = "import") -> dict[str, Any]:
-    """Latest CBIC customs exchange rate for ``currency`` against INR.
+    """Latest CBIC customs rate for ``currency`` against INR, via a third-party aggregator.
 
     Args:
         currency: ISO 4217 code (e.g. USD).
@@ -198,7 +258,7 @@ def cbic_customs_rate(currency: str, type: str = "import") -> dict[str, Any]:
 
 
 def sbi_tt_rate(currency: str) -> dict[str, Any]:
-    """Latest State Bank of India telegraphic-transfer (TT) buy/sell rate against INR.
+    """Latest SBI telegraphic-transfer (TT) buy/sell rate against INR, via a third-party aggregator.
 
     Args:
         currency: ISO 4217 code (e.g. USD).
@@ -213,16 +273,12 @@ def sbi_tt_rate(currency: str) -> dict[str, Any]:
         return _error(currency=code, source=source, errors=errors)
 
     path = "/bank-rates/in/sbi"
-    payload, status, errors = _fetch_json(path, params={"ccy": code})
+    payload, status, errors = _fetch_json(path, _is_bank_quote, params={"ccy": code})
     if errors:
         return _error(currency=code, source=source, errors=errors)
     if status == 404:
-        msg = payload.get("error") if isinstance(payload, dict) else None
+        msg = payload.get("error") if payload else None
         return _error(currency=code, source=source, errors=[str(msg or f"no rate for {code}")])
-    if not isinstance(payload, dict) or payload.get("buy") is None or payload.get("sell") is None:
-        return _error(
-            currency=code, source=source, errors=["fx source returned an unexpected shape"]
-        )
 
     captured_at = payload.get("captured_at")
     rate_date = (
@@ -241,6 +297,10 @@ def sbi_tt_rate(currency: str) -> dict[str, Any]:
         "rate_type": "tt",
         "source": source,
         "source_url": f"{_FX_BASE_URL}{path}?ccy={code}",
+        **_provenance(source),
         "errors": [],
-        "warnings": ["indicative bank board rate, not an official or reference rate"],
+        "warnings": [
+            _THIRD_PARTY_WARNING,
+            "indicative bank board rate, not an official or reference rate",
+        ],
     }

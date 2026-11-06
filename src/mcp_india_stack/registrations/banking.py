@@ -4,6 +4,7 @@ from mcp.types import ToolAnnotations
 from pydantic import Field
 
 from mcp_india_stack.app import mcp
+from mcp_india_stack.authenticity import AUTHENTICITY_SCHEMA
 from mcp_india_stack.tools.aa_consent import (
     build_aa_consent_request as core_build_aa_consent_request,
 )
@@ -55,6 +56,7 @@ def lookup_ifsc(
             errors=result.get("errors", []),
             warnings=result.get("warnings", []),
             source=result.get("source", "bundled_dataset"),
+            authenticity=result.get("authenticity"),
         )
     except Exception as exc:
         return build_response(
@@ -115,6 +117,7 @@ def lookup_bbps_biller(
             errors=result.get("errors", []),
             warnings=result.get("warnings", []),
             source="bundled_dataset",
+            authenticity=result.get("authenticity"),
         )
     except Exception as exc:
         return build_response(
@@ -129,6 +132,9 @@ def calculate_epf_esic(
     include_employer_share: Annotated[
         bool, Field(description="If True, return employer costs")
     ] = True,
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate EPF and ESIC contributions for employer and employee.
 
@@ -152,6 +158,7 @@ def calculate_epf_esic(
             basic_wages=basic_wages,
             gross_wages=gross_wages,
             include_employer_share=include_employer_share,
+            financial_year=financial_year,
         )
         return build_response(
             success=len(result.get("errors", [])) == 0,
@@ -173,6 +180,9 @@ def calculate_neft_rtgs_imps_charges(
     amount: Annotated[float, Field(description="Transfer amount in INR")],
     account_type: Annotated[str, Field(description="'savings' or 'current'")] = "savings",
     is_online: Annotated[bool, Field(description="True if done via online banking")] = True,
+    financial_year: Annotated[
+        str, Field(description="Financial year (e.g. '2025-26', '2026-27')")
+    ] = "2025-26",
 ) -> dict[str, Any]:
     """Calculate NEFT/RTGS/IMPS/UPI transaction charges.
 
@@ -193,6 +203,7 @@ def calculate_neft_rtgs_imps_charges(
             amount=amount,
             account_type=account_type,
             is_online=is_online,
+            financial_year=financial_year,
         )
         return build_response(
             success="errors" not in result,
@@ -361,5 +372,6 @@ def schema_lookup_ifsc() -> dict[str, Any]:
             "verification_source": {"type": "string"},
             "errors": {"type": "array", "items": {"type": "string"}},
             "warnings": {"type": "array", "items": {"type": "string"}},
+            "authenticity": AUTHENTICITY_SCHEMA,
         },
     }

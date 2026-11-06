@@ -5,6 +5,11 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
+from mcp_india_stack.tools.rules_metadata import (
+    attach_rule_metadata,
+    validate_financial_year,
+)
+
 DISCLAIMER = "Verify exact computation with your CA."
 
 
@@ -14,6 +19,7 @@ def calculate_income_tax_interest(
     tds_deducted: float = 0.0,
     filing_date: str | None = None,
     due_date: str = "2025-07-31",
+    financial_year: str = "2025-26",
 ) -> dict[str, Any]:
     """Calculate interest under Sections 234A, 234B, 234C.
 
@@ -23,10 +29,15 @@ def calculate_income_tax_interest(
         tds_deducted: TDS already deducted
         filing_date: YYYY-MM-DD when return filed (None if not filed)
         due_date: Due date for filing
+        financial_year: Financial year (defaults to "2025-26")
 
     Returns:
         Dict with interest breakdown.
     """
+    is_valid_fy, err_resp = validate_financial_year("income_tax_interest", financial_year)
+    if not is_valid_fy:
+        assert err_resp is not None
+        return err_resp
     if advance_tax_paid is None:
         advance_tax_paid = {}
 
@@ -81,7 +92,7 @@ def calculate_income_tax_interest(
 
     total_interest = round(interest_234a + interest_234b + interest_234c, 2)
 
-    return {
+    res = {
         "net_assessed_tax": net_tax,
         "section_234a": {
             "applicable": interest_234a > 0,
@@ -103,3 +114,4 @@ def calculate_income_tax_interest(
         "total_interest_payable": total_interest,
         "disclaimer": DISCLAIMER,
     }
+    return attach_rule_metadata(res, "income_tax_interest", financial_year)

@@ -4,6 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from mcp_india_stack.tools.rules_metadata import (
+    attach_rule_metadata,
+    validate_financial_year,
+)
+
 # Monthly salary slabs with (threshold, monthly_pt) pairs.
 # For each state, find the first threshold >= monthly salary.
 PT_SLABS: dict[str, list[tuple[float, float]]] = {
@@ -85,21 +90,28 @@ def _resolve_state_code(state_input: str) -> str:
 def calculate_professional_tax(
     gross_salary_monthly: float,
     state_code: str,
+    financial_year: str = "2025-26",
 ) -> dict[str, Any]:
     """Calculate state-wise professional tax.
 
     Args:
         gross_salary_monthly: Monthly gross salary
         state_code: State code (e.g., "MH", "KA") or full name (e.g., "Maharashtra")
+        financial_year: Financial year (defaults to "2025-26")
 
     Returns:
         Dict with PT calculation including monthly, February, and annual amounts.
     """
+    is_valid_fy, err_resp = validate_financial_year("professional_tax", financial_year)
+    if not is_valid_fy:
+        assert err_resp is not None
+        return err_resp
+
     resolved_code = _resolve_state_code(state_code)
 
     # Check if state has no PT
     if resolved_code.upper() in NO_PT_STATES or state_code.strip().upper() in NO_PT_STATES:
-        return {
+        res_no_pt = {
             "state": state_code,
             "applicable": False,
             "annual_pt": 0,
@@ -107,9 +119,10 @@ def calculate_professional_tax(
             "reason": f"No professional tax in state {state_code}",
             "disclaimer": DISCLAIMER,
         }
+        return attach_rule_metadata(res_no_pt, "professional_tax", financial_year)
 
     if resolved_code not in PT_SLABS:
-        return {
+        res_not_avail = {
             "state": state_code,
             "applicable": False,
             "annual_pt": 0,
@@ -117,6 +130,7 @@ def calculate_professional_tax(
             "reason": f"Professional tax data not available for state: {state_code}",
             "disclaimer": DISCLAIMER,
         }
+        return attach_rule_metadata(res_not_avail, "professional_tax", financial_year)
 
     # Get monthly PT from slabs (applied to MONTHLY salary)
     monthly_pt = _get_monthly_pt(gross_salary_monthly, PT_SLABS[resolved_code])
@@ -130,7 +144,7 @@ def calculate_professional_tax(
     # Annual = 11 regular months + 1 February month
     annual_pt = (monthly_pt * 11) + february_pt
 
-    return {
+    res = {
         "state": resolved_code,
         "gross_salary_monthly": gross_salary_monthly,
         "professional_tax_monthly": round(monthly_pt, 2),
@@ -150,3 +164,4 @@ def calculate_professional_tax(
         ).strip(),
         "disclaimer": DISCLAIMER,
     }
+    return attach_rule_metadata(res, "professional_tax", financial_year)

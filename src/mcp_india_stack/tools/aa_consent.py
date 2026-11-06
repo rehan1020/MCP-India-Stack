@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 from typing import Any
 
+from mcp_india_stack.authenticity.rules import create_aa_consent_authenticity
 from mcp_india_stack.utils.responses import build_response
 
 PURPOSE_CODE_MAP: dict[str, str] = {
@@ -165,13 +166,21 @@ def validate_aa_consent_artifact(artifact: dict[str, Any]) -> dict[str, Any]:
     if "Purpose" in artifact and artifact["Purpose"].get("code") not in PURPOSE_CODE_MAP:
         warnings.append(f"Unknown purpose code: {artifact['Purpose'].get('code')}")
 
+    is_valid = len(errors) == 0
+    auth = create_aa_consent_authenticity(
+        valid=is_valid,
+        has_dates="consentStart" in artifact and "consentExpiry" in artifact,
+        has_fi_types="fiTypes" in artifact and isinstance(artifact.get("fiTypes"), list),
+    )
+
     return build_response(
-        success=len(errors) == 0,
+        success=is_valid,
         data={
             "artifact": artifact,
             "errors": errors,
             "warnings": warnings,
-            "validated": len(errors) == 0,
+            "validated": is_valid,
         },
         source="offline_algorithm",
+        authenticity=auth,
     )

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from typing import Any
 
 from mcp_india_stack.tools.market_data.provider import MarketDataProvider
@@ -30,14 +31,21 @@ def get_stock_quote(symbol: str) -> dict[str, Any]:
     try:
         return _provider.get_quote(symbol)
     except Exception as e:
-        return _flatten(
-            build_response(
-                success=False,
-                data={},
-                errors=[f"market data provider unavailable: {str(e)}"],
-                source="market_data",
-            )
+        as_of = datetime.now(timezone.utc).isoformat()
+        metadata_envelope = {
+            "data_source": "yfinance (unofficial)",
+            "delayed": True,
+            "as_of": as_of,
+            "experimental": True,
+        }
+        res = build_response(
+            success=False,
+            data=dict(metadata_envelope),
+            errors=[f"market data provider unavailable: {str(e)}"],
+            source="market_data",
         )
+        res.update(metadata_envelope)
+        return _flatten(res)
 
 
 def get_stock_history(symbol: str, period: str = "1mo") -> dict[str, Any]:
@@ -45,11 +53,18 @@ def get_stock_history(symbol: str, period: str = "1mo") -> dict[str, Any]:
     try:
         return _provider.get_history(symbol, period)
     except Exception as e:
-        return _flatten(
-            build_response(
-                success=False,
-                data={},
-                errors=[f"market data provider unavailable: {str(e)}"],
-                source="market_data",
-            )
+        as_of = datetime.now(timezone.utc).isoformat()
+        metadata_envelope = {
+            "data_source": "yfinance (unofficial)",
+            "delayed": True,
+            "as_of": as_of,
+            "experimental": True,
+        }
+        res = build_response(
+            success=False,
+            data=dict(metadata_envelope),
+            errors=[f"market data provider unavailable: {str(e)}"],
+            source="market_data",
         )
+        res.update(metadata_envelope)
+        return _flatten(res)

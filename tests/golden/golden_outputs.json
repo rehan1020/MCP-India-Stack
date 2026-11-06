@@ -2,48 +2,115 @@
   "bulk_validate_gstin": [
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
-          "invalid_count": 1,
           "results": [
             {
-              "confidence": 0.65,
+              "success": true,
               "data": {
-                "category": "standard",
-                "checksum_valid": true,
-                "entity_number": "1",
-                "expected_checksum": "V",
-                "format_validity": "full",
+                "valid": true,
                 "gstin": "27AAPFU0939F1ZV",
-                "live_verified": false,
-                "normalized_input": "27AAPFU0939F1ZV",
-                "pan": "AAPFU0939F",
                 "state_code": "27",
                 "state_name": "Maharashtra",
-                "valid": true
+                "pan": "AAPFU0939F",
+                "entity_number": "1",
+                "checksum_valid": true,
+                "expected_checksum": "V",
+                "category": "standard",
+                "format_validity": "full",
+                "live_verified": false,
+                "normalized_input": "27AAPFU0939F1ZV"
               },
               "errors": [],
+              "warnings": [],
               "source": "offline_static",
-              "success": true,
-              "tool_version": "0.7.0",
+              "tool_version": "0.8.0",
+              "confidence": 0.65,
               "validated_by": [
                 "format_check",
                 "checksum"
               ],
-              "warnings": []
+              "authenticity": {
+                "level": "A1",
+                "checks": [
+                  {
+                    "name": "gstin_format_syntax",
+                    "passed": true,
+                    "level": "A0",
+                    "detail": "15-character uppercase alphanumeric structure"
+                  },
+                  {
+                    "name": "gstin_mod36_checksum",
+                    "passed": true,
+                    "level": "A0",
+                    "detail": "Luhn mod-36 checksum character verification"
+                  },
+                  {
+                    "name": "embedded_pan_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "Characters 3-12 form a structurally valid Indian PAN"
+                  },
+                  {
+                    "name": "state_code_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "Leading 2 digits correspond to an assigned state/UT code"
+                  },
+                  {
+                    "name": "entity_number_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "13th character is a valid alphanumeric entity index (1-9, A-Z)"
+                  },
+                  {
+                    "name": "standard_14th_char_rule",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "14th character is 'Z' per standard GSTIN specification"
+                  }
+                ],
+                "source": "GST Council / CBIC",
+                "dataset_version": null,
+                "as_of": "2026-11-05",
+                "evidence_hash": null,
+                "limitations": [
+                  "active registration status not verified",
+                  "taxpayer filing compliance not verified"
+                ]
+              }
             }
           ],
           "total": 1,
-          "valid_count": 0
+          "valid_count": 0,
+          "invalid_count": 1,
+          "authenticity_summary": {
+            "A0": 0,
+            "A1": 1,
+            "A2": 0,
+            "A3": 0,
+            "A4": 0,
+            "null": 0
+          }
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
         ],
-        "warnings": []
+        "authenticity": {
+          "summary": {
+            "A0": 0,
+            "A1": 1,
+            "A2": 0,
+            "A3": 0,
+            "A4": 0,
+            "null": 0
+          }
+        }
       },
       "input": {
         "gstins": [
@@ -53,50 +120,117 @@
     },
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
-          "invalid_count": 1,
           "results": [
             {
-              "confidence": 0.0,
+              "success": false,
               "data": {
-                "category": "standard",
-                "checksum_valid": false,
-                "entity_number": "1",
-                "expected_checksum": "V",
-                "format_validity": "full",
+                "valid": false,
                 "gstin": "27AAPFU0939F1Z0",
-                "live_verified": false,
-                "normalized_input": "27AAPFU0939F1Z0",
-                "pan": "AAPFU0939F",
                 "state_code": "27",
                 "state_name": "Maharashtra",
-                "valid": false
+                "pan": "AAPFU0939F",
+                "entity_number": "1",
+                "checksum_valid": false,
+                "expected_checksum": "V",
+                "category": "standard",
+                "format_validity": "full",
+                "live_verified": false,
+                "normalized_input": "27AAPFU0939F1Z0"
               },
               "errors": [
                 "Checksum character is invalid"
               ],
+              "warnings": [],
               "source": "offline_static",
-              "success": false,
-              "tool_version": "0.7.0",
+              "tool_version": "0.8.0",
+              "confidence": 0.0,
               "validated_by": [
                 "format_check",
                 "checksum"
               ],
-              "warnings": []
+              "authenticity": {
+                "level": null,
+                "checks": [
+                  {
+                    "name": "gstin_format_syntax",
+                    "passed": true,
+                    "level": "A0",
+                    "detail": "15-character uppercase alphanumeric structure"
+                  },
+                  {
+                    "name": "gstin_mod36_checksum",
+                    "passed": false,
+                    "level": "A0",
+                    "detail": "Luhn mod-36 checksum character verification"
+                  },
+                  {
+                    "name": "embedded_pan_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "Characters 3-12 form a structurally valid Indian PAN"
+                  },
+                  {
+                    "name": "state_code_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "Leading 2 digits correspond to an assigned state/UT code"
+                  },
+                  {
+                    "name": "entity_number_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "13th character is a valid alphanumeric entity index (1-9, A-Z)"
+                  },
+                  {
+                    "name": "standard_14th_char_rule",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "14th character is 'Z' per standard GSTIN specification"
+                  }
+                ],
+                "source": "GST Council / CBIC",
+                "dataset_version": null,
+                "as_of": "2026-11-05",
+                "evidence_hash": null,
+                "limitations": [
+                  "active registration status not verified",
+                  "taxpayer filing compliance not verified"
+                ]
+              }
             }
           ],
           "total": 1,
-          "valid_count": 0
+          "valid_count": 0,
+          "invalid_count": 1,
+          "authenticity_summary": {
+            "A0": 0,
+            "A1": 0,
+            "A2": 0,
+            "A3": 0,
+            "A4": 0,
+            "null": 1
+          }
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
         ],
-        "warnings": []
+        "authenticity": {
+          "summary": {
+            "A0": 0,
+            "A1": 0,
+            "A2": 0,
+            "A3": 0,
+            "A4": 0,
+            "null": 1
+          }
+        }
       },
       "input": {
         "gstins": [
@@ -106,76 +240,192 @@
     },
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
-          "invalid_count": 2,
           "results": [
             {
-              "confidence": 0.65,
+              "success": true,
               "data": {
-                "category": "standard",
-                "checksum_valid": true,
-                "entity_number": "1",
-                "expected_checksum": "V",
-                "format_validity": "full",
+                "valid": true,
                 "gstin": "27AAPFU0939F1ZV",
-                "live_verified": false,
-                "normalized_input": "27AAPFU0939F1ZV",
-                "pan": "AAPFU0939F",
                 "state_code": "27",
                 "state_name": "Maharashtra",
-                "valid": true
+                "pan": "AAPFU0939F",
+                "entity_number": "1",
+                "checksum_valid": true,
+                "expected_checksum": "V",
+                "category": "standard",
+                "format_validity": "full",
+                "live_verified": false,
+                "normalized_input": "27AAPFU0939F1ZV"
               },
               "errors": [],
+              "warnings": [],
               "source": "offline_static",
-              "success": true,
-              "tool_version": "0.7.0",
+              "tool_version": "0.8.0",
+              "confidence": 0.65,
               "validated_by": [
                 "format_check",
                 "checksum"
               ],
-              "warnings": []
+              "authenticity": {
+                "level": "A1",
+                "checks": [
+                  {
+                    "name": "gstin_format_syntax",
+                    "passed": true,
+                    "level": "A0",
+                    "detail": "15-character uppercase alphanumeric structure"
+                  },
+                  {
+                    "name": "gstin_mod36_checksum",
+                    "passed": true,
+                    "level": "A0",
+                    "detail": "Luhn mod-36 checksum character verification"
+                  },
+                  {
+                    "name": "embedded_pan_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "Characters 3-12 form a structurally valid Indian PAN"
+                  },
+                  {
+                    "name": "state_code_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "Leading 2 digits correspond to an assigned state/UT code"
+                  },
+                  {
+                    "name": "entity_number_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "13th character is a valid alphanumeric entity index (1-9, A-Z)"
+                  },
+                  {
+                    "name": "standard_14th_char_rule",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "14th character is 'Z' per standard GSTIN specification"
+                  }
+                ],
+                "source": "GST Council / CBIC",
+                "dataset_version": null,
+                "as_of": "2026-11-05",
+                "evidence_hash": null,
+                "limitations": [
+                  "active registration status not verified",
+                  "taxpayer filing compliance not verified"
+                ]
+              }
             },
             {
-              "confidence": 0.0,
+              "success": false,
               "data": {
-                "category": "standard",
-                "checksum_valid": false,
-                "entity_number": "1",
-                "expected_checksum": "J",
-                "format_validity": "full",
+                "valid": false,
                 "gstin": "29AABCU9603R1ZM",
-                "live_verified": false,
-                "normalized_input": "29AABCU9603R1ZM",
-                "pan": "AABCU9603R",
                 "state_code": "29",
                 "state_name": "Karnataka",
-                "valid": false
+                "pan": "AABCU9603R",
+                "entity_number": "1",
+                "checksum_valid": false,
+                "expected_checksum": "J",
+                "category": "standard",
+                "format_validity": "full",
+                "live_verified": false,
+                "normalized_input": "29AABCU9603R1ZM"
               },
               "errors": [
                 "Checksum character is invalid"
               ],
+              "warnings": [],
               "source": "offline_static",
-              "success": false,
-              "tool_version": "0.7.0",
+              "tool_version": "0.8.0",
+              "confidence": 0.0,
               "validated_by": [
                 "format_check",
                 "checksum"
               ],
-              "warnings": []
+              "authenticity": {
+                "level": null,
+                "checks": [
+                  {
+                    "name": "gstin_format_syntax",
+                    "passed": true,
+                    "level": "A0",
+                    "detail": "15-character uppercase alphanumeric structure"
+                  },
+                  {
+                    "name": "gstin_mod36_checksum",
+                    "passed": false,
+                    "level": "A0",
+                    "detail": "Luhn mod-36 checksum character verification"
+                  },
+                  {
+                    "name": "embedded_pan_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "Characters 3-12 form a structurally valid Indian PAN"
+                  },
+                  {
+                    "name": "state_code_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "Leading 2 digits correspond to an assigned state/UT code"
+                  },
+                  {
+                    "name": "entity_number_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "13th character is a valid alphanumeric entity index (1-9, A-Z)"
+                  },
+                  {
+                    "name": "standard_14th_char_rule",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "14th character is 'Z' per standard GSTIN specification"
+                  }
+                ],
+                "source": "GST Council / CBIC",
+                "dataset_version": null,
+                "as_of": "2026-11-05",
+                "evidence_hash": null,
+                "limitations": [
+                  "active registration status not verified",
+                  "taxpayer filing compliance not verified"
+                ]
+              }
             }
           ],
           "total": 2,
-          "valid_count": 0
+          "valid_count": 0,
+          "invalid_count": 2,
+          "authenticity_summary": {
+            "A0": 0,
+            "A1": 1,
+            "A2": 0,
+            "A3": 0,
+            "A4": 0,
+            "null": 1
+          }
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
         ],
-        "warnings": []
+        "authenticity": {
+          "summary": {
+            "A0": 0,
+            "A1": 1,
+            "A2": 0,
+            "A3": 0,
+            "A4": 0,
+            "null": 1
+          }
+        }
       },
       "input": {
         "gstins": [
@@ -186,63 +436,179 @@
     },
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
-          "invalid_count": 2,
           "results": [
             {
-              "confidence": 0.0,
+              "success": false,
               "data": {
+                "valid": false,
                 "gstin": "INVALID_GSTIN",
-                "live_verified": false,
-                "valid": false
+                "live_verified": false
               },
               "errors": [
                 "GSTIN must be exactly 15 characters"
               ],
+              "warnings": [],
               "source": "offline_static",
-              "success": false,
-              "tool_version": "0.7.0",
-              "warnings": []
+              "tool_version": "0.8.0",
+              "confidence": 0.0,
+              "authenticity": {
+                "level": null,
+                "checks": [
+                  {
+                    "name": "gstin_format_syntax",
+                    "passed": false,
+                    "level": "A0",
+                    "detail": "15-character uppercase alphanumeric structure"
+                  },
+                  {
+                    "name": "gstin_mod36_checksum",
+                    "passed": false,
+                    "level": "A0",
+                    "detail": "Luhn mod-36 checksum character verification"
+                  },
+                  {
+                    "name": "embedded_pan_consistency",
+                    "passed": false,
+                    "level": "A1",
+                    "detail": "Characters 3-12 form a structurally valid Indian PAN"
+                  },
+                  {
+                    "name": "state_code_consistency",
+                    "passed": false,
+                    "level": "A1",
+                    "detail": "Leading 2 digits correspond to an assigned state/UT code"
+                  },
+                  {
+                    "name": "entity_number_consistency",
+                    "passed": false,
+                    "level": "A1",
+                    "detail": "13th character is a valid alphanumeric entity index (1-9, A-Z)"
+                  },
+                  {
+                    "name": "standard_14th_char_rule",
+                    "passed": false,
+                    "level": "A1",
+                    "detail": "14th character is 'Z' per standard GSTIN specification"
+                  }
+                ],
+                "source": "GST Council / CBIC",
+                "dataset_version": null,
+                "as_of": "2026-11-05",
+                "evidence_hash": null,
+                "limitations": [
+                  "active registration status not verified",
+                  "taxpayer filing compliance not verified"
+                ]
+              }
             },
             {
-              "confidence": 0.65,
+              "success": true,
               "data": {
-                "category": "standard",
-                "checksum_valid": true,
-                "entity_number": "1",
-                "expected_checksum": "V",
-                "format_validity": "full",
+                "valid": true,
                 "gstin": "27AAPFU0939F1ZV",
-                "live_verified": false,
-                "normalized_input": "27AAPFU0939F1ZV",
-                "pan": "AAPFU0939F",
                 "state_code": "27",
                 "state_name": "Maharashtra",
-                "valid": true
+                "pan": "AAPFU0939F",
+                "entity_number": "1",
+                "checksum_valid": true,
+                "expected_checksum": "V",
+                "category": "standard",
+                "format_validity": "full",
+                "live_verified": false,
+                "normalized_input": "27AAPFU0939F1ZV"
               },
               "errors": [],
+              "warnings": [],
               "source": "offline_static",
-              "success": true,
-              "tool_version": "0.7.0",
+              "tool_version": "0.8.0",
+              "confidence": 0.65,
               "validated_by": [
                 "format_check",
                 "checksum"
               ],
-              "warnings": []
+              "authenticity": {
+                "level": "A1",
+                "checks": [
+                  {
+                    "name": "gstin_format_syntax",
+                    "passed": true,
+                    "level": "A0",
+                    "detail": "15-character uppercase alphanumeric structure"
+                  },
+                  {
+                    "name": "gstin_mod36_checksum",
+                    "passed": true,
+                    "level": "A0",
+                    "detail": "Luhn mod-36 checksum character verification"
+                  },
+                  {
+                    "name": "embedded_pan_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "Characters 3-12 form a structurally valid Indian PAN"
+                  },
+                  {
+                    "name": "state_code_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "Leading 2 digits correspond to an assigned state/UT code"
+                  },
+                  {
+                    "name": "entity_number_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "13th character is a valid alphanumeric entity index (1-9, A-Z)"
+                  },
+                  {
+                    "name": "standard_14th_char_rule",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "14th character is 'Z' per standard GSTIN specification"
+                  }
+                ],
+                "source": "GST Council / CBIC",
+                "dataset_version": null,
+                "as_of": "2026-11-05",
+                "evidence_hash": null,
+                "limitations": [
+                  "active registration status not verified",
+                  "taxpayer filing compliance not verified"
+                ]
+              }
             }
           ],
           "total": 2,
-          "valid_count": 0
+          "valid_count": 0,
+          "invalid_count": 2,
+          "authenticity_summary": {
+            "A0": 0,
+            "A1": 1,
+            "A2": 0,
+            "A3": 0,
+            "A4": 0,
+            "null": 1
+          }
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
         ],
-        "warnings": []
+        "authenticity": {
+          "summary": {
+            "A0": 0,
+            "A1": 1,
+            "A2": 0,
+            "A3": 0,
+            "A4": 0,
+            "null": 1
+          }
+        }
       },
       "input": {
         "gstins": [
@@ -253,15 +619,15 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": null,
         "errors": [
           "Empty GSTIN list"
         ],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0
       },
       "input": {
         "gstins": []
@@ -269,15 +635,15 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": null,
         "errors": [
           "Maximum 500 GSTINs per call"
         ],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0
       },
       "input": {
         "gstins": [
@@ -789,42 +1155,91 @@
   "bulk_validate_ifsc": [
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
-          "found_count": 1,
           "results": [
             {
-              "address": null,
-              "bank": "SBI",
-              "branch": "TEST BRANCH",
-              "city": "TEST CITY",
-              "district": null,
-              "errors": [],
               "found": true,
               "ifsc": "SBIN0001234",
-              "imps_enabled": false,
-              "live_verified": false,
-              "micr": null,
-              "neft_enabled": false,
-              "rtgs_enabled": false,
-              "source": "bundled_dataset",
+              "bank": "SBI",
+              "branch": "TEST BRANCH",
+              "address": null,
+              "city": "TEST CITY",
+              "district": null,
               "state": "TEST STATE",
-              "swift": null,
+              "micr": null,
               "upi_enabled": false,
+              "rtgs_enabled": false,
+              "neft_enabled": false,
+              "imps_enabled": false,
+              "swift": null,
+              "source": "bundled_dataset",
+              "live_verified": false,
               "verification_source": "offline",
-              "warnings": []
+              "errors": [],
+              "warnings": [],
+              "authenticity": {
+                "level": "A2",
+                "checks": [
+                  {
+                    "name": "ifsc_format_syntax",
+                    "passed": true,
+                    "level": "A0",
+                    "detail": "11-character alphanumeric structure with 5th character '0'"
+                  },
+                  {
+                    "name": "ifsc_bank_prefix_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "4-letter alphabetical bank prefix code"
+                  },
+                  {
+                    "name": "record_in_bundled_dataset",
+                    "passed": true,
+                    "level": "A2",
+                    "detail": "Branch record matched in bundled RBI IFSC master directory"
+                  }
+                ],
+                "source": "Reserve Bank of India (RBI)",
+                "dataset_version": "2025.04",
+                "as_of": "2026-11-05",
+                "evidence_hash": "sha256:aad63b71fe53900397e54a5cd4cdc75635cfa40be91b976a36bfa76a11372de0",
+                "limitations": [
+                  "real-time operational/merger status not verified",
+                  "active registration status not verified"
+                ]
+              }
             }
           ],
-          "total": 1
+          "total": 1,
+          "found_count": 1,
+          "authenticity_summary": {
+            "A0": 0,
+            "A1": 0,
+            "A2": 1,
+            "A3": 0,
+            "A4": 0,
+            "null": 0
+          }
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
         ],
-        "warnings": []
+        "authenticity": {
+          "summary": {
+            "A0": 0,
+            "A1": 0,
+            "A2": 1,
+            "A3": 0,
+            "A4": 0,
+            "null": 0
+          }
+        }
       },
       "input": {
         "ifscs": [
@@ -834,31 +1249,81 @@
     },
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
-          "found_count": 0,
           "results": [
             {
+              "found": false,
+              "ifsc": "INVALID999",
               "errors": [
                 "IFSC code must be exactly 11 characters"
               ],
-              "found": false,
-              "ifsc": "INVALID999",
+              "warnings": [],
               "live_verified": false,
               "verification_source": "offline",
-              "warnings": []
+              "authenticity": {
+                "level": null,
+                "checks": [
+                  {
+                    "name": "ifsc_format_syntax",
+                    "passed": false,
+                    "level": "A0",
+                    "detail": "11-character alphanumeric structure with 5th character '0'"
+                  },
+                  {
+                    "name": "ifsc_bank_prefix_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "4-letter alphabetical bank prefix code"
+                  },
+                  {
+                    "name": "record_in_bundled_dataset",
+                    "passed": false,
+                    "level": "A2",
+                    "detail": "Branch record matched in bundled RBI IFSC master directory"
+                  }
+                ],
+                "source": "Reserve Bank of India (RBI)",
+                "dataset_version": "2025.04",
+                "as_of": "2026-11-05",
+                "evidence_hash": null,
+                "limitations": [
+                  "not_found_in_dataset@2025.04",
+                  "real-time operational/merger status not verified",
+                  "active registration status not verified"
+                ]
+              }
             }
           ],
-          "total": 1
+          "total": 1,
+          "found_count": 0,
+          "authenticity_summary": {
+            "A0": 0,
+            "A1": 0,
+            "A2": 0,
+            "A3": 0,
+            "A4": 0,
+            "null": 1
+          }
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
         ],
-        "warnings": []
+        "authenticity": {
+          "summary": {
+            "A0": 0,
+            "A1": 0,
+            "A2": 0,
+            "A3": 0,
+            "A4": 0,
+            "null": 1
+          }
+        }
       },
       "input": {
         "ifscs": [
@@ -868,63 +1333,143 @@
     },
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
-          "found_count": 2,
           "results": [
             {
-              "address": null,
-              "bank": "SBI",
-              "branch": "TEST BRANCH",
-              "city": "TEST CITY",
-              "district": null,
-              "errors": [],
               "found": true,
               "ifsc": "SBIN0001234",
-              "imps_enabled": false,
-              "live_verified": false,
-              "micr": null,
-              "neft_enabled": false,
-              "rtgs_enabled": false,
-              "source": "bundled_dataset",
+              "bank": "SBI",
+              "branch": "TEST BRANCH",
+              "address": null,
+              "city": "TEST CITY",
+              "district": null,
               "state": "TEST STATE",
-              "swift": null,
+              "micr": null,
               "upi_enabled": false,
+              "rtgs_enabled": false,
+              "neft_enabled": false,
+              "imps_enabled": false,
+              "swift": null,
+              "source": "bundled_dataset",
+              "live_verified": false,
               "verification_source": "offline",
-              "warnings": []
+              "errors": [],
+              "warnings": [],
+              "authenticity": {
+                "level": "A2",
+                "checks": [
+                  {
+                    "name": "ifsc_format_syntax",
+                    "passed": true,
+                    "level": "A0",
+                    "detail": "11-character alphanumeric structure with 5th character '0'"
+                  },
+                  {
+                    "name": "ifsc_bank_prefix_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "4-letter alphabetical bank prefix code"
+                  },
+                  {
+                    "name": "record_in_bundled_dataset",
+                    "passed": true,
+                    "level": "A2",
+                    "detail": "Branch record matched in bundled RBI IFSC master directory"
+                  }
+                ],
+                "source": "Reserve Bank of India (RBI)",
+                "dataset_version": "2025.04",
+                "as_of": "2026-11-05",
+                "evidence_hash": "sha256:aad63b71fe53900397e54a5cd4cdc75635cfa40be91b976a36bfa76a11372de0",
+                "limitations": [
+                  "real-time operational/merger status not verified",
+                  "active registration status not verified"
+                ]
+              }
             },
             {
-              "address": null,
-              "bank": "HDFC",
-              "branch": "TEST",
-              "city": "TEST",
-              "district": null,
-              "errors": [],
               "found": true,
               "ifsc": "HDFC0000001",
-              "imps_enabled": false,
-              "live_verified": false,
-              "micr": null,
-              "neft_enabled": false,
-              "rtgs_enabled": false,
-              "source": "bundled_dataset",
+              "bank": "HDFC",
+              "branch": "TEST",
+              "address": null,
+              "city": "TEST",
+              "district": null,
               "state": "TEST",
-              "swift": null,
+              "micr": null,
               "upi_enabled": false,
+              "rtgs_enabled": false,
+              "neft_enabled": false,
+              "imps_enabled": false,
+              "swift": null,
+              "source": "bundled_dataset",
+              "live_verified": false,
               "verification_source": "offline",
-              "warnings": []
+              "errors": [],
+              "warnings": [],
+              "authenticity": {
+                "level": "A2",
+                "checks": [
+                  {
+                    "name": "ifsc_format_syntax",
+                    "passed": true,
+                    "level": "A0",
+                    "detail": "11-character alphanumeric structure with 5th character '0'"
+                  },
+                  {
+                    "name": "ifsc_bank_prefix_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "4-letter alphabetical bank prefix code"
+                  },
+                  {
+                    "name": "record_in_bundled_dataset",
+                    "passed": true,
+                    "level": "A2",
+                    "detail": "Branch record matched in bundled RBI IFSC master directory"
+                  }
+                ],
+                "source": "Reserve Bank of India (RBI)",
+                "dataset_version": "2025.04",
+                "as_of": "2026-11-05",
+                "evidence_hash": "sha256:6c65f93c21e48277479c70730e0e6b9dc11fe778cd534fbc31170f9a70a9a5e4",
+                "limitations": [
+                  "real-time operational/merger status not verified",
+                  "active registration status not verified"
+                ]
+              }
             }
           ],
-          "total": 2
+          "total": 2,
+          "found_count": 2,
+          "authenticity_summary": {
+            "A0": 0,
+            "A1": 0,
+            "A2": 2,
+            "A3": 0,
+            "A4": 0,
+            "null": 0
+          }
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
         ],
-        "warnings": []
+        "authenticity": {
+          "summary": {
+            "A0": 0,
+            "A1": 0,
+            "A2": 2,
+            "A3": 0,
+            "A4": 0,
+            "null": 0
+          }
+        }
       },
       "input": {
         "ifscs": [
@@ -935,53 +1480,134 @@
     },
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
-          "found_count": 1,
           "results": [
             {
-              "address": null,
-              "bank": "SBI",
-              "branch": "TEST BRANCH",
-              "city": "TEST CITY",
-              "district": null,
-              "errors": [],
               "found": true,
               "ifsc": "SBIN0001234",
-              "imps_enabled": false,
-              "live_verified": false,
-              "micr": null,
-              "neft_enabled": false,
-              "rtgs_enabled": false,
-              "source": "bundled_dataset",
+              "bank": "SBI",
+              "branch": "TEST BRANCH",
+              "address": null,
+              "city": "TEST CITY",
+              "district": null,
               "state": "TEST STATE",
-              "swift": null,
+              "micr": null,
               "upi_enabled": false,
+              "rtgs_enabled": false,
+              "neft_enabled": false,
+              "imps_enabled": false,
+              "swift": null,
+              "source": "bundled_dataset",
+              "live_verified": false,
               "verification_source": "offline",
-              "warnings": []
+              "errors": [],
+              "warnings": [],
+              "authenticity": {
+                "level": "A2",
+                "checks": [
+                  {
+                    "name": "ifsc_format_syntax",
+                    "passed": true,
+                    "level": "A0",
+                    "detail": "11-character alphanumeric structure with 5th character '0'"
+                  },
+                  {
+                    "name": "ifsc_bank_prefix_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "4-letter alphabetical bank prefix code"
+                  },
+                  {
+                    "name": "record_in_bundled_dataset",
+                    "passed": true,
+                    "level": "A2",
+                    "detail": "Branch record matched in bundled RBI IFSC master directory"
+                  }
+                ],
+                "source": "Reserve Bank of India (RBI)",
+                "dataset_version": "2025.04",
+                "as_of": "2026-11-05",
+                "evidence_hash": "sha256:aad63b71fe53900397e54a5cd4cdc75635cfa40be91b976a36bfa76a11372de0",
+                "limitations": [
+                  "real-time operational/merger status not verified",
+                  "active registration status not verified"
+                ]
+              }
             },
             {
+              "found": false,
+              "ifsc": "ZZZZ0999999",
+              "source": "bundled_dataset",
+              "live_verified": false,
+              "verification_source": "offline",
               "errors": [
                 "IFSC not found in local dataset"
               ],
-              "found": false,
-              "ifsc": "ZZZZ0999999",
-              "live_verified": false,
-              "source": "bundled_dataset",
-              "verification_source": "offline",
-              "warnings": []
+              "warnings": [],
+              "authenticity": {
+                "level": "A1",
+                "checks": [
+                  {
+                    "name": "ifsc_format_syntax",
+                    "passed": true,
+                    "level": "A0",
+                    "detail": "11-character alphanumeric structure with 5th character '0'"
+                  },
+                  {
+                    "name": "ifsc_bank_prefix_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "4-letter alphabetical bank prefix code"
+                  },
+                  {
+                    "name": "record_in_bundled_dataset",
+                    "passed": false,
+                    "level": "A2",
+                    "detail": "Branch record matched in bundled RBI IFSC master directory"
+                  }
+                ],
+                "source": "Reserve Bank of India (RBI)",
+                "dataset_version": "2025.04",
+                "as_of": "2026-11-05",
+                "evidence_hash": null,
+                "limitations": [
+                  "not_found_in_dataset@2025.04",
+                  "real-time operational/merger status not verified",
+                  "active registration status not verified"
+                ]
+              }
             }
           ],
-          "total": 2
+          "total": 2,
+          "found_count": 1,
+          "authenticity_summary": {
+            "A0": 0,
+            "A1": 1,
+            "A2": 1,
+            "A3": 0,
+            "A4": 0,
+            "null": 0
+          }
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
         ],
-        "warnings": []
+        "authenticity": {
+          "summary": {
+            "A0": 0,
+            "A1": 1,
+            "A2": 1,
+            "A3": 0,
+            "A4": 0,
+            "null": 0
+          }
+        }
       },
       "input": {
         "ifscs": [
@@ -992,15 +1618,15 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": null,
         "errors": [
           "Empty IFSC list"
         ],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0
       },
       "input": {
         "ifscs": []
@@ -1008,15 +1634,15 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": null,
         "errors": [
           "Maximum 500 IFSCs per call"
         ],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0
       },
       "input": {
         "ifscs": [
@@ -1528,56 +2154,106 @@
   "bulk_validate_pan": [
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
           "results": [
             {
-              "check_character": "F",
-              "checksum_verifiable": false,
-              "confidence": 0.0,
+              "success": true,
               "data": {
-                "check_character": "F",
-                "checksum_verifiable": false,
+                "valid": true,
+                "pan": "ABCDE1234F",
                 "entity_code": "D",
                 "entity_type": "Unknown",
-                "name_initial": "E",
-                "normalized_input": "ABCDE1234F",
-                "pan": "ABCDE1234F",
-                "sequence": "1234",
                 "series": "ABC",
-                "valid": true
+                "name_initial": "E",
+                "sequence": "1234",
+                "check_character": "F",
+                "checksum_verifiable": false,
+                "normalized_input": "ABCDE1234F"
               },
-              "entity_code": "D",
-              "entity_type": "Unknown",
               "errors": [],
-              "name_initial": "E",
-              "normalized_input": "ABCDE1234F",
-              "pan": "ABCDE1234F",
-              "sequence": "1234",
-              "series": "ABC",
+              "warnings": [
+                "PAN entity code is not in the common official list"
+              ],
               "source": "offline_static",
-              "success": true,
-              "tool_version": "0.7.0",
-              "valid": true,
+              "tool_version": "0.8.0",
+              "confidence": 0.0,
               "validated_by": [
                 "format_check"
               ],
-              "warnings": [
-                "PAN entity code is not in the common official list"
-              ]
+              "authenticity": {
+                "level": "A0",
+                "checks": [
+                  {
+                    "name": "pan_format_syntax",
+                    "passed": true,
+                    "level": "A0",
+                    "detail": "10-character alphanumeric structure (5 letters, 4 digits, 1 letter)"
+                  },
+                  {
+                    "name": "pan_entity_type_consistency",
+                    "passed": false,
+                    "level": "A1",
+                    "detail": "4th character 'D' represents a recognized entity category (Unknown)"
+                  },
+                  {
+                    "name": "pan_name_initial_rule",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "5th character is an alphabetic taxpayer surname or entity name initial"
+                  }
+                ],
+                "source": "Income Tax Department",
+                "dataset_version": null,
+                "as_of": "2026-11-05",
+                "evidence_hash": null,
+                "limitations": [
+                  "active PAN status not verified",
+                  "PAN-Aadhaar linking status not verified",
+                  "active registration status not verified"
+                ]
+              },
+              "valid": true,
+              "pan": "ABCDE1234F",
+              "entity_code": "D",
+              "entity_type": "Unknown",
+              "series": "ABC",
+              "name_initial": "E",
+              "sequence": "1234",
+              "check_character": "F",
+              "checksum_verifiable": false,
+              "normalized_input": "ABCDE1234F"
             }
           ],
           "total": 1,
-          "valid_count": 1
+          "valid_count": 1,
+          "authenticity_summary": {
+            "A0": 1,
+            "A1": 0,
+            "A2": 0,
+            "A3": 0,
+            "A4": 0,
+            "null": 0
+          }
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
         ],
-        "warnings": []
+        "authenticity": {
+          "summary": {
+            "A0": 1,
+            "A1": 0,
+            "A2": 0,
+            "A3": 0,
+            "A4": 0,
+            "null": 0
+          }
+        }
       },
       "input": {
         "pans": [
@@ -1587,39 +2263,89 @@
     },
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
           "results": [
             {
-              "checksum_verifiable": false,
-              "confidence": 0.0,
+              "success": false,
               "data": {
-                "checksum_verifiable": false,
+                "valid": false,
                 "pan": "INVALID123",
-                "valid": false
+                "checksum_verifiable": false
               },
               "errors": [
                 "PAN must match format AAAAA9999A"
               ],
-              "pan": "INVALID123",
+              "warnings": [],
               "source": "offline_static",
-              "success": false,
-              "tool_version": "0.7.0",
+              "tool_version": "0.8.0",
+              "confidence": 0.0,
+              "authenticity": {
+                "level": null,
+                "checks": [
+                  {
+                    "name": "pan_format_syntax",
+                    "passed": false,
+                    "level": "A0",
+                    "detail": "10-character alphanumeric structure (5 letters, 4 digits, 1 letter)"
+                  },
+                  {
+                    "name": "pan_entity_type_consistency",
+                    "passed": false,
+                    "level": "A1",
+                    "detail": "4th character 'A' represents a recognized entity category (Standard)"
+                  },
+                  {
+                    "name": "pan_name_initial_rule",
+                    "passed": false,
+                    "level": "A1",
+                    "detail": "5th character is an alphabetic taxpayer surname or entity name initial"
+                  }
+                ],
+                "source": "Income Tax Department",
+                "dataset_version": null,
+                "as_of": "2026-11-05",
+                "evidence_hash": null,
+                "limitations": [
+                  "active PAN status not verified",
+                  "PAN-Aadhaar linking status not verified",
+                  "active registration status not verified"
+                ]
+              },
               "valid": false,
-              "warnings": []
+              "pan": "INVALID123",
+              "checksum_verifiable": false
             }
           ],
           "total": 1,
-          "valid_count": 0
+          "valid_count": 0,
+          "authenticity_summary": {
+            "A0": 0,
+            "A1": 0,
+            "A2": 0,
+            "A3": 0,
+            "A4": 0,
+            "null": 1
+          }
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
         ],
-        "warnings": []
+        "authenticity": {
+          "summary": {
+            "A0": 0,
+            "A1": 0,
+            "A2": 0,
+            "A3": 0,
+            "A4": 0,
+            "null": 1
+          }
+        }
       },
       "input": {
         "pans": [
@@ -1629,89 +2355,171 @@
     },
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
           "results": [
             {
-              "check_character": "F",
-              "checksum_verifiable": false,
-              "confidence": 0.0,
+              "success": true,
               "data": {
-                "check_character": "F",
-                "checksum_verifiable": false,
+                "valid": true,
+                "pan": "ABCDE1234F",
                 "entity_code": "D",
                 "entity_type": "Unknown",
-                "name_initial": "E",
-                "normalized_input": "ABCDE1234F",
-                "pan": "ABCDE1234F",
-                "sequence": "1234",
                 "series": "ABC",
-                "valid": true
+                "name_initial": "E",
+                "sequence": "1234",
+                "check_character": "F",
+                "checksum_verifiable": false,
+                "normalized_input": "ABCDE1234F"
               },
-              "entity_code": "D",
-              "entity_type": "Unknown",
               "errors": [],
-              "name_initial": "E",
-              "normalized_input": "ABCDE1234F",
-              "pan": "ABCDE1234F",
-              "sequence": "1234",
-              "series": "ABC",
-              "source": "offline_static",
-              "success": true,
-              "tool_version": "0.7.0",
-              "valid": true,
-              "validated_by": [
-                "format_check"
-              ],
               "warnings": [
                 "PAN entity code is not in the common official list"
-              ]
-            },
-            {
-              "check_character": "G",
-              "checksum_verifiable": false,
-              "confidence": 0.0,
-              "data": {
-                "check_character": "G",
-                "checksum_verifiable": false,
-                "entity_code": "A",
-                "entity_type": "Association of Persons (AOP)",
-                "name_initial": "B",
-                "normalized_input": "XYZAB5678G",
-                "pan": "XYZAB5678G",
-                "sequence": "5678",
-                "series": "XYZ",
-                "valid": true
-              },
-              "entity_code": "A",
-              "entity_type": "Association of Persons (AOP)",
-              "errors": [],
-              "name_initial": "B",
-              "normalized_input": "XYZAB5678G",
-              "pan": "XYZAB5678G",
-              "sequence": "5678",
-              "series": "XYZ",
+              ],
               "source": "offline_static",
-              "success": true,
-              "tool_version": "0.7.0",
-              "valid": true,
+              "tool_version": "0.8.0",
+              "confidence": 0.0,
               "validated_by": [
                 "format_check"
               ],
-              "warnings": []
+              "authenticity": {
+                "level": "A0",
+                "checks": [
+                  {
+                    "name": "pan_format_syntax",
+                    "passed": true,
+                    "level": "A0",
+                    "detail": "10-character alphanumeric structure (5 letters, 4 digits, 1 letter)"
+                  },
+                  {
+                    "name": "pan_entity_type_consistency",
+                    "passed": false,
+                    "level": "A1",
+                    "detail": "4th character 'D' represents a recognized entity category (Unknown)"
+                  },
+                  {
+                    "name": "pan_name_initial_rule",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "5th character is an alphabetic taxpayer surname or entity name initial"
+                  }
+                ],
+                "source": "Income Tax Department",
+                "dataset_version": null,
+                "as_of": "2026-11-05",
+                "evidence_hash": null,
+                "limitations": [
+                  "active PAN status not verified",
+                  "PAN-Aadhaar linking status not verified",
+                  "active registration status not verified"
+                ]
+              },
+              "valid": true,
+              "pan": "ABCDE1234F",
+              "entity_code": "D",
+              "entity_type": "Unknown",
+              "series": "ABC",
+              "name_initial": "E",
+              "sequence": "1234",
+              "check_character": "F",
+              "checksum_verifiable": false,
+              "normalized_input": "ABCDE1234F"
+            },
+            {
+              "success": true,
+              "data": {
+                "valid": true,
+                "pan": "XYZAB5678G",
+                "entity_code": "A",
+                "entity_type": "Association of Persons (AOP)",
+                "series": "XYZ",
+                "name_initial": "B",
+                "sequence": "5678",
+                "check_character": "G",
+                "checksum_verifiable": false,
+                "normalized_input": "XYZAB5678G"
+              },
+              "errors": [],
+              "warnings": [],
+              "source": "offline_static",
+              "tool_version": "0.8.0",
+              "confidence": 0.0,
+              "validated_by": [
+                "format_check"
+              ],
+              "authenticity": {
+                "level": "A1",
+                "checks": [
+                  {
+                    "name": "pan_format_syntax",
+                    "passed": true,
+                    "level": "A0",
+                    "detail": "10-character alphanumeric structure (5 letters, 4 digits, 1 letter)"
+                  },
+                  {
+                    "name": "pan_entity_type_consistency",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "4th character 'A' represents a recognized entity category (Association of Persons (AOP))"
+                  },
+                  {
+                    "name": "pan_name_initial_rule",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "5th character is an alphabetic taxpayer surname or entity name initial"
+                  }
+                ],
+                "source": "Income Tax Department",
+                "dataset_version": null,
+                "as_of": "2026-11-05",
+                "evidence_hash": null,
+                "limitations": [
+                  "active PAN status not verified",
+                  "PAN-Aadhaar linking status not verified",
+                  "active registration status not verified"
+                ]
+              },
+              "valid": true,
+              "pan": "XYZAB5678G",
+              "entity_code": "A",
+              "entity_type": "Association of Persons (AOP)",
+              "series": "XYZ",
+              "name_initial": "B",
+              "sequence": "5678",
+              "check_character": "G",
+              "checksum_verifiable": false,
+              "normalized_input": "XYZAB5678G"
             }
           ],
           "total": 2,
-          "valid_count": 2
+          "valid_count": 2,
+          "authenticity_summary": {
+            "A0": 1,
+            "A1": 1,
+            "A2": 0,
+            "A3": 0,
+            "A4": 0,
+            "null": 0
+          }
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
         ],
-        "warnings": []
+        "authenticity": {
+          "summary": {
+            "A0": 1,
+            "A1": 1,
+            "A2": 0,
+            "A3": 0,
+            "A4": 0,
+            "null": 0
+          }
+        }
       },
       "input": {
         "pans": [
@@ -1722,74 +2530,156 @@
     },
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
           "results": [
             {
-              "check_character": "F",
-              "checksum_verifiable": false,
-              "confidence": 0.0,
+              "success": true,
               "data": {
-                "check_character": "F",
-                "checksum_verifiable": false,
+                "valid": true,
+                "pan": "ABCDE1234F",
                 "entity_code": "D",
                 "entity_type": "Unknown",
-                "name_initial": "E",
-                "normalized_input": "ABCDE1234F",
-                "pan": "ABCDE1234F",
-                "sequence": "1234",
                 "series": "ABC",
-                "valid": true
+                "name_initial": "E",
+                "sequence": "1234",
+                "check_character": "F",
+                "checksum_verifiable": false,
+                "normalized_input": "ABCDE1234F"
               },
-              "entity_code": "D",
-              "entity_type": "Unknown",
               "errors": [],
-              "name_initial": "E",
-              "normalized_input": "ABCDE1234F",
-              "pan": "ABCDE1234F",
-              "sequence": "1234",
-              "series": "ABC",
+              "warnings": [
+                "PAN entity code is not in the common official list"
+              ],
               "source": "offline_static",
-              "success": true,
-              "tool_version": "0.7.0",
-              "valid": true,
+              "tool_version": "0.8.0",
+              "confidence": 0.0,
               "validated_by": [
                 "format_check"
               ],
-              "warnings": [
-                "PAN entity code is not in the common official list"
-              ]
+              "authenticity": {
+                "level": "A0",
+                "checks": [
+                  {
+                    "name": "pan_format_syntax",
+                    "passed": true,
+                    "level": "A0",
+                    "detail": "10-character alphanumeric structure (5 letters, 4 digits, 1 letter)"
+                  },
+                  {
+                    "name": "pan_entity_type_consistency",
+                    "passed": false,
+                    "level": "A1",
+                    "detail": "4th character 'D' represents a recognized entity category (Unknown)"
+                  },
+                  {
+                    "name": "pan_name_initial_rule",
+                    "passed": true,
+                    "level": "A1",
+                    "detail": "5th character is an alphabetic taxpayer surname or entity name initial"
+                  }
+                ],
+                "source": "Income Tax Department",
+                "dataset_version": null,
+                "as_of": "2026-11-05",
+                "evidence_hash": null,
+                "limitations": [
+                  "active PAN status not verified",
+                  "PAN-Aadhaar linking status not verified",
+                  "active registration status not verified"
+                ]
+              },
+              "valid": true,
+              "pan": "ABCDE1234F",
+              "entity_code": "D",
+              "entity_type": "Unknown",
+              "series": "ABC",
+              "name_initial": "E",
+              "sequence": "1234",
+              "check_character": "F",
+              "checksum_verifiable": false,
+              "normalized_input": "ABCDE1234F"
             },
             {
-              "checksum_verifiable": false,
-              "confidence": 0.0,
+              "success": false,
               "data": {
-                "checksum_verifiable": false,
+                "valid": false,
                 "pan": "SHORT",
-                "valid": false
+                "checksum_verifiable": false
               },
               "errors": [
                 "PAN must be exactly 10 characters"
               ],
-              "pan": "SHORT",
+              "warnings": [],
               "source": "offline_static",
-              "success": false,
-              "tool_version": "0.7.0",
+              "tool_version": "0.8.0",
+              "confidence": 0.0,
+              "authenticity": {
+                "level": null,
+                "checks": [
+                  {
+                    "name": "pan_format_syntax",
+                    "passed": false,
+                    "level": "A0",
+                    "detail": "10-character alphanumeric structure (5 letters, 4 digits, 1 letter)"
+                  },
+                  {
+                    "name": "pan_entity_type_consistency",
+                    "passed": false,
+                    "level": "A1",
+                    "detail": "4th character 'R' represents a recognized entity category (Standard)"
+                  },
+                  {
+                    "name": "pan_name_initial_rule",
+                    "passed": false,
+                    "level": "A1",
+                    "detail": "5th character is an alphabetic taxpayer surname or entity name initial"
+                  }
+                ],
+                "source": "Income Tax Department",
+                "dataset_version": null,
+                "as_of": "2026-11-05",
+                "evidence_hash": null,
+                "limitations": [
+                  "active PAN status not verified",
+                  "PAN-Aadhaar linking status not verified",
+                  "active registration status not verified"
+                ]
+              },
               "valid": false,
-              "warnings": []
+              "pan": "SHORT",
+              "checksum_verifiable": false
             }
           ],
           "total": 2,
-          "valid_count": 1
+          "valid_count": 1,
+          "authenticity_summary": {
+            "A0": 1,
+            "A1": 0,
+            "A2": 0,
+            "A3": 0,
+            "A4": 0,
+            "null": 1
+          }
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
         ],
-        "warnings": []
+        "authenticity": {
+          "summary": {
+            "A0": 1,
+            "A1": 0,
+            "A2": 0,
+            "A3": 0,
+            "A4": 0,
+            "null": 1
+          }
+        }
       },
       "input": {
         "pans": [
@@ -1800,15 +2690,15 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": null,
         "errors": [
           "Empty PAN list"
         ],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0
       },
       "input": {
         "pans": []
@@ -1816,15 +2706,15 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": null,
         "errors": [
           "Maximum 500 PANs per call"
         ],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0
       },
       "input": {
         "pans": [
@@ -2336,25 +3226,25 @@
   "decode_digilocker_uri": [
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
+          "uri": "dlg://uidai/aadhaar/12345",
+          "issuer": "uidai",
           "document_type": "Aadhaar Card",
           "expected_fields": [
             "aadhaar_number"
           ],
-          "issuer": "uidai",
-          "normalized_input": "dlg://uidai/aadhaar/12345",
-          "uri": "dlg://uidai/aadhaar/12345",
-          "verification_pairing": "validate_aadhaar"
+          "verification_pairing": "validate_aadhaar",
+          "normalized_input": "dlg://uidai/aadhaar/12345"
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
-        ],
-        "warnings": []
+        ]
       },
       "input": {
         "uri": "dlg://uidai/aadhaar/12345"
@@ -2362,25 +3252,25 @@
     },
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
+          "uri": "dlg://incometax/pan/ABCDE1234F",
+          "issuer": "incometax",
           "document_type": "PAN Card",
           "expected_fields": [
             "pan"
           ],
-          "issuer": "incometax",
-          "normalized_input": "dlg://incometax/pan/ABCDE1234F",
-          "uri": "dlg://incometax/pan/ABCDE1234F",
-          "verification_pairing": "validate_pan"
+          "verification_pairing": "validate_pan",
+          "normalized_input": "dlg://incometax/pan/ABCDE1234F"
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
-        ],
-        "warnings": []
+        ]
       },
       "input": {
         "uri": "dlg://incometax/pan/ABCDE1234F"
@@ -2388,25 +3278,25 @@
     },
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
+          "uri": "dlg://mha/passport/A1234567",
+          "issuer": "mha",
           "document_type": "Passport",
           "expected_fields": [
             "passport_number"
           ],
-          "issuer": "mha",
-          "normalized_input": "dlg://mha/passport/A1234567",
-          "uri": "dlg://mha/passport/A1234567",
-          "verification_pairing": "validate_passport"
+          "verification_pairing": "validate_passport",
+          "normalized_input": "dlg://mha/passport/A1234567"
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
-        ],
-        "warnings": []
+        ]
       },
       "input": {
         "uri": "dlg://mha/passport/A1234567"
@@ -2414,25 +3304,25 @@
     },
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
+          "uri": "dlg://custom/unknown_doc",
+          "issuer": "custom",
           "document_type": "Document from custom",
           "expected_fields": [
             "document_id"
           ],
-          "issuer": "custom",
-          "normalized_input": "dlg://custom/unknown_doc",
-          "uri": "dlg://custom/unknown_doc",
-          "verification_pairing": null
+          "verification_pairing": null,
+          "normalized_input": "dlg://custom/unknown_doc"
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
-        ],
-        "warnings": []
+        ]
       },
       "input": {
         "uri": "dlg://custom/unknown_doc"
@@ -2440,15 +3330,15 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": null,
         "errors": [
           "Invalid DigiLocker URI format. Must start with 'dlg://'"
         ],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0
       },
       "input": {
         "uri": "http://example.com"
@@ -2456,15 +3346,15 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": null,
         "errors": [
           "Invalid DigiLocker URI format"
         ],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0
       },
       "input": {
         "uri": "dlg://onlyonepart"
@@ -2474,23 +3364,23 @@
   "decode_pan_type": [
     {
       "expected": {
-        "confidence": 0.65,
+        "success": true,
         "data": {
+          "pan": "ABCPE1234F",
           "entity_type_code": "P",
           "entity_type_label": "Individual",
           "kyc_routing_hint": "NRI requires Form 60/61",
-          "normalized_input": "ABCPE1234F",
-          "pan": "ABCPE1234F"
+          "normalized_input": "ABCPE1234F"
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.65,
         "validated_by": [
           "format",
           "checksum"
-        ],
-        "warnings": []
+        ]
       },
       "input": {
         "pan": "ABCPE1234F"
@@ -2498,23 +3388,23 @@
     },
     {
       "expected": {
-        "confidence": 0.65,
+        "success": true,
         "data": {
+          "pan": "ABCCE1234F",
           "entity_type_code": "C",
           "entity_type_label": "Company",
           "kyc_routing_hint": "Requires DIN for directors",
-          "normalized_input": "ABCCE1234F",
-          "pan": "ABCCE1234F"
+          "normalized_input": "ABCCE1234F"
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.65,
         "validated_by": [
           "format",
           "checksum"
-        ],
-        "warnings": []
+        ]
       },
       "input": {
         "pan": "ABCCE1234F"
@@ -2522,23 +3412,23 @@
     },
     {
       "expected": {
-        "confidence": 0.65,
+        "success": true,
         "data": {
+          "pan": "ABCHE1234F",
           "entity_type_code": "H",
           "entity_type_label": "Hindu Undivided Family (HUF)",
           "kyc_routing_hint": "HUF",
-          "normalized_input": "ABCHE1234F",
-          "pan": "ABCHE1234F"
+          "normalized_input": "ABCHE1234F"
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.65,
         "validated_by": [
           "format",
           "checksum"
-        ],
-        "warnings": []
+        ]
       },
       "input": {
         "pan": "ABCHE1234F"
@@ -2546,23 +3436,23 @@
     },
     {
       "expected": {
-        "confidence": 0.65,
+        "success": true,
         "data": {
+          "pan": "ABCFE1234F",
           "entity_type_code": "F",
           "entity_type_label": "Firm",
           "kyc_routing_hint": "Partnership/LLP",
-          "normalized_input": "ABCFE1234F",
-          "pan": "ABCFE1234F"
+          "normalized_input": "ABCFE1234F"
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.65,
         "validated_by": [
           "format",
           "checksum"
-        ],
-        "warnings": []
+        ]
       },
       "input": {
         "pan": "ABCFE1234F"
@@ -2570,23 +3460,23 @@
     },
     {
       "expected": {
-        "confidence": 0.65,
+        "success": true,
         "data": {
+          "pan": "ABCZE1234F",
           "entity_type_code": "Z",
           "entity_type_label": "Unknown",
           "kyc_routing_hint": "",
-          "normalized_input": "ABCZE1234F",
-          "pan": "ABCZE1234F"
+          "normalized_input": "ABCZE1234F"
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.65,
         "validated_by": [
           "format",
           "checksum"
-        ],
-        "warnings": []
+        ]
       },
       "input": {
         "pan": "ABCZE1234F"
@@ -2594,32 +3484,64 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": {
-          "checksum_verifiable": false,
-          "confidence": 0.0,
+          "success": false,
           "data": {
-            "checksum_verifiable": false,
+            "valid": false,
             "pan": "INVALID",
-            "valid": false
+            "checksum_verifiable": false
           },
           "errors": [
             "PAN must be exactly 10 characters"
           ],
-          "pan": "INVALID",
+          "warnings": [],
           "source": "offline_static",
-          "success": false,
-          "tool_version": "0.7.0",
+          "tool_version": "0.8.0",
+          "confidence": 0.0,
+          "authenticity": {
+            "level": null,
+            "checks": [
+              {
+                "name": "pan_format_syntax",
+                "passed": false,
+                "level": "A0",
+                "detail": "10-character alphanumeric structure (5 letters, 4 digits, 1 letter)"
+              },
+              {
+                "name": "pan_entity_type_consistency",
+                "passed": false,
+                "level": "A1",
+                "detail": "4th character 'A' represents a recognized entity category (Standard)"
+              },
+              {
+                "name": "pan_name_initial_rule",
+                "passed": false,
+                "level": "A1",
+                "detail": "5th character is an alphabetic taxpayer surname or entity name initial"
+              }
+            ],
+            "source": "Income Tax Department",
+            "dataset_version": null,
+            "as_of": "2026-11-05",
+            "evidence_hash": null,
+            "limitations": [
+              "active PAN status not verified",
+              "PAN-Aadhaar linking status not verified",
+              "active registration status not verified"
+            ]
+          },
           "valid": false,
-          "warnings": []
+          "pan": "INVALID",
+          "checksum_verifiable": false
         },
         "errors": [
           "PAN must be exactly 10 characters"
         ],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0
       },
       "input": {
         "pan": "INVALID"
@@ -2629,27 +3551,27 @@
   "lookup_bank": [
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
           "banks": [
             {
-              "code": "SBIN",
-              "hq": "Mumbai",
               "name": "State Bank of India",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "SBIN",
+              "type": "commercial",
+              "hq": "Mumbai",
+              "rbi_licensed": true
             }
           ],
           "count": 1
         },
         "errors": [],
+        "warnings": [],
         "source": "bundled_dataset",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
-        ],
-        "warnings": []
+        ]
       },
       "input": {
         "name_or_code": "SBIN"
@@ -2657,27 +3579,27 @@
     },
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
           "banks": [
             {
-              "code": "SBIN",
-              "hq": "Mumbai",
               "name": "State Bank of India",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "SBIN",
+              "type": "commercial",
+              "hq": "Mumbai",
+              "rbi_licensed": true
             }
           ],
           "count": 1
         },
         "errors": [],
+        "warnings": [],
         "source": "bundled_dataset",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
-        ],
-        "warnings": []
+        ]
       },
       "input": {
         "name_or_code": "State Bank"
@@ -2685,27 +3607,27 @@
     },
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
           "banks": [
             {
-              "code": "HDFC",
-              "hq": "Mumbai",
               "name": "HDFC Bank Limited",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "HDFC",
+              "type": "commercial",
+              "hq": "Mumbai",
+              "rbi_licensed": true
             }
           ],
           "count": 1
         },
         "errors": [],
+        "warnings": [],
         "source": "bundled_dataset",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
-        ],
-        "warnings": []
+        ]
       },
       "input": {
         "name_or_code": "HDFC"
@@ -2713,90 +3635,90 @@
     },
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
           "banks": [
             {
-              "code": "SBIN",
-              "hq": "Mumbai",
               "name": "State Bank of India",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "SBIN",
+              "type": "commercial",
+              "hq": "Mumbai",
+              "rbi_licensed": true
             },
             {
-              "code": "HDFC",
-              "hq": "Mumbai",
               "name": "HDFC Bank Limited",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "HDFC",
+              "type": "commercial",
+              "hq": "Mumbai",
+              "rbi_licensed": true
             },
             {
-              "code": "ICICI",
-              "hq": "Mumbai",
               "name": "ICICI Bank Limited",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "ICICI",
+              "type": "commercial",
+              "hq": "Mumbai",
+              "rbi_licensed": true
             },
             {
-              "code": "PNB",
-              "hq": "New Delhi",
               "name": "Punjab National Bank",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "PNB",
+              "type": "commercial",
+              "hq": "New Delhi",
+              "rbi_licensed": true
             },
             {
-              "code": "BARODA",
-              "hq": "Vadodara",
               "name": "Bank of Baroda",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "BARODA",
+              "type": "commercial",
+              "hq": "Vadodara",
+              "rbi_licensed": true
             },
             {
-              "code": "CANARA",
-              "hq": "Bengaluru",
               "name": "Canara Bank",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "CANARA",
+              "type": "commercial",
+              "hq": "Bengaluru",
+              "rbi_licensed": true
             },
             {
-              "code": "AXIS",
-              "hq": "Mumbai",
               "name": "Axis Bank Limited",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "AXIS",
+              "type": "commercial",
+              "hq": "Mumbai",
+              "rbi_licensed": true
             },
             {
-              "code": "KOTAK",
-              "hq": "Mumbai",
               "name": "Kotak Mahindra Bank",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "KOTAK",
+              "type": "commercial",
+              "hq": "Mumbai",
+              "rbi_licensed": true
             },
             {
-              "code": "YES",
-              "hq": "Mumbai",
               "name": "Yes Bank Limited",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "YES",
+              "type": "commercial",
+              "hq": "Mumbai",
+              "rbi_licensed": true
             },
             {
-              "code": "IDBI",
-              "hq": "Mumbai",
               "name": "IDBI Bank Limited",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "IDBI",
+              "type": "commercial",
+              "hq": "Mumbai",
+              "rbi_licensed": true
             }
           ],
           "count": 10
         },
         "errors": [],
+        "warnings": [],
         "source": "bundled_dataset",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
-        ],
-        "warnings": []
+        ]
       },
       "input": {
         "name_or_code": "bank"
@@ -2804,16 +3726,16 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": {
           "banks": [],
           "count": 0
         },
         "errors": [],
+        "warnings": [],
         "source": "bundled_dataset",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0
       },
       "input": {
         "name_or_code": "NONEXISTENT_BANK_XYZ"
@@ -2821,90 +3743,90 @@
     },
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
           "banks": [
             {
-              "code": "SBIN",
-              "hq": "Mumbai",
               "name": "State Bank of India",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "SBIN",
+              "type": "commercial",
+              "hq": "Mumbai",
+              "rbi_licensed": true
             },
             {
-              "code": "HDFC",
-              "hq": "Mumbai",
               "name": "HDFC Bank Limited",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "HDFC",
+              "type": "commercial",
+              "hq": "Mumbai",
+              "rbi_licensed": true
             },
             {
-              "code": "ICICI",
-              "hq": "Mumbai",
               "name": "ICICI Bank Limited",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "ICICI",
+              "type": "commercial",
+              "hq": "Mumbai",
+              "rbi_licensed": true
             },
             {
-              "code": "PNB",
-              "hq": "New Delhi",
               "name": "Punjab National Bank",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "PNB",
+              "type": "commercial",
+              "hq": "New Delhi",
+              "rbi_licensed": true
             },
             {
-              "code": "BARODA",
-              "hq": "Vadodara",
               "name": "Bank of Baroda",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "BARODA",
+              "type": "commercial",
+              "hq": "Vadodara",
+              "rbi_licensed": true
             },
             {
-              "code": "CANARA",
-              "hq": "Bengaluru",
               "name": "Canara Bank",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "CANARA",
+              "type": "commercial",
+              "hq": "Bengaluru",
+              "rbi_licensed": true
             },
             {
-              "code": "AXIS",
-              "hq": "Mumbai",
               "name": "Axis Bank Limited",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "AXIS",
+              "type": "commercial",
+              "hq": "Mumbai",
+              "rbi_licensed": true
             },
             {
-              "code": "KOTAK",
-              "hq": "Mumbai",
               "name": "Kotak Mahindra Bank",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "KOTAK",
+              "type": "commercial",
+              "hq": "Mumbai",
+              "rbi_licensed": true
             },
             {
-              "code": "YES",
-              "hq": "Mumbai",
               "name": "Yes Bank Limited",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "YES",
+              "type": "commercial",
+              "hq": "Mumbai",
+              "rbi_licensed": true
             },
             {
-              "code": "IDBI",
-              "hq": "Mumbai",
               "name": "IDBI Bank Limited",
-              "rbi_licensed": true,
-              "type": "commercial"
+              "code": "IDBI",
+              "type": "commercial",
+              "hq": "Mumbai",
+              "rbi_licensed": true
             }
           ],
           "count": 10
         },
         "errors": [],
+        "warnings": [],
         "source": "bundled_dataset",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
-        ],
-        "warnings": []
+        ]
       },
       "input": {
         "name_or_code": ""
@@ -2914,7 +3836,7 @@
   "validate_aa_consent_artifact": [
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
           "artifact": {
             "Purpose": {
@@ -2927,17 +3849,43 @@
             ]
           },
           "errors": [],
-          "validated": true,
-          "warnings": []
+          "warnings": [],
+          "validated": true
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
         ],
-        "warnings": []
+        "authenticity": {
+          "level": "A1",
+          "checks": [
+            {
+              "name": "aa_consent_schema_syntax",
+              "passed": true,
+              "level": "A0",
+              "detail": "Account Aggregator consent artifact schema validation"
+            },
+            {
+              "name": "aa_consent_parameters_consistency",
+              "passed": true,
+              "level": "A1",
+              "detail": "Consent start, expiry, and financial information types consistency"
+            }
+          ],
+          "source": "Reserve Bank of India (RBI) / Sahamati",
+          "dataset_version": null,
+          "as_of": "2026-11-05",
+          "evidence_hash": null,
+          "limitations": [
+            "cryptographic signature on artifact not verified",
+            "AA registry active session status not verified",
+            "active registration status not verified"
+          ]
+        }
       },
       "input": {
         "artifact": {
@@ -2954,7 +3902,7 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": {
           "artifact": {
             "consentExpiry": "2026-12-31T23:59:59Z",
@@ -2965,14 +3913,40 @@
           "errors": [
             "Missing consentStart"
           ],
-          "validated": false,
-          "warnings": []
+          "warnings": [],
+          "validated": false
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0,
+        "authenticity": {
+          "level": null,
+          "checks": [
+            {
+              "name": "aa_consent_schema_syntax",
+              "passed": false,
+              "level": "A0",
+              "detail": "Account Aggregator consent artifact schema validation"
+            },
+            {
+              "name": "aa_consent_parameters_consistency",
+              "passed": false,
+              "level": "A1",
+              "detail": "Consent start, expiry, and financial information types consistency"
+            }
+          ],
+          "source": "Reserve Bank of India (RBI) / Sahamati",
+          "dataset_version": null,
+          "as_of": "2026-11-05",
+          "evidence_hash": null,
+          "limitations": [
+            "cryptographic signature on artifact not verified",
+            "AA registry active session status not verified",
+            "active registration status not verified"
+          ]
+        }
       },
       "input": {
         "artifact": {
@@ -2985,7 +3959,7 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": {
           "artifact": {
             "consentStart": "2026-01-01T00:00:00Z",
@@ -2996,14 +3970,40 @@
           "errors": [
             "Missing consentExpiry"
           ],
-          "validated": false,
-          "warnings": []
+          "warnings": [],
+          "validated": false
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0,
+        "authenticity": {
+          "level": null,
+          "checks": [
+            {
+              "name": "aa_consent_schema_syntax",
+              "passed": false,
+              "level": "A0",
+              "detail": "Account Aggregator consent artifact schema validation"
+            },
+            {
+              "name": "aa_consent_parameters_consistency",
+              "passed": false,
+              "level": "A1",
+              "detail": "Consent start, expiry, and financial information types consistency"
+            }
+          ],
+          "source": "Reserve Bank of India (RBI) / Sahamati",
+          "dataset_version": null,
+          "as_of": "2026-11-05",
+          "evidence_hash": null,
+          "limitations": [
+            "cryptographic signature on artifact not verified",
+            "AA registry active session status not verified",
+            "active registration status not verified"
+          ]
+        }
       },
       "input": {
         "artifact": {
@@ -3016,7 +4016,7 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": {
           "artifact": {
             "consentExpiry": "2026-12-31T23:59:59Z",
@@ -3025,14 +4025,40 @@
           "errors": [
             "Missing fiTypes"
           ],
-          "validated": false,
-          "warnings": []
+          "warnings": [],
+          "validated": false
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0,
+        "authenticity": {
+          "level": null,
+          "checks": [
+            {
+              "name": "aa_consent_schema_syntax",
+              "passed": false,
+              "level": "A0",
+              "detail": "Account Aggregator consent artifact schema validation"
+            },
+            {
+              "name": "aa_consent_parameters_consistency",
+              "passed": false,
+              "level": "A1",
+              "detail": "Consent start, expiry, and financial information types consistency"
+            }
+          ],
+          "source": "Reserve Bank of India (RBI) / Sahamati",
+          "dataset_version": null,
+          "as_of": "2026-11-05",
+          "evidence_hash": null,
+          "limitations": [
+            "cryptographic signature on artifact not verified",
+            "AA registry active session status not verified",
+            "active registration status not verified"
+          ]
+        }
       },
       "input": {
         "artifact": {
@@ -3043,7 +4069,7 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": {
           "artifact": {
             "consentExpiry": "2026-12-31T23:59:59Z",
@@ -3053,14 +4079,40 @@
           "errors": [
             "fiTypes must be a list"
           ],
-          "validated": false,
-          "warnings": []
+          "warnings": [],
+          "validated": false
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0,
+        "authenticity": {
+          "level": null,
+          "checks": [
+            {
+              "name": "aa_consent_schema_syntax",
+              "passed": false,
+              "level": "A0",
+              "detail": "Account Aggregator consent artifact schema validation"
+            },
+            {
+              "name": "aa_consent_parameters_consistency",
+              "passed": false,
+              "level": "A1",
+              "detail": "Consent start, expiry, and financial information types consistency"
+            }
+          ],
+          "source": "Reserve Bank of India (RBI) / Sahamati",
+          "dataset_version": null,
+          "as_of": "2026-11-05",
+          "evidence_hash": null,
+          "limitations": [
+            "cryptographic signature on artifact not verified",
+            "AA registry active session status not verified",
+            "active registration status not verified"
+          ]
+        }
       },
       "input": {
         "artifact": {
@@ -3072,7 +4124,7 @@
     },
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
           "artifact": {
             "Purpose": {
@@ -3085,20 +4137,46 @@
             ]
           },
           "errors": [],
-          "validated": true,
           "warnings": [
             "Unknown fi_type: UNKNOWN_TYPE",
             "Unknown purpose code: 999"
-          ]
+          ],
+          "validated": true
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
         ],
-        "warnings": []
+        "authenticity": {
+          "level": "A1",
+          "checks": [
+            {
+              "name": "aa_consent_schema_syntax",
+              "passed": true,
+              "level": "A0",
+              "detail": "Account Aggregator consent artifact schema validation"
+            },
+            {
+              "name": "aa_consent_parameters_consistency",
+              "passed": true,
+              "level": "A1",
+              "detail": "Consent start, expiry, and financial information types consistency"
+            }
+          ],
+          "source": "Reserve Bank of India (RBI) / Sahamati",
+          "dataset_version": null,
+          "as_of": "2026-11-05",
+          "evidence_hash": null,
+          "limitations": [
+            "cryptographic signature on artifact not verified",
+            "AA registry active session status not verified",
+            "active registration status not verified"
+          ]
+        }
       },
       "input": {
         "artifact": {
@@ -3117,7 +4195,7 @@
   "validate_epf_code": [
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": {
           "code": "MH/BAN/0012345/000",
           "normalized_input": "MH/BAN/0012345/000"
@@ -3125,10 +4203,42 @@
         "errors": [
           "Invalid EPF format. Expected: XX/XXXXX/XXXXXX/XXX"
         ],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0,
+        "authenticity": {
+          "level": null,
+          "checks": [
+            {
+              "name": "epf_format_syntax",
+              "passed": false,
+              "level": "A0",
+              "detail": "Standard EPFO establishment code structure (XX/XXXXX/XXXXXX/XXX)"
+            },
+            {
+              "name": "epf_region_code_consistency",
+              "passed": false,
+              "level": "A1",
+              "detail": "2-digit region code matches recognized EPFO regional office"
+            },
+            {
+              "name": "epf_office_subcode_structure",
+              "passed": true,
+              "level": "A1",
+              "detail": "Office, establishment, and extension sub-components correctly formatted"
+            }
+          ],
+          "source": "Employees' Provident Fund Organisation (EPFO)",
+          "dataset_version": null,
+          "as_of": "2026-11-05",
+          "evidence_hash": null,
+          "limitations": [
+            "active establishment registration not verified",
+            "PF contribution remittance compliance not verified",
+            "active registration status not verified"
+          ]
+        }
       },
       "input": {
         "code": "MH/BAN/0012345/000"
@@ -3136,7 +4246,7 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": {
           "code": "DL/CPM/123456/123",
           "normalized_input": "DL/CPM/123456/123"
@@ -3144,10 +4254,42 @@
         "errors": [
           "Invalid EPF format. Expected: XX/XXXXX/XXXXXX/XXX"
         ],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0,
+        "authenticity": {
+          "level": null,
+          "checks": [
+            {
+              "name": "epf_format_syntax",
+              "passed": false,
+              "level": "A0",
+              "detail": "Standard EPFO establishment code structure (XX/XXXXX/XXXXXX/XXX)"
+            },
+            {
+              "name": "epf_region_code_consistency",
+              "passed": false,
+              "level": "A1",
+              "detail": "2-digit region code matches recognized EPFO regional office"
+            },
+            {
+              "name": "epf_office_subcode_structure",
+              "passed": true,
+              "level": "A1",
+              "detail": "Office, establishment, and extension sub-components correctly formatted"
+            }
+          ],
+          "source": "Employees' Provident Fund Organisation (EPFO)",
+          "dataset_version": null,
+          "as_of": "2026-11-05",
+          "evidence_hash": null,
+          "limitations": [
+            "active establishment registration not verified",
+            "PF contribution remittance compliance not verified",
+            "active registration status not verified"
+          ]
+        }
       },
       "input": {
         "code": "DL/CPM/123456/123"
@@ -3155,7 +4297,7 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": {
           "code": "mh/ban/0012345/000",
           "normalized_input": "MH/BAN/0012345/000"
@@ -3163,10 +4305,42 @@
         "errors": [
           "Invalid EPF format. Expected: XX/XXXXX/XXXXXX/XXX"
         ],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0,
+        "authenticity": {
+          "level": null,
+          "checks": [
+            {
+              "name": "epf_format_syntax",
+              "passed": false,
+              "level": "A0",
+              "detail": "Standard EPFO establishment code structure (XX/XXXXX/XXXXXX/XXX)"
+            },
+            {
+              "name": "epf_region_code_consistency",
+              "passed": false,
+              "level": "A1",
+              "detail": "2-digit region code matches recognized EPFO regional office"
+            },
+            {
+              "name": "epf_office_subcode_structure",
+              "passed": true,
+              "level": "A1",
+              "detail": "Office, establishment, and extension sub-components correctly formatted"
+            }
+          ],
+          "source": "Employees' Provident Fund Organisation (EPFO)",
+          "dataset_version": null,
+          "as_of": "2026-11-05",
+          "evidence_hash": null,
+          "limitations": [
+            "active establishment registration not verified",
+            "PF contribution remittance compliance not verified",
+            "active registration status not verified"
+          ]
+        }
       },
       "input": {
         "code": "mh/ban/0012345/000"
@@ -3174,7 +4348,7 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": {
           "code": "MH-BAN-0012345-000",
           "normalized_input": "MH-BAN-0012345-000"
@@ -3182,10 +4356,42 @@
         "errors": [
           "Invalid EPF format. Expected: XX/XXXXX/XXXXXX/XXX"
         ],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0,
+        "authenticity": {
+          "level": null,
+          "checks": [
+            {
+              "name": "epf_format_syntax",
+              "passed": false,
+              "level": "A0",
+              "detail": "Standard EPFO establishment code structure (XX/XXXXX/XXXXXX/XXX)"
+            },
+            {
+              "name": "epf_region_code_consistency",
+              "passed": false,
+              "level": "A1",
+              "detail": "2-digit region code matches recognized EPFO regional office"
+            },
+            {
+              "name": "epf_office_subcode_structure",
+              "passed": true,
+              "level": "A1",
+              "detail": "Office, establishment, and extension sub-components correctly formatted"
+            }
+          ],
+          "source": "Employees' Provident Fund Organisation (EPFO)",
+          "dataset_version": null,
+          "as_of": "2026-11-05",
+          "evidence_hash": null,
+          "limitations": [
+            "active establishment registration not verified",
+            "PF contribution remittance compliance not verified",
+            "active registration status not verified"
+          ]
+        }
       },
       "input": {
         "code": "MH-BAN-0012345-000"
@@ -3193,7 +4399,7 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": {
           "code": "INVALID",
           "normalized_input": "INVALID"
@@ -3201,10 +4407,42 @@
         "errors": [
           "Invalid EPF format. Expected: XX/XXXXX/XXXXXX/XXX"
         ],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0,
+        "authenticity": {
+          "level": null,
+          "checks": [
+            {
+              "name": "epf_format_syntax",
+              "passed": false,
+              "level": "A0",
+              "detail": "Standard EPFO establishment code structure (XX/XXXXX/XXXXXX/XXX)"
+            },
+            {
+              "name": "epf_region_code_consistency",
+              "passed": false,
+              "level": "A1",
+              "detail": "2-digit region code matches recognized EPFO regional office"
+            },
+            {
+              "name": "epf_office_subcode_structure",
+              "passed": true,
+              "level": "A1",
+              "detail": "Office, establishment, and extension sub-components correctly formatted"
+            }
+          ],
+          "source": "Employees' Provident Fund Organisation (EPFO)",
+          "dataset_version": null,
+          "as_of": "2026-11-05",
+          "evidence_hash": null,
+          "limitations": [
+            "active establishment registration not verified",
+            "PF contribution remittance compliance not verified",
+            "active registration status not verified"
+          ]
+        }
       },
       "input": {
         "code": "INVALID"
@@ -3212,7 +4450,7 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": {
           "code": "",
           "normalized_input": ""
@@ -3220,10 +4458,42 @@
         "errors": [
           "Invalid EPF format. Expected: XX/XXXXX/XXXXXX/XXX"
         ],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0,
+        "authenticity": {
+          "level": null,
+          "checks": [
+            {
+              "name": "epf_format_syntax",
+              "passed": false,
+              "level": "A0",
+              "detail": "Standard EPFO establishment code structure (XX/XXXXX/XXXXXX/XXX)"
+            },
+            {
+              "name": "epf_region_code_consistency",
+              "passed": false,
+              "level": "A1",
+              "detail": "2-digit region code matches recognized EPFO regional office"
+            },
+            {
+              "name": "epf_office_subcode_structure",
+              "passed": true,
+              "level": "A1",
+              "detail": "Office, establishment, and extension sub-components correctly formatted"
+            }
+          ],
+          "source": "Employees' Provident Fund Organisation (EPFO)",
+          "dataset_version": null,
+          "as_of": "2026-11-05",
+          "evidence_hash": null,
+          "limitations": [
+            "active establishment registration not verified",
+            "PF contribution remittance compliance not verified",
+            "active registration status not verified"
+          ]
+        }
       },
       "input": {
         "code": ""
@@ -3233,22 +4503,54 @@
   "validate_esic_code": [
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
           "code": "11-00012-00034",
-          "employer_code": "00012",
           "normalized_input": "11-00012-00034",
           "regional_code": "11",
+          "employer_code": "00012",
           "sub_code": "00034"
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
         ],
-        "warnings": []
+        "authenticity": {
+          "level": "A1",
+          "checks": [
+            {
+              "name": "esic_format_syntax",
+              "passed": true,
+              "level": "A0",
+              "detail": "Standard 17-digit ESIC employer code syntax (XX-XXXXX-XXXXX)"
+            },
+            {
+              "name": "esic_regional_office_consistency",
+              "passed": true,
+              "level": "A1",
+              "detail": "2-digit regional office code matches assigned ESIC jurisdiction"
+            },
+            {
+              "name": "esic_employer_structure",
+              "passed": true,
+              "level": "A1",
+              "detail": "Employer identification number and branch extension syntax verified"
+            }
+          ],
+          "source": "Employees' State Insurance Corporation (ESIC)",
+          "dataset_version": null,
+          "as_of": "2026-11-05",
+          "evidence_hash": null,
+          "limitations": [
+            "active employer registration not verified",
+            "ESIC contribution status not verified",
+            "active registration status not verified"
+          ]
+        }
       },
       "input": {
         "code": "11-00012-00034"
@@ -3256,22 +4558,54 @@
     },
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
           "code": "31-123456-78901",
-          "employer_code": "123456",
           "normalized_input": "31-123456-78901",
           "regional_code": "31",
+          "employer_code": "123456",
           "sub_code": "78901"
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
         ],
-        "warnings": []
+        "authenticity": {
+          "level": "A1",
+          "checks": [
+            {
+              "name": "esic_format_syntax",
+              "passed": true,
+              "level": "A0",
+              "detail": "Standard 17-digit ESIC employer code syntax (XX-XXXXX-XXXXX)"
+            },
+            {
+              "name": "esic_regional_office_consistency",
+              "passed": true,
+              "level": "A1",
+              "detail": "2-digit regional office code matches assigned ESIC jurisdiction"
+            },
+            {
+              "name": "esic_employer_structure",
+              "passed": true,
+              "level": "A1",
+              "detail": "Employer identification number and branch extension syntax verified"
+            }
+          ],
+          "source": "Employees' State Insurance Corporation (ESIC)",
+          "dataset_version": null,
+          "as_of": "2026-11-05",
+          "evidence_hash": null,
+          "limitations": [
+            "active employer registration not verified",
+            "ESIC contribution status not verified",
+            "active registration status not verified"
+          ]
+        }
       },
       "input": {
         "code": "31-123456-78901"
@@ -3279,22 +4613,54 @@
     },
     {
       "expected": {
-        "confidence": 0.4,
+        "success": true,
         "data": {
           "code": " 11-00012-00034 ",
-          "employer_code": "00012",
           "normalized_input": "11-00012-00034",
           "regional_code": "11",
+          "employer_code": "00012",
           "sub_code": "00034"
         },
         "errors": [],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": true,
-        "tool_version": "0.7.0",
+        "tool_version": "0.8.0",
+        "confidence": 0.4,
         "validated_by": [
           "format"
         ],
-        "warnings": []
+        "authenticity": {
+          "level": "A1",
+          "checks": [
+            {
+              "name": "esic_format_syntax",
+              "passed": true,
+              "level": "A0",
+              "detail": "Standard 17-digit ESIC employer code syntax (XX-XXXXX-XXXXX)"
+            },
+            {
+              "name": "esic_regional_office_consistency",
+              "passed": true,
+              "level": "A1",
+              "detail": "2-digit regional office code matches assigned ESIC jurisdiction"
+            },
+            {
+              "name": "esic_employer_structure",
+              "passed": true,
+              "level": "A1",
+              "detail": "Employer identification number and branch extension syntax verified"
+            }
+          ],
+          "source": "Employees' State Insurance Corporation (ESIC)",
+          "dataset_version": null,
+          "as_of": "2026-11-05",
+          "evidence_hash": null,
+          "limitations": [
+            "active employer registration not verified",
+            "ESIC contribution status not verified",
+            "active registration status not verified"
+          ]
+        }
       },
       "input": {
         "code": " 11-00012-00034 "
@@ -3302,7 +4668,7 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": {
           "code": "11/00012/00034",
           "normalized_input": "11/00012/00034"
@@ -3310,10 +4676,42 @@
         "errors": [
           "Invalid ESIC format. Expected: XX-XXXXX-XXXXX"
         ],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0,
+        "authenticity": {
+          "level": null,
+          "checks": [
+            {
+              "name": "esic_format_syntax",
+              "passed": false,
+              "level": "A0",
+              "detail": "Standard 17-digit ESIC employer code syntax (XX-XXXXX-XXXXX)"
+            },
+            {
+              "name": "esic_regional_office_consistency",
+              "passed": false,
+              "level": "A1",
+              "detail": "2-digit regional office code matches assigned ESIC jurisdiction"
+            },
+            {
+              "name": "esic_employer_structure",
+              "passed": true,
+              "level": "A1",
+              "detail": "Employer identification number and branch extension syntax verified"
+            }
+          ],
+          "source": "Employees' State Insurance Corporation (ESIC)",
+          "dataset_version": null,
+          "as_of": "2026-11-05",
+          "evidence_hash": null,
+          "limitations": [
+            "active employer registration not verified",
+            "ESIC contribution status not verified",
+            "active registration status not verified"
+          ]
+        }
       },
       "input": {
         "code": "11/00012/00034"
@@ -3321,7 +4719,7 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": {
           "code": "INVALID",
           "normalized_input": "INVALID"
@@ -3329,10 +4727,42 @@
         "errors": [
           "Invalid ESIC format. Expected: XX-XXXXX-XXXXX"
         ],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0,
+        "authenticity": {
+          "level": null,
+          "checks": [
+            {
+              "name": "esic_format_syntax",
+              "passed": false,
+              "level": "A0",
+              "detail": "Standard 17-digit ESIC employer code syntax (XX-XXXXX-XXXXX)"
+            },
+            {
+              "name": "esic_regional_office_consistency",
+              "passed": false,
+              "level": "A1",
+              "detail": "2-digit regional office code matches assigned ESIC jurisdiction"
+            },
+            {
+              "name": "esic_employer_structure",
+              "passed": true,
+              "level": "A1",
+              "detail": "Employer identification number and branch extension syntax verified"
+            }
+          ],
+          "source": "Employees' State Insurance Corporation (ESIC)",
+          "dataset_version": null,
+          "as_of": "2026-11-05",
+          "evidence_hash": null,
+          "limitations": [
+            "active employer registration not verified",
+            "ESIC contribution status not verified",
+            "active registration status not verified"
+          ]
+        }
       },
       "input": {
         "code": "INVALID"
@@ -3340,7 +4770,7 @@
     },
     {
       "expected": {
-        "confidence": 0.0,
+        "success": false,
         "data": {
           "code": "",
           "normalized_input": ""
@@ -3348,10 +4778,42 @@
         "errors": [
           "Invalid ESIC format. Expected: XX-XXXXX-XXXXX"
         ],
+        "warnings": [],
         "source": "offline_algorithm",
-        "success": false,
-        "tool_version": "0.7.0",
-        "warnings": []
+        "tool_version": "0.8.0",
+        "confidence": 0.0,
+        "authenticity": {
+          "level": null,
+          "checks": [
+            {
+              "name": "esic_format_syntax",
+              "passed": false,
+              "level": "A0",
+              "detail": "Standard 17-digit ESIC employer code syntax (XX-XXXXX-XXXXX)"
+            },
+            {
+              "name": "esic_regional_office_consistency",
+              "passed": false,
+              "level": "A1",
+              "detail": "2-digit regional office code matches assigned ESIC jurisdiction"
+            },
+            {
+              "name": "esic_employer_structure",
+              "passed": true,
+              "level": "A1",
+              "detail": "Employer identification number and branch extension syntax verified"
+            }
+          ],
+          "source": "Employees' State Insurance Corporation (ESIC)",
+          "dataset_version": null,
+          "as_of": "2026-11-05",
+          "evidence_hash": null,
+          "limitations": [
+            "active employer registration not verified",
+            "ESIC contribution status not verified",
+            "active registration status not verified"
+          ]
+        }
       },
       "input": {
         "code": ""

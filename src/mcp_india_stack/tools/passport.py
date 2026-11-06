@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 
+from mcp_india_stack.authenticity.rules import create_passport_authenticity
 from mcp_india_stack.utils.responses import build_response
 
 PASSPORT_RE = re.compile(r"^[A-Z][0-9]{7}$")
@@ -25,28 +26,33 @@ def validate_passport(passport_number: str) -> dict[str, object]:
     """
     try:
         if passport_number is None:
+            auth = create_passport_authenticity(passport="", valid=False)
             return build_response(
                 success=False,
                 data={"valid": False, "passport_number": "", "series_letter": "", "serial": ""},
                 errors=["Passport number is required"],
                 source="offline_static",
+                authenticity=auth,
             )
 
         cleaned = str(passport_number).strip().upper()
         errors: list[str] = []
 
         if not cleaned:
+            auth = create_passport_authenticity(passport="", valid=False)
             return build_response(
                 success=False,
                 data={"valid": False, "passport_number": "", "series_letter": "", "serial": ""},
                 errors=["Passport number cannot be empty"],
                 source="offline_static",
+                authenticity=auth,
             )
 
         if len(cleaned) != 8:
             errors.append(
                 f"Indian passport number must be exactly 8 characters, got {len(cleaned)}"
             )
+            auth = create_passport_authenticity(passport=cleaned, valid=False)
             return build_response(
                 success=False,
                 data={
@@ -57,10 +63,12 @@ def validate_passport(passport_number: str) -> dict[str, object]:
                 },
                 errors=errors,
                 source="offline_static",
+                authenticity=auth,
             )
 
         if not PASSPORT_RE.match(cleaned):
             errors.append("Passport number must be 1 uppercase letter followed by 7 digits")
+            auth = create_passport_authenticity(passport=cleaned, valid=False)
             return build_response(
                 success=False,
                 data={
@@ -71,8 +79,10 @@ def validate_passport(passport_number: str) -> dict[str, object]:
                 },
                 errors=errors,
                 source="offline_static",
+                authenticity=auth,
             )
 
+        auth = create_passport_authenticity(passport=cleaned, valid=True)
         return build_response(
             success=True,
             data={
@@ -83,9 +93,13 @@ def validate_passport(passport_number: str) -> dict[str, object]:
             },
             source="offline_static",
             validated_by=["format_check"],
+            authenticity=auth,
         )
 
     except Exception as exc:
+        auth = create_passport_authenticity(
+            passport=str(passport_number) if passport_number else "", valid=False
+        )
         return build_response(
             success=False,
             data={
@@ -96,4 +110,5 @@ def validate_passport(passport_number: str) -> dict[str, object]:
             },
             errors=[f"Passport validation failed: {exc}"],
             source="offline_static",
+            authenticity=auth,
         )

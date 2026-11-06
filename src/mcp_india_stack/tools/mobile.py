@@ -5,6 +5,8 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from mcp_india_stack.authenticity.rules import create_mobile_authenticity
+
 MOBILE_PREFIXES = {
     "9820": ("Jio", "Maharashtra"),
     "9821": ("Jio", "Gujarat"),
@@ -75,6 +77,7 @@ def validate_mobile_number(mobile: str) -> dict[str, Any]:
     normalized = _normalise_mobile(mobile)
 
     if len(normalized) != 10 or not normalized.isdigit():
+        auth = create_mobile_authenticity(mobile=normalized, valid=False)
         return {
             "valid": False,
             "error": (
@@ -82,17 +85,26 @@ def validate_mobile_number(mobile: str) -> dict[str, Any]:
                 f" got {len(normalized)}"
             ),
             "disclaimer": DISCLAIMER,
+            "authenticity": auth,
         }
 
     if normalized[0] not in "6789":
+        auth = create_mobile_authenticity(mobile=normalized, valid=False)
         return {
             "valid": False,
             "error": "Indian mobile numbers must start with 6, 7, 8, or 9",
             "disclaimer": DISCLAIMER,
+            "authenticity": auth,
         }
 
     prefix = normalized[:4]
     operator, circle = MOBILE_PREFIXES.get(prefix, ("Unknown", "Unknown"))
+    auth = create_mobile_authenticity(
+        mobile=normalized,
+        valid=True,
+        operator=operator,
+        circle=circle,
+    )
 
     return {
         "valid": True,
@@ -103,4 +115,5 @@ def validate_mobile_number(mobile: str) -> dict[str, Any]:
         "telecom_circle": circle,
         "note": "MNP may have changed actual operator.",
         "disclaimer": DISCLAIMER,
+        "authenticity": auth,
     }

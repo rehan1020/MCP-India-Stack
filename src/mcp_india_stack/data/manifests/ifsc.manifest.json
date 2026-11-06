@@ -1,0 +1,11 @@
+{
+  "name": "ifsc",
+  "version": 20250401,
+  "sha256": "1e84af03d7e1a2ab721de17460aad39f047637eb1c256ab69b9da785ccc4cd2b",
+  "size": 35255976,
+  "source": "Reserve Bank of India / Razorpay IFSC Repository",
+  "generated_at": "2026-11-04T00:00:00Z",
+  "expires_at": "2027-12-31T23:59:59Z",
+  "key_id": "mcp-india-stack-ed25519-primary",
+  "signature": "01220312af477a544a4d4c3610204f3fef1ec3b674bfb9acad5f0ce373a4a25eb48ffb6d6b4e76bc65a67b28c497f95d1b8ab774790e6d9f7d7557478e87b501"
+}

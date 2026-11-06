@@ -1,0 +1,11 @@
+{
+  "status": "ACTIVE",
+  "source": "Mock GSTN Portal",
+  "as_of": "2026-11-05",
+  "details": {
+    "gstin": "27AAPFU0939F1ZV",
+    "trade_name": "ACME ENTERPRISES",
+    "status": "Active",
+    "taxpayer_type": "Regular"
+  }
+}

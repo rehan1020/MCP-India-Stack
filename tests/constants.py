@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-EXPECTED_TOOL_COUNT_ELEVATED_OFF: int = 77
-EXPECTED_TOOL_COUNT_ELEVATED_ON: int = 81
+EXPECTED_TOOL_COUNT_ELEVATED_OFF: int = 79
+EXPECTED_TOOL_COUNT_ELEVATED_ON: int = 83
 
 SCHEMA_TOOLS: frozenset[str] = frozenset(
     {
@@ -17,6 +17,8 @@ SCHEMA_TOOLS: frozenset[str] = frozenset(
         "validate_cin",
         "validate_din",
         "bulk_validate_gstin",
+        "verify_einvoice_qr",
+        "verify_aadhaar_offline_artifact",
         "calculate_income_tax",
         "calculate_tds",
         "calculate_gst",

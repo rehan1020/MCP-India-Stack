@@ -42,6 +42,9 @@ jobs:
       - name: Ruff format check
         run: ruff format --check .
 
+      - name: Relative link check
+        run: python scripts/check_relative_links.py
+
       - name: Mypy
         run: mypy src
         env:
