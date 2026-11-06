@@ -492,3 +492,75 @@ def test_registration_wrappers_delegate(monkeypatch: pytest.MonkeyPatch) -> None
     assert markets.inr_reference_rate(currency="USD")["value"] == 94.8606
     assert markets.sbi_tt_rate(currency="USD")["buy"] == 94.32
     assert markets.cbic_customs_rate(currency="USD", type="export")["value"] == 94.1
+
+
+@pytest.mark.parametrize("bad_mid", [None, "x", 0, -1, True, float("inf"), float("nan")])
+@respx.mock
+def test_sbi_tt_rate_without_a_valid_mid_uses_buy_and_sell(bad_mid: Any) -> None:
+    body = {"buy": 94.0, "sell": 96.0, "captured_at": "2026-11-03T06:00:00Z"}
+    if bad_mid is not None:
+        body["mid"] = bad_mid
+    respx.get(SBI_URL).mock(return_value=_json_response(200, body))
+    result = sbi_tt_rate("USD")
+    assert result["success"] is True
+    assert result["value"] == 95.0
+
+
+@respx.mock
+def test_sbi_tt_rate_keeps_a_valid_mid() -> None:
+    body = {"buy": 94.0, "sell": 96.0, "mid": 95.5}
+    respx.get(SBI_URL).mock(return_value=_json_response(200, body))
+    assert sbi_tt_rate("USD")["value"] == 95.5
+
+
+@pytest.mark.parametrize("bad", [float("inf"), float("-inf"), float("nan"), 10**400])
+def test_is_rate_rejects_non_finite_and_oversized_numbers(bad: Any) -> None:
+    assert fx._is_rate(bad) is False
+
+
+@respx.mock
+def test_infinite_table_rate_is_rejected() -> None:
+    body = {
+        "rate_date": "2026-11-03",
+        "rates": [{"base": "USD", "quote": "INR", "type": "reference", "value": float("inf")}],
+    }
+    respx.get(RBI_URL).mock(return_value=_json_response(200, body))
+    assert inr_reference_rate("USD")["success"] is False
+
+
+@pytest.mark.parametrize("bad", [123, 1.5, True, ["USD"], {"code": "USD"}])
+def test_non_string_currency_is_an_error_not_a_raise(bad: Any) -> None:
+    for tool in (inr_reference_rate, sbi_tt_rate, cbic_customs_rate):
+        result = tool(bad)
+        assert result["success"] is False
+        assert result["errors"]
+
+
+@pytest.mark.parametrize("bad", [123, True, ["import"]])
+def test_non_string_customs_type_is_an_error_not_a_raise(bad: Any) -> None:
+    result = cbic_customs_rate("USD", bad)
+    assert result["success"] is False
+    assert result["errors"] == ["type must be 'import' or 'export'"]
+
+
+def test_validation_errors_carry_source_url() -> None:
+    assert inr_reference_rate("x")["source_url"] == RBI_URL
+    assert cbic_customs_rate("x")["source_url"] == CBIC_URL
+    assert cbic_customs_rate("USD", "bad")["source_url"] == CBIC_URL
+    assert sbi_tt_rate("x")["source_url"] == SBI_URL
+
+
+@respx.mock
+def test_upstream_errors_carry_source_url() -> None:
+    respx.get(RBI_URL).mock(return_value=httpx.Response(503))
+    respx.get(CBIC_URL).mock(return_value=_json_response(404, {"error": "none"}))
+    respx.get(SBI_URL).mock(return_value=httpx.Response(503))
+    assert inr_reference_rate("USD")["source_url"] == RBI_URL
+    assert cbic_customs_rate("USD")["source_url"] == CBIC_URL
+    assert sbi_tt_rate("USD")["source_url"] == f"{SBI_URL}?ccy=USD"
+
+
+@respx.mock
+def test_missing_currency_in_table_carries_source_url() -> None:
+    respx.get(RBI_URL).mock(return_value=_json_response(200, RBI_PAYLOAD))
+    assert inr_reference_rate("JPY")["source_url"] == RBI_URL

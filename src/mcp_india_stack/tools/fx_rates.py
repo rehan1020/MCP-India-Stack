@@ -15,6 +15,7 @@ body, breaker open) is reported through ``errors`` with ``success`` set to
 
 from __future__ import annotations
 
+import math
 import re
 from collections.abc import Callable
 from datetime import datetime, timezone
@@ -44,8 +45,10 @@ _CUSTOMS_TYPES = ("import", "export")
 _fx_breaker = _CircuitBreaker(_CB_FAILURE_THRESHOLD, _CB_COOLDOWN_SECONDS)
 
 
-def _normalize_currency(currency: str | None) -> tuple[str, list[str]]:
+def _normalize_currency(currency: Any) -> tuple[str, list[str]]:
     """Upper-case and validate a 3-letter ISO 4217 code."""
+    if currency is not None and not isinstance(currency, str):
+        return "", ["currency must be a 3-letter ISO 4217 code (e.g. USD, EUR, AED)"]
     value = (currency or "").strip().upper()
     if not value:
         return value, ["currency is required (ISO 4217 code, e.g. USD)"]
@@ -58,6 +61,7 @@ def _error(
     *,
     currency: str,
     source: str,
+    source_url: str,
     errors: list[str],
     warnings: list[str] | None = None,
     **extra: Any,
@@ -69,6 +73,7 @@ def _error(
         "value": None,
         "rate_date": None,
         "source": source,
+        "source_url": source_url,
         **_provenance(source),
         "errors": errors,
         "warnings": warnings or [],
@@ -88,8 +93,13 @@ def _provenance(source: str) -> dict[str, Any]:
 
 
 def _is_rate(value: Any) -> bool:
-    """A usable rate: a positive number (``bool`` is not a number here)."""
-    return isinstance(value, (int, float)) and not isinstance(value, bool) and value > 0
+    """A usable rate: a positive, finite number (``bool`` is not a number here)."""
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return False
+    try:
+        return math.isfinite(value) and value > 0
+    except OverflowError:  # an int too large for a float
+        return False
 
 
 def _is_table(payload: Any) -> bool:
@@ -184,24 +194,32 @@ def _table_warnings(payload: dict[str, Any]) -> list[str]:
 
 def _central_bank_rate(*, bank: str, source: str, currency: str, rate_type: str) -> dict[str, Any]:
     """Shared path for RBI and CBIC tables served at ``/central-bank/{bank}``."""
+    path = f"/central-bank/{bank}"
+    source_url = f"{_FX_BASE_URL}{path}"
     code, errors = _normalize_currency(currency)
     if errors:
-        return _error(currency=code, source=source, errors=errors)
+        return _error(currency=code, source=source, source_url=source_url, errors=errors)
 
-    path = f"/central-bank/{bank}"
     payload, status, errors = _fetch_json(path, _is_table)
     if errors:
-        return _error(currency=code, source=source, errors=errors)
+        return _error(currency=code, source=source, source_url=source_url, errors=errors)
     if status == 404:
         msg = payload.get("error") if payload else None
         return _error(
-            currency=code, source=source, errors=[str(msg or "no published table available")]
+            currency=code,
+            source=source,
+            source_url=source_url,
+            errors=[str(msg or "no published table available")],
         )
 
     row, errors = _pick_rate(payload, code, rate_type)
     if row is None:
         return _error(
-            currency=code, source=source, errors=errors, rate_date=payload.get("rate_date")
+            currency=code,
+            source=source,
+            source_url=source_url,
+            errors=errors,
+            rate_date=payload.get("rate_date"),
         )
 
     return {
@@ -212,7 +230,7 @@ def _central_bank_rate(*, bank: str, source: str, currency: str, rate_type: str)
         "rate_date": payload.get("rate_date"),
         "rate_type": rate_type,
         "source": source,
-        "source_url": f"{_FX_BASE_URL}{path}",
+        "source_url": source_url,
         **_provenance(source),
         "errors": [],
         "warnings": [_THIRD_PARTY_WARNING, *_table_warnings(payload)],
@@ -244,12 +262,13 @@ def cbic_customs_rate(currency: str, type: str = "import") -> dict[str, Any]:
         Dict with ``currency``, ``quote`` ("INR"), ``value``, ``rate_date``, ``rate_type``,
         ``source``.
     """
-    rate_type = (type or "").strip().lower()
+    rate_type = type.strip().lower() if isinstance(type, str) else ""
     if rate_type not in _CUSTOMS_TYPES:
         code, _ = _normalize_currency(currency)
         return _error(
             currency=code,
             source="cbic_customs_rate",
+            source_url=f"{_FX_BASE_URL}/central-bank/cbic",
             errors=["type must be 'import' or 'export'"],
         )
     return _central_bank_rate(
@@ -268,17 +287,27 @@ def sbi_tt_rate(currency: str) -> dict[str, Any]:
         ``rate_date``, ``source``. These are indicative board rates, not official rates.
     """
     source = "sbi_tt_rate"
+    path = "/bank-rates/in/sbi"
     code, errors = _normalize_currency(currency)
     if errors:
-        return _error(currency=code, source=source, errors=errors)
+        return _error(
+            currency=code, source=source, source_url=f"{_FX_BASE_URL}{path}", errors=errors
+        )
 
-    path = "/bank-rates/in/sbi"
+    source_url = f"{_FX_BASE_URL}{path}?ccy={code}"
     payload, status, errors = _fetch_json(path, _is_bank_quote, params={"ccy": code})
     if errors:
-        return _error(currency=code, source=source, errors=errors)
+        return _error(currency=code, source=source, source_url=source_url, errors=errors)
     if status == 404:
         msg = payload.get("error") if payload else None
-        return _error(currency=code, source=source, errors=[str(msg or f"no rate for {code}")])
+        return _error(
+            currency=code,
+            source=source,
+            source_url=source_url,
+            errors=[str(msg or f"no rate for {code}")],
+        )
+
+    buy, sell, mid = payload["buy"], payload["sell"], payload.get("mid")
 
     captured_at = payload.get("captured_at")
     rate_date = (
@@ -288,15 +317,15 @@ def sbi_tt_rate(currency: str) -> dict[str, Any]:
         "success": True,
         "currency": code,
         "quote": "INR",
-        "buy": payload.get("buy"),
-        "sell": payload.get("sell"),
-        "value": payload.get("mid"),
+        "buy": buy,
+        "sell": sell,
+        "value": mid if _is_rate(mid) else buy / 2 + sell / 2,
         "rate_date": rate_date,
         "bank_updated_at": payload.get("bank_updated_at"),
         "basis": payload.get("basis"),
         "rate_type": "tt",
         "source": source,
-        "source_url": f"{_FX_BASE_URL}{path}?ccy={code}",
+        "source_url": source_url,
         **_provenance(source),
         "errors": [],
         "warnings": [

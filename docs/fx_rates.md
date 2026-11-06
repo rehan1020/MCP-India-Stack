@@ -11,7 +11,7 @@ Every result, including error results, says so in its fields:
 - `data_source`: `allratestoday.com (third-party aggregator, unverified)`
 - `authority`: the body whose figure the aggregator republishes (`Reserve Bank of India`, `State Bank of India`, `Central Board of Indirect Taxes and Customs`)
 - `verified`: always `false`
-- `source_url`: the aggregator URL that was called, not an RBI, SBI or CBIC URL
+- `source_url`: the aggregator URL for the lookup, not an RBI, SBI or CBIC URL (input rejected before any request carries the endpoint it would have called)
 - `as_of`: UTC time of the lookup
 - `warnings`: the first entry on a successful result states that the value comes from a third-party aggregator
 
@@ -45,7 +45,7 @@ Latest State Bank of India telegraphic-transfer (TT) buy and sell rate for a cur
 **Input:**
 - `currency` (str): ISO 4217 code, e.g. `USD`, `EUR`, `AED`, `SGD`.
 
-**Output:** `currency`, `quote` (`INR`), `buy`, `sell`, `value` (mid of buy/sell), `rate_date` (date the aggregator captured the sheet), `bank_updated_at` (the timestamp printed on SBI's sheet, as captured), `basis`, `rate_type` (`tt`), `source` (`sbi_tt_rate`), `source_url`, `data_source`, `authority`, `verified`, `as_of`, `errors`, `warnings`.
+**Output:** `currency`, `quote` (`INR`), `buy`, `sell`, `value` (the aggregator's mid, or the mean of `buy` and `sell` if it sends no valid mid), `rate_date` (date the aggregator captured the sheet), `bank_updated_at` (the timestamp printed on SBI's sheet, as captured), `basis`, `rate_type` (`tt`), `source` (`sbi_tt_rate`), `source_url`, `data_source`, `authority`, `verified`, `as_of`, `errors`, `warnings`.
 
 **Example prompt:** "What is SBI's TT selling rate for EUR right now?"
 
