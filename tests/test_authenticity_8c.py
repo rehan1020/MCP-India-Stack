@@ -204,9 +204,7 @@ def test_einvoice_qr_valid_signature_before_april() -> None:
         ("2027-01-31", "2026-27"),
     ],
 )
-def test_compute_expected_irn_fiscal_year_boundaries(
-    doc_dt: str, expected_fin_yr: str
-) -> None:
+def test_compute_expected_irn_fiscal_year_boundaries(doc_dt: str, expected_fin_yr: str) -> None:
     """Fiscal years before April keep the hyphenated FY format."""
     _, fin_yr = _compute_expected_irn("27AAPFU0939F1ZV", "INV", "INV-001", doc_dt)
     assert fin_yr == expected_fin_yr
