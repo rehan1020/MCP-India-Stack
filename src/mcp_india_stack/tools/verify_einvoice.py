@@ -56,10 +56,8 @@ def _compute_expected_irn(
         else:
             year, month = 2026, 4
 
-        if month >= 4:
-            fin_yr = f"{year}-{(year + 1) % 100:02d}"
-        else:
-            fin_yr = f"{year - 1}{year % 100:02d}"
+        fiscal_start = year if month >= 4 else year - 1
+        fin_yr = f"{fiscal_start}-{(fiscal_start + 1) % 100:02d}"
     except Exception:
         pass
 
