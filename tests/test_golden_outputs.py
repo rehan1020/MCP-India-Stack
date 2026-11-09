@@ -59,6 +59,22 @@ def test_tool_manifest_stability() -> None:
             )
 
 
+def _without_volatile_fields(value: Any) -> Any:
+    """Return `value` without the fields that are the current date by design.
+
+    `as_of` records the day the output was produced, so it can never be part of
+    a stored golden value that must still match tomorrow. Everything else is
+    compared exactly.
+    """
+    if isinstance(value, dict):
+        return {
+            key: _without_volatile_fields(item) for key, item in value.items() if key != "as_of"
+        }
+    if isinstance(value, list):
+        return [_without_volatile_fields(item) for item in value]
+    return value
+
+
 @pytest.mark.parametrize(
     "tool_name",
     [
@@ -90,7 +106,8 @@ def test_golden_outputs_match(tool_name: str) -> None:
     for idx, case in enumerate(cases):
         inp = case["input"]
         expected = case["expected"]
-        actual = tool.fn(**inp)
+        actual = _without_volatile_fields(tool.fn(**inp))
+        expected = _without_volatile_fields(case["expected"])
         assert actual == expected, (
             f"Output mismatch for {tool_name} case {idx}: actual={actual} != expected={expected}"
         )
