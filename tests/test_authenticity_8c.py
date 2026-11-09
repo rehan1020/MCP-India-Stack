@@ -29,7 +29,10 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
 
 from mcp_india_stack.tools.verify_aadhaar_artifact import verify_aadhaar_offline_artifact
-from mcp_india_stack.tools.verify_einvoice import verify_einvoice_qr
+from mcp_india_stack.tools.verify_einvoice import (
+    _compute_expected_irn,
+    verify_einvoice_qr,
+)
 
 FIXTURES_DIR = Path(__file__).parent / "fixtures" / "certs"
 CERTS_DIR = Path(__file__).resolve().parents[1] / "src" / "mcp_india_stack" / "certs"
@@ -153,6 +156,58 @@ def test_einvoice_qr_valid_signature() -> None:
     assert checks_by_name["digital_signature_verification"]["level"] == "A3"
     assert checks_by_name["irn_hash_integrity"]["passed"] is True
     assert checks_by_name["gstin_consistency"]["passed"] is True
+
+
+def test_einvoice_qr_valid_signature_before_april() -> None:
+    """January-March invoices spell the fiscal year like the rest of the year."""
+    seller_gstin = "27AAPFU0939F1ZV"
+    buyer_gstin = "27AAPFU0939F1ZV"
+    doc_no = "INV-001"
+    doc_typ = "INV"
+    doc_dt = "15/02/2027"
+    fin_yr = "2026-27"
+    raw_irn_seed = f"{seller_gstin}{doc_typ}{doc_no}{fin_yr}"
+    irn = hashlib.sha256(raw_irn_seed.encode("utf-8")).hexdigest().lower()
+
+    claims = {
+        "SellerGstin": seller_gstin,
+        "BuyerGstin": buyer_gstin,
+        "DocNo": doc_no,
+        "DocTyp": doc_typ,
+        "DocDt": doc_dt,
+        "TotInvVal": 118000.0,
+        "ItemCnt": 2,
+        "MainHsnCode": "998311",
+        "Irn": irn,
+    }
+    jwt_str = _make_signed_einvoice_jwt(claims)
+
+    res = verify_einvoice_qr(
+        jwt_str,
+        expected_gstin=seller_gstin,
+        expected_irn=irn,
+        cert_path=NIC_PUB_CERT,
+    )
+
+    assert res["success"] is True
+    assert res["valid"] is True, res["errors"]
+    checks_by_name = {c["name"]: c for c in res["authenticity"]["checks"]}
+    assert checks_by_name["irn_hash_integrity"]["passed"] is True
+
+
+@pytest.mark.parametrize(
+    ("doc_dt", "expected_fin_yr"),
+    [
+        ("15/02/2027", "2026-27"),
+        ("31/03/2026", "2025-26"),
+        ("01/04/2026", "2026-27"),
+        ("2027-01-31", "2026-27"),
+    ],
+)
+def test_compute_expected_irn_fiscal_year_boundaries(doc_dt: str, expected_fin_yr: str) -> None:
+    """Fiscal years before April keep the hyphenated FY format."""
+    _, fin_yr = _compute_expected_irn("27AAPFU0939F1ZV", "INV", "INV-001", doc_dt)
+    assert fin_yr == expected_fin_yr
 
 
 def test_einvoice_qr_tampered_signature() -> None:
