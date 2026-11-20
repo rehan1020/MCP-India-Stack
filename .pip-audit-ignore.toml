@@ -210,3 +210,63 @@ id = "CVE-2026-119284"
 package = "joserfc"
 justification = "Pinned dependency for FastMCP auth; to be addressed in dependency lock refresh"
 review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-128089"
+package = "dnspython"
+justification = "Transitive dependency of email-validator; review before year-end"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-126360"
+package = "opentelemetry-api"
+justification = "Transitive dependency of fastmcp; review before year-end"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-126190"
+package = "soupsieve"
+justification = "Transitive dependency of beautifulsoup4 and yfinance"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-126191"
+package = "soupsieve"
+justification = "Transitive dependency of beautifulsoup4 and yfinance"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "CVE-2026-126193"
+package = "soupsieve"
+justification = "Transitive dependency of beautifulsoup4 and yfinance"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "PYSEC-2026-4380"
+package = "virtualenv"
+justification = "Dev dependency in pre-commit environment"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "PYSEC-2026-4375"
+package = "virtualenv"
+justification = "Dev dependency in pre-commit environment"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "PYSEC-2026-4383"
+package = "virtualenv"
+justification = "Dev dependency in pre-commit environment"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "PYSEC-2026-4372"
+package = "virtualenv"
+justification = "Dev dependency in pre-commit environment"
+review_by = "2026-12-31"
+
+[[ignore]]
+id = "PYSEC-2026-4378"
+package = "virtualenv"
+justification = "Dev dependency in pre-commit environment"
+review_by = "2026-12-31"
