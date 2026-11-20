@@ -354,7 +354,15 @@ def _verify_signed_info_rsa(
 def _verify_with_builtin(raw_str: str, cert_bytes: bytes) -> tuple[bool, Any, str | None]:
     """Pure-Python XML-DSig verifier enforcing canonicalization and reference digest."""
     try:
-        root = ET.fromstring(raw_str)
+        import defusedxml.ElementTree as DefusedET
+
+        root = DefusedET.fromstring(raw_str)
+    except ImportError:
+        if "<!ENTITY" in raw_str or "<!DOCTYPE" in raw_str:
+            return False, None, "Security violation rejected: XML entity expansion detected"
+        import xml.etree.ElementTree as StdET
+
+        root = StdET.fromstring(raw_str)  # nosec B314
     except Exception as exc:
         return False, None, f"XML parse error: {exc}"
 
