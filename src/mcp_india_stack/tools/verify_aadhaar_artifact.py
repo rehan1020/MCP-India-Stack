@@ -362,7 +362,7 @@ def _verify_with_builtin(raw_str: str, cert_bytes: bytes) -> tuple[bool, Any, st
             return False, None, "Security violation rejected: XML entity expansion detected"
         import xml.etree.ElementTree as StdET
 
-        root = StdET.fromstring(raw_str)  # nosec B314
+        root = StdET.fromstring(raw_str)  # nosec: B314 - entity expansion and DTDs checked above
     except Exception as exc:
         return False, None, f"XML parse error: {exc}"
 
