@@ -70,38 +70,47 @@ def _make_signed_einvoice_jwt(claims: dict[str, Any], priv_key_path: Path = NIC_
 
 
 def _make_signed_aadhaar_xml(
-    ref_id: str = "123420260515123456", priv_key_path: Path = UIDAI_PRIV_KEY
+    ref_id: str = "123420260515123456",
+    priv_key_path: Path = UIDAI_PRIV_KEY,
+    cert_path: Path | None = None,
+    poi_name: str = "Aadhaar Holder",
+    dob: str = "1990-01-01",
+    gender: str = "M",
+    state: str = "Karnataka",
 ) -> str:
-    """Generate a signed UIDAI offline XML fixture using test private key."""
-    signed_info_xml = (
-        '<SignedInfo xmlns="http://www.w3.org/2000/09/xmldsig#">'
-        '<CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>'
-        '<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256"/>'
-        "</SignedInfo>"
-    )
-    signed_info_bytes = signed_info_xml.encode("utf-8")
+    """Generate a signed UIDAI offline XML fixture with real XML-DSig."""
+    import signxml
+    from lxml import etree
 
-    priv_key = serialization.load_pem_private_key(priv_key_path.read_bytes(), password=None)
-    assert isinstance(priv_key, rsa.RSAPrivateKey)
+    active_cert_path = cert_path
+    if active_cert_path is None:
+        if priv_key_path == UIDAI_EXP_PRIV_KEY:
+            active_cert_path = UIDAI_EXP_CERT
+        else:
+            active_cert_path = UIDAI_PUB_CERT
 
-    sig = priv_key.sign(signed_info_bytes, padding.PKCS1v15(), hashes.SHA256())
-    sig_b64 = base64.b64encode(sig).decode("ascii")
-
-    xml = (
-        f'<?xml version="1.0" encoding="UTF-8"?>\n'
+    xml_content = (
         f'<OfflinePaperlessKyc referenceId="{ref_id}">\n'
         f"  <UidData>\n"
-        f'    <Poi dob="1990-01-01" gender="M" name="Aadhaar Holder"/>\n'
+        f'    <Poi dob="{dob}" gender="{gender}" name="{poi_name}"/>\n'
         f'    <Poa co="S/O Father" dist="Bengaluru" house="42" '
-        f'loc="Koramangala" pc="560034" state="Karnataka" street="100ft Rd" vtc="Bengaluru"/>\n'
+        f'loc="Koramangala" pc="560034" state="{state}" street="100ft Rd" vtc="Bengaluru"/>\n'
         f"  </UidData>\n"
-        f'  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">\n'
-        f"    {signed_info_xml}\n"
-        f"    <SignatureValue>{sig_b64}</SignatureValue>\n"
-        f"  </Signature>\n"
         f"</OfflinePaperlessKyc>"
     )
-    return xml
+    doc = etree.fromstring(xml_content.encode("utf-8"))
+    signer = signxml.XMLSigner(
+        method=signxml.methods.enveloped,
+        signature_algorithm="rsa-sha256",
+        digest_algorithm="sha256",
+        c14n_algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315",
+    )
+    signed_doc = signer.sign(
+        doc,
+        key=priv_key_path.read_bytes(),
+        cert=active_cert_path.read_bytes(),
+    )
+    return etree.tostring(signed_doc, encoding="utf-8").decode("utf-8")
 
 
 # ===========================================================================
@@ -341,13 +350,135 @@ def test_aadhaar_offline_artifact_valid_signature() -> None:
 def test_aadhaar_offline_artifact_tampered_signature() -> None:
     """Tampered XML signature value is rejected with level=None."""
     xml_str = _make_signed_aadhaar_xml()
-    tampered_xml = xml_str.replace("SignatureValue>", "SignatureValue>DEADBEEF")
+    start = xml_str.find("SignatureValue>") + len("SignatureValue>")
+    end = xml_str.find("</", start)
+    sig_val = xml_str[start:end]
+    tampered_sig_val = ("A" if sig_val[0] != "A" else "B") + sig_val[1:]
+    tampered_xml = xml_str[:start] + tampered_sig_val + xml_str[end:]
 
     res = verify_aadhaar_offline_artifact(tampered_xml, cert_path=UIDAI_PUB_CERT)
     assert res["valid"] is False
     assert res["authenticity"]["level"] is None
     checks = {c["name"]: c for c in res["authenticity"]["checks"]}
     assert checks["uidai_digital_signature"]["passed"] is False
+
+
+def test_aadhaar_offline_artifact_tampered_demographics_name() -> None:
+    """Tampering with name in <Poi> after signing invalidates digest and fails A3 verification."""
+    xml_str = _make_signed_aadhaar_xml(poi_name="Genuine User")
+    tampered_xml = xml_str.replace('name="Genuine User"', 'name="Imposter Fraudster"')
+
+    res = verify_aadhaar_offline_artifact(tampered_xml, cert_path=UIDAI_PUB_CERT)
+    assert res["valid"] is False
+    assert res["success"] is False
+    assert res["authenticity"]["level"] is None
+    # Demographic must not be authenticated as verified
+    assert res["data"]["name"] != "Imposter Fraudster"
+    assert res["data"]["valid"] is False
+    checks = {c["name"]: c for c in res["authenticity"]["checks"]}
+    assert checks["uidai_digital_signature"]["passed"] is False
+    assert any("digest" in e.lower() for e in res["errors"])
+
+
+def test_aadhaar_offline_artifact_tampered_demographics_address() -> None:
+    """Tampering with address in <Poa> after signing invalidates digest and fails A3."""
+    xml_str = _make_signed_aadhaar_xml(state="Karnataka")
+    tampered_xml = xml_str.replace('state="Karnataka"', 'state="Goa"')
+
+    res = verify_aadhaar_offline_artifact(tampered_xml, cert_path=UIDAI_PUB_CERT)
+    assert res["valid"] is False
+    assert res["authenticity"]["level"] is None
+    assert res["data"]["valid"] is False
+    assert res["data"]["address"] == {}
+    assert any("digest" in e.lower() for e in res["errors"])
+
+
+def test_aadhaar_offline_artifact_missing_reference() -> None:
+    """Signature missing <Reference> element fails validation."""
+    xml_str = _make_signed_aadhaar_xml()
+    start = xml_str.find("<ds:Reference")
+    if start == -1:
+        start = xml_str.find("<Reference")
+    end = xml_str.find("</ds:SignedInfo>")
+    if end == -1:
+        end = xml_str.find("</SignedInfo>")
+    no_ref_xml = xml_str[:start] + xml_str[end:]
+
+    res = verify_aadhaar_offline_artifact(no_ref_xml, cert_path=UIDAI_PUB_CERT)
+    assert res["valid"] is False
+    assert res["authenticity"]["level"] is None
+    assert any(
+        "reference" in e.lower() or "missing" in e.lower() or "digest" in e.lower()
+        for e in res["errors"]
+    )
+
+
+def test_aadhaar_offline_artifact_reference_not_covering_uiddata() -> None:
+    """Signature with reference pointing to another element but not UidData fails validation."""
+    import signxml
+    from lxml import etree
+
+    xml_str = (
+        '<OfflinePaperlessKyc referenceId="123420260515123456">\n'
+        "  <UidData>\n"
+        '    <Poi dob="1990-01-01" gender="M" name="Aadhaar Holder"/>\n'
+        '    <Poa co="S/O Father" dist="Bengaluru" house="42" '
+        'loc="Koramangala" pc="560034" state="Karnataka" street="100ft Rd" vtc="Bengaluru"/>\n'
+        "  </UidData>\n"
+        '  <OtherData Id="other_elem">\n'
+        "    <Field>Unrelated</Field>\n"
+        "  </OtherData>\n"
+        "</OfflinePaperlessKyc>"
+    )
+    doc = etree.fromstring(xml_str.encode("utf-8"))
+    other_elem = doc.find(".//OtherData")
+    signer = signxml.XMLSigner(
+        method=signxml.methods.enveloped,
+        signature_algorithm="rsa-sha256",
+        digest_algorithm="sha256",
+        c14n_algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315",
+    )
+    signed_other = signer.sign(
+        other_elem,
+        key=UIDAI_PRIV_KEY.read_bytes(),
+        cert=UIDAI_PUB_CERT.read_bytes(),
+        reference_uri="#other_elem",
+    )
+    doc.remove(other_elem)
+    doc.append(signed_other)
+    crafted_xml = etree.tostring(doc, encoding="utf-8").decode("utf-8")
+
+    res = verify_aadhaar_offline_artifact(crafted_xml, cert_path=UIDAI_PUB_CERT)
+    assert res["valid"] is False
+    assert res["authenticity"]["level"] is None
+    assert res["data"]["valid"] is False
+    assert any("uiddata" in e.lower() or "cover" in e.lower() for e in res["errors"])
+
+
+def test_aadhaar_offline_artifact_signature_wrapping_defense() -> None:
+    """Multiple signature elements (signature wrapping) are rejected."""
+    xml_str = _make_signed_aadhaar_xml()
+    wrapped_xml = xml_str.replace(
+        "</OfflinePaperlessKyc>",
+        "<ds:Signature xmlns:ds='http://www.w3.org/2000/09/xmldsig#'></ds:Signature></OfflinePaperlessKyc>",
+    )
+    res = verify_aadhaar_offline_artifact(wrapped_xml, cert_path=UIDAI_PUB_CERT)
+    assert res["valid"] is False
+    assert res["authenticity"]["level"] is None
+    assert any("multiple" in e.lower() or "wrapping" in e.lower() for e in res["errors"])
+
+
+def test_aadhaar_offline_artifact_disallowed_signature_algorithm() -> None:
+    """Signature algorithm other than RSA-SHA256 (e.g. HMAC) is rejected."""
+    xml_str = _make_signed_aadhaar_xml()
+    tampered_alg = xml_str.replace("rsa-sha256", "hmac-sha256")
+    res = verify_aadhaar_offline_artifact(tampered_alg, cert_path=UIDAI_PUB_CERT)
+    assert res["valid"] is False
+    assert res["authenticity"]["level"] is None
+    assert any(
+        "algorithm" in e.lower() or "unsupported" in e.lower() or "forbidden" in e.lower()
+        for e in res["errors"]
+    )
 
 
 def test_aadhaar_offline_artifact_expired_cert() -> None:

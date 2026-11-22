@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+### Security
+- **Aadhaar Offline e-KYC XML-DSig Verification (`verify_aadhaar_offline_artifact`)**: Enforced XML-DSig reference digest verification over `<UidData>` with canonicalization (C14N 1.0), signature wrapping defense, and signature algorithm allowlists (`rsa-sha256`). Demographics are extracted strictly from cryptographically verified XML nodes, preventing modified demographic attributes from passing Level A3 verification. Special thanks to **Baidik Mazumdar** for discovering and responsibly reporting the vulnerability (#30).
+
 ## [0.8.0] - 2026-11-05
 
 ### Authenticity System (PRs 8a – 8d)
